@@ -53,7 +53,7 @@ fun KnowledgePoolScreen(database: AppDatabase) {
             var passageCount = 0
             var pending = mutableListOf<BookPassageEntity>()
             val pageSamples = mutableListOf<Pair<Int, String>>()
-            val candidates = linkedMapOf<String, Pair<Int, Pair<Float, String>>>()
+            val candidates = linkedMapOf<String, Pair<String, Pair<Int, Pair<Float, String>>>>()
             val reader = OfflineDocumentReader(context)
             try {
                 require(File(book.localPath).isFile) { "The original PDF is missing from local storage." }
