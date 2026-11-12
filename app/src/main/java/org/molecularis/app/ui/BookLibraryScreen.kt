@@ -26,6 +26,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.molecularis.app.data.AppDatabase
 import org.molecularis.app.data.BookEntity
+import org.molecularis.app.data.BookPassageEntity
 import java.io.File
 import java.util.UUID
 
