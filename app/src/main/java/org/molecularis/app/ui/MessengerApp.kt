@@ -335,7 +335,7 @@ private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LI
  }
  val selectedOnAccent=Color(0xFF202A27)
  val selectedFontFamily=when(fontFamilyName){"Serif"->FontFamily.Serif;"Monospace"->FontFamily.Monospace;"Cursive"->FontFamily.Cursive;else->FontFamily.SansSerif}
- MaterialTheme(typography=Typography(defaultFontFamily=selectedFontFamily),shapes=Shapes(small=RoundedCornerShape(14.dp),medium=RoundedCornerShape(20.dp),large=RoundedCornerShape(26.dp)),colorScheme=if(darkAppearance)
+ MaterialTheme(typography=Typography().let { base -> base.copy(bodyLarge=base.bodyLarge.copy(fontFamily=selectedFontFamily),bodyMedium=base.bodyMedium.copy(fontFamily=selectedFontFamily),bodySmall=base.bodySmall.copy(fontFamily=selectedFontFamily),titleLarge=base.titleLarge.copy(fontFamily=selectedFontFamily),titleMedium=base.titleMedium.copy(fontFamily=selectedFontFamily),titleSmall=base.titleSmall.copy(fontFamily=selectedFontFamily),labelLarge=base.labelLarge.copy(fontFamily=selectedFontFamily),labelMedium=base.labelMedium.copy(fontFamily=selectedFontFamily),labelSmall=base.labelSmall.copy(fontFamily=selectedFontFamily))},shapes=Shapes(small=RoundedCornerShape(14.dp),medium=RoundedCornerShape(20.dp),large=RoundedCornerShape(26.dp)),colorScheme=if(darkAppearance)
   darkColorScheme(primary=selectedAccent,onPrimary=selectedOnAccent,primaryContainer=selectedAccent.copy(alpha=0.28f),onPrimaryContainer=Color(0xFFE9EDF3),background=Color(0xFF101318),surface=Color(0xFF1A1F27),onSurface=Color(0xFFE9EDF3),secondary=selectedAccent)
  else
   lightColorScheme(primary=selectedAccent,onPrimary=selectedOnAccent,primaryContainer=selectedAccent.copy(alpha=0.14f),onPrimaryContainer=Color(0xFF20242B),background=Color(0xFFF6F7F9),surface=Color.White,onSurface=Color(0xFF20242B),secondary=selectedAccent)){
@@ -1222,7 +1222,6 @@ private suspend fun readDatasetBounded(context:Context,uri:Uri):String = withCon
    }
   }
  }
-}
 @Composable private fun InfoCard(title:String,body:String){Card(Modifier.fillMaxWidth().padding(bottom=10.dp)){Column(Modifier.padding(16.dp)){Text(title,fontWeight=FontWeight.SemiBold);Spacer(Modifier.height(4.dp));Text(body,color=Muted,style=MaterialTheme.typography.bodyMedium)}}}
 @Composable private fun EmptyState(title:String,body:String){Column(Modifier.fillMaxWidth().padding(vertical=24.dp),horizontalAlignment=Alignment.CenterHorizontally){Text(title,fontWeight=FontWeight.SemiBold);Text(body,color=Muted,style=MaterialTheme.typography.bodySmall)}}
 private fun friendlyLanguageName(tag:String):String {
