@@ -75,15 +75,21 @@ data class BookPassageEntity(
  val text:String
 )
 @Dao interface BookDao {
- @Query("SELECT * FROM books ORDER BY importedAt DESC") fun books():Flow<List<BookEntity>>
+ @Query("SELECT * FROM books WHERE id NOT LIKE '__stage__%' ORDER BY importedAt DESC") fun books():Flow<List<BookEntity>>
  @Insert suspend fun addBook(book:BookEntity)
  @Insert suspend fun addPassages(passages:List<BookPassageEntity>)
  @Query("DELETE FROM book_passages WHERE bookId=:bookId") suspend fun deletePassages(bookId:String)
  @Query("SELECT * FROM book_passages WHERE bookId=:bookId ORDER BY pageNumber,chunkIndex") suspend fun passages(bookId:String):List<BookPassageEntity>
  @Query("SELECT * FROM book_passages WHERE bookId=:bookId AND text LIKE '%' || :query || '%' ORDER BY pageNumber LIMIT 100") suspend fun searchInBook(bookId:String,query:String):List<BookPassageEntity>
- @Query("SELECT * FROM book_passages WHERE text LIKE '%' || :query || '%' ORDER BY bookId,pageNumber LIMIT 100") suspend fun searchAll(query:String):List<BookPassageEntity>
+ @Query("SELECT * FROM book_passages WHERE bookId IN (SELECT id FROM books WHERE id NOT LIKE '__stage__%') AND text LIKE '%' || :query || '%' ORDER BY bookId,pageNumber LIMIT 100") suspend fun searchAll(query:String):List<BookPassageEntity>
  @Query("UPDATE books SET pageCount=:pageCount, extractedChars=:extractedChars WHERE id=:bookId") suspend fun updateBookStats(bookId:String,pageCount:Int,extractedChars:Int)
  @Query("DELETE FROM books WHERE id=:bookId") suspend fun deleteBook(bookId:String)
+ @Query("UPDATE book_passages SET bookId=:bookId WHERE bookId=:stagingBookId") suspend fun moveStagedPassages(stagingBookId:String,bookId:String)
+ @Transaction suspend fun replacePassagesFromStage(bookId:String,stagingBookId:String) {
+  deletePassages(bookId)
+  moveStagedPassages(stagingBookId,bookId)
+  deleteBook(stagingBookId)
+ }
 }
 
 @Entity(tableName="knowledge_books",indices=[Index("bookId",unique=true)])

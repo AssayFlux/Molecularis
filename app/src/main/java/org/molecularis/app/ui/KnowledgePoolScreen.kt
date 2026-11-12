@@ -71,9 +71,12 @@ fun KnowledgePoolScreen(database: AppDatabase) {
             val pageFingerprints = mutableSetOf<String>()
             val candidates = linkedMapOf<String, Pair<String, Pair<Int, Pair<Float, String>>>>()
             val reader = OfflineDocumentReader(context)
+            val stagingBookId = "__stage__${UUID.randomUUID()}"
+            var stageCreated = false
             try {
                 require(File(book.localPath).isFile) { "The original PDF is missing from local storage." }
-                database.bookDao().deletePassages(book.id)
+                database.bookDao().addBook(book.copy(id = stagingBookId))
+                stageCreated = true
                 val summary = try {
                     reader.readPdfPages(Uri.fromFile(File(book.localPath)), maxPdfPages = 5_000) { page, total, text ->
                         chars += text.length
@@ -92,7 +95,7 @@ fun KnowledgePoolScreen(database: AppDatabase) {
                         }
                         val chunks = knowledgeChunks(text)
                         chunks.forEachIndexed { index, chunk ->
-                            pending += BookPassageEntity(UUID.randomUUID().toString(), book.id, index, page, chunk)
+                            pending += BookPassageEntity(UUID.randomUUID().toString(), stagingBookId, index, page, chunk)
                             if (pending.size >= 250) {
                                 database.bookDao().addPassages(pending)
                                 passageCount += pending.size
@@ -115,8 +118,6 @@ fun KnowledgePoolScreen(database: AppDatabase) {
                     passageCount += pending.size
                 }
                 require(summary.extractedChars > 0) { "No readable text was extracted. Check the PDF quality or OCR language." }
-                database.bookDao().updateBookStats(book.id, summary.pageCount, summary.extractedChars)
-
                 val opening = pageSamples.sortedBy { it.first }.joinToString(System.lineSeparator()) { it.second }
                 val detectedTitle = opening.lineSequence().map { it.trim() }.firstOrNull { it.length in 5..140 && !it.contains("copyright", true) } ?: book.title
                 val author = Regex("(?im)^(?:by|author[s]?:)\\s*(.{3,100})$").find(opening)?.groupValues?.get(1)?.trim().orEmpty()
@@ -137,6 +138,11 @@ fun KnowledgePoolScreen(database: AppDatabase) {
                     (if (edition.isNotBlank()) 5 else 0) +
                     (if (summary.extractedChars.toDouble() / summary.pageCount.coerceAtLeast(1) >= 300.0) 7 else 0)
                 ).coerceIn(0, 100)
+                // Swap staged passages only after the complete PDF has been read and validated.
+                // Failed or cancelled re-analysis leaves the previous reviewed content intact.
+                database.bookDao().replacePassagesFromStage(book.id, stagingBookId)
+                stageCreated = false
+                database.bookDao().updateBookStats(book.id, summary.pageCount, summary.extractedChars)
                 val knowledgeId = database.knowledgePoolDao().forBook(book.id)?.id ?: UUID.randomUUID().toString()
                 database.knowledgePoolDao().saveBook(
                     KnowledgeBookEntity(
@@ -159,11 +165,13 @@ fun KnowledgePoolScreen(database: AppDatabase) {
                 status = "Knowledge preparation complete for ${book.title}. Review extracted metadata and approve topic candidates before generating teaching material."
             } catch (cancelled: CancellationException) {
                 withContext(NonCancellable) {
-                    runCatching { database.bookDao().deletePassages(book.id) }
-                    runCatching { database.knowledgePoolDao().deleteForBook(book.id) }
+                    if (stageCreated) runCatching { database.bookDao().deleteBook(stagingBookId) }
                 }
                 throw cancelled
             } catch (error: Exception) {
+                if (stageCreated) withContext(NonCancellable) {
+                    runCatching { database.bookDao().deleteBook(stagingBookId) }
+                }
                 status = "Analysis failed for ${book.title}: ${error.message ?: error.javaClass.simpleName}"
             } finally {
                 processingId = null

@@ -31,7 +31,7 @@ This roadmap is outcome-based. Complete and validate one usable vertical slice a
 - [x] Persist original book metadata in Room; extracted content is now created separately in Knowledge Pool.
 - [x] Preserve PDF page numbers in extracted passage records (chapter-boundary detection remains open).
 - [x] Normalize and chunk extracted text into page-aware passages.
-- [ ] Move Knowledge Pool processing to resumable WorkManager jobs with cancellation/recovery.
+- [ ] Move Knowledge Pool processing to resumable WorkManager jobs with cancellation/recovery. Current foreground processing now writes to a hidden staging book and atomically swaps passages only after successful full extraction; failed/cancelled re-analysis preserves the previous passage set and reviewed source. WorkManager persistence and resume remain open.
 - [x] Add import progress/error feedback and clean up partially imported book rows/files on failure.
 - [x] Add textbook deletion with Room cascade and local PDF file cleanup.
 - [ ] Add duplicate detection and safe reimport/replace workflow.
