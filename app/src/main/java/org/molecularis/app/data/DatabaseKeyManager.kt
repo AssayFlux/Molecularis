@@ -16,9 +16,9 @@ import javax.crypto.spec.GCMParameterSpec
  * The passphrase itself is never stored in plaintext preferences or source code.
  */
 internal object DatabaseKeyManager {
-    private const val PREFS = "astronaut_secure_database"
+    private const val PREFS = "molecularis_secure_database"
     private const val ENCRYPTED_PASSPHRASE = "wrapped_passphrase"
-    private const val KEY_ALIAS = "org.astronaut.agi.database.wrap.v1"
+    private const val KEY_ALIAS = "org.molecularis.app.database.wrap.v1"
     private const val TRANSFORMATION = "AES/GCM/NoPadding"
     private const val IV_BYTES = 12
     private const val TAG_BITS = 128
