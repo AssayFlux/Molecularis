@@ -5,7 +5,7 @@ import org.molecularis.app.ai.LiteRtRuntime
 import org.molecularis.app.features.OnnxWordPieceEmbedder
 import java.io.File
 
-/** Adapter around Astronaut's existing LiteRT-LM engine; no duplicate runtime is created per request. */
+/** Adapter around Molecularis's existing LiteRT-LM engine; no duplicate runtime is created per request. */
 class LiteRtChatAdapter(context: Context) : AiRuntimeAdapter {
     private val appContext = context.applicationContext
     private val runtime = LiteRtRuntime(appContext)
