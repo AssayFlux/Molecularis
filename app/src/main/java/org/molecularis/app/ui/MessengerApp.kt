@@ -339,13 +339,13 @@ private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LI
      NavigationBarItem(selected=section==item,onClick={section=item;moreNavigationExpanded=false},icon={Icon(icon,item.label)},label={Text(item.label,maxLines=1)})
     }
     NavigationBarItem(
-     selected=section==Section.LIBRARY||section==Section.AI_HUB||section==Section.TRAINING||section==Section.ONLINE_AI||section==Section.SETTINGS,
+     selected=section==Section.AI_HUB||section==Section.TRAINING||section==Section.ONLINE_AI||section==Section.SETTINGS,
      onClick={moreNavigationExpanded=true},
      icon={
       Box{
        Icon(Icons.Default.MoreHoriz,"More sections")
        DropdownMenu(expanded=moreNavigationExpanded,onDismissRequest={moreNavigationExpanded=false}){
-        listOf(Section.LIBRARY,Section.AI_HUB,Section.TRAINING,Section.ONLINE_AI,Section.SETTINGS).forEach{item->
+        listOf(Section.AI_HUB,Section.TRAINING,Section.ONLINE_AI,Section.SETTINGS).forEach{item->
          val icon=when(item){Section.LIBRARY->Icons.Default.MenuBook;Section.AI_HUB->Icons.Default.Hub;Section.TRAINING->Icons.Default.Tune;Section.ONLINE_AI->Icons.Default.Cloud;else->Icons.Default.Settings}
          DropdownMenuItem(text={Text(item.label)},leadingIcon={Icon(icon,null)},onClick={section=item;moreNavigationExpanded=false})
         }
@@ -361,7 +361,8 @@ private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LI
    when(section){
     Section.TEACHING->TeachingStudioScreen(db, voiceAvailable = offlineTtsVoices.isNotEmpty(), localModelAvailable = activeModelPath != null && activeModelName != null, onSpeak = { voiceController.speak(it) }, onGenerateWithLocalModel = { prompt -> runtime.generate(prompt) })
     Section.LIBRARY->BookLibraryScreen(db)
-    Section.CHATS->ChatScreen(conversations,conversationId,messages,draft,{draft=it},pendingAttachment?.second,activeModelName,runtimeMessage,loadingModel,sending,voiceListening,showTeachingStudio={showTeachingStudio=true},onOpenLibrary={section=Section.LIBRARY},onOpenModels={section=Section.MODELS},onOpenAiHub={section=Section.AI_HUB},onVoice=
+    Section.CHATS->ChatScreen(conversations,conversationId,messages,draft,{draft=it},pendingAttachment?.second,activeModelName,runtimeMessage,loadingModel,sending,voiceListening,
+     
      {if(voiceListening)voiceController.stopListening()else if(ContextCompat.checkSelfPermission(context,Manifest.permission.RECORD_AUDIO)==PackageManager.PERMISSION_GRANTED)voiceController.startListening()else microphonePermission.launch(Manifest.permission.RECORD_AUDIO)},
      {text->voiceController.speak(text)} ,
      {attachmentPicker.launch(arrayOf("*/*"))},{pendingAttachment=null},{selectedConversation=it},{id->scope.launch{
@@ -465,7 +466,7 @@ private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LI
         }catch(error:Throwable){db.chatDao().addMessage(MessageEntity(conversationId=target,body="Attachment processing failed: "+(error.message?:error.javaClass.simpleName),role="assistant",status="error"))}finally{draft="";pendingAttachment=null;sending=false}
        }
       }
-     }, onTeach=showTeachingStudio, onLibrary=onOpenLibrary, onModels=onOpenModels, onAiHub=onOpenAiHub)
+     }, onTeach={showTeachingStudio=true}, onLibrary={section=Section.LIBRARY}, onModels={section=Section.MODELS}, onAiHub={section=Section.AI_HUB})
     Section.AI_HUB->CollaborationScreen(models,collaborationPrompt,{collaborationPrompt=it},collaborationStatus,collaborating){
      val prompt=collaborationPrompt.trim()
      if(prompt.isNotBlank()&&!collaborating){
