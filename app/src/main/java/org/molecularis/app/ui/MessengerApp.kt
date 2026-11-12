@@ -354,7 +354,7 @@ private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LI
    Image(painter=painterResource(id=org.molecularis.app.R.drawable.molecularis_background),contentDescription=null,contentScale=ContentScale.Crop,modifier=Modifier.fillMaxSize().alpha(if(darkAppearance)0.035f else 0.055f))
    Column(Modifier.fillMaxSize()){
    when(section){
-    Section.TEACHING->TeachingStudioScreen()
+    Section.TEACHING->TeachingStudioScreen(db)
     Section.CHATS->ChatScreen(conversations,conversationId,messages,draft,{draft=it},pendingAttachment?.second,activeModelName,runtimeMessage,loadingModel,sending,voiceListening,
      {if(voiceListening)voiceController.stopListening()else if(ContextCompat.checkSelfPermission(context,Manifest.permission.RECORD_AUDIO)==PackageManager.PERMISSION_GRANTED)voiceController.startListening()else microphonePermission.launch(Manifest.permission.RECORD_AUDIO)},
      {text->voiceController.speak(text)} ,
