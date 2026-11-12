@@ -2,7 +2,7 @@ name: Android source checks
 
 'on':
   push:
-    branches: [main, 'feature/**', 'chore/**', 'fix/**']
+    branches: [main]
   pull_request:
     branches: [main]
   workflow_dispatch:
