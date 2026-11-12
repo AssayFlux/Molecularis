@@ -748,7 +748,7 @@ private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LI
  var historyExpanded by remember{mutableStateOf(false)}
  var actionsExpanded by remember{mutableStateOf(false)}
  val messageListState=rememberLazyListState()
- LaunchedEffect(messages.size){if(messages.isNotEmpty())messageListState.animateScrollToItem(messages.lastIndex)}
+ LaunchedEffect(selectedId,messages.size){if(messages.isNotEmpty())messageListState.animateScrollToItem(messages.lastIndex)}
  Column(Modifier.fillMaxSize().padding(horizontal=16.dp)){
   if(conversations.isNotEmpty()) Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically){
    Box(Modifier.weight(1f)){
@@ -881,7 +881,7 @@ private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LI
  onRun:()->Unit
 ){
  val available=models.filter{it.modelPath!=null}.distinctBy{it.modelPath}
- Column(Modifier.fillMaxSize().padding(16.dp),verticalArrangement=Arrangement.spacedBy(12.dp)){
+ Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp),verticalArrangement=Arrangement.spacedBy(12.dp)){
   Card(colors=CardDefaults.cardColors(containerColor=MaterialTheme.colorScheme.primaryContainer.copy(alpha=0.48f)),modifier=Modifier.fillMaxWidth()) { Column(Modifier.padding(16.dp),verticalArrangement=Arrangement.spacedBy(6.dp)) {
    Text("AI HUB",style=MaterialTheme.typography.labelMedium,color=MaterialTheme.colorScheme.primary,fontWeight=FontWeight.Bold)
    Text("Your private AI toolkit",style=MaterialTheme.typography.headlineSmall,fontWeight=FontWeight.SemiBold)
@@ -937,7 +937,7 @@ private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LI
  onStartTraining:(String,String,String,String,Int)->Unit,
  onCancelTraining:(String,String,String)->Unit
 ){
- Column(Modifier.fillMaxSize().padding(16.dp),verticalArrangement=Arrangement.spacedBy(12.dp)){
+ Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp),verticalArrangement=Arrangement.spacedBy(12.dp)){
   Text("Training data lab",style=MaterialTheme.typography.headlineSmall,fontWeight=FontWeight.SemiBold)
   Text("Import JSONL examples, validate their structure and export a cleaned dataset. Files are processed on this device.",color=Muted)
   Button(onClick=onImport,modifier=Modifier.fillMaxWidth(),enabled=!busy){Icon(Icons.Default.FileOpen,null);Spacer(Modifier.width(8.dp));Text("Import JSONL dataset")}
