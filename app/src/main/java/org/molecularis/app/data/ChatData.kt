@@ -107,6 +107,7 @@ data class KnowledgeTopicEntity(
  @Insert(onConflict=OnConflictStrategy.REPLACE) suspend fun saveTopics(topics:List<KnowledgeTopicEntity>)
  @Query("UPDATE knowledge_topics SET approved=:approved WHERE id=:id") suspend fun setTopicApproved(id:String,approved:Boolean)
  @Query("DELETE FROM knowledge_topics WHERE knowledgeBookId=:knowledgeBookId") suspend fun clearTopics(knowledgeBookId:String)
+ @Query("UPDATE knowledge_books SET reviewState=:state WHERE id=:id") suspend fun setReviewState(id:String,state:String)
  @Query("DELETE FROM knowledge_books WHERE bookId=:bookId") suspend fun deleteForBook(bookId:String)
 }
 
