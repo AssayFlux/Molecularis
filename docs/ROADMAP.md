@@ -80,7 +80,7 @@ This roadmap is outcome-based. Complete and validate one usable vertical slice a
 - [ ] Implement and validate editable PPTX export on Android.
 - [ ] Add speaker notes and slide-to-lesson segment mapping.
 
-**Current status:** the Teaching Studio can turn the current editable outline into a navigable slide preview on-device. This is a first presentation scaffold, not a finished classroom player; PDF export, PPTX export, speaker notes, automatic slide timing and diagram synchronization remain open.\n\n**Exit criteria:** a saved lesson can be presented offline and exported as a usable presentation file.
+**Current status:** the Teaching Studio can turn the current editable outline into a navigable slide preview and a progressive lesson-flow diagram. The diagram is derived only from the professor's existing outline; it does not invent biochemical pathway reactions. This is a first presentation scaffold, not a finished classroom player; PDF export, PPTX export, speaker notes, automatic slide timing and diagram synchronization remain open.\n\n**Exit criteria:** a saved lesson can be presented offline and exported as a usable presentation file.
 
 ## Phase 5 — Scientific SVG diagram engine
 
@@ -94,7 +94,7 @@ This roadmap is outcome-based. Complete and validate one usable vertical slice a
 - [ ] Add curated online image search and permitted local caching with rights metadata.
 - [ ] Link diagram steps to slide and narration segments.
 
-**Current status:** a validated diagram data model, reveal-step filtering, XML-escaped SVG renderer and unit tests are implemented. There is not yet a professor-facing diagram editor, on-screen SVG viewer, pan/zoom, reusable pathway templates or synchronization with lesson narration.\n\n**Exit criteria:** at least one pathway can be generated from structured components and revealed in sync with its explanation.
+**Current status:** a validated diagram data model, reveal-step filtering, XML-escaped SVG renderer and unit tests are implemented. Teaching Studio now displays a progressive SVG lesson-flow diagram from the editable slide outline, with step navigation. This is not yet a biochemical reaction/pathway editor; professor-authored node editing, pan/zoom, reusable pathway templates and synchronization with lesson narration remain open.\n\n**Exit criteria:** at least one pathway can be generated from structured components and revealed in sync with its explanation.
 
 ## Phase 6 — Voice lecture and synchronization
 
@@ -143,11 +143,11 @@ This roadmap is outcome-based. Complete and validate one usable vertical slice a
 
 ## Large-book import update
 
-The importer accepts PDFs up to 5,000 pages. OCR is performed sequentially and each page's chunks are written in batches of at most 250 passages, avoiding the previous design's full-book text and full-book passage lists in memory. The import is still a foreground coroutine: keep Molecularis open during import. The 25-million-character ceiling is an additional safety bound, so 5,000 pages is a maximum page count, not a guarantee that every PDF of that size will fit every device. A 5,000-page real-world stress test is still required on representative Android hardware.
+The importer accepts PDFs up to 5,000 pages. OCR is performed sequentially and each page's chunks are written in batches of at most 250 passages, avoiding the previous design's full-book text and full-book passage lists in memory. Partial database rows and copied files are cleaned up on failure and cancellation. The import is still a foreground coroutine: keep Molecularis open during import. The 25-million-character ceiling is an additional safety bound, so 5,000 pages is a maximum page count, not a guarantee that every PDF of that size will fit every device. A 5,000-page real-world stress test is still required on representative Android hardware.
 
 ## First milestone status
 
-The first vertical slice is implemented in the repository: **import one PDF → extract page text with on-device OCR → search local passages → prepare and edit a structured lesson outline → preview outline-derived slides → save and reopen the lesson → read the outline aloud with Android TTS.** The earlier baseline commit passed unit tests, lint and debug APK assembly. The slide-preview and per-slide narration commits have new CI runs in progress; do not treat those commits as verified until their workflows finish. A physical-device/offline acceptance test has not yet been performed. This remains a foundation; it is not yet an AI-generated lecture or a synchronized slide-and-voice presentation.
+The first vertical slice is implemented in the repository: **import one PDF → extract page text with on-device OCR → search local passages → prepare and edit a structured lesson outline → preview outline-derived slides → save and reopen the lesson → read the outline aloud with Android TTS.** The earlier baseline commit passed unit tests, lint and debug APK assembly. The 5,000-page importer, progressive lesson diagram and cancellation-safe cleanup commits have CI runs queued or in progress; do not treat those commits as verified until their workflows finish. A physical-device/offline acceptance test has not yet been performed. This remains a foundation; it is not yet an AI-generated lecture or a synchronized slide-and-voice presentation.
 
 ## Delivery discipline
 
