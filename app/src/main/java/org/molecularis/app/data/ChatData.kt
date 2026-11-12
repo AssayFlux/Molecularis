@@ -83,11 +83,12 @@ data class BookPassageEntity(
  @Query("SELECT * FROM book_passages WHERE text LIKE '%' || :query || '%' ORDER BY bookId,pageNumber LIMIT 100") suspend fun searchAll(query:String):List<BookPassageEntity>
  @Query("DELETE FROM books WHERE id=:bookId") suspend fun deleteBook(bookId:String)
 }
-@Database(entities=[ConversationEntity::class,MessageEntity::class,LocalModelEntity::class,WorkspaceProjectEntity::class,KnowledgeChunkEntity::class,BookEntity::class,BookPassageEntity::class],version=7,exportSchema=false)
+@Database(entities=[ConversationEntity::class,MessageEntity::class,LocalModelEntity::class,WorkspaceProjectEntity::class,KnowledgeChunkEntity::class,BookEntity::class,BookPassageEntity::class,SavedLessonEntity::class],version=8,exportSchema=false)
 abstract class AppDatabase:RoomDatabase(){
  abstract fun chatDao():ChatDao
  abstract fun modelDao():ModelDao
  abstract fun workspaceDao():WorkspaceDao
  abstract fun knowledgeDao():KnowledgeDao
  abstract fun bookDao():BookDao
+ abstract fun lessonDao():LessonDao
 }
