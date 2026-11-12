@@ -46,7 +46,7 @@ The Android application now starts from the reusable Astronaut Kotlin/Compose fo
 8. **Autonomous teaching:** schedule, preflight and play prepared lectures.
 9. **Release quality:** scientific review, device testing, privacy and performance.
 
-The first milestone is deliberately small: **import one PDF, extract it, search a topic and save a structured teaching outline.**
+The first vertical slice is implemented in code: **import a PDF, extract page text on-device, search passages, prepare and edit a structured teaching outline, save and reopen it, and read it aloud using an installed offline Android voice.** CI and physical-device acceptance are still pending.
 
 ## Project documentation
 
@@ -67,4 +67,4 @@ Import only books and materials you are authorized to store and process. Images 
 
 ## Current status
 
-An initial Android application foundation has been added from Astronaut and rebranded for Molecularis. The inherited Compose interface, offline AI and retrieval components, Room persistence, document and voice components are present. A first Teaching Studio screen can generate and save a local lesson outline. Automated build verification is in progress; book-library ingestion, source-grounded lesson generation, slide authoring, synchronized SVG diagrams and autonomous voice teaching are not complete yet.
+An Android application foundation has been added from Astronaut and rebranded for Molecularis. The inherited Compose interface, Room persistence, local retrieval, model-management and voice components are present. The first textbook library supports PDF import, on-device OCR, page-aware local passage search and deletion. The Teaching Studio prepares an editable level-aware outline with retrieved passages, saves/reopens it locally and can read it aloud using an installed offline Android TTS voice. This is a teaching scaffold, not yet a scientific AI lesson generator. CI build verification and physical-device acceptance are pending. Slide authoring, synchronized SVG diagrams, robust background imports and autonomous scheduled teaching are still to be built.
