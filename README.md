@@ -32,7 +32,7 @@ The professor selects the topic, student level and duration. Molecularis organiz
 - Voice and playback: Android media/TTS adapters, with offline readiness checks.
 - Visuals: structured scientific diagrams rendered as safe SVG.
 
-The architecture is intentionally modular, but implementation will begin with a small, buildable Android app and grow through tested vertical slices.
+The Android application now starts from the reusable Astronaut Kotlin/Compose foundation, including its interface, local data layer, offline AI adapters, knowledge retrieval, model management and voice components. These are being adapted into a biochemistry teaching workspace; not every imported capability is yet verified or complete.
 
 ## Roadmap
 
@@ -50,7 +50,8 @@ The first milestone is deliberately small: **import one PDF, extract it, search 
 
 ## Project documentation
 
-- [Product vision and North Star](docs/PRODUCT_VISION.md)
+- [North Star — product destination and principles](docs/NORTH_STAR.md)
+- [Product vision and requirements](docs/PRODUCT_VISION.md)
 - [Development roadmap](docs/ROADMAP.md)
 - [Proposed architecture](docs/ARCHITECTURE.md)
 
