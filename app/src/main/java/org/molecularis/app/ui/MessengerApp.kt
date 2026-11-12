@@ -82,7 +82,7 @@ private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LI
  val db= remember{DatabaseProvider.get(context)}
  val runtime= remember{LiteRtRuntime(context)}
  val scope= rememberCoroutineScope()
- var section by remember{mutableStateOf(Section.CHATS)}
+ var section by remember{mutableStateOf(Section.TEACHING)}
  var moreNavigationExpanded by remember{mutableStateOf(false)}
  var selectedConversation by remember{mutableStateOf<Long?>(null)}
  var draft by remember{mutableStateOf("")}
@@ -355,6 +355,7 @@ private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LI
    Column(Modifier.fillMaxSize()){
    when(section){
     Section.TEACHING->TeachingStudioScreen(db)
+    Section.LIBRARY->LibraryScreen(db)
     Section.CHATS->ChatScreen(conversations,conversationId,messages,draft,{draft=it},pendingAttachment?.second,activeModelName,runtimeMessage,loadingModel,sending,voiceListening,
      {if(voiceListening)voiceController.stopListening()else if(ContextCompat.checkSelfPermission(context,Manifest.permission.RECORD_AUDIO)==PackageManager.PERMISSION_GRANTED)voiceController.startListening()else microphonePermission.launch(Manifest.permission.RECORD_AUDIO)},
      {text->voiceController.speak(text)} ,
