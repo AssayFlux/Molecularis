@@ -53,6 +53,7 @@ The first vertical slice is implemented in code: **import a PDF, extract page te
 - [North Star — product destination and principles](docs/NORTH_STAR.md)
 - [Product vision and requirements](docs/PRODUCT_VISION.md)
 - [Development roadmap](docs/ROADMAP.md)
+- [Android build and installation guide](docs/BUILD_AND_INSTALL.md)
 - [Proposed architecture](docs/ARCHITECTURE.md)
 - [Astronaut code and UI reuse record](docs/ASTRONAUT_REUSE.md)
 - [Third-party notices](THIRD_PARTY_NOTICES.md)
