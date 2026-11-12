@@ -1103,7 +1103,7 @@ private suspend fun readDatasetBounded(context:Context,uri:Uri):String = withCon
        securityPrefs.edit().putBoolean("biometric_lock_enabled",false).apply()
        biometricStatus="App lock disabled."
       }else{
-       val authenticators=BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL
+       val authenticators=if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.R) BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL else BiometricManager.Authenticators.BIOMETRIC_STRONG
        val availability=BiometricManager.from(context).canAuthenticate(authenticators)
        val activity=context as? FragmentActivity
        if(availability!=BiometricManager.BIOMETRIC_SUCCESS||activity==null){
@@ -1118,7 +1118,7 @@ private suspend fun readDatasetBounded(context:Context,uri:Uri):String = withCon
          override fun onAuthenticationError(errorCode:Int,errString:CharSequence){biometricStatus="Could not enable app lock: "+errString}
          override fun onAuthenticationFailed(){biometricStatus="Biometric not recognized. Try again to enable the lock."}
         })
-        prompt.authenticate(BiometricPrompt.PromptInfo.Builder().setTitle("Enable Molecularis app lock").setSubtitle("Confirm your fingerprint or secure device credential").setAllowedAuthenticators(authenticators).build())
+        prompt.authenticate(BiometricPrompt.PromptInfo.Builder().setTitle("Enable Molecularis app lock").setSubtitle(if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.R)"Confirm your fingerprint or secure device credential" else "Confirm your fingerprint").setAllowedAuthenticators(authenticators).build())
        }
       }
      })
