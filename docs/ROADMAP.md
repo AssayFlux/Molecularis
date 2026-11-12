@@ -71,11 +71,13 @@ This roadmap is outcome-based. Complete and validate one usable vertical slice a
 - [x] Convert numbered lesson-outline sections into an initial local slide model (simple outline-derived preview; rich editable slide authoring remains open).
 - [ ] Build slide themes, layouts and readable typography.
 - [x] Add an in-app slide preview with previous/next navigation (full-screen presenter mode, timing and richer controls remain open).
+- [x] Add per-slide offline TTS playback (manual slide-by-slide narration; automatic timeline synchronization remains open).
+- [x] Extract deterministic slide conversion into a testable component with unit tests.
 - [ ] Add PDF export as the first dependable offline export.
 - [ ] Implement and validate editable PPTX export on Android.
 - [ ] Add speaker notes and slide-to-lesson segment mapping.
 
-**Current status:** the Teaching Studio can turn the current editable outline into a navigable slide preview on-device. This is a first presentation scaffold, not a finished classroom player; PDF export, PPTX export, speaker notes and slide-to-narration synchronization remain open.\n\n**Exit criteria:** a saved lesson can be presented offline and exported as a usable presentation file.
+**Current status:** the Teaching Studio can turn the current editable outline into a navigable slide preview on-device. This is a first presentation scaffold, not a finished classroom player; PDF export, PPTX export, speaker notes, automatic slide timing and diagram synchronization remain open.\n\n**Exit criteria:** a saved lesson can be presented offline and exported as a usable presentation file.
 
 ## Phase 5 — Scientific SVG diagram engine
 
@@ -103,7 +105,7 @@ This roadmap is outcome-based. Complete and validate one usable vertical slice a
 - [ ] Add audio focus, interruption handling and headset/Bluetooth tests.
 - [ ] Add optional local speech engine only after device and license evaluation.
 
-**Current status:** the Teaching Studio can read its current outline aloud using an installed Android offline TTS voice, splitting long scripts into queued chunks. There are not yet slide or diagram synchronization controls.
+**Current status:** the Teaching Studio can read its current outline aloud using an installed Android offline TTS voice, splitting long scripts into queued chunks. A presenter can manually request offline TTS for the current slide. Automatic narration timelines, pause/resume/seek, and diagram synchronization remain open.
 
 **Exit criteria:** a prepared lesson plays with understandable voice, slides and diagram steps synchronized, including offline operation on a validated device/voice pack.
 
@@ -138,7 +140,7 @@ This roadmap is outcome-based. Complete and validate one usable vertical slice a
 
 ## First milestone status
 
-The first vertical slice is implemented in the repository: **import one PDF → extract page text with on-device OCR → search local passages → prepare and edit a structured lesson outline → preview outline-derived slides → save and reopen the lesson → read the outline aloud with Android TTS.** The latest CI run has passed unit tests, lint and debug APK assembly. A physical-device/offline acceptance test has not yet been performed. This remains a foundation; it is not yet an AI-generated lecture or a synchronized slide-and-voice presentation.
+The first vertical slice is implemented in the repository: **import one PDF → extract page text with on-device OCR → search local passages → prepare and edit a structured lesson outline → preview outline-derived slides → save and reopen the lesson → read the outline aloud with Android TTS.** The earlier baseline commit passed unit tests, lint and debug APK assembly. The slide-preview and per-slide narration commits have new CI runs in progress; do not treat those commits as verified until their workflows finish. A physical-device/offline acceptance test has not yet been performed. This remains a foundation; it is not yet an AI-generated lecture or a synchronized slide-and-voice presentation.
 
 ## Delivery discipline
 
