@@ -6,10 +6,14 @@ This roadmap is outcome-based. Complete and validate one usable vertical slice a
 
 **Goal:** agree on scope and create a reliable Android project foundation.
 
-- [ ] Confirm minimum Android version and target device range.
+- [x] Set Android minSdk 26 and targetSdk 35 (confirm supported device range through physical-device testing).
 - [x] Inspect reusable Astronaut components and record license/dependency decisions.
 - [x] Create Kotlin + Jetpack Compose Android project and Gradle wrapper.
 - [x] Establish package structure, navigation shell, theme and settings.
+- [x] Organize settings into separate appearance, chat/AI, speech/voice, privacy and account/security cards.
+- [x] Add font-family, colour palette, dark appearance and custom background-image preferences.
+- [x] Add fingerprint/strong-biometric app lock with device credential fallback where supported.
+- [ ] Configure a real account authentication provider and backend; local-only mode must remain usable without sign-in.
 - [x] Add Room database, migrations and local repositories (automated migration coverage remains to be expanded).
 - [x] Add GitHub Actions Android unit-test and lint workflow.
 - [x] Document local build and install instructions in [BUILD_AND_INSTALL.md](BUILD_AND_INSTALL.md).
@@ -20,19 +24,19 @@ This roadmap is outcome-based. Complete and validate one usable vertical slice a
 
 **Goal:** import a book and make its content usable offline.
 
-- [x] Add SAF-based document picker and library screen.
+- [x] Add SAF-based document picker and Library screen that preserves the original PDF before processing.
 - [x] Add PDF page extraction through Android PDF rendering and on-device OCR; EPUB/DOCX remain deferred.
 - [x] Add on-device OCR for PDF pages (currently used for all pages; direct text-layer extraction is a future improvement).
 - [x] Raise the per-book PDF limit to 5,000 pages and stream OCR page-by-page into bounded Room batches.
-- [x] Persist book metadata and extracted passages in Room.
+- [x] Persist original book metadata in Room; extracted content is now created separately in Knowledge Pool.
 - [x] Preserve PDF page numbers in extracted passage records (chapter-boundary detection remains open).
 - [x] Normalize and chunk extracted text into page-aware passages.
-- [ ] Move large imports to resumable WorkManager processing with cancellation/recovery.
+- [ ] Move Knowledge Pool processing to resumable WorkManager jobs with cancellation/recovery.
 - [x] Add import progress/error feedback and clean up partially imported book rows/files on failure.
 - [x] Add textbook deletion with Room cascade and local PDF file cleanup.
 - [ ] Add duplicate detection and safe reimport/replace workflow.
 
-**Current status:** the first SAF PDF import, on-device OCR, page-aware passage storage, local keyword search, book selection and textbook deletion are implemented. The importer is foreground-only and currently limited to 500 pages and 5 million extracted characters; resumable WorkManager processing, progress reporting and direct PDF text-layer extraction remain open.
+**Current status:** Library stores the selected original PDF unchanged. Knowledge Pool now performs on-device page OCR after the professor explicitly starts processing, writes passages in bounded batches, detects conservative bibliographic metadata and possible chapter/topic headings, calculates a heuristic readiness score, and provides professor review/approval. The current 5,000-page and 25-million-character limits apply. Processing is foreground-only; resumable WorkManager processing, safe staged re-analysis, duplicate detection, progress recovery and direct PDF text-layer extraction remain open.
 
 **Exit criteria:** a professor can import a permitted PDF, inspect extraction status and retrieve its extracted text while offline.
 
@@ -40,16 +44,20 @@ This roadmap is outcome-based. Complete and validate one usable vertical slice a
 
 **Goal:** turn book content into a browsable biochemistry knowledge library.
 
-- [ ] Detect headings, chapters and likely topic/subtopic labels.
+- [x] Add a first-pass detector for chapter/unit/part headings and likely section headings (heuristic; OCR errors and false positives need review).
 - [ ] Build a topic tree with aliases and duplicate-topic merging.
-- [ ] Add professor review/edit tools for topic assignments.
+- [x] Add professor review controls for detected source metadata and topic candidates (full topic editing, merging and hierarchy remain open).
 - [ ] Upgrade current Room keyword search to SQLite FTS5 with filters (current search is basic local keyword matching).
-- [x] Retrieve page-labelled passages from imported books in offline chat prompts (simple lexical matching; source verification remains essential).
+- [ ] Add duplicate-topic detection, aliasing, hierarchy editing and merge tools.
+- [ ] Add a provenance-aware quality audit: OCR confidence, page coverage, duplicate passages, missing pages, heading confidence and metadata confidence.
+- [ ] Prepare professor-curated, source-cited training/evaluation datasets with validation and holdout splits; never auto-train on raw OCR.
+- [ ] Keep fine-tuning optional and explicit; verify training service security, dataset rights and evaluation before model use.
+- [x] Retrieve page-labelled passages from professor-reviewed Knowledge Pool sources in offline chat prompts (simple lexical matching; source verification remains essential).
 - [ ] Link topic pages to relevant content chunks and page locations.
 - [ ] Add optional local embeddings only after runtime and device tests.
 - [ ] Add a small curated biochemistry topic taxonomy as a starter, not as a replacement for the professor's books.
 
-**Exit criteria:** topic search returns relevant passages from imported material and the professor can correct the organization.
+**Exit criteria:** topic search returns relevant passages from Knowledge Pool sources and the professor can correct the organization.
 
 ## Phase 3 — Teaching flow engine
 
@@ -63,8 +71,9 @@ This roadmap is outcome-based. Complete and validate one usable vertical slice a
 - [x] Reuse the optional external AI provider settings and encrypted API-key storage for chat; Teaching Studio's source-grounded draft currently uses the local model only.
 - [x] Add outline editing, local save, reopen and delete (regeneration and duplication remain open).
 - [ ] Test with professor-reviewed sample topics and different audience levels.
+- [ ] Add source-level quality thresholds and refuse low-confidence/unreviewed knowledge for teaching generation.
 
-**Current status:** imported textbook passages can now be retrieved into offline chat prompts with book, page and passage labels; retrieval is simple lexical matching rather than semantic textbook search. The Teaching Studio offers two paths: a deterministic editable outline and an optional draft generated by the installed LiteRT-LM model. The generation prompt includes retrieved textbook excerpts, requests level-appropriate explanation and asks the model not to invent references. Source excerpts are retained alongside the generated draft. Model quality and factual grounding are not guaranteed; professor review against the original books is mandatory. No local model is bundled with the app.
+**Current status:** imported textbook passages can be retrieved into offline chat and Teaching Studio only after their source has been reviewed in Knowledge Pool. Retrieval is simple lexical matching rather than semantic textbook search. The Teaching Studio offers two paths: a deterministic editable outline and an optional draft generated by the installed LiteRT-LM model. The generation prompt includes retrieved textbook excerpts, requests level-appropriate explanation and asks the model not to invent references. Source excerpts are retained alongside the generated draft. Model quality and factual grounding are not guaranteed; professor review against the original books is mandatory. No local model is bundled with the app.
 
 **Exit criteria:** a topic plus audience level produces an editable, coherent teaching flow grounded in the imported library. No API key is required for the local/search-based experience.
 
