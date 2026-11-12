@@ -39,9 +39,19 @@ fun KnowledgePoolScreen(database: AppDatabase) {
     var processingId by remember { mutableStateOf<String?>(null) }
     var selected by remember { mutableStateOf<KnowledgeBookEntity?>(null) }
     var topics by remember { mutableStateOf(emptyList<KnowledgeTopicEntity>()) }
+    var titleDraft by remember { mutableStateOf("") }
+    var authorDraft by remember { mutableStateOf("") }
+    var publisherDraft by remember { mutableStateOf("") }
+    var editionDraft by remember { mutableStateOf("") }
+    var subjectDraft by remember { mutableStateOf("") }
 
     LaunchedEffect(selected?.id) {
         topics = selected?.let { database.knowledgePoolDao().topics(it.id) }.orEmpty()
+        titleDraft = selected?.detectedTitle.orEmpty()
+        authorDraft = selected?.author.orEmpty()
+        publisherDraft = selected?.publisher.orEmpty()
+        editionDraft = selected?.edition.orEmpty()
+        subjectDraft = selected?.subject.orEmpty()
     }
 
     fun processBook(book: BookEntity) {
@@ -151,10 +161,20 @@ fun KnowledgePoolScreen(database: AppDatabase) {
             TextButton(onClick = { selected = null }) { Text("← All knowledge sources") }
             Card(Modifier.fillMaxWidth()) {
                 Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text(selected!!.detectedTitle, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold)
-                    Text(listOf(selected!!.author, selected!!.edition, selected!!.publisher).filter { it.isNotBlank() }.joinToString(" · ").ifBlank { "Bibliographic details need review" }, style = MaterialTheme.typography.bodySmall)
-                    Text("Subject: ${selected!!.subject}", style = MaterialTheme.typography.bodySmall)
-                    Text("Quality readiness: ${selected!!.qualityScore}/100 · ${selected!!.reviewState.replace('_', ' ')}", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary)
+                    Text("Extracted book details · edit before approval", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                    OutlinedTextField(titleDraft, { titleDraft = it }, modifier = Modifier.fillMaxWidth(), label = { Text("Book title") }, singleLine = true)
+                    OutlinedTextField(authorDraft, { authorDraft = it }, modifier = Modifier.fillMaxWidth(), label = { Text("Author") }, singleLine = true)
+                    OutlinedTextField(publisherDraft, { publisherDraft = it }, modifier = Modifier.fillMaxWidth(), label = { Text("Publisher") }, singleLine = true)
+                    OutlinedTextField(editionDraft, { editionDraft = it }, modifier = Modifier.fillMaxWidth(), label = { Text("Edition") }, singleLine = true)
+                    OutlinedTextField(subjectDraft, { subjectDraft = it }, modifier = Modifier.fillMaxWidth(), label = { Text("Subject / discipline") }, singleLine = true)
+                    OutlinedButton(onClick = {
+                        scope.launch {
+                            database.knowledgePoolDao().updateMetadata(selected!!.id, titleDraft.trim(), authorDraft.trim(), publisherDraft.trim(), editionDraft.trim(), subjectDraft.trim())
+                            selected = selected!!.copy(detectedTitle = titleDraft.trim(), author = authorDraft.trim(), publisher = publisherDraft.trim(), edition = editionDraft.trim(), subject = subjectDraft.trim(), reviewState = "needs_review")
+                            status = "Book metadata saved. Review and approve the source when it is accurate."
+                        }
+                    }, modifier = Modifier.fillMaxWidth(), enabled = titleDraft.isNotBlank()) { Text("Save book details") }
+                    Text("Extraction readiness: " + selected!!.qualityScore + "/100 · " + selected!!.reviewState.replace('_', ' '), style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary)
                     Text(selected!!.summary, style = MaterialTheme.typography.bodySmall)
                     Button(
                         onClick = {
