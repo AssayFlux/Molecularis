@@ -7,11 +7,11 @@ This roadmap is outcome-based. Complete and validate one usable vertical slice a
 **Goal:** agree on scope and create a reliable Android project foundation.
 
 - [ ] Confirm minimum Android version and target device range.
-- [ ] Inspect reusable Astronaut components and record license/dependency decisions.
-- [ ] Create Kotlin + Jetpack Compose Android project and Gradle wrapper.
-- [ ] Establish package structure, navigation shell, theme and settings.
-- [ ] Add Room database, migrations and repository tests.
-- [ ] Add GitHub Actions build and unit-test workflow.
+- [x] Inspect reusable Astronaut components and record license/dependency decisions.
+- [x] Create Kotlin + Jetpack Compose Android project and Gradle wrapper.
+- [x] Establish package structure, navigation shell, theme and settings.
+- [x] Add Room database, migrations and local repositories (automated migration coverage remains to be expanded).
+- [x] Add GitHub Actions Android unit-test and lint workflow.
 - [ ] Document local build and install instructions.
 
 **Exit criteria:** clean debug APK build, app launches on a physical Android device, database initializes and CI runs.
@@ -20,14 +20,16 @@ This roadmap is outcome-based. Complete and validate one usable vertical slice a
 
 **Goal:** import a book and make its content usable offline.
 
-- [ ] Add SAF-based document picker and library screen.
-- [ ] Support PDF text extraction first; add EPUB/DOCX only after library and licensing review.
-- [ ] Detect scanned PDFs and add on-device OCR as a separate processing path.
-- [ ] Persist book/document metadata and processing state in Room.
-- [ ] Preserve page numbers and chapter boundaries where available.
-- [ ] Clean and chunk extracted text without losing scientific notation.
+- [x] Add SAF-based document picker and library screen.
+- [x] Add PDF page extraction through Android PDF rendering and on-device OCR; EPUB/DOCX remain deferred.
+- [x] Add on-device OCR for PDF pages (currently used for all pages; direct text-layer extraction is a future improvement).
+- [x] Persist book metadata and extracted passages in Room.
+- [x] Preserve PDF page numbers in extracted passage records (chapter-boundary detection remains open).
+- [x] Normalize and chunk extracted text into page-aware passages.
 - [ ] Add resumable background processing and progress/error UI.
 - [ ] Add delete/reimport behavior and derived-data cleanup.
+
+**Current status:** first SAF import, PDF OCR, page-aware passage storage, local keyword search and textbook deletion are implemented. Large imports are currently limited to 250 PDF pages and run in the foreground; resumable WorkManager processing and richer PDF text-layer extraction remain open.
 
 **Exit criteria:** a professor can import a permitted PDF, inspect extraction status and retrieve its extracted text while offline.
 
