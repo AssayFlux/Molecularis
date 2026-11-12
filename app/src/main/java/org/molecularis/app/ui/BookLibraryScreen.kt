@@ -65,12 +65,12 @@ fun BookLibraryScreen(database: AppDatabase) {
                     }
                     val reader = OfflineDocumentReader(context)
                     val extracted = try {
-                        reader.read(uri, "application/pdf", maxPdfPages = 500, displayName = name)
+                        reader.read(uri, "application/pdf", maxPdfPages = 5_000, displayName = name)
                     } finally {
                         reader.close()
                     }
                     require(extracted.isNotBlank()) { "No readable text was extracted from this PDF." }
-                    require(extracted.length <= 5_000_000) { "This import is too large for the first library release (5 million extracted characters)." }
+                    require(extracted.length <= 25_000_000) { "This import is too large for the first library release (25 million extracted characters)." }
                     val pageBlocks = splitPages(extracted)
                     require(pageBlocks.isNotEmpty()) { "No readable pages were found." }
                     val book = BookEntity(
