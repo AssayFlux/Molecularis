@@ -219,6 +219,7 @@ class OfflineVoiceController(
         onListeningChanged(false)
     }
 
+    /** Speaks long teaching scripts in bounded chunks without truncating at the platform limit. */
     fun speak(text: String) {
         if (closed || text.isBlank()) return
         val engine = textToSpeech ?: run {
@@ -230,7 +231,33 @@ class OfflineVoiceController(
             return
         }
         engine.voice = voice
-        engine.speak(text, TextToSpeech.QUEUE_FLUSH, null, "astronaut-offline-speech")
+        val chunks = splitSpeech(text, 2800)
+        chunks.forEachIndexed { index, chunk ->
+            engine.speak(
+                chunk,
+                if (index == 0) TextToSpeech.QUEUE_FLUSH else TextToSpeech.QUEUE_ADD,
+                null,
+                "molecularis-lesson-speech-$index"
+            )
+        }
+    }
+
+    private fun splitSpeech(text: String, maxChars: Int): List<String> {
+        val remaining = text.trim()
+        if (remaining.length <= maxChars) return listOf(remaining)
+        val result = mutableListOf<String>()
+        var start = 0
+        while (start < remaining.length) {
+            var end = (start + maxChars).coerceAtMost(remaining.length)
+            if (end < remaining.length) {
+                val boundary = remaining.lastIndexOfAny(charArrayOf('.', '!', '?', '\\n', ' '), end)
+                if (boundary > start + maxChars / 2) end = boundary + 1
+            }
+            result += remaining.substring(start, end).trim()
+            start = end
+            while (start < remaining.length && remaining[start].isWhitespace()) start++
+        }
+        return result.filter(String::isNotBlank)
     }
 
     @TargetApi(Build.VERSION_CODES.S)
