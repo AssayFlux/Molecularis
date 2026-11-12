@@ -83,15 +83,15 @@ This roadmap is outcome-based. Complete and validate one usable vertical slice a
 
 **Goal:** explain biochemical mechanisms visually, step by step.
 
-- [ ] Define structured diagram schema for nodes, labels, arrows, compartments and reactions.
-- [ ] Build a safe SVG generator from those components.
+- [x] Define an initial structured diagram schema for nodes, labels, connections and reveal steps (compartments and reaction-specific semantics remain open).
+- [x] Build a safe SVG generator from supported primitives with XML-escaped labels and bounded inputs.
 - [ ] Build SVG rendering, zoom and pan.
 - [ ] Add ordered reveal steps and animation timing.
 - [ ] Create first reusable templates: metabolic pathway, reaction mechanism, feedback regulation and molecular interaction.
 - [ ] Add curated online image search and permitted local caching with rights metadata.
 - [ ] Link diagram steps to slide and narration segments.
 
-**Exit criteria:** at least one pathway can be generated from structured components and revealed in sync with its explanation.
+**Current status:** a validated diagram data model, reveal-step filtering, XML-escaped SVG renderer and unit tests are implemented. There is not yet a professor-facing diagram editor, on-screen SVG viewer, pan/zoom, reusable pathway templates or synchronization with lesson narration.\n\n**Exit criteria:** at least one pathway can be generated from structured components and revealed in sync with its explanation.
 
 ## Phase 6 — Voice lecture and synchronization
 
@@ -101,7 +101,7 @@ This roadmap is outcome-based. Complete and validate one usable vertical slice a
 - [x] Reuse Android local-voice readiness checks and add long-script narration to the Teaching Studio (device voice-pack validation remains open).
 - [ ] Add narration pacing, pauses, pronunciation dictionary and emphasis controls.
 - [ ] Synchronize narration with slide changes and SVG reveal events.
-- [ ] Add play, pause, resume, seek and stop controls.
+- [x] Add manual per-slide narration using the installed Android TTS voice.\n- [ ] Add play, pause, resume, seek and stop controls.
 - [ ] Add audio focus, interruption handling and headset/Bluetooth tests.
 - [ ] Add optional local speech engine only after device and license evaluation.
 
