@@ -26,12 +26,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.molecularis.app.data.AppDatabase
 import org.molecularis.app.data.BookEntity
-import org.molecularis.app.data.BookPassageEntity
-import org.molecularis.app.features.OfflineDocumentReader
 import java.io.File
 import java.util.UUID
 
-private const val MAX_BOOK_EXTRACTED_CHARS = 25_000_000
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,7 +40,6 @@ fun BookLibraryScreen(database: AppDatabase) {
     var importing by remember { mutableStateOf(false) }
     var status by remember { mutableStateOf("") }
     var selectedBook by remember { mutableStateOf<BookEntity?>(null) }
-    var passages by remember { mutableStateOf(emptyList<BookPassageEntity>()) }
     var results by remember { mutableStateOf(emptyList<BookPassageEntity>()) }
 
     val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
@@ -77,38 +73,8 @@ fun BookLibraryScreen(database: AppDatabase) {
                         extractedChars = 0
                     )
                     database.bookDao().addBook(book)
-                    var passageCount = 0
-                    var pendingRows = mutableListOf<BookPassageEntity>()
-                    val reader = OfflineDocumentReader(context)
-                    val summary = try {
-                        reader.readPdfPages(uri, maxPdfPages = 5_000) { pageNumber, totalPages, pageText ->
-                            val nextChars = importedChars + pageText.length
-                            require(nextChars <= MAX_BOOK_EXTRACTED_CHARS) {
-                                "This book exceeds the 25 million extracted-character safety limit."
-                            }
-                            importedChars = nextChars
-                            splitChunks(pageText).forEachIndexed { chunkIndex, chunk ->
-                                pendingRows += BookPassageEntity(UUID.randomUUID().toString(), id, chunkIndex, pageNumber, chunk)
-                                if (pendingRows.size >= 250) {
-                                    database.bookDao().addPassages(pendingRows)
-                                    passageCount += pendingRows.size
-                                    pendingRows = mutableListOf()
-                                }
-                            }
-                            if (pageNumber % 25 == 0 || pageNumber == totalPages) {
-                                status = "Reading page " + pageNumber + " of " + totalPages + " · " + passageCount + " passages indexed"
-                            }
-                        }
-                    } finally {
-                        reader.close()
-                    }
-                    if (pendingRows.isNotEmpty()) {
-                        database.bookDao().addPassages(pendingRows)
-                        passageCount += pendingRows.size
-                    }
-                    require(summary.extractedChars > 0) { "No readable text was extracted from this PDF." }
-                    database.bookDao().updateBookStats(id, summary.pageCount, summary.extractedChars)
-                    status = "Imported " + book.title + ": " + summary.pageCount + " pages and " + passageCount + " searchable passages. The original PDF is stored on this device."
+                    status = "Added ${book.title} to Library. The original PDF is preserved unchanged. Open Knowledge Pool when you are ready to extract, analyse and organize its content."
+
                 } catch (error: CancellationException) {
                     withContext(NonCancellable) {
                         runCatching { database.bookDao().deleteBook(id) }
@@ -128,9 +94,6 @@ fun BookLibraryScreen(database: AppDatabase) {
         }
     }
 
-    LaunchedEffect(selectedBook?.id) {
-        passages = selectedBook?.let { database.bookDao().passages(it.id) }.orEmpty()
-    }
     LaunchedEffect(query, selectedBook?.id) {
         val clean = query.trim()
         results = if (clean.length < 2) emptyList()
@@ -140,11 +103,11 @@ fun BookLibraryScreen(database: AppDatabase) {
 
     Column(Modifier.fillMaxSize().padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Text("Textbook library", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
-        Text("Keep your teaching books on-device. Molecularis extracts page-labelled text and indexes passages for local topic search.", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text("Library is your source shelf. Add original books here first; extraction, quality analysis and topic organization happen separately in Knowledge Pool.", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
         Button(onClick = { picker.launch(arrayOf("application/pdf")) }, enabled = !importing, modifier = Modifier.fillMaxWidth()) {
             Icon(Icons.Default.UploadFile, contentDescription = null)
             Spacer(Modifier.width(8.dp))
-            Text(if (importing) "Importing PDF…" else "Import a PDF textbook")
+            Text(if (importing) "Saving PDF…" else "Add original PDF")
         }
         if (importing) LinearProgressIndicator(Modifier.fillMaxWidth())
         if (status.isNotBlank()) Text(status, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
@@ -152,7 +115,7 @@ fun BookLibraryScreen(database: AppDatabase) {
             value = query,
             onValueChange = { query = it },
             modifier = Modifier.fillMaxWidth(),
-            label = { Text(if (selectedBook == null) "Search all imported books" else "Search this book") },
+            label = { Text("Search extracted Library text") },
             leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
             singleLine = true
         )
@@ -176,15 +139,10 @@ fun BookLibraryScreen(database: AppDatabase) {
                 }
             }
         } else if (selectedBook != null) {
-            Text(passages.size.toString() + " indexed passages", style = MaterialTheme.typography.titleSmall)
-            LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                items(passages, key = { it.id }) { passage ->
-                    Card(Modifier.fillMaxWidth()) {
-                        Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
-                            Text("Page " + passage.pageNumber, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
-                            Text(passage.text, style = MaterialTheme.typography.bodyMedium)
-                        }
-                    }
+            Card(Modifier.fillMaxWidth()) {
+                Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Text(selectedBook!!.title, fontWeight = FontWeight.SemiBold)
+                    Text("This is the preserved source document. Open Knowledge Pool to extract text, detect metadata and propose chapter/topic structure.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
         } else if (books.isEmpty()) {
@@ -204,7 +162,7 @@ fun BookLibraryScreen(database: AppDatabase) {
                             Spacer(Modifier.width(12.dp))
                             Column(Modifier.weight(1f)) {
                                 Text(book.title, fontWeight = FontWeight.SemiBold)
-                                Text(book.pageCount.toString() + " pages · " + book.extractedChars + " extracted characters", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                Text(if (book.pageCount == 0) "Original PDF stored · not yet processed" else book.pageCount.toString() + " pages · " + book.extractedChars + " extracted characters", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                             }
                             IconButton(onClick = {
                                 scope.launch {
