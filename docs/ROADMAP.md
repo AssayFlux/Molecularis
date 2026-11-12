@@ -12,7 +12,7 @@ This roadmap is outcome-based. Complete and validate one usable vertical slice a
 - [x] Establish package structure, navigation shell, theme and settings.
 - [x] Add Room database, migrations and local repositories (automated migration coverage remains to be expanded).
 - [x] Add GitHub Actions Android unit-test and lint workflow.
-- [ ] Document local build and install instructions.
+- [x] Document local build and install instructions in [BUILD_AND_INSTALL.md](BUILD_AND_INSTALL.md).
 
 **Exit criteria:** clean debug APK build, app launches on a physical Android device, database initializes and CI runs.
 
