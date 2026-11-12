@@ -54,6 +54,8 @@ The first milestone is deliberately small: **import one PDF, extract it, search 
 - [Product vision and requirements](docs/PRODUCT_VISION.md)
 - [Development roadmap](docs/ROADMAP.md)
 - [Proposed architecture](docs/ARCHITECTURE.md)
+- [Astronaut code and UI reuse record](docs/ASTRONAUT_REUSE.md)
+- [Third-party notices](THIRD_PARTY_NOTICES.md)
 
 ## Development rule
 
@@ -65,4 +67,4 @@ Import only books and materials you are authorized to store and process. Images 
 
 ## Current status
 
-Planning and architecture documentation. Android application implementation has not started yet.
+An initial Android application foundation has been added from Astronaut and rebranded for Molecularis. The inherited Compose interface, offline AI and retrieval components, Room persistence, document and voice components are present. A first Teaching Studio screen can generate and save a local lesson outline. Automated build verification is in progress; book-library ingestion, source-grounded lesson generation, slide authoring, synchronized SVG diagrams and autonomous voice teaching are not complete yet.
