@@ -78,7 +78,7 @@ import java.io.File
 import java.util.UUID
 
 private val Muted=Color(0xFF65736D)
-private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LIBRARY("Library"),AI_HUB("AI Hub"),MODELS("Models"),TRAINING("Training"),WORKSPACE("Workspace"),ONLINE_AI("Online AI"),SETTINGS("Settings")}
+private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LIBRARY("Library"),KNOWLEDGE_POOL("Knowledge Pool"),AI_HUB("AI Hub"),MODELS("Models"),TRAINING("Training"),WORKSPACE("Workspace"),ONLINE_AI("Online AI"),SETTINGS("Settings")}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable fun MessengerApp(){
@@ -340,14 +340,14 @@ private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LI
      NavigationBarItem(selected=section==item,onClick={section=item;moreNavigationExpanded=false},icon={Icon(icon,item.label)},label={Text(item.label,maxLines=1)})
     }
     NavigationBarItem(
-     selected=section==Section.AI_HUB||section==Section.TRAINING||section==Section.ONLINE_AI||section==Section.SETTINGS,
+     selected=section==Section.AI_HUB||section==Section.TRAINING||section==Section.ONLINE_AI||section==Section.SETTINGS||section==Section.KNOWLEDGE_POOL,
      onClick={moreNavigationExpanded=true},
      icon={
       Box{
        Icon(Icons.Default.MoreHoriz,"More sections")
        DropdownMenu(expanded=moreNavigationExpanded,onDismissRequest={moreNavigationExpanded=false}){
-        listOf(Section.AI_HUB,Section.TRAINING,Section.ONLINE_AI,Section.SETTINGS).forEach{item->
-         val icon=when(item){Section.LIBRARY->Icons.Default.MenuBook;Section.AI_HUB->Icons.Default.Hub;Section.TRAINING->Icons.Default.Tune;Section.ONLINE_AI->Icons.Default.Cloud;else->Icons.Default.Settings}
+        listOf(Section.KNOWLEDGE_POOL,Section.AI_HUB,Section.TRAINING,Section.ONLINE_AI,Section.SETTINGS).forEach{item->
+         val icon=when(item){Section.LIBRARY->Icons.Default.MenuBook;Section.KNOWLEDGE_POOL->Icons.Default.AccountTree;Section.AI_HUB->Icons.Default.Hub;Section.TRAINING->Icons.Default.Tune;Section.ONLINE_AI->Icons.Default.Cloud;else->Icons.Default.Settings}
          DropdownMenuItem(text={Text(item.label)},leadingIcon={Icon(icon,null)},onClick={section=item;moreNavigationExpanded=false})
         }
        }
@@ -362,6 +362,7 @@ private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LI
    when(section){
     Section.TEACHING->TeachingStudioScreen(db, voiceAvailable = offlineTtsVoices.isNotEmpty(), localModelAvailable = activeModelPath != null && activeModelName != null, onSpeak = { voiceController.speak(it) }, onGenerateWithLocalModel = { prompt -> runtime.generate(prompt) })
     Section.LIBRARY->BookLibraryScreen(db)
+    Section.KNOWLEDGE_POOL->KnowledgePoolScreen(db)
     Section.CHATS->ChatScreen(conversations,conversationId,messages,draft,{draft=it},pendingAttachment?.second,activeModelName,runtimeMessage,loadingModel,sending,voiceListening,
      
      {if(voiceListening)voiceController.stopListening()else if(ContextCompat.checkSelfPermission(context,Manifest.permission.RECORD_AUDIO)==PackageManager.PERMISSION_GRANTED)voiceController.startListening()else microphonePermission.launch(Manifest.permission.RECORD_AUDIO)},
