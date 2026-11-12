@@ -78,6 +78,7 @@ data class BookPassageEntity(
  @Query("SELECT * FROM books ORDER BY importedAt DESC") fun books():Flow<List<BookEntity>>
  @Insert suspend fun addBook(book:BookEntity)
  @Insert suspend fun addPassages(passages:List<BookPassageEntity>)
+ @Query("DELETE FROM book_passages WHERE bookId=:bookId") suspend fun deletePassages(bookId:String)
  @Query("SELECT * FROM book_passages WHERE bookId=:bookId ORDER BY pageNumber,chunkIndex") suspend fun passages(bookId:String):List<BookPassageEntity>
  @Query("SELECT * FROM book_passages WHERE bookId=:bookId AND text LIKE '%' || :query || '%' ORDER BY pageNumber LIMIT 100") suspend fun searchInBook(bookId:String,query:String):List<BookPassageEntity>
  @Query("SELECT * FROM book_passages WHERE text LIKE '%' || :query || '%' ORDER BY bookId,pageNumber LIMIT 100") suspend fun searchAll(query:String):List<BookPassageEntity>
