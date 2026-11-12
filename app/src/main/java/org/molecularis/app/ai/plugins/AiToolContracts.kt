@@ -119,7 +119,7 @@ interface AiRuntimeAdapter {
 }
 
 
-/** In-memory registry for trusted adapters packaged with Astronaut. */
+/** In-memory registry for trusted adapters packaged with Molecularis. */
 class AiRuntimeRegistry(adapters: Collection<AiRuntimeAdapter> = emptyList()) {
     private val byId = linkedMapOf<String, AiRuntimeAdapter>()
 
