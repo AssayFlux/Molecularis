@@ -7,6 +7,10 @@ name: Android source checks
     branches: [main]
   workflow_dispatch:
 
+concurrency:
+  group: android-build-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
