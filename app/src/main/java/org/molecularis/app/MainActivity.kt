@@ -1,6 +1,7 @@
 package org.molecularis.app
 
 import android.os.Bundle
+import android.os.Build
 import android.view.WindowManager
 import androidx.activity.compose.setContent
 import androidx.biometric.BiometricManager
@@ -72,8 +73,11 @@ class MainActivity : FragmentActivity() {
 
     private fun requestUnlock() {
         if (promptActive) return
-        val authenticators = BiometricManager.Authenticators.BIOMETRIC_STRONG or
-            BiometricManager.Authenticators.DEVICE_CREDENTIAL
+        val authenticators = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL
+        } else {
+            BiometricManager.Authenticators.BIOMETRIC_STRONG
+        }
         val availability = BiometricManager.from(this).canAuthenticate(authenticators)
         if (availability != BiometricManager.BIOMETRIC_SUCCESS) {
             unlockMessage = "Biometric or secure device-lock authentication is unavailable. Disable the app lock from device settings or enroll a supported method."
@@ -100,7 +104,7 @@ class MainActivity : FragmentActivity() {
         )
         val info = BiometricPrompt.PromptInfo.Builder()
             .setTitle("Unlock Molecularis")
-            .setSubtitle("Use your fingerprint or device screen lock")
+            .setSubtitle(if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) "Use your fingerprint or device screen lock" else "Use your fingerprint")
             .setAllowedAuthenticators(authenticators)
             .build()
         prompt.authenticate(info)
