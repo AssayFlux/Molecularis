@@ -85,6 +85,30 @@ data class BookPassageEntity(
  @Query("DELETE FROM books WHERE id=:bookId") suspend fun deleteBook(bookId:String)
 }
 
+@Entity(tableName="knowledge_books",indices=[Index("bookId",unique=true)])
+data class KnowledgeBookEntity(
+ @PrimaryKey val id:String,val bookId:String,val detectedTitle:String,val author:String,
+ val publisher:String,val edition:String,val subject:String,val summary:String,
+ val chapterOutline:String,val extractedPageCount:Int,val extractedChars:Int,
+ val passageCount:Int,val topicCount:Int,val qualityScore:Int,
+ val reviewState:String="needs_review",val processedAt:Long=System.currentTimeMillis()
+)
+@Entity(tableName="knowledge_topics",indices=[Index("knowledgeBookId"),Index("name")])
+data class KnowledgeTopicEntity(
+ @PrimaryKey val id:String,val knowledgeBookId:String,val name:String,
+ val startPage:Int,val confidence:Float,val evidence:String,val approved:Boolean=false
+)
+@Dao interface KnowledgePoolDao {
+ @Query("SELECT * FROM knowledge_books ORDER BY processedAt DESC") fun books():Flow<List<KnowledgeBookEntity>>
+ @Query("SELECT * FROM knowledge_books WHERE bookId=:bookId LIMIT 1") suspend fun forBook(bookId:String):KnowledgeBookEntity?
+ @Insert(onConflict=OnConflictStrategy.REPLACE) suspend fun saveBook(book:KnowledgeBookEntity)
+ @Query("SELECT * FROM knowledge_topics WHERE knowledgeBookId=:knowledgeBookId ORDER BY startPage") suspend fun topics(knowledgeBookId:String):List<KnowledgeTopicEntity>
+ @Insert(onConflict=OnConflictStrategy.REPLACE) suspend fun saveTopics(topics:List<KnowledgeTopicEntity>)
+ @Query("UPDATE knowledge_topics SET approved=:approved WHERE id=:id") suspend fun setTopicApproved(id:String,approved:Boolean)
+ @Query("DELETE FROM knowledge_topics WHERE knowledgeBookId=:knowledgeBookId") suspend fun clearTopics(knowledgeBookId:String)
+ @Query("DELETE FROM knowledge_books WHERE bookId=:bookId") suspend fun deleteForBook(bookId:String)
+}
+
 @Entity(tableName="saved_lessons",indices=[Index("updatedAt")])
 data class SavedLessonEntity(
  @PrimaryKey val id:String,
@@ -101,7 +125,7 @@ data class SavedLessonEntity(
  @Query("DELETE FROM saved_lessons WHERE id=:id") suspend fun deleteLesson(id:String)
 }
 
-@Database(entities=[ConversationEntity::class,MessageEntity::class,LocalModelEntity::class,WorkspaceProjectEntity::class,KnowledgeChunkEntity::class,BookEntity::class,BookPassageEntity::class,SavedLessonEntity::class],version=8,exportSchema=false)
+@Database(entities=[ConversationEntity::class,MessageEntity::class,LocalModelEntity::class,WorkspaceProjectEntity::class,KnowledgeChunkEntity::class,BookEntity::class,BookPassageEntity::class,KnowledgeBookEntity::class,KnowledgeTopicEntity::class,SavedLessonEntity::class],version=9,exportSchema=false)
 abstract class AppDatabase:RoomDatabase(){
  abstract fun chatDao():ChatDao
  abstract fun modelDao():ModelDao
@@ -109,4 +133,5 @@ abstract class AppDatabase:RoomDatabase(){
  abstract fun knowledgeDao():KnowledgeDao
  abstract fun bookDao():BookDao
  abstract fun lessonDao():LessonDao
+ abstract fun knowledgePoolDao():KnowledgePoolDao
 }
