@@ -260,10 +260,10 @@ fun KnowledgePoolScreen(database: AppDatabase) {
                                 }
                             }
                             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                Button(onClick = { processBook(book) }, enabled = processingId == null && analysed == null) {
+                                Button(onClick = { processBook(book) }, enabled = processingId == null) {
                                     Icon(Icons.Default.PlayArrow, contentDescription = null)
                                     Spacer(Modifier.width(5.dp))
-                                    Text(if (analysed == null) "Extract & analyse" else "Already analysed")
+                                    Text(if (analysed == null) "Extract & analyse" else "Re-analyse safely")
                                 }
                                 if (analysed != null) OutlinedButton(onClick = { selected = analysed }) { Text("Review") }
                             }
