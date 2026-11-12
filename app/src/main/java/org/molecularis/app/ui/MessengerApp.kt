@@ -29,6 +29,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
+import coil.compose.rememberAsyncImagePainter
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -120,6 +122,8 @@ private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LI
  var responseStyle by remember{mutableStateOf(personalizationPrefs.getString("response_style","balanced")?:"balanced")}
  var darkAppearance by remember{mutableStateOf(personalizationPrefs.getBoolean("dark_appearance",false))}
  var accentName by remember{mutableStateOf(personalizationPrefs.getString("accent_name","Sage")?:"Sage")}
+ var fontFamilyName by remember{mutableStateOf(personalizationPrefs.getString("font_family","SansSerif")?:"SansSerif")}
+ var customBackgroundUri by remember{mutableStateOf(personalizationPrefs.getString("background_uri","")?:"")}
  val enginePrefs=remember(context){context.getSharedPreferences("molecularis_engine",Context.MODE_PRIVATE)}
  var engineOptimization by remember{mutableStateOf(enginePrefs.getString("optimization","balanced")?:"balanced")}
  val onlinePrefs=remember(context){context.getSharedPreferences("molecularis_online_ai",Context.MODE_PRIVATE)}
@@ -325,7 +329,8 @@ private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LI
   else->runCatching{Color(android.graphics.Color.parseColor(accentName))}.getOrDefault(Color(0xFF78988A))
  }
  val selectedOnAccent=Color(0xFF202A27)
- MaterialTheme(shapes=Shapes(small=RoundedCornerShape(14.dp),medium=RoundedCornerShape(20.dp),large=RoundedCornerShape(26.dp)),colorScheme=if(darkAppearance)
+ val selectedFontFamily=when(fontFamilyName){"Serif"->FontFamily.Serif;"Monospace"->FontFamily.Monospace;"Cursive"->FontFamily.Cursive;else->FontFamily.SansSerif}
+ MaterialTheme(typography=Typography(defaultFontFamily=selectedFontFamily),shapes=Shapes(small=RoundedCornerShape(14.dp),medium=RoundedCornerShape(20.dp),large=RoundedCornerShape(26.dp)),colorScheme=if(darkAppearance)
   darkColorScheme(primary=selectedAccent,onPrimary=selectedOnAccent,primaryContainer=selectedAccent.copy(alpha=0.28f),onPrimaryContainer=Color(0xFFE9EDF3),background=Color(0xFF101318),surface=Color(0xFF1A1F27),onSurface=Color(0xFFE9EDF3),secondary=selectedAccent)
  else
   lightColorScheme(primary=selectedAccent,onPrimary=selectedOnAccent,primaryContainer=selectedAccent.copy(alpha=0.14f),onPrimaryContainer=Color(0xFF20242B),background=Color(0xFFF6F7F9),surface=Color.White,onSurface=Color(0xFF20242B),secondary=selectedAccent)){
@@ -357,7 +362,7 @@ private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LI
     )
    }}
   ){padding->Box(Modifier.fillMaxSize().padding(padding).imePadding()){
-   Image(painter=painterResource(id=org.molecularis.app.R.drawable.molecularis_background),contentDescription=null,contentScale=ContentScale.Crop,modifier=Modifier.fillMaxSize().alpha(if(darkAppearance)0.035f else 0.055f))
+   Image(painter=if(customBackgroundUri.isNotBlank())rememberAsyncImagePainter(Uri.parse(customBackgroundUri)) else painterResource(id=org.molecularis.app.R.drawable.molecularis_background),contentDescription=null,contentScale=ContentScale.Crop,modifier=Modifier.fillMaxSize().alpha(if(darkAppearance)0.12f else 0.16f))
    Column(Modifier.fillMaxSize()){
    when(section){
     Section.TEACHING->TeachingStudioScreen(db, voiceAvailable = offlineTtsVoices.isNotEmpty(), localModelAvailable = activeModelPath != null && activeModelName != null, onSpeak = { voiceController.speak(it) }, onGenerateWithLocalModel = { prompt -> runtime.generate(prompt) })
@@ -679,11 +684,13 @@ private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LI
      }
     )
     Section.SETTINGS->SettingsScreen(
-     speechLanguageTag,ttsVoiceName,offlineTtsVoices,recognitionLanguages,speechStatus,responseStyle,darkAppearance,accentName,engineOptimization,
+     speechLanguageTag,ttsVoiceName,offlineTtsVoices,recognitionLanguages,speechStatus,responseStyle,darkAppearance,accentName,engineOptimization,fontFamilyName,customBackgroundUri,
      {style->responseStyle=style;personalizationPrefs.edit().putString("response_style",style).apply()},
      {name->accentName=name;personalizationPrefs.edit().putString("accent_name",name).apply()},
      {enabled->darkAppearance=enabled;personalizationPrefs.edit().putBoolean("dark_appearance",enabled).apply()},
      {mode->engineOptimization=mode;enginePrefs.edit().putString("optimization",mode).apply()},
+     {name->fontFamilyName=name;personalizationPrefs.edit().putString("font_family",name).apply()},
+     {uri->customBackgroundUri=uri;personalizationPrefs.edit().putString("background_uri",uri).apply()},
      {tag->try{
       val normalized=OfflineVoiceController.normalizeLanguageTag(tag)
       speechLanguageTag=normalized
@@ -1038,86 +1045,142 @@ private suspend fun readDatasetBounded(context:Context,uri:Uri):String = withCon
  darkAppearance:Boolean,
  accentName:String,
  engineOptimization:String,
+ fontFamilyName:String,
+ backgroundUri:String,
  onResponseStyleChange:(String)->Unit,
  onAccentChange:(String)->Unit,
  onDarkAppearanceChange:(Boolean)->Unit,
  onEngineOptimizationChange:(String)->Unit,
+ onFontFamilyChange:(String)->Unit,
+ onBackgroundChange:(String)->Unit,
  onLanguageChange:(String)->Unit,
  onCheckLanguages:()->Unit,
  onDownloadLanguage:()->Unit,
  onVoiceSelect:(String)->Unit,
  onTestVoice:()->Unit
 ){
+ val context=LocalContext.current
  var languageDraft by remember(languageTag){mutableStateOf(languageTag)}
  var voiceMenu by remember{mutableStateOf(false)}
  var languageMenu by remember{mutableStateOf(false)}
  val languageOptions=(listOf(languageTag,java.util.Locale.getDefault().toLanguageTag(),"en-US","hi-IN","bn-IN")+recognition.installed+recognition.downloadable+recognition.pending).distinct()
  val duplicateVoiceLabels=voices.groupingBy{it.label}.eachCount()
- Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp)){
-  Card(colors=CardDefaults.cardColors(containerColor=MaterialTheme.colorScheme.primaryContainer.copy(alpha=0.42f)),modifier=Modifier.fillMaxWidth()){Column(Modifier.padding(16.dp),verticalArrangement=Arrangement.spacedBy(5.dp)){Text("CUSTOMIZE",style=MaterialTheme.typography.labelMedium,color=MaterialTheme.colorScheme.primary,fontWeight=FontWeight.Bold);Text("Make Molecularis yours",style=MaterialTheme.typography.headlineSmall,fontWeight=FontWeight.SemiBold);Text("Appearance, response style, engine behaviour and offline voice preferences. Saved on this device.",color=MaterialTheme.colorScheme.onSurfaceVariant)}}
-  Text("Response style",style=MaterialTheme.typography.titleMedium,fontWeight=FontWeight.SemiBold)
-  Row(horizontalArrangement=Arrangement.spacedBy(6.dp)){
-   FilterChip(selected=responseStyle=="concise",onClick={onResponseStyleChange("concise")},label={Text("Concise")})
-   FilterChip(selected=responseStyle=="balanced",onClick={onResponseStyleChange("balanced")},label={Text("Balanced")})
-   FilterChip(selected=responseStyle=="detailed",onClick={onResponseStyleChange("detailed")},label={Text("Detailed")})
+ val backgroundPicker=rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()){uri->
+  if(uri!=null){
+   runCatching{context.contentResolver.takePersistableUriPermission(uri,Intent.FLAG_GRANT_READ_URI_PERMISSION)}
+   onBackgroundChange(uri.toString())
   }
-  Row(verticalAlignment=Alignment.CenterVertically){
-   Column(Modifier.weight(1f)){Text("Dark appearance",fontWeight=FontWeight.Medium);Text(if(darkAppearance)"Enabled · low-glare dark workspace" else "Disabled · light workspace",style=MaterialTheme.typography.bodySmall,color=Muted)}
-   Switch(checked=darkAppearance,onCheckedChange=onDarkAppearanceChange)
-  }
-  Text("Colour palette",style=MaterialTheme.typography.titleMedium,fontWeight=FontWeight.SemiBold)
-  Text("Soft classic accents. Select a swatch to apply it across cards, buttons and active states.",style=MaterialTheme.typography.bodySmall,color=Muted)
-  val palette=listOf("Sage" to 0xFF78988A,"Sky" to 0xFF83AFCB,"Lavender" to 0xFFA69BCB,"Rose" to 0xFFC58F9C,"Peach" to 0xFFD5A184,"Butter" to 0xFFC8B36F,"Seafoam" to 0xFF83B8A8,"Mint" to 0xFF16866A,"Blue" to 0xFF4968D8,"Violet" to 0xFF7955C8,"Amber" to 0xFFB7791F,"Graphite" to 0xFF4B5563)
-  palette.chunked(4).forEach{row->Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(8.dp)){row.forEach{(name,hex)->val selected=accentName==name;Surface(onClick={onAccentChange(name)},shape=RoundedCornerShape(14.dp),color=Color(hex).copy(alpha=if(selected)0.28f else 0.12f),border=if(selected)androidx.compose.foundation.BorderStroke(2.dp,Color(hex)) else null,modifier=Modifier.weight(1f)){Column(Modifier.padding(vertical=10.dp),horizontalAlignment=Alignment.CenterHorizontally){Box(Modifier.size(22.dp).background(Color(hex),CircleShape));Spacer(Modifier.height(5.dp));Text(name,style=MaterialTheme.typography.labelSmall,maxLines=1)}}}}}
-  var customHex by remember{mutableStateOf(if(accentName.startsWith("#"))accentName else "#D8B4FE")}
-  Row(verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)){OutlinedTextField(customHex,{customHex=it.uppercase()},modifier=Modifier.weight(1f),label={Text("Custom HEX colour")},singleLine=true,placeholder={Text("#D8B4FE")});Button(onClick={onAccentChange(customHex)},enabled=customHex.matches(Regex("#[A-F0-9]{6}"))){Text("Apply")}}
-  Divider()
-  Text("Engine optimization",style=MaterialTheme.typography.titleMedium,fontWeight=FontWeight.SemiBold)
-  Text("Choose how much recent chat context is sent to the local model. Smaller context can reduce prompt processing time and memory pressure.",style=MaterialTheme.typography.bodySmall,color=Muted)
-  Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(6.dp)){listOf("memory" to "Memory saver","speed" to "Faster","balanced" to "Balanced","quality" to "More context").forEach{(value,label)->FilterChip(selected=engineOptimization==value,onClick={onEngineOptimizationChange(value)},label={Text(label)},modifier=Modifier.weight(1f))}}
-  Text(when(engineOptimization){"memory"->"Uses the last 2 completed turns."; "speed"->"Uses the last 4 completed turns."; "quality"->"Uses the last 24 completed turns.";else->"Uses the last 12 completed turns."},style=MaterialTheme.typography.labelSmall,color=MaterialTheme.colorScheme.primary)
-  Divider()
-  Text("Privacy & device",style=MaterialTheme.typography.headlineSmall,fontWeight=FontWeight.SemiBold)
-  InfoCard("Offline-first","Chat records and model files are stored on this device. Model generation runs locally.")
-  InfoCard("No silent uploads","This app does not upload chats or connect to an account or server.")
-  InfoCard("Model requirement","Obtain a compatible .litertlm model separately, then import it in Models. Chat generation works offline after model installation.")
-  Spacer(Modifier.height(12.dp))
-  Text("Offline voice",style=MaterialTheme.typography.titleLarge,fontWeight=FontWeight.SemiBold)
-  Text("Voice names are shown as readable languages and quality levels instead of Android's technical voice IDs. Tap a voice to select and preview it.",color=Muted,style=MaterialTheme.typography.bodySmall)
-  Text("Speech recognition uses Android's on-device recognizer only. Text-to-speech is restricted to installed voices that do not require a network connection.",color=Muted,style=MaterialTheme.typography.bodySmall)
-  Box{
-   OutlinedButton(onClick={languageMenu=true},modifier=Modifier.fillMaxWidth()){
-    Column(Modifier.weight(1f),horizontalAlignment=Alignment.Start){Text("Speech language",style=MaterialTheme.typography.labelSmall,color=Muted);Text(friendlyLanguageName(languageDraft),maxLines=1,overflow=TextOverflow.Ellipsis)}
-    Icon(Icons.Default.ExpandMore,null)
-   }
-   DropdownMenu(expanded=languageMenu,onDismissRequest={languageMenu=false}){
-    languageOptions.forEach{tag->DropdownMenuItem(text={Text(friendlyLanguageName(tag))},leadingIcon={if(tag.equals(languageDraft,true))Icon(Icons.Default.Check,null)},onClick={languageDraft=tag;languageMenu=false})}
+ }
+ Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp),verticalArrangement=Arrangement.spacedBy(12.dp)){
+  Card(Modifier.fillMaxWidth(),colors=CardDefaults.cardColors(containerColor=MaterialTheme.colorScheme.primaryContainer.copy(alpha=0.42f))){
+   Column(Modifier.padding(16.dp),verticalArrangement=Arrangement.spacedBy(5.dp)){
+    Text("SETTINGS",style=MaterialTheme.typography.labelMedium,color=MaterialTheme.colorScheme.primary,fontWeight=FontWeight.Bold)
+    Text("Organized around your workflow",style=MaterialTheme.typography.headlineSmall,fontWeight=FontWeight.SemiBold)
+    Text("Each area has its own controls. Preferences are stored locally on this device.",color=MaterialTheme.colorScheme.onSurfaceVariant)
    }
   }
-  Button(onClick={onLanguageChange(languageDraft)},modifier=Modifier.fillMaxWidth()){Text("Use this speech language")}
-  Row(horizontalArrangement=Arrangement.spacedBy(8.dp)){
-   OutlinedButton(onClick=onCheckLanguages,modifier=Modifier.weight(1f)){Text("Check packs")}
-   Button(onClick=onDownloadLanguage,modifier=Modifier.weight(1f),enabled=recognition.downloadable.isNotEmpty()){Text("Download pack")}
-  }
-  if(recognition.installed.isNotEmpty())Text("Installed for offline speech: "+recognition.installed.joinToString{friendlyLanguageName(it)},color=MaterialTheme.colorScheme.primary,style=MaterialTheme.typography.bodySmall)
-  if(recognition.downloadable.isNotEmpty())Text("Available to download: "+recognition.downloadable.joinToString{friendlyLanguageName(it)},color=Muted,style=MaterialTheme.typography.bodySmall)
-  if(recognition.pending.isNotEmpty())Text("Download pending: "+recognition.pending.joinToString{friendlyLanguageName(it)},color=Muted,style=MaterialTheme.typography.bodySmall)
-  Text("Offline TTS voice",style=MaterialTheme.typography.titleMedium,fontWeight=FontWeight.SemiBold)
-  Box{
-   OutlinedButton(onClick={voiceMenu=true},modifier=Modifier.fillMaxWidth(),enabled=voices.isNotEmpty()){
-    Text(voices.firstOrNull{it.name==selectedVoiceName}?.label?:if(voices.isEmpty())"No offline TTS voices installed" else voices.first().label)
-   }
-   DropdownMenu(expanded=voiceMenu,onDismissRequest={voiceMenu=false}){
-    voices.forEachIndexed{index,voice->DropdownMenuItem(
-     text={Column{val duplicateCount=duplicateVoiceLabels[voice.label]?:0;val display=voice.label+(if(duplicateCount>1)" · Voice "+voices.take(index+1).count{it.label==voice.label} else "");Text(display);Text("Installed on this device · offline · tap to preview",style=MaterialTheme.typography.labelSmall,color=Muted)}},
-     leadingIcon={Icon(Icons.Default.RecordVoiceOver,null)},
-     onClick={voiceMenu=false;onVoiceSelect(voice.name);onTestVoice()}
-    )}
+  Card(Modifier.fillMaxWidth()){
+   Column(Modifier.padding(16.dp),verticalArrangement=Arrangement.spacedBy(10.dp)){
+    Text("Account & security",style=MaterialTheme.typography.titleLarge,fontWeight=FontWeight.SemiBold)
+    Text("Molecularis currently keeps your library, models and conversations on this device. A real account sign-in needs a configured authentication service; this build does not pretend a local profile is a cloud account.",style=MaterialTheme.typography.bodySmall,color=Muted)
+    OutlinedButton(onClick={},enabled=false,modifier=Modifier.fillMaxWidth()){Icon(Icons.Default.AccountCircle,null);Spacer(Modifier.width(8.dp));Text("Account sign-in · service not configured")}
+    Text("Biometric app lock is a separate security feature and requires Android biometric authentication to be integrated with the app lifecycle.",style=MaterialTheme.typography.bodySmall,color=Muted)
    }
   }
-  OutlinedButton(onClick=onTestVoice,modifier=Modifier.fillMaxWidth(),enabled=voices.isNotEmpty()){Icon(Icons.Default.VolumeUp,null);Spacer(Modifier.width(8.dp));Text("Test offline voice")}
-  Text(speechStatus,color=MaterialTheme.colorScheme.primary,style=MaterialTheme.typography.bodySmall)
-  InfoCard("Language pack downloads","On Android 13 and newer, Molecularis can ask the system speech provider to download supported on-device recognition languages. The system provider controls the actual download and availability. Android 12 can use an already-installed on-device recognizer but cannot expose the same pack-management API.")
+  Card(Modifier.fillMaxWidth()){
+   Column(Modifier.padding(16.dp),verticalArrangement=Arrangement.spacedBy(10.dp)){
+    Text("Appearance & personalization",style=MaterialTheme.typography.titleLarge,fontWeight=FontWeight.SemiBold)
+    Row(verticalAlignment=Alignment.CenterVertically){
+     Column(Modifier.weight(1f)){Text("Dark appearance",fontWeight=FontWeight.Medium);Text(if(darkAppearance)"Enabled · low-glare workspace" else "Disabled · light workspace",style=MaterialTheme.typography.bodySmall,color=Muted)}
+     Switch(checked=darkAppearance,onCheckedChange=onDarkAppearanceChange)
+    }
+    Text("Font family",style=MaterialTheme.typography.titleMedium,fontWeight=FontWeight.SemiBold)
+    Row(horizontalArrangement=Arrangement.spacedBy(6.dp)){
+     listOf("SansSerif" to "Sans","Serif" to "Serif","Monospace" to "Mono","Cursive" to "Cursive").forEach{(value,label)->
+      FilterChip(selected=fontFamilyName==value,onClick={onFontFamilyChange(value)},label={Text(label)},modifier=Modifier.weight(1f))
+     }
+    }
+    Text("Colour scheme",style=MaterialTheme.typography.titleMedium,fontWeight=FontWeight.SemiBold)
+    val palette=listOf("Sage" to 0xFF78988A,"Sky" to 0xFF83AFCB,"Lavender" to 0xFFA69BCB,"Rose" to 0xFFC58F9C,"Peach" to 0xFFD5A184,"Butter" to 0xFFC8B36F,"Seafoam" to 0xFF83B8A8,"Mint" to 0xFF16866A,"Blue" to 0xFF4968D8,"Violet" to 0xFF7955C8,"Amber" to 0xFFB7791F,"Graphite" to 0xFF4B5563)
+    palette.chunked(4).forEach{row->Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(8.dp)){row.forEach{(name,hex)->
+     val selected=accentName==name
+     Surface(onClick={onAccentChange(name)},shape=RoundedCornerShape(14.dp),color=Color(hex).copy(alpha=if(selected)0.28f else 0.12f),border=if(selected)androidx.compose.foundation.BorderStroke(2.dp,Color(hex)) else null,modifier=Modifier.weight(1f)){
+      Column(Modifier.padding(vertical=9.dp),horizontalAlignment=Alignment.CenterHorizontally){Box(Modifier.size(22.dp).background(Color(hex),CircleShape));Spacer(Modifier.height(4.dp));Text(name,style=MaterialTheme.typography.labelSmall,maxLines=1)}
+     }
+    }}}}
+    var customHex by remember{mutableStateOf(if(accentName.startsWith("#"))accentName else "#D8B4FE")}
+    Row(verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)){
+     OutlinedTextField(customHex,{customHex=it.uppercase()},modifier=Modifier.weight(1f),label={Text("Custom HEX")},singleLine=true)
+     Button(onClick={onAccentChange(customHex)},enabled=customHex.matches(Regex("#[A-F0-9]{6}"))){Text("Apply")}
+    }
+    Divider()
+    Text("Background image",style=MaterialTheme.typography.titleMedium,fontWeight=FontWeight.SemiBold)
+    Text("Choose a personal image. It is used as a subtle, cropped workspace background; the original file remains in your selected storage.",style=MaterialTheme.typography.bodySmall,color=Muted)
+    OutlinedButton(onClick={backgroundPicker.launch(arrayOf("image/*"))},modifier=Modifier.fillMaxWidth()){
+     Icon(Icons.Default.Image,null);Spacer(Modifier.width(8.dp));Text(if(backgroundUri.isBlank())"Choose background image" else "Change background image")
+    }
+    if(backgroundUri.isNotBlank()){Text("Custom background selected",style=MaterialTheme.typography.labelSmall,color=MaterialTheme.colorScheme.primary);TextButton(onClick={onBackgroundChange("")}){Text("Use default background")}}
+   }
+  }
+  Card(Modifier.fillMaxWidth()){
+   Column(Modifier.padding(16.dp),verticalArrangement=Arrangement.spacedBy(10.dp)){
+    Text("Chat & AI behaviour",style=MaterialTheme.typography.titleLarge,fontWeight=FontWeight.SemiBold)
+    Text("Response style",style=MaterialTheme.typography.titleMedium,fontWeight=FontWeight.SemiBold)
+    Row(horizontalArrangement=Arrangement.spacedBy(6.dp)){
+     listOf("concise" to "Concise","balanced" to "Balanced","detailed" to "Detailed").forEach{(value,label)->FilterChip(selected=responseStyle==value,onClick={onResponseStyleChange(value)},label={Text(label)})}
+    }
+    Text("Context and performance",style=MaterialTheme.typography.titleMedium,fontWeight=FontWeight.SemiBold)
+    Text("Choose how much recent chat context is sent to the local model.",style=MaterialTheme.typography.bodySmall,color=Muted)
+    Column(verticalArrangement=Arrangement.spacedBy(4.dp)){
+     listOf("memory" to "Memory saver","speed" to "Faster","balanced" to "Balanced","quality" to "More context").forEach{(value,label)->FilterChip(selected=engineOptimization==value,onClick={onEngineOptimizationChange(value)},label={Text(label)})}
+    }
+    Text(when(engineOptimization){"memory"->"Uses the last 2 completed turns.";"speed"->"Uses the last 4 completed turns.";"quality"->"Uses the last 24 completed turns.";else->"Uses the last 12 completed turns."},style=MaterialTheme.typography.labelSmall,color=MaterialTheme.colorScheme.primary)
+   }
+  }
+  Card(Modifier.fillMaxWidth()){
+   Column(Modifier.padding(16.dp),verticalArrangement=Arrangement.spacedBy(10.dp)){
+    Text("Speech & voice",style=MaterialTheme.typography.titleLarge,fontWeight=FontWeight.SemiBold)
+    Text("Speech controls are grouped separately from appearance and AI preferences. Recognition uses the device's on-device speech provider; text-to-speech uses installed offline voices.",style=MaterialTheme.typography.bodySmall,color=Muted)
+    Box{
+     OutlinedButton(onClick={languageMenu=true},modifier=Modifier.fillMaxWidth()){
+      Column(Modifier.weight(1f),horizontalAlignment=Alignment.Start){Text("Speech language",style=MaterialTheme.typography.labelSmall,color=Muted);Text(friendlyLanguageName(languageDraft),maxLines=1,overflow=TextOverflow.Ellipsis)}
+      Icon(Icons.Default.ExpandMore,null)
+     }
+     DropdownMenu(expanded=languageMenu,onDismissRequest={languageMenu=false}){
+      languageOptions.forEach{tag->DropdownMenuItem(text={Text(friendlyLanguageName(tag))},leadingIcon={if(tag.equals(languageDraft,true))Icon(Icons.Default.Check,null)},onClick={languageDraft=tag;languageMenu=false})}
+     }
+    }
+    Button(onClick={onLanguageChange(languageDraft)},modifier=Modifier.fillMaxWidth()){Text("Use this speech language")}
+    Row(horizontalArrangement=Arrangement.spacedBy(8.dp)){
+     OutlinedButton(onClick=onCheckLanguages,modifier=Modifier.weight(1f)){Text("Check packs")}
+     Button(onClick=onDownloadLanguage,modifier=Modifier.weight(1f),enabled=recognition.downloadable.isNotEmpty()){Text("Download pack")}
+    }
+    if(recognition.installed.isNotEmpty())Text("Installed offline recognition: "+recognition.installed.joinToString{friendlyLanguageName(it)},style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.primary)
+    if(recognition.downloadable.isNotEmpty())Text("Available to download: "+recognition.downloadable.joinToString{friendlyLanguageName(it)},style=MaterialTheme.typography.bodySmall,color=Muted)
+    if(recognition.pending.isNotEmpty())Text("Download pending: "+recognition.pending.joinToString{friendlyLanguageName(it)},style=MaterialTheme.typography.bodySmall,color=Muted)
+    Text("Offline text-to-speech voice",style=MaterialTheme.typography.titleMedium,fontWeight=FontWeight.SemiBold)
+    Box{
+     OutlinedButton(onClick={voiceMenu=true},modifier=Modifier.fillMaxWidth(),enabled=voices.isNotEmpty()){
+      Text(voices.firstOrNull{it.name==selectedVoiceName}?.label?:if(voices.isEmpty())"No offline TTS voices installed" else voices.first().label)
+     }
+     DropdownMenu(expanded=voiceMenu,onDismissRequest={voiceMenu=false}){
+      voices.forEachIndexed{index,voice->DropdownMenuItem(
+       text={Column{val duplicates=duplicateVoiceLabels[voice.label]?:0;Text(voice.label+(if(duplicates>1)" · Voice "+voices.take(index+1).count{it.label==voice.label} else ""));Text("Installed on this device · offline · tap to preview",style=MaterialTheme.typography.labelSmall,color=Muted)}},
+       leadingIcon={Icon(Icons.Default.RecordVoiceOver,null)},onClick={voiceMenu=false;onVoiceSelect(voice.name);onTestVoice()}
+      )}
+     }
+    }
+    OutlinedButton(onClick=onTestVoice,modifier=Modifier.fillMaxWidth(),enabled=voices.isNotEmpty()){Icon(Icons.Default.VolumeUp,null);Spacer(Modifier.width(8.dp));Text("Test offline voice")}
+    Text(speechStatus,color=MaterialTheme.colorScheme.primary,style=MaterialTheme.typography.bodySmall)
+    Text("Language pack availability is controlled by Android. Android 13+ can expose on-device recognition pack downloads; Android 12 can use already-installed offline recognizers.",style=MaterialTheme.typography.bodySmall,color=Muted)
+   }
+  }
+  Card(Modifier.fillMaxWidth()){
+   Column(Modifier.padding(16.dp),verticalArrangement=Arrangement.spacedBy(6.dp)){
+    Text("Privacy & device",style=MaterialTheme.typography.titleLarge,fontWeight=FontWeight.SemiBold)
+    Text("Offline-first: chats, books and models remain on this device. External AI is optional and disabled unless you explicitly enable it. A compatible .litertlm model must be installed separately for local chat generation.",style=MaterialTheme.typography.bodySmall,color=Muted)
+   }
+  }
  }
 }
 @Composable private fun InfoCard(title:String,body:String){Card(Modifier.fillMaxWidth().padding(bottom=10.dp)){Column(Modifier.padding(16.dp)){Text(title,fontWeight=FontWeight.SemiBold);Spacer(Modifier.height(4.dp));Text(body,color=Muted,style=MaterialTheme.typography.bodyMedium)}}}
