@@ -80,6 +80,17 @@ private val MIGRATION_7_8 = object : Migration(7, 8) {
     }
 }
 
+
+private val MIGRATION_9_10 = object : Migration(9, 10) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("CREATE VIRTUAL TABLE IF NOT EXISTS book_passages_fts USING fts4(text, content='book_passages')")
+        db.execSQL("INSERT INTO book_passages_fts(book_passages_fts) VALUES('rebuild')")
+        db.execSQL("CREATE TRIGGER IF NOT EXISTS book_passages_fts_insert AFTER INSERT ON book_passages BEGIN INSERT INTO book_passages_fts(docid,text) VALUES(new.rowid,new.text); END")
+        db.execSQL("CREATE TRIGGER IF NOT EXISTS book_passages_fts_delete AFTER DELETE ON book_passages BEGIN INSERT INTO book_passages_fts(book_passages_fts,docid,text) VALUES('delete',old.rowid,old.text); END")
+        db.execSQL("CREATE TRIGGER IF NOT EXISTS book_passages_fts_update AFTER UPDATE OF text ON book_passages BEGIN INSERT INTO book_passages_fts(book_passages_fts,docid,text) VALUES('delete',old.rowid,old.text); INSERT INTO book_passages_fts(docid,text) VALUES(new.rowid,new.text); END")
+    }
+}
+
 private val MIGRATION_8_9 = object : Migration(8, 9) {
     override fun migrate(db: SupportSQLiteDatabase) {
         db.execSQL("CREATE TABLE IF NOT EXISTS knowledge_books (id TEXT NOT NULL, bookId TEXT NOT NULL, detectedTitle TEXT NOT NULL, author TEXT NOT NULL, publisher TEXT NOT NULL, edition TEXT NOT NULL, subject TEXT NOT NULL, summary TEXT NOT NULL, chapterOutline TEXT NOT NULL, extractedPageCount INTEGER NOT NULL, extractedChars INTEGER NOT NULL, passageCount INTEGER NOT NULL, topicCount INTEGER NOT NULL, qualityScore INTEGER NOT NULL, reviewState TEXT NOT NULL, processedAt INTEGER NOT NULL, PRIMARY KEY(id))")
@@ -133,7 +144,7 @@ object DatabaseProvider {
             ENCRYPTED_NAME
         )
             .openHelperFactory(SupportOpenHelperFactory(passphrase.copyOf()))
-            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9)
+            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10)
             .setJournalMode(RoomDatabase.JournalMode.TRUNCATE)
             .build()
 

@@ -97,9 +97,11 @@ fun BookLibraryScreen(database: AppDatabase) {
 
     LaunchedEffect(query, selectedBook?.id) {
         val clean = query.trim()
-        results = if (clean.length < 2) emptyList()
-        else selectedBook?.let { database.bookDao().searchInBook(it.id, clean) }
-            ?: database.bookDao().searchAll(clean)
+        val ftsQuery = clean.split(Regex("\\s+")).filter { it.isNotBlank() }
+            .joinToString(" ") { "\"" + it.replace("\"", "") + "\"" }
+        results = if (clean.length < 2 || ftsQuery.isBlank()) emptyList()
+        else selectedBook?.let { database.bookDao().searchInBookIndexed(it.id, ftsQuery) }
+            ?: database.bookDao().searchAllIndexed(ftsQuery)
     }
 
     Column(Modifier.fillMaxSize().padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {

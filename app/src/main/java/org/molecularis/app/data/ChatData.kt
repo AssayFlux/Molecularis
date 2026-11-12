@@ -74,14 +74,21 @@ data class BookPassageEntity(
  val pageNumber:Int,
  val text:String
 )
+
+@Fts4(contentEntity = BookPassageEntity::class)
+@Entity(tableName = "book_passages_fts")
+data class BookPassageFts(val text: String)
+
 @Dao interface BookDao {
  @Query("SELECT * FROM books WHERE id NOT GLOB '__stage__*' ORDER BY importedAt DESC") fun books():Flow<List<BookEntity>>
  @Insert suspend fun addBook(book:BookEntity)
  @Insert suspend fun addPassages(passages:List<BookPassageEntity>)
  @Query("DELETE FROM book_passages WHERE bookId=:bookId") suspend fun deletePassages(bookId:String)
  @Query("SELECT * FROM book_passages WHERE bookId=:bookId ORDER BY pageNumber,chunkIndex") suspend fun passages(bookId:String):List<BookPassageEntity>
+ @Query("SELECT book_passages.* FROM book_passages JOIN book_passages_fts ON book_passages_fts.rowid = book_passages.rowid WHERE book_passages.bookId=:bookId AND book_passages_fts MATCH :query ORDER BY book_passages.pageNumber LIMIT 100") suspend fun searchInBookIndexed(bookId:String,query:String):List<BookPassageEntity>
+ @Query("SELECT book_passages.* FROM book_passages JOIN book_passages_fts ON book_passages_fts.rowid = book_passages.rowid WHERE book_passages.bookId IN (SELECT id FROM books WHERE id NOT GLOB '__stage__*') AND book_passages_fts MATCH :query ORDER BY book_passages.bookId,book_passages.pageNumber LIMIT 100") suspend fun searchAllIndexed(query:String):List<BookPassageEntity>
  @Query("SELECT * FROM book_passages WHERE bookId=:bookId AND text LIKE '%' || :query || '%' ORDER BY pageNumber LIMIT 100") suspend fun searchInBook(bookId:String,query:String):List<BookPassageEntity>
- @Query("SELECT * FROM book_passages WHERE bookId IN (SELECT id FROM books WHERE id NOT GLOB '__stage__*') AND text LIKE '%' || :query || '%' ORDER BY bookId,pageNumber LIMIT 100") suspend fun searchAll(query:String):List<BookPassageEntity>
+ @Query("SELECT * FROM book_passages WHERE bookId IN (SELECT id FROM books WHERE id NOT GLOB '__stage__*') AND text LIKE '%' || :query || '%' ORDER BY bookId,pageNumber LIMIT 100") suspend fun searchAll(query:String)
  @Query("UPDATE books SET pageCount=:pageCount, extractedChars=:extractedChars WHERE id=:bookId") suspend fun updateBookStats(bookId:String,pageCount:Int,extractedChars:Int)
  @Query("DELETE FROM books WHERE id=:bookId") suspend fun deleteBook(bookId:String)
  @Query("DELETE FROM books WHERE id GLOB '__stage__*' AND importedAt < :olderThan") suspend fun cleanupStaleStagingBooks(olderThan:Long)
@@ -137,7 +144,7 @@ data class SavedLessonEntity(
  @Query("DELETE FROM saved_lessons WHERE id=:id") suspend fun deleteLesson(id:String)
 }
 
-@Database(entities=[ConversationEntity::class,MessageEntity::class,LocalModelEntity::class,WorkspaceProjectEntity::class,KnowledgeChunkEntity::class,BookEntity::class,BookPassageEntity::class,KnowledgeBookEntity::class,KnowledgeTopicEntity::class,SavedLessonEntity::class],version=9,exportSchema=false)
+@Database(entities=[ConversationEntity::class,MessageEntity::class,LocalModelEntity::class,WorkspaceProjectEntity::class,KnowledgeChunkEntity::class,BookEntity::class,BookPassageEntity::class,KnowledgeBookEntity::class,KnowledgeTopicEntity::class,SavedLessonEntity::class,BookPassageFts::class],version=10,exportSchema=false)
 abstract class AppDatabase:RoomDatabase(){
  abstract fun chatDao():ChatDao
  abstract fun modelDao():ModelDao
