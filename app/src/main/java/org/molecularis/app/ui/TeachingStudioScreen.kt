@@ -38,7 +38,7 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, onSpeak
     var preparing by remember { mutableStateOf(false) }
     var slidePreview by remember { mutableStateOf(false) }
     var slideIndex by remember { mutableIntStateOf(0) }
-    val slides = remember(outline, topic, level, minutes) { buildLessonSlides(outline, topic, level, minutes.toInt()) }
+    val slides = remember(outline, topic, level, minutes) { LessonSlideBuilder.build(outline, topic, level, minutes.toInt()) }
 
     Column(
         modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(18.dp),
@@ -324,40 +324,3 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, onSpeak
     }
 }
 
-private data class LessonSlide(val title: String, val points: List<String>)
-
-private fun buildLessonSlides(outline: String, topic: String, level: String, minutes: Int): List<LessonSlide> {
-    if (outline.isBlank()) return emptyList()
-    val result = mutableListOf(
-        LessonSlide(topic.ifBlank { "Biochemistry lesson" }, listOf("Audience: $level", "Teaching time: $minutes minutes", "Molecularis · Teaching Studio"))
-    )
-    var currentTitle: String? = null
-    var currentPoints = mutableListOf<String>()
-    fun flush() {
-        val title = currentTitle ?: return
-        val cleanPoints = currentPoints.map { it.trim().removePrefix("-").trim() }
-            .filter { it.isNotBlank() && !it.startsWith("SOURCE ") && !it.startsWith("REVIEW NOTE:") }
-            .take(6)
-        result += LessonSlide(title, cleanPoints)
-        currentTitle = null
-        currentPoints = mutableListOf()
-    }
-    outline.lineSequence().forEach { raw ->
-        val line = raw.trim()
-        val heading = Regex("^\\d+\\.\\s+(.+)$").matchEntire(line)
-        when {
-            heading != null -> {
-                flush()
-                currentTitle = heading.groupValues[1]
-            }
-            currentTitle != null && line.startsWith("LOCAL LIBRARY RETRIEVAL") -> flush()
-            currentTitle != null && line.startsWith("TEACHING EMPHASIS:") -> flush()
-            currentTitle != null && line.isNotBlank() -> {
-                val point = line.removePrefix("-").trim()
-                if (point.isNotBlank()) currentPoints += point
-            }
-        }
-    }
-    flush()
-    return result
-}
