@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import org.molecularis.app.data.AppDatabase
 import org.molecularis.app.data.SavedLessonEntity
+import org.molecularis.app.features.LessonSlideBuilder
 import java.io.File
 import java.util.UUID
 
