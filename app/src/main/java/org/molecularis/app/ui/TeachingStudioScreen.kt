@@ -15,19 +15,16 @@ import androidx.compose.material.icons.filled.Slideshow
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import org.molecularis.app.data.AppDatabase
 import org.molecularis.app.data.SavedLessonEntity
 import org.molecularis.app.features.LessonSlideBuilder
-import java.io.File
 import java.util.UUID
 
 @Composable
 fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localModelAvailable: Boolean, onSpeak: (String) -> Unit, onGenerateWithLocalModel: suspend (String) -> String) {
-    val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val books by database.bookDao().books().collectAsState(initial = emptyList())
     val savedLessons by database.lessonDao().lessons().collectAsState(initial = emptyList())
@@ -271,10 +268,7 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localMo
                                             updatedAt = now
                                         )
                                     )
-                                    val directory = File(context.filesDir, "lessons").apply { mkdirs() }
-                                    val safeName = topic.trim().lowercase().replace(Regex("[^a-z0-9]+"), "-").trim('-').take(48).ifBlank { "lesson" }
-                                    File(directory, safeName + "-" + now + ".md").writeText(outline)
-                                    status = "Lesson saved to your encrypted local library."
+                                    status = "Lesson saved to the encrypted local database on this device."
                                 } catch (error: Throwable) {
                                     status = "Could not save lesson: " + (error.message ?: "unknown error")
                                 }
