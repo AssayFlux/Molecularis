@@ -12,8 +12,9 @@ The professor selects the topic, student level and duration. Molecularis organiz
 
 ## Core capabilities
 
-- Import permitted books and study materials into a local library.
-- Extract, organize and search content by subject, topic and subtopic.
+- Preserve original permitted books in Library without modifying source files.
+- Process selected books into a separate Knowledge Pool with page-linked passages, conservative metadata detection, chapter/topic candidates and quality indicators.
+- Require professor review before reviewed Knowledge Pool sources are used to ground teaching generation.
 - Generate teaching flows adapted for MBBS, MD, DNB and PhD levels.
 - Build slides and export presentations.
 - Assemble scientific diagrams from reusable SVG components and reveal them progressively.
@@ -46,7 +47,7 @@ The Android application now starts from the reusable Astronaut Kotlin/Compose fo
 8. **Autonomous teaching:** schedule, preflight and play prepared lectures.
 9. **Release quality:** scientific review, device testing, privacy and performance.
 
-The first vertical slice is implemented in code: **import a PDF, extract page text on-device, search passages, prepare and edit a structured teaching outline, save and reopen it, and read it aloud using an installed offline Android voice.** CI and physical-device acceptance are still pending.
+The first vertical slice now separates **Library source storage** from **Knowledge Pool processing**. Add an original PDF to Library, then explicitly process it in Knowledge Pool to OCR pages, store source-linked passages, propose metadata and chapter headings, inspect extraction-quality indicators, and approve the source. Teaching Studio and offline textbook chat now use only professor-reviewed Knowledge Pool sources. The extraction/heading analysis is a deterministic first pass, not model fine-tuning or a guarantee of scientific correctness.
 
 ## Project documentation
 
@@ -68,8 +69,8 @@ Import only books and materials you are authorized to store and process. Images 
 
 ## Current status
 
-An Android application foundation has been adapted from Astronaut and rebranded for Molecularis. The app includes the Compose interface, encrypted Room persistence, local retrieval, model management and Android voice components. The textbook library supports PDF import up to 5,000 pages per book, page-by-page on-device OCR, bounded passage batching, page-aware storage, keyword search and deletion. A 25-million-character safety ceiling also applies; large imports remain foreground-only and need device stress testing.
+An Android application foundation has been adapted from Astronaut and rebranded for Molecularis. The app includes the Compose interface, encrypted Room persistence, local retrieval, model management and Android voice components. Library preserves original PDFs up to the 5,000-page processing ceiling; Knowledge Pool performs page-by-page on-device OCR in bounded batches and stores page-aware passages, metadata candidates, chapter/topic candidates and a transparent readiness score. A 25-million-character safety ceiling also applies; processing remains foreground-only and needs device stress testing.
 
-Offline chat now retrieves matching passages from imported textbooks and includes book/page/passage labels in the local model prompt so answers can cite their source. This is simple lexical retrieval, not a guarantee of completeness or scientific correctness. The Teaching Studio prepares an editable, level-aware outline with retrieved textbook passages. When a compatible LiteRT-LM model is loaded, it can optionally draft a longer explanation using those local excerpts; the excerpts are retained with the draft and professor verification is required. Lessons are saved in the encrypted local database. Numbered outline sections become a navigable slide preview, and the professor can manually narrate each slide with an installed Android TTS voice.
+Offline chat and Teaching Studio retrieve matching passages only from professor-reviewed Knowledge Pool sources and include book/page/passage labels in the local model prompt. This is simple lexical retrieval, not a guarantee of completeness or scientific correctness. The Teaching Studio prepares an editable, level-aware outline with retrieved textbook passages. When a compatible LiteRT-LM model is loaded, it can optionally draft a longer explanation using those local excerpts; the excerpts are retained with the draft and professor verification is required. Lessons are saved in the encrypted local database. Numbered outline sections become a navigable slide preview, and the professor can manually narrate each slide with an installed Android TTS voice.
 
-A validated biochemical diagram schema and XML-escaped SVG renderer are integrated into Teaching Studio as a progressive lesson-flow preview derived from the professor's outline. The diagram can reveal lesson sections step by step; it is not yet a biochemical reaction editor and does not fabricate pathway chemistry. Rich slide authoring and export, diagram pan/zoom and pathway templates, automatic narration timelines, background book ingestion and scheduled autonomous teaching remain open. The latest importer, diagram and cleanup changes are awaiting CI verification. Physical-device, offline-mode and professor acceptance testing have not yet been performed.
+A validated biochemical diagram schema and XML-escaped SVG renderer are integrated into Teaching Studio as a progressive lesson-flow preview derived from the professor's outline. The diagram can reveal lesson sections step by step; it is not yet a biochemical reaction editor and does not fabricate pathway chemistry. Rich slide authoring and export, diagram pan/zoom and pathway templates, automatic narration timelines, background book ingestion and scheduled autonomous teaching remain open. The latest Knowledge Pool, settings, biometric and diagram changes are awaiting CI verification. Settings now has separate cards for appearance, font family, colour palette, custom background image, chat/AI behaviour, speech/voice and privacy. A fingerprint/strong-biometric app lock with device-credential fallback is implemented; cloud account sign-in remains unconfigured because the project has no authentication backend/provider yet. Physical-device, offline-mode and professor acceptance testing have not yet been performed.
