@@ -156,6 +156,17 @@ fun KnowledgePoolScreen(database: AppDatabase) {
                     Text("Subject: ${selected!!.subject}", style = MaterialTheme.typography.bodySmall)
                     Text("Quality readiness: ${selected!!.qualityScore}/100 · ${selected!!.reviewState.replace('_', ' ')}", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary)
                     Text(selected!!.summary, style = MaterialTheme.typography.bodySmall)
+                    Button(
+                        onClick = {
+                            scope.launch {
+                                database.knowledgePoolDao().setReviewState(selected!!.id, "approved")
+                                selected = selected!!.copy(reviewState = "approved")
+                                status = "Source marked as professor-reviewed. Individual topic approvals remain visible below."
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = selected!!.reviewState != "approved"
+                    ) { Text(if (selected!!.reviewState == "approved") "Source reviewed" else "Mark source as reviewed") }
                     Divider()
                     Text("Detected chapter / topic candidates", fontWeight = FontWeight.SemiBold)
                     if (topics.isEmpty()) Text("No reliable headings were detected. Add topics manually in a future review editor.", style = MaterialTheme.typography.bodySmall)
@@ -166,7 +177,17 @@ fun KnowledgePoolScreen(database: AppDatabase) {
                                 Text("Page ${topic.startPage} · confidence ${"%.0f".format(topic.confidence * 100)}% · evidence: ${topic.evidence}", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                             }
                             Checkbox(checked = topic.approved, onCheckedChange = { checked ->
-                                scope.launch { database.knowledgePoolDao().setTopicApproved(topic.id, checked); topics = database.knowledgePoolDao().topics(selected!!.id) }
+                                scope.launch {
+                                    database.knowledgePoolDao().setTopicApproved(topic.id, checked)
+                                    topics = database.knowledgePoolDao().topics(selected!!.id)
+                                    if (topics.isNotEmpty() && topics.all { it.approved }) {
+                                        database.knowledgePoolDao().setReviewState(selected!!.id, "approved")
+                                        selected = selected!!.copy(reviewState = "approved")
+                                    } else if (selected!!.reviewState == "approved") {
+                                        database.knowledgePoolDao().setReviewState(selected!!.id, "needs_review")
+                                        selected = selected!!.copy(reviewState = "needs_review")
+                                    }
+                                }
                             })
                         }
                     }
