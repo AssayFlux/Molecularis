@@ -62,6 +62,17 @@ private val MIGRATION_5_6 = object : Migration(5, 6) {
     }
 }
 
+
+private val MIGRATION_6_7 = object : Migration(6, 7) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("CREATE TABLE IF NOT EXISTS books (id TEXT NOT NULL, title TEXT NOT NULL, originalFileName TEXT NOT NULL, localPath TEXT NOT NULL, sourceUri TEXT NOT NULL, pageCount INTEGER NOT NULL, extractedChars INTEGER NOT NULL, importedAt INTEGER NOT NULL, PRIMARY KEY(id))")
+        db.execSQL("CREATE INDEX IF NOT EXISTS index_books_importedAt ON books(importedAt)")
+        db.execSQL("CREATE TABLE IF NOT EXISTS book_passages (id TEXT NOT NULL, bookId TEXT NOT NULL, chunkIndex INTEGER NOT NULL, pageNumber INTEGER NOT NULL, text TEXT NOT NULL, PRIMARY KEY(id), FOREIGN KEY(bookId) REFERENCES books(id) ON UPDATE NO ACTION ON DELETE CASCADE)")
+        db.execSQL("CREATE INDEX IF NOT EXISTS index_book_passages_bookId ON book_passages(bookId)")
+        db.execSQL("CREATE INDEX IF NOT EXISTS index_book_passages_pageNumber ON book_passages(pageNumber)")
+    }
+}
+
 object DatabaseProvider {
     private const val LEGACY_NAME = "astronaut-local.db"
     private const val ENCRYPTED_NAME = "astronaut-secure.db"
@@ -105,7 +116,7 @@ object DatabaseProvider {
             ENCRYPTED_NAME
         )
             .openHelperFactory(SupportOpenHelperFactory(passphrase.copyOf()))
-            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6)
+            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7)
             .setJournalMode(RoomDatabase.JournalMode.TRUNCATE)
             .build()
 
@@ -146,7 +157,7 @@ object DatabaseProvider {
         try {
             val source = legacy.openHelper.writableDatabase
             val target = encryptedTemp.openHelper.writableDatabase
-            val tables = listOf("conversations", "messages", "local_models", "workspace_projects", "knowledge_chunks")
+            val tables = listOf("conversations", "messages", "local_models", "workspace_projects", "knowledge_chunks", "books", "book_passages")
             target.beginTransaction()
             try {
                 tables.forEach { table -> copyTable(source, target, table) }
