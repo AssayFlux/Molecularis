@@ -25,7 +25,7 @@ private data class StudioFile(val document: DocumentFile, val relativePath: Stri
 fun DeveloperStudioScreen(modifier: Modifier = Modifier) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val prefs = remember(context) { context.getSharedPreferences("astronaut_developer_studio", 0) }
+    val prefs = remember(context) { context.getSharedPreferences("molecularis_developer_studio", 0) }
     var treeUri by remember { mutableStateOf(prefs.getString("tree_uri", null)) }
     var files by remember { mutableStateOf(emptyList<StudioFile>()) }
     var selected by remember { mutableStateOf<StudioFile?>(null) }
