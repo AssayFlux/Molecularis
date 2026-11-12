@@ -80,6 +80,16 @@ private val MIGRATION_7_8 = object : Migration(7, 8) {
     }
 }
 
+private val MIGRATION_8_9 = object : Migration(8, 9) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("CREATE TABLE IF NOT EXISTS knowledge_books (id TEXT NOT NULL, bookId TEXT NOT NULL, detectedTitle TEXT NOT NULL, author TEXT NOT NULL, publisher TEXT NOT NULL, edition TEXT NOT NULL, subject TEXT NOT NULL, summary TEXT NOT NULL, chapterOutline TEXT NOT NULL, extractedPageCount INTEGER NOT NULL, extractedChars INTEGER NOT NULL, passageCount INTEGER NOT NULL, topicCount INTEGER NOT NULL, qualityScore INTEGER NOT NULL, reviewState TEXT NOT NULL, processedAt INTEGER NOT NULL, PRIMARY KEY(id))")
+        db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS index_knowledge_books_bookId ON knowledge_books(bookId)")
+        db.execSQL("CREATE TABLE IF NOT EXISTS knowledge_topics (id TEXT NOT NULL, knowledgeBookId TEXT NOT NULL, name TEXT NOT NULL, startPage INTEGER NOT NULL, confidence REAL NOT NULL, evidence TEXT NOT NULL, approved INTEGER NOT NULL, PRIMARY KEY(id))")
+        db.execSQL("CREATE INDEX IF NOT EXISTS index_knowledge_topics_knowledgeBookId ON knowledge_topics(knowledgeBookId)")
+        db.execSQL("CREATE INDEX IF NOT EXISTS index_knowledge_topics_name ON knowledge_topics(name)")
+    }
+}
+
 object DatabaseProvider {
     private const val LEGACY_NAME = "molecularis-local.db"
     private const val ENCRYPTED_NAME = "molecularis-secure.db"
@@ -123,7 +133,7 @@ object DatabaseProvider {
             ENCRYPTED_NAME
         )
             .openHelperFactory(SupportOpenHelperFactory(passphrase.copyOf()))
-            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8)
+            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9)
             .setJournalMode(RoomDatabase.JournalMode.TRUNCATE)
             .build()
 
@@ -164,7 +174,7 @@ object DatabaseProvider {
         try {
             val source = legacy.openHelper.writableDatabase
             val target = encryptedTemp.openHelper.writableDatabase
-            val tables = listOf("conversations", "messages", "local_models", "workspace_projects", "knowledge_chunks", "books", "book_passages", "saved_lessons")
+            val tables = listOf("conversations", "messages", "local_models", "workspace_projects", "knowledge_chunks", "books", "book_passages", "knowledge_books", "knowledge_topics", "saved_lessons")
             target.beginTransaction()
             try {
                 tables.forEach { table -> copyTable(source, target, table) }
