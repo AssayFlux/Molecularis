@@ -74,7 +74,7 @@ import java.io.File
 import java.util.UUID
 
 private val Muted=Color(0xFF65736D)
-private enum class Section(val label:String){CHATS("Chats"),AI_HUB("AI Hub"),MODELS("Models"),TRAINING("Training"),WORKSPACE("Workspace"),ONLINE_AI("Online AI"),SETTINGS("Settings")}
+private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),AI_HUB("AI Hub"),MODELS("Models"),TRAINING("Training"),WORKSPACE("Workspace"),ONLINE_AI("Online AI"),SETTINGS("Settings")}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable fun MessengerApp(){
@@ -324,24 +324,24 @@ private enum class Section(val label:String){CHATS("Chats"),AI_HUB("AI Hub"),MOD
  else
   lightColorScheme(primary=selectedAccent,onPrimary=selectedOnAccent,primaryContainer=selectedAccent.copy(alpha=0.14f),onPrimaryContainer=Color(0xFF20242B),background=Color(0xFFF6F7F9),surface=Color.White,onSurface=Color(0xFF20242B),secondary=selectedAccent)){
   Scaffold(containerColor=MaterialTheme.colorScheme.background,topBar={TopAppBar(title={Column{
-   Text("ASTRONAUT",style=MaterialTheme.typography.labelMedium,color=MaterialTheme.colorScheme.primary,fontWeight=FontWeight.Bold)
+   Text("MOLECULARIS",style=MaterialTheme.typography.labelMedium,color=MaterialTheme.colorScheme.primary,fontWeight=FontWeight.Bold)
    Text(section.label,style=MaterialTheme.typography.titleLarge,fontWeight=FontWeight.SemiBold)
   }},actions={if(section==Section.CHATS) IconButton(onClick={scope.launch{selectedConversation=db.chatDao().addConversation(ConversationEntity(title="New conversation"))}}){Icon(Icons.Default.Add,"New chat")}},colors=TopAppBarDefaults.topAppBarColors(containerColor=MaterialTheme.colorScheme.background))},
    bottomBar={NavigationBar(containerColor=MaterialTheme.colorScheme.surface, tonalElevation=6.dp){
-    val primarySections=listOf(Section.CHATS,Section.AI_HUB,Section.MODELS,Section.WORKSPACE)
+    val primarySections=listOf(Section.TEACHING,Section.CHATS,Section.MODELS,Section.WORKSPACE)
     primarySections.forEach{item->
-     val icon=when(item){Section.CHATS->Icons.Default.ChatBubbleOutline;Section.AI_HUB->Icons.Default.Hub;Section.MODELS->Icons.Default.Memory;Section.WORKSPACE->Icons.Default.FolderOpen;else->Icons.Default.MoreHoriz}
+     val icon=when(item){Section.TEACHING->Icons.Default.School;Section.CHATS->Icons.Default.ChatBubbleOutline;Section.MODELS->Icons.Default.Memory;Section.WORKSPACE->Icons.Default.FolderOpen;else->Icons.Default.MoreHoriz}
      NavigationBarItem(selected=section==item,onClick={section=item;moreNavigationExpanded=false},icon={Icon(icon,item.label)},label={Text(item.label,maxLines=1)})
     }
     NavigationBarItem(
-     selected=section==Section.TRAINING||section==Section.ONLINE_AI||section==Section.SETTINGS,
+     selected=section==Section.AI_HUB||section==Section.TRAINING||section==Section.ONLINE_AI||section==Section.SETTINGS,
      onClick={moreNavigationExpanded=true},
      icon={
       Box{
        Icon(Icons.Default.MoreHoriz,"More sections")
        DropdownMenu(expanded=moreNavigationExpanded,onDismissRequest={moreNavigationExpanded=false}){
-        listOf(Section.TRAINING,Section.ONLINE_AI,Section.SETTINGS).forEach{item->
-         val icon=when(item){Section.TRAINING->Icons.Default.Tune;Section.ONLINE_AI->Icons.Default.Cloud;else->Icons.Default.Settings}
+        listOf(Section.AI_HUB,Section.TRAINING,Section.ONLINE_AI,Section.SETTINGS).forEach{item->
+         val icon=when(item){Section.AI_HUB->Icons.Default.Hub;Section.TRAINING->Icons.Default.Tune;Section.ONLINE_AI->Icons.Default.Cloud;else->Icons.Default.Settings}
          DropdownMenuItem(text={Text(item.label)},leadingIcon={Icon(icon,null)},onClick={section=item;moreNavigationExpanded=false})
         }
        }
