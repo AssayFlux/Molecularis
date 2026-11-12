@@ -23,11 +23,14 @@ This roadmap is outcome-based. Complete and validate one usable vertical slice a
 - [x] Add SAF-based document picker and library screen.
 - [x] Add PDF page extraction through Android PDF rendering and on-device OCR; EPUB/DOCX remain deferred.
 - [x] Add on-device OCR for PDF pages (currently used for all pages; direct text-layer extraction is a future improvement).
+- [x] Raise the per-book PDF limit to 5,000 pages and stream OCR page-by-page into bounded Room batches.
 - [x] Persist book metadata and extracted passages in Room.
 - [x] Preserve PDF page numbers in extracted passage records (chapter-boundary detection remains open).
 - [x] Normalize and chunk extracted text into page-aware passages.
-- [ ] Add resumable background processing and progress/error UI.
-- [ ] Add delete/reimport behavior and derived-data cleanup.
+- [ ] Move large imports to resumable WorkManager processing with cancellation/recovery.
+- [x] Add import progress/error feedback and clean up partially imported book rows/files on failure.
+- [x] Add textbook deletion with Room cascade and local PDF file cleanup.
+- [ ] Add duplicate detection and safe reimport/replace workflow.
 
 **Current status:** the first SAF PDF import, on-device OCR, page-aware passage storage, local keyword search, book selection and textbook deletion are implemented. The importer is foreground-only and currently limited to 500 pages and 5 million extracted characters; resumable WorkManager processing, progress reporting and direct PDF text-layer extraction remain open.
 
@@ -137,6 +140,10 @@ This roadmap is outcome-based. Complete and validate one usable vertical slice a
 - [ ] Prepare signed release, backup/export guidance and crash diagnostics with privacy controls.
 
 **Exit criteria:** documented device matrix, passing automated tests, professor acceptance of sample lectures and a reproducible release build.
+
+## Large-book import update
+
+The importer accepts PDFs up to 5,000 pages. OCR is performed sequentially and each page's chunks are written in batches of at most 250 passages, avoiding the previous design's full-book text and full-book passage lists in memory. The import is still a foreground coroutine: keep Molecularis open during import. The 25-million-character ceiling is an additional safety bound, so 5,000 pages is a maximum page count, not a guarantee that every PDF of that size will fit every device. A 5,000-page real-world stress test is still required on representative Android hardware.
 
 ## First milestone status
 

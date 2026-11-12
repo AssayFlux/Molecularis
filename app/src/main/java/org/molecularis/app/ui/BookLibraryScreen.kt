@@ -30,6 +30,8 @@ import org.molecularis.app.features.OfflineDocumentReader
 import java.io.File
 import java.util.UUID
 
+private const val MAX_BOOK_EXTRACTED_CHARS = 25_000_000
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookLibraryScreen(database: AppDatabase) {
@@ -49,12 +51,13 @@ fun BookLibraryScreen(database: AppDatabase) {
                 importing = true
                 status = "Reading and indexing the selected PDF on this device…"
                 var localFile: File? = null
+                var importedChars = 0
+                val id = UUID.randomUUID().toString()
                 try {
                     val name = context.contentResolver.query(uri, arrayOf(android.provider.OpenableColumns.DISPLAY_NAME), null, null, null)?.use { cursor ->
                         if (cursor.moveToFirst()) cursor.getString(0) else null
                     } ?: "Biochemistry textbook.pdf"
                     require(name.endsWith(".pdf", true)) { "Please select a PDF textbook." }
-                    val id = UUID.randomUUID().toString()
                     val bookDir = File(context.filesDir, "books").apply { mkdirs() }
                     val safeName = name.replace(Regex("[^A-Za-z0-9._-]"), "_").take(100)
                     localFile = File(bookDir, "$id-$safeName")
@@ -63,36 +66,50 @@ fun BookLibraryScreen(database: AppDatabase) {
                             localFile!!.outputStream().buffered().use { output -> input.copyTo(output) }
                         } ?: error("Could not open the selected PDF.")
                     }
-                    val reader = OfflineDocumentReader(context)
-                    val extracted = try {
-                        reader.read(uri, "application/pdf", maxPdfPages = 5_000, displayName = name)
-                    } finally {
-                        reader.close()
-                    }
-                    require(extracted.isNotBlank()) { "No readable text was extracted from this PDF." }
-                    require(extracted.length <= 25_000_000) { "This import is too large for the first library release (25 million extracted characters)." }
-                    val pageBlocks = splitPages(extracted)
-                    require(pageBlocks.isNotEmpty()) { "No readable pages were found." }
                     val book = BookEntity(
                         id = id,
                         title = name.removeSuffix(".pdf").removeSuffix(".PDF"),
                         originalFileName = name,
                         localPath = localFile!!.absolutePath,
                         sourceUri = uri.toString(),
-                        pageCount = pageBlocks.size,
-                        extractedChars = extracted.length
+                        pageCount = 0,
+                        extractedChars = 0
                     )
-                    val rows = pageBlocks.flatMapIndexed { pageIndex, pageText ->
-                        splitChunks(pageText).mapIndexed { chunkIndex, chunk ->
-                            BookPassageEntity(UUID.randomUUID().toString(), id, chunkIndex, pageIndex + 1, chunk)
+                    database.bookDao().addBook(book)
+                    var passageCount = 0
+                    var pendingRows = mutableListOf<BookPassageEntity>()
+                    val reader = OfflineDocumentReader(context)
+                    val summary = try {
+                        reader.readPdfPages(uri, maxPdfPages = 5_000) { pageNumber, totalPages, pageText ->
+                            val nextChars = importedChars + pageText.length
+                            require(nextChars <= MAX_BOOK_EXTRACTED_CHARS) {
+                                "This book exceeds the 25 million extracted-character safety limit."
+                            }
+                            importedChars = nextChars
+                            splitChunks(pageText).forEachIndexed { chunkIndex, chunk ->
+                                pendingRows += BookPassageEntity(UUID.randomUUID().toString(), id, chunkIndex, pageNumber, chunk)
+                                if (pendingRows.size >= 250) {
+                                    database.bookDao().addPassages(pendingRows)
+                                    passageCount += pendingRows.size
+                                    pendingRows = mutableListOf()
+                                }
+                            }
+                            if (pageNumber % 25 == 0 || pageNumber == totalPages) {
+                                status = "Reading page " + pageNumber + " of " + totalPages + " · " + passageCount + " passages indexed"
+                            }
                         }
+                    } finally {
+                        reader.close()
                     }
-                    database.withTransaction {
-                        database.bookDao().addBook(book)
-                        rows.chunked(250).forEach { batch -> database.bookDao().addPassages(batch) }
+                    if (pendingRows.isNotEmpty()) {
+                        database.bookDao().addPassages(pendingRows)
+                        passageCount += pendingRows.size
                     }
-                    status = "Imported " + book.title + ": " + book.pageCount + " pages and " + rows.size + " searchable passages. The original PDF is stored on this device."
+                    require(summary.extractedChars > 0) { "No readable text was extracted from this PDF." }
+                    database.bookDao().updateBookStats(id, summary.pageCount, summary.extractedChars)
+                    status = "Imported " + book.title + ": " + summary.pageCount + " pages and " + passageCount + " searchable passages. The original PDF is stored on this device."
                 } catch (error: Throwable) {
+                    runCatching { database.bookDao().deleteBook(id) }
                     localFile?.delete()
                     status = "Import failed: " + (error.message ?: error.javaClass.simpleName)
                 } finally {
@@ -192,17 +209,6 @@ fun BookLibraryScreen(database: AppDatabase) {
                 }
             }
         }
-    }
-}
-
-private fun splitPages(text: String): List<String> {
-    val marker = Regex("\\[Page (\\d+)]")
-    val matches = marker.findAll(text).toList()
-    if (matches.isEmpty()) return listOf(text.trim()).filter { it.isNotBlank() }
-    return matches.mapIndexedNotNull { index, match ->
-        val start = match.range.last + 1
-        val end = matches.getOrNull(index + 1)?.range?.first ?: text.length
-        text.substring(start, end).trim().takeIf { it.isNotBlank() }
     }
 }
 

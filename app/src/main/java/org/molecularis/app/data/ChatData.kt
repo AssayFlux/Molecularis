@@ -81,6 +81,7 @@ data class BookPassageEntity(
  @Query("SELECT * FROM book_passages WHERE bookId=:bookId ORDER BY pageNumber,chunkIndex") suspend fun passages(bookId:String):List<BookPassageEntity>
  @Query("SELECT * FROM book_passages WHERE bookId=:bookId AND text LIKE '%' || :query || '%' ORDER BY pageNumber LIMIT 100") suspend fun searchInBook(bookId:String,query:String):List<BookPassageEntity>
  @Query("SELECT * FROM book_passages WHERE text LIKE '%' || :query || '%' ORDER BY bookId,pageNumber LIMIT 100") suspend fun searchAll(query:String):List<BookPassageEntity>
+ @Query("UPDATE books SET pageCount=:pageCount, extractedChars=:extractedChars WHERE id=:bookId") suspend fun updateBookStats(bookId:String,pageCount:Int,extractedChars:Int)
  @Query("DELETE FROM books WHERE id=:bookId") suspend fun deleteBook(bookId:String)
 }
 

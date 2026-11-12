@@ -68,7 +68,7 @@ Import only books and materials you are authorized to store and process. Images 
 
 ## Current status
 
-An Android application foundation has been adapted from Astronaut and rebranded for Molecularis. The app includes the Compose interface, encrypted Room persistence, local retrieval, model management and Android voice components. The textbook library supports PDF import, on-device OCR, page-aware passage storage, keyword search and deletion.
+An Android application foundation has been adapted from Astronaut and rebranded for Molecularis. The app includes the Compose interface, encrypted Room persistence, local retrieval, model management and Android voice components. The textbook library supports PDF import up to 5,000 pages per book, page-by-page on-device OCR, bounded passage batching, page-aware storage, keyword search and deletion. A 25-million-character safety ceiling also applies; large imports remain foreground-only and need device stress testing.
 
 The Teaching Studio prepares an editable, level-aware outline with retrieved textbook passages. When a compatible LiteRT-LM model is loaded, it can optionally draft a longer explanation using those local excerpts; the excerpts are retained with the draft and professor verification is required. Lessons are saved in the encrypted local database. Numbered outline sections become a navigable slide preview, and the professor can manually narrate each slide with an installed Android TTS voice.
 

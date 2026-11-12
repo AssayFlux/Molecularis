@@ -49,6 +49,46 @@ class OfflineDocumentReader(private val context: Context) {
         finally { bitmap.recycle() }
     }
 
+    /**
+     * OCR a large PDF one page at a time so the caller can persist bounded batches instead of
+     * holding an entire 5,000-page textbook and all of its chunks in memory.
+     */
+    suspend fun readPdfPages(
+        uri: Uri,
+        maxPdfPages: Int,
+        onPage: suspend (pageNumber: Int, totalPages: Int, text: String) -> Unit
+    ): PdfExtractionSummary = withContext(Dispatchers.IO) {
+        require(maxPdfPages in 1..5_000) { "PDF import limit must be between 1 and 5,000 pages." }
+        val pfd = context.contentResolver.openFileDescriptor(uri, "r") ?: error("Cannot open PDF")
+        pfd.use { descriptor ->
+            PdfRenderer(descriptor).use { pdf ->
+                require(pdf.pageCount <= maxPdfPages) {
+                    "PDF has ${pdf.pageCount} pages; limit is $maxPdfPages pages per import."
+                }
+                var extractedChars = 0
+                for (index in 0 until pdf.pageCount) {
+                    val pageText = pdf.openPage(index).use { page ->
+                        val scale = min(2.0, 1800.0 / maxOf(page.width, page.height)).toFloat()
+                        val bitmap = Bitmap.createBitmap(
+                            (page.width * scale).toInt().coerceAtLeast(1),
+                            (page.height * scale).toInt().coerceAtLeast(1),
+                            Bitmap.Config.ARGB_8888
+                        )
+                        try {
+                            page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
+                            recognizer.process(InputImage.fromBitmap(bitmap, 0)).await().text
+                        } finally {
+                            bitmap.recycle()
+                        }
+                    }
+                    extractedChars += pageText.length
+                    onPage(index + 1, pdf.pageCount, pageText)
+                }
+                PdfExtractionSummary(pdf.pageCount, extractedChars)
+            }
+        }
+    }
+
     private suspend fun readPdf(uri: Uri, maxPages: Int): String {
         val pfd = context.contentResolver.openFileDescriptor(uri, "r") ?: error("Cannot open PDF")
         return pfd.use { descriptor ->
@@ -110,6 +150,8 @@ private fun BufferedReader.readBounded(maxChars: Int): String {
     }
     return out.toString()
 }
+
+data class PdfExtractionSummary(val pageCount: Int, val extractedChars: Int)
 
 data class KnowledgeChunk(val source: String, val index: Int, val text: String, val pageNumber: Int? = null)
 data class RetrievedChunk(val chunk: KnowledgeChunk, val score: Double)
