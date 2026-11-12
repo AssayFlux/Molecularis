@@ -18,6 +18,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -31,6 +32,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -82,7 +86,7 @@ private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LI
  val db= remember{DatabaseProvider.get(context)}
  val runtime= remember{LiteRtRuntime(context)}
  val scope= rememberCoroutineScope()
- var section by remember{mutableStateOf(Section.TEACHING)}
+ var section by remember{mutableStateOf(Section.CHATS)}
  var moreNavigationExpanded by remember{mutableStateOf(false)}
  var selectedConversation by remember{mutableStateOf<Long?>(null)}
  var draft by remember{mutableStateOf("")}
@@ -136,6 +140,7 @@ private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LI
  var loadingModel by remember{mutableStateOf(false)}
  var sending by remember{mutableStateOf(false)}
  var showNewProject by remember{mutableStateOf(false)}
+ var showTeachingStudio by remember{mutableStateOf(false)}
  var projectName by remember{mutableStateOf("")}
  var projectDescription by remember{mutableStateOf("")}
  var collaborationPrompt by remember{mutableStateOf("")}
@@ -327,10 +332,10 @@ private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LI
    Text("MOLECULARIS",style=MaterialTheme.typography.labelMedium,color=MaterialTheme.colorScheme.primary,fontWeight=FontWeight.Bold)
    Text(section.label,style=MaterialTheme.typography.titleLarge,fontWeight=FontWeight.SemiBold)
   }},actions={if(section==Section.CHATS) IconButton(onClick={scope.launch{selectedConversation=db.chatDao().addConversation(ConversationEntity(title="New conversation"))}}){Icon(Icons.Default.Add,"New chat")}},colors=TopAppBarDefaults.topAppBarColors(containerColor=MaterialTheme.colorScheme.background))},
-   bottomBar={NavigationBar(containerColor=MaterialTheme.colorScheme.surface, tonalElevation=6.dp){
-    val primarySections=listOf(Section.TEACHING,Section.CHATS,Section.MODELS,Section.WORKSPACE)
+   bottomBar={if(WindowInsets.ime.getBottom(LocalDensity.current)==0) NavigationBar(containerColor=MaterialTheme.colorScheme.surface, tonalElevation=6.dp){
+    val primarySections=listOf(Section.CHATS,Section.MODELS,Section.WORKSPACE,Section.LIBRARY)
     primarySections.forEach{item->
-     val icon=when(item){Section.TEACHING->Icons.Default.School;Section.CHATS->Icons.Default.ChatBubbleOutline;Section.MODELS->Icons.Default.Memory;Section.WORKSPACE->Icons.Default.FolderOpen;else->Icons.Default.MoreHoriz}
+     val icon=when(item){Section.CHATS->Icons.Default.ChatBubbleOutline;Section.MODELS->Icons.Default.Memory;Section.WORKSPACE->Icons.Default.FolderOpen;Section.LIBRARY->Icons.Default.MenuBook;else->Icons.Default.MoreHoriz}
      NavigationBarItem(selected=section==item,onClick={section=item;moreNavigationExpanded=false},icon={Icon(icon,item.label)},label={Text(item.label,maxLines=1)})
     }
     NavigationBarItem(
@@ -356,7 +361,7 @@ private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LI
    when(section){
     Section.TEACHING->TeachingStudioScreen(db, voiceAvailable = offlineTtsVoices.isNotEmpty(), localModelAvailable = activeModelPath != null && activeModelName != null, onSpeak = { voiceController.speak(it) }, onGenerateWithLocalModel = { prompt -> runtime.generate(prompt) })
     Section.LIBRARY->BookLibraryScreen(db)
-    Section.CHATS->ChatScreen(conversations,conversationId,messages,draft,{draft=it},pendingAttachment?.second,activeModelName,runtimeMessage,loadingModel,sending,voiceListening,
+    Section.CHATS->ChatScreen(conversations,conversationId,messages,draft,{draft=it},pendingAttachment?.second,activeModelName,runtimeMessage,loadingModel,sending,voiceListening,showTeachingStudio={showTeachingStudio=true},onOpenLibrary={section=Section.LIBRARY},onOpenModels={section=Section.MODELS},onOpenAiHub={section=Section.AI_HUB},onVoice=
      {if(voiceListening)voiceController.stopListening()else if(ContextCompat.checkSelfPermission(context,Manifest.permission.RECORD_AUDIO)==PackageManager.PERMISSION_GRANTED)voiceController.startListening()else microphonePermission.launch(Manifest.permission.RECORD_AUDIO)},
      {text->voiceController.speak(text)} ,
      {attachmentPicker.launch(arrayOf("*/*"))},{pendingAttachment=null},{selectedConversation=it},{id->scope.launch{
@@ -460,7 +465,7 @@ private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LI
         }catch(error:Throwable){db.chatDao().addMessage(MessageEntity(conversationId=target,body="Attachment processing failed: "+(error.message?:error.javaClass.simpleName),role="assistant",status="error"))}finally{draft="";pendingAttachment=null;sending=false}
        }
       }
-     })
+     }, onTeach=showTeachingStudio, onLibrary=onOpenLibrary, onModels=onOpenModels, onAiHub=onOpenAiHub)
     Section.AI_HUB->CollaborationScreen(models,collaborationPrompt,{collaborationPrompt=it},collaborationStatus,collaborating){
      val prompt=collaborationPrompt.trim()
      if(prompt.isNotBlank()&&!collaborating){
@@ -675,6 +680,18 @@ private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LI
    }
   }}}
  }
+ if(showTeachingStudio) Dialog(onDismissRequest={showTeachingStudio=false},properties=DialogProperties(usePlatformDefaultWidth=false)) {
+  Surface(Modifier.fillMaxWidth().fillMaxHeight(0.96f),shape=RoundedCornerShape(24.dp),color=MaterialTheme.colorScheme.background) {
+   Column(Modifier.fillMaxSize()) {
+    Row(Modifier.fillMaxWidth().padding(horizontal=12.dp,vertical=6.dp),verticalAlignment=Alignment.CenterVertically) {
+     Text("Teach a lesson",modifier=Modifier.weight(1f),style=MaterialTheme.typography.titleLarge,fontWeight=FontWeight.SemiBold)
+     IconButton(onClick={showTeachingStudio=false}) { Icon(Icons.Default.Close,"Close teaching studio") }
+    }
+    HorizontalDivider()
+    TeachingStudioScreen(db,voiceAvailable=offlineTtsVoices.isNotEmpty(),localModelAvailable=activeModelPath!=null&&activeModelName!=null,onSpeak={voiceController.speak(it)},onGenerateWithLocalModel={prompt->runtime.generate(prompt)})
+   }
+  }
+ }
  if(showNewProject) AlertDialog(onDismissRequest={showNewProject=false},title={Text("Create project")},text={Column(verticalArrangement=Arrangement.spacedBy(8.dp)){
   OutlinedTextField(projectName,{projectName=it},label={Text("Project name")},singleLine=true)
   OutlinedTextField(projectDescription,{projectDescription=it},label={Text("Description")},minLines=2)
@@ -725,9 +742,12 @@ private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LI
  }
 }
 
-@Composable private fun ChatScreen(conversations:List<ConversationEntity>,selectedId:Long?,messages:List<MessageEntity>,draft:String,onDraftChange:(String)->Unit,attachmentName:String?,activeModelName:String?,runtimeMessage:String,loading:Boolean,sending:Boolean,voiceListening:Boolean,onVoice:()->Unit,onSpeak:(String)->Unit,onAttach:()->Unit,onClearAttachment:()->Unit,onSelect:(Long)->Unit,onDelete:(Long)->Unit,onlineEnabled:Boolean,onSend:()->Unit){
+@Composable private fun ChatScreen(conversations:List<ConversationEntity>,selectedId:Long?,messages:List<MessageEntity>,draft:String,onDraftChange:(String)->Unit,attachmentName:String?,activeModelName:String?,runtimeMessage:String,loading:Boolean,sending:Boolean,voiceListening:Boolean,onVoice:()->Unit,onSpeak:(String)->Unit,onAttach:()->Unit,onClearAttachment:()->Unit,onSelect:(Long)->Unit,onDelete:(Long)->Unit,onlineEnabled:Boolean,onSend:()->Unit,onTeach:()->Unit,onLibrary:()->Unit,onModels:()->Unit,onAiHub:()->Unit){
  var pendingDelete by remember{mutableStateOf<Long?>(null)}
  var historyExpanded by remember{mutableStateOf(false)}
+ var actionsExpanded by remember{mutableStateOf(false)}
+ val messageListState=rememberLazyListState()
+ LaunchedEffect(messages.size){if(messages.isNotEmpty())messageListState.animateScrollToItem(messages.lastIndex)}
  Column(Modifier.fillMaxSize().padding(horizontal=16.dp).imePadding()){
   if(conversations.isNotEmpty()) Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically){
    Box(Modifier.weight(1f)){
@@ -752,7 +772,7 @@ private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LI
    Spacer(Modifier.height(18.dp));Text("A quieter kind of AI.",style=MaterialTheme.typography.headlineSmall,fontWeight=FontWeight.SemiBold)
    Text("Private conversations. On-device intelligence.",color=Muted)
    Text(runtimeMessage,style=MaterialTheme.typography.bodySmall,color=Muted)
-  }else LazyColumn(Modifier.weight(1f).fillMaxWidth(),contentPadding=PaddingValues(vertical=12.dp),verticalArrangement=Arrangement.spacedBy(10.dp)){
+  }else LazyColumn(state=messageListState,modifier=Modifier.weight(1f).fillMaxWidth(),contentPadding=PaddingValues(vertical=12.dp),verticalArrangement=Arrangement.spacedBy(10.dp)){
    items(messages,key={it.id}){message->val mine=message.role=="user"
     Row(Modifier.fillMaxWidth(),horizontalArrangement=if(mine)Arrangement.End else Arrangement.Start){
      Surface(color=if(mine)MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface,shape=RoundedCornerShape(if(mine)22.dp else 16.dp),modifier=Modifier.widthIn(max=340.dp)){
@@ -772,13 +792,26 @@ private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LI
   }
   Surface(color=MaterialTheme.colorScheme.surface,shape=RoundedCornerShape(26.dp),shadowElevation=3.dp){
    Row(Modifier.padding(start=6.dp,end=8.dp,top=4.dp,bottom=4.dp),verticalAlignment=Alignment.CenterVertically){
-    IconButton(onClick=onAttach){Icon(Icons.Default.AttachFile,"Attach file",tint=Muted)}
+    IconButton(onClick={actionsExpanded=true}){Icon(Icons.Default.AttachFile,"Teaching tools and attachments",tint=MaterialTheme.colorScheme.primary)}
     IconButton(onClick=onVoice,enabled=!sending){Icon(if(voiceListening)Icons.Default.MicOff else Icons.Default.Mic,if(voiceListening)"Listening" else "Speak message",tint=if(voiceListening)MaterialTheme.colorScheme.primary else Muted)}
     TextField(draft,onDraftChange,Modifier.weight(1f),placeholder={Text("Message privately…")},maxLines=5,enabled=!sending,colors=TextFieldDefaults.colors(focusedContainerColor=Color.Transparent,unfocusedContainerColor=Color.Transparent,focusedIndicatorColor=Color.Transparent,unfocusedIndicatorColor=Color.Transparent))
     IconButton(onClick=onSend,enabled=!sending&&(draft.isNotBlank()||attachmentName!=null)){if(sending)CircularProgressIndicator(Modifier.size(20.dp),strokeWidth=2.dp)else Icon(Icons.Default.Send,"Send",tint=MaterialTheme.colorScheme.primary)}
    }
   }
   Text((if(onlineEnabled)"Online · remote provider" else "On-device · "+(activeModelName?: "No model loaded")),style=MaterialTheme.typography.labelSmall,color=MaterialTheme.colorScheme.primary,modifier=Modifier.padding(top=6.dp,bottom=8.dp))
+ }
+ if(actionsExpanded) ModalBottomSheet(onDismissRequest={actionsExpanded=false}) {
+  Column(Modifier.fillMaxWidth().navigationBarsPadding().padding(horizontal=20.dp,vertical=12.dp),verticalArrangement=Arrangement.spacedBy(10.dp)) {
+   Text("Molecularis tools",style=MaterialTheme.typography.titleLarge,fontWeight=FontWeight.SemiBold)
+   Text("Keep chatting here. Open a focused tool only when you need it.",style=MaterialTheme.typography.bodySmall,color=Muted)
+   Button(onClick={actionsExpanded=false;onTeach()},modifier=Modifier.fillMaxWidth()) { Icon(Icons.Default.School,null);Spacer(Modifier.width(10.dp));Text("Teach a lesson") }
+   OutlinedButton(onClick={actionsExpanded=false;onAttach()},modifier=Modifier.fillMaxWidth()) { Icon(Icons.Default.AttachFile,null);Spacer(Modifier.width(10.dp));Text("Attach a document or image") }
+   OutlinedButton(onClick={actionsExpanded=false;onLibrary()},modifier=Modifier.fillMaxWidth()) { Icon(Icons.Default.MenuBook,null);Spacer(Modifier.width(10.dp));Text("Textbook library") }
+   Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(10.dp)) {
+    OutlinedButton(onClick={actionsExpanded=false;onModels()},modifier=Modifier.weight(1f)) { Icon(Icons.Default.Memory,null);Spacer(Modifier.width(6.dp));Text("Models") }
+    OutlinedButton(onClick={actionsExpanded=false;onAiHub()},modifier=Modifier.weight(1f)) { Icon(Icons.Default.Hub,null);Spacer(Modifier.width(6.dp));Text("AI tools") }
+   }
+  }
  }
 }
 
