@@ -166,6 +166,7 @@ fun BookLibraryScreen(database: AppDatabase) {
                             }
                             IconButton(onClick = {
                                 scope.launch {
+                                    database.knowledgePoolDao().deleteForBook(book.id)
                                     database.bookDao().deleteBook(book.id)
                                     withContext(Dispatchers.IO) { File(book.localPath).delete() }
                                     status = "Removed " + book.title + " from this device."
