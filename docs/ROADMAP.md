@@ -12,7 +12,7 @@ This roadmap is outcome-based. Complete and validate one usable vertical slice a
 - [x] Establish package structure, navigation shell, theme and settings.
 - [x] Organize settings into separate appearance, chat/AI, speech/voice, privacy and account/security cards.
 - [x] Add font-family, colour palette, dark appearance and custom background-image preferences.
-- [x] Add fingerprint/strong-biometric app lock with device credential fallback where supported.
+- [x] Add a local PIN/password app lock using a salted PBKDF2 verifier encrypted by an Android Keystore AES-GCM key; optional strong biometric/device-credential unlock is available as a convenience. Physical-device security validation remains open.
 - [ ] Configure a real account authentication provider and backend; local-only mode must remain usable without sign-in.
 - [x] Add Room database, migrations and local repositories (automated migration coverage remains to be expanded).
 - [x] Add GitHub Actions Android unit-test and lint workflow.

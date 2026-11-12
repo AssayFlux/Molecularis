@@ -44,6 +44,8 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.KeyboardOptions
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.imePadding
 import androidx.documentfile.provider.DocumentFile
@@ -1093,6 +1095,49 @@ private suspend fun readDatasetBounded(context:Context,uri:Uri):String = withCon
     Text("Account & security",style=MaterialTheme.typography.titleLarge,fontWeight=FontWeight.SemiBold)
     Text("Molecularis currently keeps your library, models and conversations on this device. A real account sign-in needs a configured authentication service; this build does not pretend a local profile is a cloud account.",style=MaterialTheme.typography.bodySmall,color=Muted)
     OutlinedButton(onClick={},enabled=false,modifier=Modifier.fillMaxWidth()){Icon(Icons.Default.AccountCircle,null);Spacer(Modifier.width(8.dp));Text("Account sign-in · service not configured")}
+    val appCredentialStore = remember(context) { org.molecularis.app.features.AppLockCredentialStore(context) }
+    var pinConfigured by remember { mutableStateOf(runCatching { appCredentialStore.isConfigured() }.getOrDefault(false)) }
+    var showPinDialog by remember { mutableStateOf(false) }
+    var pinDraft by remember { mutableStateOf("") }
+    var pinConfirmation by remember { mutableStateOf("") }
+    var pinStatus by remember { mutableStateOf("Set a local PIN/password first; fingerprint is an optional faster unlock.") }
+    OutlinedButton(onClick={showPinDialog=true;pinDraft="";pinConfirmation=""},modifier=Modifier.fillMaxWidth()){
+     Icon(Icons.Default.Password,null);Spacer(Modifier.width(8.dp));Text(if(pinConfigured)"Change app PIN / password" else "Set app PIN / password")
+    }
+    Text(if(pinConfigured)"App PIN / password is configured and encrypted with an Android Keystore key." else "No app PIN / password is set yet.",style=MaterialTheme.typography.bodySmall,color=Muted)
+    Text(pinStatus,style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.primary)
+    if(showPinDialog){
+     AlertDialog(
+      onDismissRequest={showPinDialog=false;pinDraft="";pinConfirmation=""},
+      title={Text(if(pinConfigured)"Change app PIN / password" else "Create app PIN / password")},
+      text={Column(verticalArrangement=Arrangement.spacedBy(8.dp)){
+       OutlinedTextField(value=pinDraft,onValueChange={pinDraft=it.take(128)},label={Text("New PIN / password")},singleLine=true,visualTransformation=PasswordVisualTransformation(),keyboardOptions=KeyboardOptions(keyboardType=KeyboardType.Password))
+       OutlinedTextField(value=pinConfirmation,onValueChange={pinConfirmation=it.take(128)},label={Text("Confirm PIN / password")},singleLine=true,visualTransformation=PasswordVisualTransformation(),keyboardOptions=KeyboardOptions(keyboardType=KeyboardType.Password))
+       Text("Use at least 6 characters. The credential is never stored as plain text.",style=MaterialTheme.typography.bodySmall,color=Muted)
+      }},
+      confirmButton={TextButton(onClick={
+       if(pinDraft.length<6) pinStatus="Use at least 6 characters."
+       else if(pinDraft!=pinConfirmation) pinStatus="The two entries do not match."
+       else runCatching {
+        appCredentialStore.setCredential(pinDraft.toCharArray())
+        check(securityPrefs.edit().putBoolean("app_lock_enabled",true).commit())
+        pinConfigured=true
+        pinStatus="App PIN/password enabled. You can also enable fingerprint below."
+        showPinDialog=false
+        pinDraft="";pinConfirmation=""
+       }.onFailure{pinStatus="Could not save the app credential: "+(it.message?:it.javaClass.simpleName)}
+      }){Text("Save securely")}},
+      dismissButton={TextButton(onClick={showPinDialog=false;pinDraft="";pinConfirmation=""}){Text("Cancel")}}
+     )
+    }
+    if(pinConfigured){
+     OutlinedButton(onClick={
+      appCredentialStore.clear()
+      pinConfigured=false
+      securityPrefs.edit().putBoolean("app_lock_enabled",false).apply()
+      pinStatus="App PIN/password removed. Biometric lock can remain enabled separately."
+     },modifier=Modifier.fillMaxWidth()){Text("Remove app PIN / password")}
+    }
     Row(verticalAlignment=Alignment.CenterVertically){
      Column(Modifier.weight(1f),verticalArrangement=Arrangement.spacedBy(3.dp)){
       Text("Fingerprint / biometric app lock",fontWeight=FontWeight.SemiBold)
