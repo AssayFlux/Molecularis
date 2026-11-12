@@ -12,16 +12,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
+import org.molecularis.app.data.AppDatabase
 import java.io.File
 
 @Composable
-fun TeachingStudioScreen() {
+fun TeachingStudioScreen(database: AppDatabase) {
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val books by database.bookDao().books().collectAsState(initial = emptyList())
     var topic by remember { mutableStateOf("") }
     var level by remember { mutableStateOf("MBBS") }
     var minutes by remember { mutableFloatStateOf(30f) }
     var outline by remember { mutableStateOf("") }
     var status by remember { mutableStateOf("") }
+    var preparing by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(18.dp),
@@ -31,7 +36,7 @@ fun TeachingStudioScreen() {
             Column(Modifier.fillMaxWidth().padding(18.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text("MOLECULARIS TEACHING STUDIO", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
                 Text("Turn a topic into a lesson.", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
-                Text("Choose the learner level and available time. Molecularis will prepare an editable teaching structure that can later be grounded in your imported books and local AI model.", style = MaterialTheme.typography.bodyMedium)
+                Text("Choose the learner level and available time. Molecularis will prepare an editable teaching structure and attach relevant passages from your local textbook library.", style = MaterialTheme.typography.bodyMedium)
             }
         }
 
@@ -57,72 +62,110 @@ fun TeachingStudioScreen() {
         }
         Slider(value = minutes, onValueChange = { minutes = it }, valueRange = 10f..90f, steps = 15)
 
+        Text(books.size.toString() + " textbooks in your local library", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         Button(
             onClick = {
                 val cleanTopic = topic.trim()
                 if (cleanTopic.isEmpty()) {
                     status = "Enter a topic to prepare a lesson."
                 } else {
-                    val depth = when (level) {
-                        "PhD" -> "Molecular mechanisms, experimental evidence, regulation, pathway integration and research questions"
-                        "MD / DNB" -> "Advanced mechanisms, clinical correlations, interpretation and applied problem-solving"
-                        else -> "Core concepts, pathway logic, physiological context and clinical relevance"
+                    scope.launch {
+                        preparing = true
+                        status = "Searching your local textbook library…"
+                        try {
+                            val terms = cleanTopic.split(Regex("\\W+")).filter { it.length >= 3 }.distinct().take(8)
+                            val retrieved = terms.flatMap { database.bookDao().searchAll(it) }
+                                .distinctBy { it.id }
+                                .take(8)
+                            val bookTitles = books.associate { it.id to it.title }
+                            val depth = when (level) {
+                                "PhD" -> "Molecular mechanisms, experimental evidence, regulation, pathway integration and research questions"
+                                "MD / DNB" -> "Advanced mechanisms, clinical correlations, interpretation and applied problem-solving"
+                                else -> "Core concepts, pathway logic, physiological context and clinical relevance"
+                            }
+                            val sections = mutableListOf(
+                                "LESSON: " + cleanTopic,
+                                "AUDIENCE: " + level,
+                                "DURATION: " + minutes.toInt() + " minutes",
+                                "",
+                                "1. Learning outcomes",
+                                "   - Define the central concepts and terminology",
+                                "   - Explain the sequence of events and the underlying biochemical logic",
+                                "   - Relate regulation to physiological and clinical context",
+                                "",
+                                "2. Prerequisites and orientation",
+                                "   - Identify the essential molecules, compartments and prior concepts",
+                                "   - Introduce the central question that the lesson will answer",
+                                "",
+                                "3. Core explanation",
+                                "   - Build the mechanism in a clear stepwise sequence",
+                                "   - Explain why each step occurs, not only what happens",
+                                "   - Highlight key enzymes, substrates, products and control points",
+                                "",
+                                "4. Regulation and integration",
+                                "   - Explain major regulatory signals and rate-controlling steps",
+                                "   - Connect the topic with related metabolic pathways",
+                                "",
+                                "5. Clinical and applied relevance",
+                                "   - Discuss relevant disorders, laboratory findings or therapeutic links",
+                                "   - Work through one applied example appropriate to " + level,
+                                "",
+                                "6. Visual teaching plan",
+                                "   - Create an overview diagram",
+                                "   - Reveal the mechanism progressively, emphasizing control points",
+                                "",
+                                "7. Recap and retrieval",
+                                "   - Summarize the three most important ideas",
+                                "   - Ask short-answer and application questions",
+                                "",
+                                "TEACHING EMPHASIS: " + depth,
+                                "",
+                                "LOCAL LIBRARY RETRIEVAL"
+                            )
+                            if (retrieved.isEmpty()) {
+                                sections += "No matching passages were found. Import a textbook or broaden the search terms."
+                            } else {
+                                retrieved.forEachIndexed { index, passage ->
+                                    sections += ""
+                                    sections += "SOURCE " + (index + 1) + ": " + (bookTitles[passage.bookId] ?: "Imported book") + " · page " + passage.pageNumber
+                                    sections += passage.text.take(900)
+                                }
+                            }
+                            sections += ""
+                            sections += "REVIEW NOTE: This is a locally prepared teaching structure with retrieved source excerpts, not an AI-authored scientific explanation. Verify and expand the scientific content against the source book before teaching."
+                            outline = sections.joinToString("\n")
+                            status = if (retrieved.isEmpty()) {
+                                "Outline prepared. No local passages matched; import books or adjust the topic."
+                            } else {
+                                "Outline prepared with " + retrieved.size + " passages from your local library."
+                            }
+                        } catch (error: Throwable) {
+                            status = "Could not prepare the outline: " + (error.message ?: error.javaClass.simpleName)
+                        } finally {
+                            preparing = false
+                        }
                     }
-                    outline = listOf(
-                        "LESSON: " + cleanTopic,
-                        "AUDIENCE: " + level,
-                        "DURATION: " + minutes.toInt() + " minutes",
-                        "",
-                        "1. Learning outcomes",
-                        "   - Define the central concepts and terminology",
-                        "   - Explain the sequence of events and the underlying biochemical logic",
-                        "   - Relate regulation to physiological and clinical context",
-                        "",
-                        "2. Prerequisites and orientation",
-                        "   - Identify the essential molecules, compartments and prior concepts",
-                        "   - Introduce the central question that the lesson will answer",
-                        "",
-                        "3. Core explanation",
-                        "   - Build the mechanism in a clear stepwise sequence",
-                        "   - Explain why each step occurs, not only what happens",
-                        "   - Highlight key enzymes, substrates, products and control points",
-                        "",
-                        "4. Regulation and integration",
-                        "   - Explain major regulatory signals and rate-controlling steps",
-                        "   - Connect the topic with related metabolic pathways",
-                        "",
-                        "5. Clinical and applied relevance",
-                        "   - Discuss relevant disorders, laboratory findings or therapeutic links",
-                        "   - Work through one applied example appropriate to " + level,
-                        "",
-                        "6. Visual teaching plan",
-                        "   - Create an overview diagram",
-                        "   - Reveal the mechanism progressively, emphasizing control points",
-                        "",
-                        "7. Recap and retrieval",
-                        "   - Summarize the three most important ideas",
-                        "   - Ask short-answer and application questions",
-                        "",
-                        "TEACHING EMPHASIS: " + depth,
-                        "",
-                        "DRAFT STATUS: Structure generated locally. Populate and verify scientific detail against the professor's library before teaching."
-                    ).joinToString("\n")
-                    status = "Editable lesson structure prepared locally. Scientific content still needs source grounding and professor review."
                 }
             },
             modifier = Modifier.fillMaxWidth(),
-            enabled = topic.isNotBlank()
+            enabled = topic.isNotBlank() && !preparing
         ) {
             Icon(Icons.Default.AutoAwesome, contentDescription = null)
             Spacer(Modifier.width(8.dp))
-            Text("Prepare lesson structure")
+            Text(if (preparing) "Preparing…" else "Prepare lesson structure")
         }
 
         if (outline.isNotBlank()) {
             Card {
                 Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     Text("Your lesson outline", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
-                    Text(outline, style = MaterialTheme.typography.bodyMedium)
+                    OutlinedTextField(
+                        value = outline,
+                        onValueChange = { outline = it },
+                        modifier = Modifier.fillMaxWidth(),
+                        minLines = 12,
+                        label = { Text("Edit your lesson") }
+                    )
                     OutlinedButton(
                         onClick = {
                             runCatching {
@@ -142,6 +185,6 @@ fun TeachingStudioScreen() {
             }
         }
         if (status.isNotBlank()) Text(status, color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.bodySmall)
-        Text("Next layers: import your textbooks, ground lesson sections in retrieved passages, generate editable slides, assemble progressive SVG diagrams and synchronize offline narration.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text("Next layers: local AI-assisted explanation, editable slides, progressive SVG diagrams and synchronized offline narration.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }
