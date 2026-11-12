@@ -570,7 +570,7 @@ private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),AI
     Section.TRAINING->TrainingLabScreen(
      datasetName,datasetReport,datasetStatus,datasetBusy,trainingJob,trainingStatus,trainingBusy,
      {datasetPicker.launch(arrayOf("*/*"))},
-     {datasetExport.launch("astronaut-cleaned-dataset.jsonl")},
+     {datasetExport.launch("molecularis-cleaned-dataset.jsonl")},
      {serverUrl,apiKey,baseModel,method,epochs->
       if(!trainingBusy){
        trainingBusy=true;trainingStatus="Preparing secure upload…";trainingJob=null
@@ -580,7 +580,7 @@ private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),AI
          val invalid=report.invalidLines.toSet()
          val clean=datasetContent.lineSequence().mapIndexedNotNull{index,line->if(line.isNotBlank()&&index+1 !in invalid)line else null}.joinToString("\n")
          val client=TrainingApiClient(serverUrl,apiKey)
-         val datasetId=client.uploadDataset(datasetName.ifBlank{"astronaut-dataset.jsonl"},clean)
+         val datasetId=client.uploadDataset(datasetName.ifBlank{"molecularis-dataset.jsonl"},clean)
          trainingStatus="Dataset uploaded to your configured workstation. Creating job…"
          var job=client.startJob(datasetId,baseModel,method,epochs)
          trainingJob=job;trainingStatus=job.message
