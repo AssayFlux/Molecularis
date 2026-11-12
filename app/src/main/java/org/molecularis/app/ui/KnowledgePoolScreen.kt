@@ -26,6 +26,7 @@ import org.molecularis.app.data.*
 import org.molecularis.app.features.OfflineDocumentReader
 import java.io.File
 import java.util.UUID
+import java.security.MessageDigest
 
 private const val KNOWLEDGE_MAX_CHARS = 25_000_000
 
@@ -63,6 +64,11 @@ fun KnowledgePoolScreen(database: AppDatabase) {
             var passageCount = 0
             var pending = mutableListOf<BookPassageEntity>()
             val pageSamples = mutableListOf<Pair<Int, String>>()
+            var pagesWithText = 0
+            var emptyPages = 0
+            var shortTextPages = 0
+            var duplicatePages = 0
+            val pageFingerprints = mutableSetOf<String>()
             val candidates = linkedMapOf<String, Pair<String, Pair<Int, Pair<Float, String>>>>()
             val reader = OfflineDocumentReader(context)
             try {
@@ -72,7 +78,18 @@ fun KnowledgePoolScreen(database: AppDatabase) {
                     reader.readPdfPages(Uri.fromFile(File(book.localPath)), maxPdfPages = 5_000) { page, total, text ->
                         chars += text.length
                         require(chars <= KNOWLEDGE_MAX_CHARS) { "The 25 million character processing safety limit was reached." }
-                        if (page <= 18 && text.isNotBlank()) pageSamples += page to text.take(4_000)
+                        if (text.isBlank()) {
+                            emptyPages++
+                        } else {
+                            pagesWithText++
+                            if (text.trim().length < 50) shortTextPages++
+                            if (page <= 18) pageSamples += page to text.take(4_000)
+                            val normalizedPage = text.lowercase().replace(Regex("\\s+"), " ").trim()
+                            val fingerprint = MessageDigest.getInstance("SHA-256")
+                                .digest(normalizedPage.toByteArray(Charsets.UTF_8))
+                                .joinToString("") { byte -> "%02x".format(byte) }
+                            if (!pageFingerprints.add(fingerprint)) duplicatePages++
+                        }
                         val chunks = knowledgeChunks(text)
                         chunks.forEachIndexed { index, chunk ->
                             pending += BookPassageEntity(UUID.randomUUID().toString(), book.id, index, page, chunk)
@@ -108,17 +125,24 @@ fun KnowledgePoolScreen(database: AppDatabase) {
                 val subject = if (("$detectedTitle $opening").contains("biochem", true)) "Biochemistry" else "Needs subject review"
                 val chapters = candidates.values.sortedBy { it.second.first }.take(120)
                 val outline = chapters.joinToString(System.lineSeparator()) { it.second.first.toString() + ". " + it.first + " [confidence " + "%.2f".format(java.util.Locale.US, it.second.second.first) + "]" }
-                val pagesWithText = pageSamples.size.coerceAtMost(summary.pageCount)
-                val pageCoverage = if (summary.pageCount > 0) summary.extractedChars.toDouble() / summary.pageCount else 0.0
-                val score = ((if (passageCount > 0) 35 else 0) + (if (chapters.isNotEmpty()) 25 else 0) +
-                    (if (author.isNotBlank()) 10 else 0) + (if (edition.isNotBlank()) 5 else 0) +
-                    (if (pagesWithText > 0) 15 else 0) + (if (pageCoverage > 500) 10 else 0)).coerceIn(0, 100)
+                val pageCoverage = if (summary.pageCount > 0) pagesWithText.toDouble() / summary.pageCount else 0.0
+                val duplicateRatio = if (pagesWithText > 0) duplicatePages.toDouble() / pagesWithText else 0.0
+                val score = (
+                    (if (passageCount > 0) 20 else 0) +
+                    (pageCoverage * 25).toInt() +
+                    ((1.0 - duplicateRatio.coerceIn(0.0, 1.0)) * 15).toInt() +
+                    (if (chapters.isNotEmpty()) 15 else 0) +
+                    (if (author.isNotBlank()) 8 else 0) +
+                    (if (publisher.isNotBlank()) 5 else 0) +
+                    (if (edition.isNotBlank()) 5 else 0) +
+                    (if (summary.extractedChars.toDouble() / summary.pageCount.coerceAtLeast(1) >= 300.0) 7 else 0)
+                ).coerceIn(0, 100)
                 val knowledgeId = database.knowledgePoolDao().forBook(book.id)?.id ?: UUID.randomUUID().toString()
                 database.knowledgePoolDao().saveBook(
                     KnowledgeBookEntity(
                         id = knowledgeId, bookId = book.id, detectedTitle = detectedTitle,
                         author = author, publisher = publisher, edition = edition, subject = subject,
-                        summary = "Extracted ${summary.pageCount} pages into $passageCount source-linked passages. ${chapters.size} possible chapter/topic headings were detected. Review metadata and headings before using them as teaching structure.",
+                        summary = "Extraction audit: $pagesWithText/${summary.pageCount} pages contained OCR text; $emptyPages pages were empty; $shortTextPages pages had fewer than 50 characters; $duplicatePages pages repeated identical OCR text. Indexed $passageCount source-linked passages and detected ${chapters.size} possible headings. Readiness is heuristic, not a scientific accuracy score. Inspect flagged pages in the original PDF before approval.",
                         chapterOutline = outline, extractedPageCount = summary.pageCount,
                         extractedChars = summary.extractedChars, passageCount = passageCount,
                         topicCount = chapters.size, qualityScore = score, reviewState = "needs_review"

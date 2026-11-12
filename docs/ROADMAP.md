@@ -49,7 +49,7 @@ This roadmap is outcome-based. Complete and validate one usable vertical slice a
 - [x] Add professor review controls for detected source metadata and topic candidates (full topic editing, merging and hierarchy remain open).
 - [ ] Upgrade current Room keyword search to SQLite FTS5 with filters (current search is basic local keyword matching).
 - [ ] Add duplicate-topic detection, aliasing, hierarchy editing and merge tools.
-- [ ] Add a provenance-aware quality audit: OCR confidence, page coverage, duplicate passages, missing pages, heading confidence and metadata confidence.
+- [x] Add a first provenance-aware OCR audit: page coverage, empty/short-text pages, repeated identical OCR pages and heuristic metadata/heading indicators. OCR engine confidence, missing-page verification against PDF structure and passage-level duplicate detection remain open.
 - [ ] Prepare professor-curated, source-cited training/evaluation datasets with validation and holdout splits; never auto-train on raw OCR.
 - [ ] Keep fine-tuning optional and explicit; verify training service security, dataset rights and evaluation before model use.
 - [x] Retrieve page-labelled passages from professor-reviewed Knowledge Pool sources in offline chat prompts (simple lexical matching; source verification remains essential).
