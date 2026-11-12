@@ -250,7 +250,7 @@ class OfflineVoiceController(
         while (start < remaining.length) {
             var end = (start + maxChars).coerceAtMost(remaining.length)
             if (end < remaining.length) {
-                val boundary = remaining.lastIndexOfAny(charArrayOf('.', '!', '?', '\\n', ' '), end)
+                val boundary = remaining.lastIndexOfAny(charArrayOf('.', '!', '?', '\n', ' '), end)
                 if (boundary > start + maxChars / 2) end = boundary + 1
             }
             result += remaining.substring(start, end).trim()
