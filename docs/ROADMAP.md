@@ -31,12 +31,12 @@ This roadmap is outcome-based. Complete and validate one usable vertical slice a
 - [x] Persist original book metadata in Room; extracted content is now created separately in Knowledge Pool.
 - [x] Preserve PDF page numbers in extracted passage records (chapter-boundary detection remains open).
 - [x] Normalize and chunk extracted text into page-aware passages.
-- [ ] Move Knowledge Pool processing to resumable WorkManager jobs with cancellation/recovery. Current foreground processing now writes to a hidden staging book and atomically swaps passages only after successful full extraction; failed/cancelled re-analysis preserves the previous passage set and reviewed source. WorkManager persistence and resume remain open.
+- [ ] Move Knowledge Pool processing to resumable WorkManager jobs with cancellation/recovery. Current foreground processing now writes to a hidden staging book and atomically swaps passages only after successful full extraction; failed/cancelled re-analysis preserves the previous passage set and reviewed source. Abandoned staging rows left by process death are reclaimed after seven days; WorkManager persistence and resume remain open.
 - [x] Add import progress/error feedback and clean up partially imported book rows/files on failure.
 - [x] Add textbook deletion with Room cascade and local PDF file cleanup.
 - [ ] Add duplicate detection and safe reimport/replace workflow.
 
-**Current status:** Library stores the selected original PDF unchanged. Knowledge Pool now performs on-device page OCR after the professor explicitly starts processing, writes passages in bounded batches, detects conservative bibliographic metadata and possible chapter/topic headings, calculates a heuristic readiness score, and provides professor review/approval. The current 5,000-page and 25-million-character limits apply. Processing is foreground-only; resumable WorkManager processing, safe staged re-analysis, duplicate detection, progress recovery and direct PDF text-layer extraction remain open.
+**Current status:** Library stores the selected original PDF unchanged. Knowledge Pool now performs on-device page OCR after the professor explicitly starts processing, writes passages in bounded batches, detects conservative bibliographic metadata and possible chapter/topic headings, calculates a heuristic readiness score, and provides professor review/approval. The current 5,000-page and 25-million-character limits apply. Processing is foreground-only; resumable WorkManager processing, duplicate detection, progress recovery and direct PDF text-layer extraction remain open.
 
 **Exit criteria:** a professor can import a permitted PDF, inspect extraction status and retrieve its extracted text while offline.
 

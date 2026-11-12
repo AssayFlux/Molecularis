@@ -46,6 +46,12 @@ fun KnowledgePoolScreen(database: AppDatabase) {
     var editionDraft by remember { mutableStateOf("") }
     var subjectDraft by remember { mutableStateOf("") }
 
+    LaunchedEffect(Unit) {
+        // Android may kill the process before the coroutine cleanup handler can run.
+        // Reclaim only abandoned staging rows older than seven days.
+        database.bookDao().cleanupStaleStagingBooks(System.currentTimeMillis() - 7L * 24 * 60 * 60 * 1000)
+    }
+
     LaunchedEffect(selected?.id) {
         topics = selected?.let { database.knowledgePoolDao().topics(it.id) }.orEmpty()
         titleDraft = selected?.detectedTitle.orEmpty()
