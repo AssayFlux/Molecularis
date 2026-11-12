@@ -68,14 +68,14 @@ This roadmap is outcome-based. Complete and validate one usable vertical slice a
 
 **Goal:** make a prepared lesson presentable in a classroom.
 
-- [ ] Convert lesson segments into slide data.
+- [x] Convert numbered lesson-outline sections into an initial local slide model (simple outline-derived preview; rich editable slide authoring remains open).
 - [ ] Build slide themes, layouts and readable typography.
-- [ ] Create an in-app slide player with presenter controls.
+- [x] Add an in-app slide preview with previous/next navigation (full-screen presenter mode, timing and richer controls remain open).
 - [ ] Add PDF export as the first dependable offline export.
 - [ ] Implement and validate editable PPTX export on Android.
 - [ ] Add speaker notes and slide-to-lesson segment mapping.
 
-**Exit criteria:** a saved lesson can be presented offline and exported as a usable presentation file.
+**Current status:** the Teaching Studio can turn the current editable outline into a navigable slide preview on-device. This is a first presentation scaffold, not a finished classroom player; PDF export, PPTX export, speaker notes and slide-to-narration synchronization remain open.\n\n**Exit criteria:** a saved lesson can be presented offline and exported as a usable presentation file.
 
 ## Phase 5 — Scientific SVG diagram engine
 
@@ -138,7 +138,7 @@ This roadmap is outcome-based. Complete and validate one usable vertical slice a
 
 ## First milestone status
 
-The first vertical slice is now implemented in the repository: **import one PDF → extract page text with on-device OCR → search local passages → prepare and edit a structured lesson outline → save and reopen it.** Automated build verification is still running, and a physical-device/offline acceptance test has not yet been performed. This slice is a foundation; it is not yet an AI-generated lecture.
+The first vertical slice is implemented in the repository: **import one PDF → extract page text with on-device OCR → search local passages → prepare and edit a structured lesson outline → preview outline-derived slides → save and reopen the lesson → read the outline aloud with Android TTS.** The latest CI run has passed unit tests, lint and debug APK assembly. A physical-device/offline acceptance test has not yet been performed. This remains a foundation; it is not yet an AI-generated lecture or a synchronized slide-and-voice presentation.
 
 ## Delivery discipline
 
