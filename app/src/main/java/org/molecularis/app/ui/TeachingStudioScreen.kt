@@ -8,6 +8,10 @@ import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.VolumeUp
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Slideshow
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -32,6 +36,9 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, onSpeak
     var outline by remember { mutableStateOf("") }
     var status by remember { mutableStateOf("") }
     var preparing by remember { mutableStateOf(false) }
+    var slidePreview by remember { mutableStateOf(false) }
+    var slideIndex by remember { mutableIntStateOf(0) }
+    val slides = remember(outline, topic, level, minutes) { buildLessonSlides(outline, topic, level, minutes.toInt()) }
 
     Column(
         modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(18.dp),
@@ -171,6 +178,15 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, onSpeak
                         minLines = 12,
                         label = { Text("Edit your lesson") }
                     )
+                    OutlinedButton(
+                        onClick = { slideIndex = 0; slidePreview = true },
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = slides.isNotEmpty()
+                    ) {
+                        Icon(Icons.Default.Slideshow, contentDescription = null)
+                        Spacer(Modifier.width(8.dp))
+                        Text("Preview classroom slides · " + slides.size)
+                    }
                     Button(
                         onClick = { onSpeak(outline) },
                         enabled = voiceAvailable,
@@ -248,6 +264,88 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, onSpeak
             }
         }
         if (status.isNotBlank()) Text(status, color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.bodySmall)
-        Text("Next layers: local AI-assisted explanation, editable slides, progressive SVG diagrams and synchronized offline narration.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text("Slide preview is a presentation scaffold generated from your editable outline. Scientific claims and source excerpts remain subject to professor review.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
     }
+
+    if (slidePreview && slides.isNotEmpty()) {
+        AlertDialog(
+            onDismissRequest = { slidePreview = false },
+            title = {
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                    Text("Slide " + (slideIndex + 1) + " of " + slides.size, style = MaterialTheme.typography.titleMedium)
+                    IconButton(onClick = { slidePreview = false }) {
+                        Icon(Icons.Default.Close, contentDescription = "Close presentation")
+                    }
+                }
+            },
+            text = {
+                Column(
+                    Modifier.fillMaxWidth().heightIn(min = 260.dp, max = 440.dp).verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    Text(slides[slideIndex].title, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+                    HorizontalDivider()
+                    slides[slideIndex].points.forEach { point ->
+                        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                            Text("•", color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.titleLarge)
+                            Text(point, style = MaterialTheme.typography.bodyLarge)
+                        }
+                    }
+                    if (slides[slideIndex].points.isEmpty()) {
+                        Text("Use the editable lesson outline to add teaching points to this slide.", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                }
+            },
+            confirmButton = {
+                Row(verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
+                    TextButton(onClick = { slideIndex = (slideIndex - 1).coerceAtLeast(0) }, enabled = slideIndex > 0) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = null)
+                        Text("Previous")
+                    }
+                    TextButton(onClick = { slideIndex = (slideIndex + 1).coerceAtMost(slides.lastIndex) }, enabled = slideIndex < slides.lastIndex) {
+                        Text("Next")
+                        Icon(Icons.Default.ArrowForward, contentDescription = null)
+                    }
+                }
+            }
+        )
+    }
+}
+
+private data class LessonSlide(val title: String, val points: List<String>)
+
+private fun buildLessonSlides(outline: String, topic: String, level: String, minutes: Int): List<LessonSlide> {
+    if (outline.isBlank()) return emptyList()
+    val result = mutableListOf(
+        LessonSlide(topic.ifBlank { "Biochemistry lesson" }, listOf("Audience: $level", "Teaching time: $minutes minutes", "Molecularis · Teaching Studio"))
+    )
+    var currentTitle: String? = null
+    var currentPoints = mutableListOf<String>()
+    fun flush() {
+        val title = currentTitle ?: return
+        val cleanPoints = currentPoints.map { it.trim().removePrefix("-").trim() }
+            .filter { it.isNotBlank() && !it.startsWith("SOURCE ") && !it.startsWith("REVIEW NOTE:") }
+            .take(6)
+        result += LessonSlide(title, cleanPoints)
+        currentTitle = null
+        currentPoints = mutableListOf()
+    }
+    outline.lineSequence().forEach { raw ->
+        val line = raw.trim()
+        val heading = Regex("^\\d+\\.\\s+(.+)$").matchEntire(line)
+        when {
+            heading != null -> {
+                flush()
+                currentTitle = heading.groupValues[1]
+            }
+            currentTitle != null && line.startsWith("LOCAL LIBRARY RETRIEVAL") -> flush()
+            currentTitle != null && line.startsWith("TEACHING EMPHASIS:") -> flush()
+            currentTitle != null && line.isNotBlank() -> {
+                val point = line.removePrefix("-").trim()
+                if (point.isNotBlank()) currentPoints += point
+            }
+        }
+    }
+    flush()
+    return result
 }
