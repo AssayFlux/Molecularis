@@ -355,7 +355,7 @@ private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LI
    Column(Modifier.fillMaxSize()){
    when(section){
     Section.TEACHING->TeachingStudioScreen(db)
-    Section.LIBRARY->LibraryScreen(db)
+    Section.LIBRARY->BookLibraryScreen(db)
     Section.CHATS->ChatScreen(conversations,conversationId,messages,draft,{draft=it},pendingAttachment?.second,activeModelName,runtimeMessage,loadingModel,sending,voiceListening,
      {if(voiceListening)voiceController.stopListening()else if(ContextCompat.checkSelfPermission(context,Manifest.permission.RECORD_AUDIO)==PackageManager.PERMISSION_GRANTED)voiceController.startListening()else microphonePermission.launch(Manifest.permission.RECORD_AUDIO)},
      {text->voiceController.speak(text)} ,
