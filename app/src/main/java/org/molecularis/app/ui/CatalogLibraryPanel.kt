@@ -86,7 +86,7 @@ fun CatalogLibraryPanel(onInstalled: (ModelCatalogEntry, File) -> Unit) {
                     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                         Text("Publisher setup required", fontWeight = FontWeight.SemiBold)
                         Text(
-                            "Configure ASTRONAUT_CATALOG_URL and ASTRONAUT_CATALOG_PUBLIC_KEY as Gradle properties. Keep the Ed25519 private signing key offline or in a protected publisher environment; never place it in the app.",
+                            "Configure MOLECULARIS_CATALOG_URL and MOLECULARIS_CATALOG_PUBLIC_KEY as Gradle properties. Keep the Ed25519 private signing key offline or in a protected publisher environment; never place it in the app.",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
