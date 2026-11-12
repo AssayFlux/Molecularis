@@ -29,8 +29,6 @@ This roadmap is outcome-based. Complete and validate one usable vertical slice a
 - [ ] Add resumable background processing and progress/error UI.
 - [ ] Add delete/reimport behavior and derived-data cleanup.
 
-**Current status:** first SAF import, PDF OCR, page-aware passage storage, local keyword search and textbook deletion are implemented. Large imports are currently limited to 250 PDF pages and run in the foreground; resumable WorkManager processing and richer PDF text-layer extraction remain open.
-
 **Current status:** the first SAF PDF import, on-device OCR, page-aware passage storage, local keyword search, book selection and textbook deletion are implemented. The importer is foreground-only and currently limited to 500 pages and 5 million extracted characters; resumable WorkManager processing, progress reporting and direct PDF text-layer extraction remain open.
 
 **Exit criteria:** a professor can import a permitted PDF, inspect extraction status and retrieve its extracted text while offline.
@@ -138,13 +136,9 @@ This roadmap is outcome-based. Complete and validate one usable vertical slice a
 
 **Exit criteria:** documented device matrix, passing automated tests, professor acceptance of sample lectures and a reproducible release build.
 
-## Recommended first milestone
+## First milestone status
 
-Do not begin with autonomous teaching or a large local model. First build this thin vertical slice:
-
-**Import one PDF → extract text → search for one topic → display relevant passages → create a structured lecture outline → save it.**
-
-This validates the core data pipeline before adding generation, voice, slides and diagrams.
+The first vertical slice is now implemented in the repository: **import one PDF → extract page text with on-device OCR → search local passages → prepare and edit a structured lesson outline → save and reopen it.** Automated build verification is still running, and a physical-device/offline acceptance test has not yet been performed. This slice is a foundation; it is not yet an AI-generated lecture.
 
 ## Delivery discipline
 
