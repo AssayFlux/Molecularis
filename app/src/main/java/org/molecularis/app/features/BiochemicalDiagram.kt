@@ -30,6 +30,7 @@ data class BiochemicalDiagram(
 object BiochemicalDiagramValidator {
     fun validate(diagram: BiochemicalDiagram): List<String> {
         val errors = mutableListOf<String>()
+        if (diagram.id.isBlank() || diagram.id.length > 80) errors += "Diagram ID must contain 1–80 characters."
         if (diagram.title.isBlank() || diagram.title.length > 160) errors += "Diagram title must contain 1–160 characters."
         if (diagram.nodes.isEmpty() || diagram.nodes.size > 40) errors += "A diagram must contain 1–40 nodes."
         if (diagram.steps.isEmpty() || diagram.steps.size > 40) errors += "A diagram must contain 1–40 reveal steps."
@@ -39,14 +40,15 @@ object BiochemicalDiagramValidator {
         if (diagram.nodes.any { it.label.isBlank() || it.label.length > 160 || it.detail.length > 500 }) {
             errors += "Node labels must contain 1–160 characters and details must not exceed 500."
         }
-        if (diagram.nodes.any { it.revealStep !in 0 until diagram.steps.size }) errors += "Every node must reference an existing reveal step."
+        val stepIndices = diagram.steps.map { it.index }.sorted()
+        if (stepIndices != diagram.steps.indices.toList()) errors += "Reveal step indices must be contiguous and zero-based."
+        if (diagram.nodes.any { it.revealStep !in stepIndices }) errors += "Every node must reference an existing reveal step."
         if (diagram.connections.size > 80) errors += "A diagram cannot contain more than 80 connections."
         diagram.connections.forEach { edge ->
             if (edge.fromId !in ids || edge.toId !in ids) errors += "A connection references an unknown node."
             if (edge.fromId == edge.toId) errors += "A node cannot connect to itself."
             if (edge.label.length > 120) errors += "Connection labels must not exceed 120 characters."
         }
-        if (diagram.steps.map { it.index }.distinct().size != diagram.steps.size) errors += "Reveal step indices must be unique."
         if (diagram.steps.any { it.title.isBlank() || it.title.length > 160 || it.explanation.length > 1000 }) {
             errors += "Reveal step titles must contain 1–160 characters and explanations must not exceed 1000."
         }
@@ -69,14 +71,14 @@ object BiochemicalSvgRenderer {
         val gap = 54
         val height = (visible.size * (nodeHeight + gap) + 40).coerceAtLeast(180)
         val positions = visible.mapIndexed { index, node ->
-            node.id to (index to (height.let { 30 + index * (nodeHeight + gap) }))
+            node.id to (30 + index * (nodeHeight + gap))
         }.toMap()
         val body = buildString {
             append("<title>").append(escape(diagram.title)).append("</title>")
             append("<defs><marker id=\"arrow\" markerWidth=\"10\" markerHeight=\"10\" refX=\"8\" refY=\"3\" orient=\"auto\"><path d=\"M0,0 L0,6 L9,3 z\" fill=\"#526579\"/></marker></defs>")
             diagram.connections.filter { it.fromId in visibleIds && it.toId in visibleIds }.forEach { edge ->
-                val fromY = positions.getValue(edge.fromId).second
-                val toY = positions.getValue(edge.toId).second
+                val fromY = positions.getValue(edge.fromId)
+                val toY = positions.getValue(edge.toId)
                 append("<line x1=\"450\" y1=\"").append(fromY + nodeHeight)
                     .append("\" x2=\"450\" y2=\"").append(toY)
                     .append("\" stroke=\"#526579\" stroke-width=\"3\" marker-end=\"url(#arrow)\"/>")
@@ -87,7 +89,7 @@ object BiochemicalSvgRenderer {
                 }
             }
             visible.forEach { node ->
-                val y = positions.getValue(node.id).second
+                val y = positions.getValue(node.id)
                 append("<rect x=\"120\" y=\"").append(y)
                     .append("\" width=\"660\" height=\"").append(nodeHeight)
                     .append("\" rx=\"16\" fill=\"#eef4f8\" stroke=\"#52738a\" stroke-width=\"2\"/>")
