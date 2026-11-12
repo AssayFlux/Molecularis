@@ -139,7 +139,7 @@ fun BookLibraryScreen(database: AppDatabase) {
         val showingResults = query.trim().length >= 2
         if (showingResults) {
             Text(results.size.toString() + " matching passages", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold)
-            LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 items(results, key = { it.id }) { passage ->
                     Card(Modifier.fillMaxWidth()) {
                         Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
@@ -151,7 +151,7 @@ fun BookLibraryScreen(database: AppDatabase) {
             }
         } else if (selectedBook != null) {
             Text(passages.size.toString() + " indexed passages", style = MaterialTheme.typography.titleSmall)
-            LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 items(passages, key = { it.id }) { passage ->
                     Card(Modifier.fillMaxWidth()) {
                         Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
@@ -170,7 +170,7 @@ fun BookLibraryScreen(database: AppDatabase) {
                 }
             }
         } else {
-            LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 items(books, key = { it.id }) { book ->
                     Card(Modifier.fillMaxWidth().clickable { selectedBook = book; query = "" }) {
                         Row(Modifier.fillMaxWidth().padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
