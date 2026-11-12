@@ -355,7 +355,7 @@ private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LI
      label={Text("More")}
     )
    }}
-  ){padding->Box(Modifier.fillMaxSize().padding(padding)){
+  ){padding->Box(Modifier.fillMaxSize().padding(padding).imePadding()){
    Image(painter=painterResource(id=org.molecularis.app.R.drawable.molecularis_background),contentDescription=null,contentScale=ContentScale.Crop,modifier=Modifier.fillMaxSize().alpha(if(darkAppearance)0.035f else 0.055f))
    Column(Modifier.fillMaxSize()){
    when(section){
@@ -749,7 +749,7 @@ private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LI
  var actionsExpanded by remember{mutableStateOf(false)}
  val messageListState=rememberLazyListState()
  LaunchedEffect(messages.size){if(messages.isNotEmpty())messageListState.animateScrollToItem(messages.lastIndex)}
- Column(Modifier.fillMaxSize().padding(horizontal=16.dp).imePadding()){
+ Column(Modifier.fillMaxSize().padding(horizontal=16.dp)){
   if(conversations.isNotEmpty()) Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically){
    Box(Modifier.weight(1f)){
     OutlinedButton(onClick={historyExpanded=true},modifier=Modifier.fillMaxWidth()){
