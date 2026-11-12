@@ -17,6 +17,7 @@ object LessonSlideBuilder {
         )
         var currentTitle: String? = null
         var currentPoints = mutableListOf<String>()
+        var skippingSourceExcerpt = false
 
         fun flush() {
             val title = currentTitle ?: return
@@ -31,6 +32,7 @@ object LessonSlideBuilder {
             result += LessonSlide(title, cleanPoints)
             currentTitle = null
             currentPoints = mutableListOf()
+            skippingSourceExcerpt = false
         }
 
         outline.lineSequence().forEach { raw ->
@@ -40,13 +42,15 @@ object LessonSlideBuilder {
                 heading != null -> {
                     flush()
                     currentTitle = heading.groupValues[1]
+                    skippingSourceExcerpt = false
                 }
                 currentTitle != null && (
                     line.startsWith("LOCAL LIBRARY RETRIEVAL") ||
                         line.startsWith("TEACHING EMPHASIS:") ||
                         line.startsWith("REVIEW NOTE:")
                     ) -> flush()
-                currentTitle != null && line.startsWith("SOURCE ") -> Unit
+                currentTitle != null && line.startsWith("SOURCE ") -> skippingSourceExcerpt = true
+                currentTitle != null && skippingSourceExcerpt -> Unit
                 currentTitle != null && line.isNotBlank() -> {
                     val point = line.removePrefix("-").trim()
                     if (point.isNotBlank()) currentPoints += point
