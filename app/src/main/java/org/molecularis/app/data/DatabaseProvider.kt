@@ -73,11 +73,18 @@ private val MIGRATION_6_7 = object : Migration(6, 7) {
     }
 }
 
+private val MIGRATION_7_8 = object : Migration(7, 8) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("CREATE TABLE IF NOT EXISTS saved_lessons (id TEXT NOT NULL, title TEXT NOT NULL, audienceLevel TEXT NOT NULL, durationMinutes INTEGER NOT NULL, outline TEXT NOT NULL, createdAt INTEGER NOT NULL, updatedAt INTEGER NOT NULL, PRIMARY KEY(id))")
+        db.execSQL("CREATE INDEX IF NOT EXISTS index_saved_lessons_updatedAt ON saved_lessons(updatedAt)")
+    }
+}
+
 object DatabaseProvider {
-    private const val LEGACY_NAME = "astronaut-local.db"
-    private const val ENCRYPTED_NAME = "astronaut-secure.db"
-    private const val TEMP_NAME = "astronaut-secure-migrating.db"
-    private const val STATE_PREFS = "astronaut_secure_database"
+    private const val LEGACY_NAME = "molecularis-local.db"
+    private const val ENCRYPTED_NAME = "molecularis-secure.db"
+    private const val TEMP_NAME = "molecularis-secure-migrating.db"
+    private const val STATE_PREFS = "molecularis_secure_database"
     private const val MIGRATION_COMPLETE = "encrypted_migration_complete"
 
     @Volatile private var instance: AppDatabase? = null
@@ -116,7 +123,7 @@ object DatabaseProvider {
             ENCRYPTED_NAME
         )
             .openHelperFactory(SupportOpenHelperFactory(passphrase.copyOf()))
-            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7)
+            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8)
             .setJournalMode(RoomDatabase.JournalMode.TRUNCATE)
             .build()
 
@@ -140,7 +147,7 @@ object DatabaseProvider {
             AppDatabase::class.java,
             LEGACY_NAME
         )
-            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7)
+            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8)
             .setJournalMode(RoomDatabase.JournalMode.TRUNCATE)
             .build()
 
@@ -150,14 +157,14 @@ object DatabaseProvider {
             TEMP_NAME
         )
             .openHelperFactory(SupportOpenHelperFactory(passphrase.copyOf()))
-            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7)
+            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8)
             .setJournalMode(RoomDatabase.JournalMode.TRUNCATE)
             .build()
 
         try {
             val source = legacy.openHelper.writableDatabase
             val target = encryptedTemp.openHelper.writableDatabase
-            val tables = listOf("conversations", "messages", "local_models", "workspace_projects", "knowledge_chunks", "books", "book_passages")
+            val tables = listOf("conversations", "messages", "local_models", "workspace_projects", "knowledge_chunks", "books", "book_passages", "saved_lessons")
             target.beginTransaction()
             try {
                 tables.forEach { table -> copyTable(source, target, table) }
