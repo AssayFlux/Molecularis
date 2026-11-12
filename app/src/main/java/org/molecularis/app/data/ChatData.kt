@@ -113,6 +113,8 @@ data class KnowledgeTopicEntity(
  @Query("UPDATE knowledge_books SET detectedTitle=:title,author=:author,publisher=:publisher,edition=:edition,subject=:subject,reviewState='needs_review' WHERE id=:id") suspend fun updateMetadata(id:String,title:String,author:String,publisher:String,edition:String,subject:String)
  @Query("SELECT * FROM knowledge_topics WHERE knowledgeBookId=:knowledgeBookId ORDER BY startPage") suspend fun topics(knowledgeBookId:String):List<KnowledgeTopicEntity>
  @Insert(onConflict=OnConflictStrategy.REPLACE) suspend fun saveTopics(topics:List<KnowledgeTopicEntity>)
+ @Insert(onConflict=OnConflictStrategy.REPLACE) suspend fun addTopic(topic:KnowledgeTopicEntity)
+ @Query("UPDATE knowledge_topics SET name=:name,startPage=:startPage,approved=0 WHERE id=:id") suspend fun updateTopicDetails(id:String,name:String,startPage:Int)
  @Query("UPDATE knowledge_topics SET approved=:approved WHERE id=:id") suspend fun setTopicApproved(id:String,approved:Boolean)
  @Query("DELETE FROM knowledge_topics WHERE knowledgeBookId=:knowledgeBookId") suspend fun clearTopics(knowledgeBookId:String)
  @Query("UPDATE knowledge_books SET reviewState=:state WHERE id=:id") suspend fun setReviewState(id:String,state:String)

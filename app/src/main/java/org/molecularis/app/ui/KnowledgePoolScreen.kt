@@ -45,6 +45,8 @@ fun KnowledgePoolScreen(database: AppDatabase) {
     var publisherDraft by remember { mutableStateOf("") }
     var editionDraft by remember { mutableStateOf("") }
     var subjectDraft by remember { mutableStateOf("") }
+    var newTopicName by remember { mutableStateOf("") }
+    var newTopicPage by remember { mutableStateOf("1") }
 
     LaunchedEffect(Unit) {
         // Android may kill the process before the coroutine cleanup handler can run.
@@ -227,12 +229,47 @@ fun KnowledgePoolScreen(database: AppDatabase) {
                     ) { Text(if (selected!!.reviewState == "approved") "Source reviewed" else "Mark source as reviewed") }
                     Divider()
                     Text("Detected chapter / topic candidates", fontWeight = FontWeight.SemiBold)
+                    OutlinedTextField(newTopicName, { newTopicName = it }, modifier = Modifier.fillMaxWidth(), label = { Text("Add a topic manually") }, singleLine = true)
+                    OutlinedTextField(newTopicPage, { newTopicPage = it.filter(Char::isDigit).take(5) }, modifier = Modifier.fillMaxWidth(), label = { Text("Starting page") }, singleLine = true)
+                    OutlinedButton(
+                        onClick = {
+                            scope.launch {
+                                val page = newTopicPage.toIntOrNull()?.coerceAtLeast(1) ?: 1
+                                database.knowledgePoolDao().addTopic(KnowledgeTopicEntity(
+                                    id = UUID.randomUUID().toString(), knowledgeBookId = selected!!.id,
+                                    name = newTopicName.trim(), startPage = page, confidence = 1f,
+                                    evidence = "Added manually by professor", approved = false
+                                ))
+                                topics = database.knowledgePoolDao().topics(selected!!.id)
+                                newTopicName = ""
+                                newTopicPage = "1"
+                                database.knowledgePoolDao().setReviewState(selected!!.id, "needs_review")
+                                selected = selected!!.copy(reviewState = "needs_review")
+                                status = "Topic added. Review and approve it before using it as a teaching source."
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = newTopicName.isNotBlank() && newTopicPage.toIntOrNull() != null
+                    ) { Text("Add topic") }
                     if (topics.isEmpty()) Text("No reliable headings were detected. Add topics manually in a future review editor.", style = MaterialTheme.typography.bodySmall)
                     topics.forEach { topic ->
                         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            Column(Modifier.weight(1f)) {
-                                Text(topic.name, fontWeight = FontWeight.Medium)
-                                Text("Page ${topic.startPage} · confidence ${"%.0f".format(topic.confidence * 100)}% · evidence: ${topic.evidence}", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                var editedName by remember(topic.id) { mutableStateOf(topic.name) }
+                                var editedPage by remember(topic.id) { mutableStateOf(topic.startPage.toString()) }
+                                OutlinedTextField(editedName, { editedName = it }, modifier = Modifier.fillMaxWidth(), label = { Text("Topic") }, singleLine = true)
+                                OutlinedTextField(editedPage, { editedPage = it.filter(Char::isDigit).take(5) }, modifier = Modifier.fillMaxWidth(), label = { Text("Starting page") }, singleLine = true)
+                                Text("Confidence ${"%.0f".format(topic.confidence * 100)}% · ${topic.evidence}", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                TextButton(onClick = {
+                                    scope.launch {
+                                        val page = editedPage.toIntOrNull()?.coerceAtLeast(1) ?: topic.startPage
+                                        database.knowledgePoolDao().updateTopicDetails(topic.id, editedName.trim(), page)
+                                        topics = database.knowledgePoolDao().topics(selected!!.id)
+                                        database.knowledgePoolDao().setReviewState(selected!!.id, "needs_review")
+                                        selected = selected!!.copy(reviewState = "needs_review")
+                                        status = "Topic updated; its approval was reset for professor review."
+                                    }
+                                }, enabled = editedName.isNotBlank() && editedPage.toIntOrNull() != null) { Text("Save topic") }
                             }
                             Checkbox(checked = topic.approved, onCheckedChange = { checked ->
                                 scope.launch {
