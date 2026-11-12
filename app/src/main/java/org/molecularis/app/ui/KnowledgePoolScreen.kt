@@ -100,14 +100,14 @@ fun KnowledgePoolScreen(database: AppDatabase) {
                 require(summary.extractedChars > 0) { "No readable text was extracted. Check the PDF quality or OCR language." }
                 database.bookDao().updateBookStats(book.id, summary.pageCount, summary.extractedChars)
 
-                val opening = pageSamples.sortedBy { it.first }.joinToString("\\n") { it.second }
+                val opening = pageSamples.sortedBy { it.first }.joinToString(System.lineSeparator()) { it.second }
                 val detectedTitle = opening.lineSequence().map { it.trim() }.firstOrNull { it.length in 5..140 && !it.contains("copyright", true) } ?: book.title
                 val author = Regex("(?im)^(?:by|author[s]?:)\\s*(.{3,100})$").find(opening)?.groupValues?.get(1)?.trim().orEmpty()
                 val publisher = Regex("(?im)^.{0,30}(?:publishers?|press)\\s*$").find(opening)?.value?.trim().orEmpty()
                 val edition = Regex("(?i)(\\d{1,2}(?:st|nd|rd|th)\\s+edition|edition\\s*[:#]?\\s*\\d{1,2})").find(opening)?.value.orEmpty()
                 val subject = if (("$detectedTitle $opening").contains("biochem", true)) "Biochemistry" else "Needs subject review"
                 val chapters = candidates.values.sortedBy { it.second.first }.take(120)
-                val outline = chapters.joinToString("\\n") { "${it.second.first}. ${it.first} [confidence ${"%.2f".format(java.util.Locale.US, it.second.second.first)}]" }
+                val outline = chapters.joinToString(System.lineSeparator()) { it.second.first.toString() + ". " + it.first + " [confidence " + "%.2f".format(java.util.Locale.US, it.second.second.first) + "]" }
                 val pagesWithText = pageSamples.size.coerceAtMost(summary.pageCount)
                 val pageCoverage = if (summary.pageCount > 0) summary.extractedChars.toDouble() / summary.pageCount else 0.0
                 val score = ((if (passageCount > 0) 35 else 0) + (if (chapters.isNotEmpty()) 25 else 0) +
