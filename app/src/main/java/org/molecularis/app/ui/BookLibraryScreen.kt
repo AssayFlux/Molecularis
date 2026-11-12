@@ -19,8 +19,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.room.withTransaction
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.molecularis.app.data.AppDatabase
@@ -108,9 +109,17 @@ fun BookLibraryScreen(database: AppDatabase) {
                     require(summary.extractedChars > 0) { "No readable text was extracted from this PDF." }
                     database.bookDao().updateBookStats(id, summary.pageCount, summary.extractedChars)
                     status = "Imported " + book.title + ": " + summary.pageCount + " pages and " + passageCount + " searchable passages. The original PDF is stored on this device."
+                } catch (error: CancellationException) {
+                    withContext(NonCancellable) {
+                        runCatching { database.bookDao().deleteBook(id) }
+                        localFile?.delete()
+                    }
+                    throw error
                 } catch (error: Throwable) {
-                    runCatching { database.bookDao().deleteBook(id) }
-                    localFile?.delete()
+                    withContext(NonCancellable) {
+                        runCatching { database.bookDao().deleteBook(id) }
+                        localFile?.delete()
+                    }
                     status = "Import failed: " + (error.message ?: error.javaClass.simpleName)
                 } finally {
                     importing = false
