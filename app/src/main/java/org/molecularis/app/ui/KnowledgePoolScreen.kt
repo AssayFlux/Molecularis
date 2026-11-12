@@ -237,7 +237,7 @@ fun KnowledgePoolScreen(database: AppDatabase) {
                                 val page = newTopicPage.toIntOrNull()?.coerceAtLeast(1) ?: 1
                                 database.knowledgePoolDao().addTopic(KnowledgeTopicEntity(
                                     id = UUID.randomUUID().toString(), knowledgeBookId = selected!!.id,
-                                    name = newTopicName.trim(), startPage = page, confidence = 1f,
+                                    name = newTopicName.trim(), startPage = page, confidence = 0f,
                                     evidence = "Added manually by professor", approved = false
                                 ))
                                 topics = database.knowledgePoolDao().topics(selected!!.id)
@@ -249,9 +249,10 @@ fun KnowledgePoolScreen(database: AppDatabase) {
                             }
                         },
                         modifier = Modifier.fillMaxWidth(),
-                        enabled = newTopicName.isNotBlank() && newTopicPage.toIntOrNull() != null
+                        enabled = newTopicName.isNotBlank() &&
+                            (newTopicPage.toIntOrNull() ?: 0) in 1..(library.firstOrNull { it.id == selected?.bookId }?.pageCount ?: 0)
                     ) { Text("Add topic") }
-                    if (topics.isEmpty()) Text("No reliable headings were detected. Add topics manually in a future review editor.", style = MaterialTheme.typography.bodySmall)
+                    if (topics.isEmpty()) Text("No reliable headings were detected. You can add professor-authored topics above.", style = MaterialTheme.typography.bodySmall)
                     topics.forEach { topic ->
                         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -259,7 +260,12 @@ fun KnowledgePoolScreen(database: AppDatabase) {
                                 var editedPage by remember(topic.id) { mutableStateOf(topic.startPage.toString()) }
                                 OutlinedTextField(editedName, { editedName = it }, modifier = Modifier.fillMaxWidth(), label = { Text("Topic") }, singleLine = true)
                                 OutlinedTextField(editedPage, { editedPage = it.filter(Char::isDigit).take(5) }, modifier = Modifier.fillMaxWidth(), label = { Text("Starting page") }, singleLine = true)
-                                Text("Confidence ${"%.0f".format(topic.confidence * 100)}% · ${topic.evidence}", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                Text(
+                                    if (topic.evidence == "Added manually by professor") "Professor-created · ${topic.evidence}"
+                                    else "Detection confidence ${"%.0f".format(topic.confidence * 100)}% · ${topic.evidence}",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
                                 TextButton(onClick = {
                                     scope.launch {
                                         val page = editedPage.toIntOrNull()?.coerceAtLeast(1) ?: topic.startPage

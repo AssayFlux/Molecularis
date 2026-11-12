@@ -46,7 +46,7 @@ This roadmap is outcome-based. Complete and validate one usable vertical slice a
 
 - [x] Add a first-pass detector for chapter/unit/part headings and likely section headings (heuristic; OCR errors and false positives need review).
 - [ ] Build a topic tree with aliases and duplicate-topic merging.
-- [x] Add professor review controls for detected source metadata and topic candidates (full topic editing, merging and hierarchy remain open).
+- [x] Add professor review controls for detected source metadata and topic candidates, including manual topic creation and editing (merging and hierarchy remain open).
 - [ ] Upgrade current Room keyword search to SQLite FTS5 with filters (current search is basic local keyword matching).
 - [ ] Add duplicate-topic detection, aliasing, hierarchy editing and merge tools.
 - [x] Add a first provenance-aware OCR audit: page coverage, empty/short-text pages, repeated identical OCR pages and heuristic metadata/heading indicators. OCR engine confidence, missing-page verification against PDF structure and passage-level duplicate detection remain open.
