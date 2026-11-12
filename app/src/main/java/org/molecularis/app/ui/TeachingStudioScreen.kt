@@ -15,12 +15,20 @@ import androidx.compose.material.icons.filled.Slideshow
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.viewinterop.AndroidView
+import android.webkit.WebView
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import org.molecularis.app.data.AppDatabase
 import org.molecularis.app.data.SavedLessonEntity
 import org.molecularis.app.features.LessonSlideBuilder
+import org.molecularis.app.features.BiochemicalDiagram
+import org.molecularis.app.features.DiagramNode
+import org.molecularis.app.features.DiagramConnection
+import org.molecularis.app.features.DiagramStep
+import org.molecularis.app.features.BiochemicalDiagramValidator
+import org.molecularis.app.features.BiochemicalSvgRenderer
 import java.util.UUID
 
 @Composable
@@ -37,7 +45,30 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localMo
     var generatingExplanation by remember { mutableStateOf(false) }
     var slidePreview by remember { mutableStateOf(false) }
     var slideIndex by remember { mutableIntStateOf(0) }
+    var diagramPreview by remember { mutableStateOf(false) }
+    var diagramStep by remember { mutableIntStateOf(0) }
     val slides = remember(outline, topic, level, minutes) { LessonSlideBuilder.build(outline, topic, level, minutes.toInt()) }
+    val diagram = remember(slides, topic) {
+        val visibleSlides = slides.take(40)
+        BiochemicalDiagram(
+            id = "lesson-flow",
+            title = topic.ifBlank { "Lesson flow" }.take(160),
+            nodes = visibleSlides.mapIndexed { index, slide ->
+                DiagramNode(
+                    id = "slide-${index + 1}",
+                    label = slide.title.take(160),
+                    detail = slide.points.joinToString(" · ").take(500),
+                    revealStep = index
+                )
+            },
+            connections = visibleSlides.zipWithNext().mapIndexed { index, _ ->
+                DiagramConnection("slide-${index + 1}", "slide-${index + 2}")
+            },
+            steps = visibleSlides.mapIndexed { index, slide ->
+                DiagramStep(index, slide.title.take(160), slide.points.joinToString(" · ").take(1000))
+            }
+        )
+    }
 
     Column(
         modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(18.dp),
@@ -228,6 +259,15 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localMo
                         )
                     }
                     OutlinedButton(
+                        onClick = { diagramStep = 0; diagramPreview = true },
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = diagram.nodes.isNotEmpty()
+                    ) {
+                        Icon(Icons.Default.AccountTree, contentDescription = null)
+                        Spacer(Modifier.width(8.dp))
+                        Text("Explore progressive lesson diagram · " + diagram.nodes.size)
+                    }
+                    OutlinedButton(
                         onClick = { slideIndex = 0; slidePreview = true },
                         modifier = Modifier.fillMaxWidth(),
                         enabled = slides.isNotEmpty()
@@ -311,6 +351,83 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localMo
         }
         if (status.isNotBlank()) Text(status, color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.bodySmall)
         Text("Slide preview is a presentation scaffold generated from your editable outline. Scientific claims and source excerpts remain subject to professor review.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+    }
+
+    if (diagramPreview && diagram.nodes.isNotEmpty()) {
+        val diagramErrors = remember(diagram) { BiochemicalDiagramValidator.validate(diagram) }
+        val svg = remember(diagram, diagramStep) {
+            if (diagramErrors.isEmpty()) BiochemicalSvgRenderer.render(diagram, diagramStep)
+            else ""
+        }
+        AlertDialog(
+            onDismissRequest = { diagramPreview = false },
+            title = {
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                    Text("Lesson flow · " + (diagramStep + 1) + "/" + diagram.steps.size, style = MaterialTheme.typography.titleMedium)
+                    IconButton(onClick = { diagramPreview = false }) {
+                        Icon(Icons.Default.Close, contentDescription = "Close diagram")
+                    }
+                }
+            },
+            text = {
+                Column(
+                    Modifier.fillMaxWidth().heightIn(min = 360.dp, max = 520.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    if (diagramErrors.isNotEmpty()) {
+                        Text(diagramErrors.joinToString(" "), color = MaterialTheme.colorScheme.error)
+                    } else {
+                        Text(diagram.steps[diagramStep].title, fontWeight = FontWeight.SemiBold)
+                        Text(
+                            diagram.steps[diagramStep].explanation.ifBlank { "Use this step to introduce the next part of the lesson." },
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        AndroidView(
+                            factory = { context ->
+                                WebView(context).apply {
+                                    settings.javaScriptEnabled = false
+                                    settings.domStorageEnabled = false
+                                    settings.allowFileAccess = false
+                                    settings.allowContentAccess = false
+                                    isVerticalScrollBarEnabled = true
+                                    isHorizontalScrollBarEnabled = true
+                                    overScrollMode = android.view.View.OVER_SCROLL_IF_CONTENT_SCROLLS
+                                }
+                            },
+                            update = { webView ->
+                                if (webView.tag != svg) {
+                                    webView.tag = svg
+                                    val html = "<!doctype html><html><head><meta name='viewport' content='width=device-width, initial-scale=1'></head><body style='margin:0;padding:8px;background:transparent;'>$svg</body></html>"
+                                    webView.loadDataWithBaseURL(null, html, "text/html", "UTF-8", null)
+                                }
+                            },
+                            modifier = Modifier.fillMaxWidth().weight(1f)
+                        )
+                        Text("Reveal progress", style = MaterialTheme.typography.labelMedium)
+                        Slider(
+                            value = diagramStep.toFloat(),
+                            onValueChange = { diagramStep = it.toInt().coerceIn(0, diagram.steps.lastIndex) },
+                            valueRange = 0f..diagram.steps.lastIndex.toFloat(),
+                            steps = (diagram.steps.size - 2).coerceAtLeast(0)
+                        )
+                        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                            TextButton(onClick = { diagramStep = (diagramStep - 1).coerceAtLeast(0) }, enabled = diagramStep > 0) {
+                                Icon(Icons.Default.ArrowBack, contentDescription = null)
+                                Text("Previous")
+                            }
+                            TextButton(onClick = { diagramStep = (diagramStep + 1).coerceAtMost(diagram.steps.lastIndex) }, enabled = diagramStep < diagram.steps.lastIndex) {
+                                Text("Reveal next")
+                                Icon(Icons.Default.ArrowForward, contentDescription = null)
+                            }
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = { diagramPreview = false }) { Text("Close") }
+            }
+        )
     }
 
     if (slidePreview && slides.isNotEmpty()) {
