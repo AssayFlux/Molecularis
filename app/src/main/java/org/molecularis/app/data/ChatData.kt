@@ -54,10 +54,40 @@ data class KnowledgeChunkEntity(
  @Insert suspend fun add(project:WorkspaceProjectEntity):Long
  @Query("DELETE FROM workspace_projects WHERE id=:id") suspend fun delete(id:Long)
 }
-@Database(entities=[ConversationEntity::class,MessageEntity::class,LocalModelEntity::class,WorkspaceProjectEntity::class,KnowledgeChunkEntity::class],version=6,exportSchema=false)
+
+@Entity(tableName="books",indices=[Index("importedAt")])
+data class BookEntity(
+ @PrimaryKey val id:String,
+ val title:String,
+ val originalFileName:String,
+ val localPath:String,
+ val sourceUri:String,
+ val pageCount:Int,
+ val extractedChars:Int,
+ val importedAt:Long=System.currentTimeMillis()
+)
+@Entity(tableName="book_passages",indices=[Index("bookId"),Index("pageNumber")],foreignKeys=[ForeignKey(entity=BookEntity::class,parentColumns=["id"],childColumns=["bookId"],onDelete=ForeignKey.CASCADE)])
+data class BookPassageEntity(
+ @PrimaryKey val id:String,
+ val bookId:String,
+ val chunkIndex:Int,
+ val pageNumber:Int,
+ val text:String
+)
+@Dao interface BookDao {
+ @Query("SELECT * FROM books ORDER BY importedAt DESC") fun books():Flow<List<BookEntity>>
+ @Insert suspend fun addBook(book:BookEntity)
+ @Insert suspend fun addPassages(passages:List<BookPassageEntity>)
+ @Query("SELECT * FROM book_passages WHERE bookId=:bookId ORDER BY pageNumber,chunkIndex") suspend fun passages(bookId:String):List<BookPassageEntity>
+ @Query("SELECT * FROM book_passages WHERE bookId=:bookId AND text LIKE '%' || :query || '%' ORDER BY pageNumber LIMIT 100") suspend fun searchInBook(bookId:String,query:String):List<BookPassageEntity>
+ @Query("SELECT * FROM book_passages WHERE text LIKE '%' || :query || '%' ORDER BY bookId,pageNumber LIMIT 100") suspend fun searchAll(query:String):List<BookPassageEntity>
+ @Query("DELETE FROM books WHERE id=:bookId") suspend fun deleteBook(bookId:String)
+}
+@Database(entities=[ConversationEntity::class,MessageEntity::class,LocalModelEntity::class,WorkspaceProjectEntity::class,KnowledgeChunkEntity::class,BookEntity::class,BookPassageEntity::class],version=7,exportSchema=false)
 abstract class AppDatabase:RoomDatabase(){
  abstract fun chatDao():ChatDao
  abstract fun modelDao():ModelDao
  abstract fun workspaceDao():WorkspaceDao
  abstract fun knowledgeDao():KnowledgeDao
+ abstract fun bookDao():BookDao
 }
