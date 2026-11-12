@@ -6,6 +6,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Save
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -14,13 +15,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import org.molecularis.app.data.AppDatabase
+import org.molecularis.app.data.SavedLessonEntity
 import java.io.File
+import java.util.UUID
 
 @Composable
 fun TeachingStudioScreen(database: AppDatabase) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val books by database.bookDao().books().collectAsState(initial = emptyList())
+    val savedLessons by database.lessonDao().lessons().collectAsState(initial = emptyList())
     var topic by remember { mutableStateOf("") }
     var level by remember { mutableStateOf("MBBS") }
     var minutes by remember { mutableFloatStateOf(30f) }
@@ -168,18 +172,60 @@ fun TeachingStudioScreen(database: AppDatabase) {
                     )
                     OutlinedButton(
                         onClick = {
-                            runCatching {
-                                val directory = File(context.filesDir, "lessons").apply { mkdirs() }
-                                val safeName = topic.trim().lowercase().replace(Regex("[^a-z0-9]+"), "-").trim('-').take(48).ifBlank { "lesson" }
-                                File(directory, safeName + "-" + System.currentTimeMillis() + ".md").writeText(outline)
-                            }.onSuccess { status = "Lesson outline saved on this device." }
-                                .onFailure { status = "Could not save outline: " + (it.message ?: "unknown error") }
+                            scope.launch {
+                                try {
+                                    val now = System.currentTimeMillis()
+                                    database.lessonDao().saveLesson(
+                                        SavedLessonEntity(
+                                            id = UUID.randomUUID().toString(),
+                                            title = topic.trim(),
+                                            audienceLevel = level,
+                                            durationMinutes = minutes.toInt(),
+                                            outline = outline,
+                                            createdAt = now,
+                                            updatedAt = now
+                                        )
+                                    )
+                                    val directory = File(context.filesDir, "lessons").apply { mkdirs() }
+                                    val safeName = topic.trim().lowercase().replace(Regex("[^a-z0-9]+"), "-").trim('-').take(48).ifBlank { "lesson" }
+                                    File(directory, safeName + "-" + now + ".md").writeText(outline)
+                                    status = "Lesson saved to your encrypted local library."
+                                } catch (error: Throwable) {
+                                    status = "Could not save lesson: " + (error.message ?: "unknown error")
+                                }
+                            }
                         },
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Icon(Icons.Default.Save, contentDescription = null)
                         Spacer(Modifier.width(8.dp))
                         Text("Save outline on this device")
+                    }
+                }
+            }
+        }
+        if (savedLessons.isNotEmpty()) {
+            Text("Saved lessons · " + savedLessons.size, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+            savedLessons.take(8).forEach { lesson ->
+                Card {
+                    Row(Modifier.fillMaxWidth().padding(12.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Column(Modifier.weight(1f)) {
+                            Text(lesson.title, fontWeight = FontWeight.SemiBold)
+                            Text(lesson.audienceLevel + " · " + lesson.durationMinutes + " min", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        }
+                        TextButton(onClick = {
+                            topic = lesson.title
+                            level = lesson.audienceLevel
+                            minutes = lesson.durationMinutes.toFloat().coerceIn(10f, 90f)
+                            outline = lesson.outline
+                            status = "Loaded saved lesson for editing."
+                        }) { Text("Open") }
+                        IconButton(onClick = {
+                            scope.launch {
+                                database.lessonDao().deleteLesson(lesson.id)
+                                status = "Saved lesson removed."
+                            }
+                        }) { Icon(Icons.Default.Delete, contentDescription = "Delete saved lesson") }
                     }
                 }
             }
