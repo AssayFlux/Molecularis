@@ -35,6 +35,7 @@ import java.util.UUID
 fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localModelAvailable: Boolean, onSpeak: (String) -> Unit, onGenerateWithLocalModel: suspend (String) -> String) {
     val scope = rememberCoroutineScope()
     val books by database.bookDao().books().collectAsState(initial = emptyList())
+    val knowledgeBooks by database.knowledgePoolDao().books().collectAsState(initial = emptyList())
     val savedLessons by database.lessonDao().lessons().collectAsState(initial = emptyList())
     var topic by remember { mutableStateOf("") }
     var level by remember { mutableStateOf("MBBS") }
@@ -113,10 +114,12 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localMo
                 } else {
                     scope.launch {
                         preparing = true
-                        status = "Searching your local textbook library…"
+                        status = "Searching professor-reviewed Knowledge Pool sources…"
                         try {
+                            val approvedBookIds = knowledgeBooks.filter { it.reviewState == "approved" }.map { it.bookId }.toSet()
+                            require(approvedBookIds.isNotEmpty()) { "No professor-reviewed sources are available yet. Process a book in Knowledge Pool and mark its source as reviewed first." }
                             val terms = cleanTopic.split(Regex("\\W+")).filter { it.length >= 3 }.distinct().take(8)
-                            val retrieved = terms.flatMap { database.bookDao().searchAll(it) }
+                            val retrieved = terms.flatMap { database.bookDao().searchAll(it).filter { passage -> passage.bookId in approvedBookIds } }
                                 .distinctBy { it.id }
                                 .take(8)
                             val bookTitles = books.associate { it.id to it.title }
