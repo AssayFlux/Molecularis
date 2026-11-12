@@ -6,6 +6,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Save
+import androidx.compose.material.icons.filled.VolumeUp
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -20,7 +21,7 @@ import java.io.File
 import java.util.UUID
 
 @Composable
-fun TeachingStudioScreen(database: AppDatabase) {
+fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, onSpeak: (String) -> Unit) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val books by database.bookDao().books().collectAsState(initial = emptyList())
@@ -170,6 +171,22 @@ fun TeachingStudioScreen(database: AppDatabase) {
                         minLines = 12,
                         label = { Text("Edit your lesson") }
                     )
+                    Button(
+                        onClick = { onSpeak(outline) },
+                        enabled = voiceAvailable,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Icon(Icons.Default.VolumeUp, contentDescription = null)
+                        Spacer(Modifier.width(8.dp))
+                        Text("Teach this lesson aloud · offline")
+                    }
+                    if (!voiceAvailable) {
+                        Text(
+                            "Install an offline text-to-speech voice in Android settings to enable narration.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
                     OutlinedButton(
                         onClick = {
                             scope.launch {
