@@ -31,6 +31,8 @@ This roadmap is outcome-based. Complete and validate one usable vertical slice a
 
 **Current status:** first SAF import, PDF OCR, page-aware passage storage, local keyword search and textbook deletion are implemented. Large imports are currently limited to 250 PDF pages and run in the foreground; resumable WorkManager processing and richer PDF text-layer extraction remain open.
 
+**Current status:** the first SAF PDF import, on-device OCR, page-aware passage storage, local keyword search, book selection and textbook deletion are implemented. The importer is foreground-only and currently limited to 500 pages and 5 million extracted characters; resumable WorkManager processing, progress reporting and direct PDF text-layer extraction remain open.
+
 **Exit criteria:** a professor can import a permitted PDF, inspect extraction status and retrieve its extracted text while offline.
 
 ## Phase 2 — Topic organization and local knowledge base
@@ -40,7 +42,7 @@ This roadmap is outcome-based. Complete and validate one usable vertical slice a
 - [ ] Detect headings, chapters and likely topic/subtopic labels.
 - [ ] Build a topic tree with aliases and duplicate-topic merging.
 - [ ] Add professor review/edit tools for topic assignments.
-- [ ] Add SQLite FTS5 keyword search and filters.
+- [ ] Upgrade current Room keyword search to SQLite FTS5 with filters (current search is basic local keyword matching).
 - [ ] Link topic pages to relevant content chunks and page locations.
 - [ ] Add optional local embeddings only after runtime and device tests.
 - [ ] Add a small curated biochemistry topic taxonomy as a starter, not as a replacement for the professor's books.
@@ -51,14 +53,16 @@ This roadmap is outcome-based. Complete and validate one usable vertical slice a
 
 **Goal:** convert a selected topic into a useful lecture plan.
 
-- [ ] Define audience profiles: MBBS, MD, DNB and PhD.
-- [ ] Define lesson structure and time-budgeting rules.
-- [ ] Build retrieval-to-lesson context assembly.
-- [ ] Create prompt/templates for objectives, prerequisites, explanation, mechanism, regulation, clinical connections, recap and questions.
+- [x] Define initial audience profiles: MBBS, MD / DNB and PhD.
+- [x] Add a first editable lesson structure and teaching-time selector (fine-grained time budgeting remains open).
+- [x] Assemble matching local textbook passages into the lesson outline using keyword retrieval.
+- [x] Add an editable template for objectives, prerequisites, explanation, mechanism, regulation, clinical connections, recap and questions (this is a scaffold, not AI-authored scientific teaching).
 - [ ] Add local-model provider interface and capability checks.
 - [ ] Add optional external AI provider settings and secure key storage.
-- [ ] Add edit, regenerate, save and duplicate lesson workflows.
+- [x] Add outline editing, local save, reopen and delete (regeneration and duplication remain open).
 - [ ] Test with professor-reviewed sample topics and different audience levels.
+
+**Current status:** the first lesson scaffold can retrieve local passages, adapt its teaching emphasis for MBBS, MD/DNB and PhD, be edited and saved locally. It is a structured outline, not yet a complete AI-generated lecture; scientific explanations must be authored/reviewed by the professor until a real local-model lesson generator is integrated.
 
 **Exit criteria:** a topic plus audience level produces an editable, coherent teaching flow grounded in the imported library. No API key is required for the local/search-based experience.
 
@@ -93,13 +97,15 @@ This roadmap is outcome-based. Complete and validate one usable vertical slice a
 
 **Goal:** let Molecularis deliver a prepared lecture aloud.
 
-- [ ] Add voice selection and preview.
-- [ ] Add text-to-speech adapter and offline voice readiness check.
+- [x] Reuse voice selection and preview in the app settings.
+- [x] Reuse Android local-voice readiness checks and add long-script narration to the Teaching Studio (device voice-pack validation remains open).
 - [ ] Add narration pacing, pauses, pronunciation dictionary and emphasis controls.
 - [ ] Synchronize narration with slide changes and SVG reveal events.
 - [ ] Add play, pause, resume, seek and stop controls.
 - [ ] Add audio focus, interruption handling and headset/Bluetooth tests.
 - [ ] Add optional local speech engine only after device and license evaluation.
+
+**Current status:** the Teaching Studio can read its current outline aloud using an installed Android offline TTS voice, splitting long scripts into queued chunks. There are not yet slide or diagram synchronization controls.
 
 **Exit criteria:** a prepared lesson plays with understandable voice, slides and diagram steps synchronized, including offline operation on a validated device/voice pack.
 
