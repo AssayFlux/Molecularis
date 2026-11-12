@@ -297,14 +297,26 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, onSpeak
                 }
             },
             confirmButton = {
-                Row(verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
-                    TextButton(onClick = { slideIndex = (slideIndex - 1).coerceAtLeast(0) }, enabled = slideIndex > 0) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = null)
-                        Text("Previous")
+                Column(horizontalAlignment = androidx.compose.ui.Alignment.End) {
+                    TextButton(
+                        onClick = {
+                            val slide = slides[slideIndex]
+                            onSpeak((slide.title + ". " + slide.points.joinToString(". ")).take(2800))
+                        },
+                        enabled = voiceAvailable
+                    ) {
+                        Icon(Icons.Default.VolumeUp, contentDescription = null)
+                        Text("Read this slide aloud")
                     }
-                    TextButton(onClick = { slideIndex = (slideIndex + 1).coerceAtMost(slides.lastIndex) }, enabled = slideIndex < slides.lastIndex) {
-                        Text("Next")
-                        Icon(Icons.Default.ArrowForward, contentDescription = null)
+                    Row(verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
+                        TextButton(onClick = { slideIndex = (slideIndex - 1).coerceAtLeast(0) }, enabled = slideIndex > 0) {
+                            Icon(Icons.Default.ArrowBack, contentDescription = null)
+                            Text("Previous")
+                        }
+                        TextButton(onClick = { slideIndex = (slideIndex + 1).coerceAtMost(slides.lastIndex) }, enabled = slideIndex < slides.lastIndex) {
+                            Text("Next")
+                            Icon(Icons.Default.ArrowForward, contentDescription = null)
+                        }
                     }
                 }
             }
