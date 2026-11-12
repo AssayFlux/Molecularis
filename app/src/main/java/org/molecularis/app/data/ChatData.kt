@@ -83,6 +83,23 @@ data class BookPassageEntity(
  @Query("SELECT * FROM book_passages WHERE text LIKE '%' || :query || '%' ORDER BY bookId,pageNumber LIMIT 100") suspend fun searchAll(query:String):List<BookPassageEntity>
  @Query("DELETE FROM books WHERE id=:bookId") suspend fun deleteBook(bookId:String)
 }
+
+@Entity(tableName="saved_lessons",indices=[Index("updatedAt")])
+data class SavedLessonEntity(
+ @PrimaryKey val id:String,
+ val title:String,
+ val audienceLevel:String,
+ val durationMinutes:Int,
+ val outline:String,
+ val createdAt:Long=System.currentTimeMillis(),
+ val updatedAt:Long=System.currentTimeMillis()
+)
+@Dao interface LessonDao {
+ @Query("SELECT * FROM saved_lessons ORDER BY updatedAt DESC") fun lessons():Flow<List<SavedLessonEntity>>
+ @Insert(onConflict=OnConflictStrategy.REPLACE) suspend fun saveLesson(lesson:SavedLessonEntity)
+ @Query("DELETE FROM saved_lessons WHERE id=:id") suspend fun deleteLesson(id:String)
+}
+
 @Database(entities=[ConversationEntity::class,MessageEntity::class,LocalModelEntity::class,WorkspaceProjectEntity::class,KnowledgeChunkEntity::class,BookEntity::class,BookPassageEntity::class,SavedLessonEntity::class],version=8,exportSchema=false)
 abstract class AppDatabase:RoomDatabase(){
  abstract fun chatDao():ChatDao
