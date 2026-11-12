@@ -743,6 +743,7 @@ private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LI
  }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable private fun ChatScreen(conversations:List<ConversationEntity>,selectedId:Long?,messages:List<MessageEntity>,draft:String,onDraftChange:(String)->Unit,attachmentName:String?,activeModelName:String?,runtimeMessage:String,loading:Boolean,sending:Boolean,voiceListening:Boolean,onVoice:()->Unit,onSpeak:(String)->Unit,onAttach:()->Unit,onClearAttachment:()->Unit,onSelect:(Long)->Unit,onDelete:(Long)->Unit,onlineEnabled:Boolean,onSend:()->Unit,onTeach:()->Unit,onLibrary:()->Unit,onModels:()->Unit,onAiHub:()->Unit){
  var pendingDelete by remember{mutableStateOf<Long?>(null)}
  var historyExpanded by remember{mutableStateOf(false)}
