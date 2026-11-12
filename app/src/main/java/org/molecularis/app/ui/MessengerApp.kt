@@ -854,7 +854,7 @@ private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LI
   if(loading)LinearProgressIndicator(Modifier.fillMaxWidth())
   Spacer(Modifier.height(10.dp))
   if(models.isEmpty())EmptyState("No model imported","Choose a compatible LiteRT-LM .litertlm file. A small model is best for phones.")
-  LazyColumn(verticalArrangement=Arrangement.spacedBy(8.dp)){items(models,key={it.uri}){model->
+  LazyColumn(Modifier.weight(1f),verticalArrangement=Arrangement.spacedBy(8.dp)){items(models,key={it.uri}){model->
    val canLoad=model.modelPath?.endsWith(".litertlm",true)==true
    val isOnnx=model.modelPath?.endsWith(".onnx",true)==true
    Card{Column(Modifier.fillMaxWidth().padding(14.dp)){
@@ -916,7 +916,7 @@ private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LI
  Column(Modifier.fillMaxSize().padding(16.dp)){
   Card(colors=CardDefaults.cardColors(containerColor=MaterialTheme.colorScheme.primaryContainer.copy(alpha=0.42f)),modifier=Modifier.fillMaxWidth()){Row(Modifier.fillMaxWidth().padding(16.dp),verticalAlignment=Alignment.CenterVertically){Column(Modifier.weight(1f)){Text("WORKSPACE",style=MaterialTheme.typography.labelMedium,color=MaterialTheme.colorScheme.primary,fontWeight=FontWeight.Bold);Text("Your local workbench",style=MaterialTheme.typography.headlineSmall,fontWeight=FontWeight.SemiBold);Text("Projects, notes and a scoped code editor.",color=MaterialTheme.colorScheme.onSurfaceVariant)};Column(verticalArrangement=Arrangement.spacedBy(6.dp)){FilledTonalButton(onClick=onAdd){Icon(Icons.Default.Add,null);Text("New")};OutlinedButton(onClick={studioOpen=true}){Icon(Icons.Default.Code,null);Text("Studio")}}}}
   Spacer(Modifier.height(14.dp));if(projects.isEmpty())EmptyState("A space for your work","Create a project to keep its name and description on this device.")
-  LazyColumn(verticalArrangement=Arrangement.spacedBy(8.dp)){items(projects,key={it.id}){project->Card{Row(Modifier.fillMaxWidth().padding(14.dp),verticalAlignment=Alignment.CenterVertically){
+  LazyColumn(Modifier.weight(1f),verticalArrangement=Arrangement.spacedBy(8.dp)){items(projects,key={it.id}){project->Card{Row(Modifier.fillMaxWidth().padding(14.dp),verticalAlignment=Alignment.CenterVertically){
    Icon(Icons.Default.Folder,null,tint=MaterialTheme.colorScheme.primary,modifier=Modifier.size(28.dp));Spacer(Modifier.width(12.dp))
    Column(Modifier.weight(1f)){Text(project.name,fontWeight=FontWeight.SemiBold);if(project.description.isNotBlank())Text(project.description,color=Muted,maxLines=2)}
    TextButton(onClick={onOpen(project)}){Text("Open assistant")}
