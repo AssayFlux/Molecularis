@@ -9,6 +9,9 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.StatFs
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.biometric.BiometricManager
+import androidx.biometric.BiometricPrompt
+import androidx.fragment.app.FragmentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.compose.foundation.Image
@@ -1060,6 +1063,9 @@ private suspend fun readDatasetBounded(context:Context,uri:Uri):String = withCon
  onTestVoice:()->Unit
 ){
  val context=LocalContext.current
+ val securityPrefs=remember(context){context.getSharedPreferences("molecularis_security",Context.MODE_PRIVATE)}
+ var biometricEnabled by remember{mutableStateOf(securityPrefs.getBoolean("biometric_lock_enabled",false))}
+ var biometricStatus by remember{mutableStateOf("Lock the app with fingerprint or secure device credentials when it is backgrounded.")}
  var languageDraft by remember(languageTag){mutableStateOf(languageTag)}
  var voiceMenu by remember{mutableStateOf(false)}
  var languageMenu by remember{mutableStateOf(false)}
@@ -1084,7 +1090,38 @@ private suspend fun readDatasetBounded(context:Context,uri:Uri):String = withCon
     Text("Account & security",style=MaterialTheme.typography.titleLarge,fontWeight=FontWeight.SemiBold)
     Text("Molecularis currently keeps your library, models and conversations on this device. A real account sign-in needs a configured authentication service; this build does not pretend a local profile is a cloud account.",style=MaterialTheme.typography.bodySmall,color=Muted)
     OutlinedButton(onClick={},enabled=false,modifier=Modifier.fillMaxWidth()){Icon(Icons.Default.AccountCircle,null);Spacer(Modifier.width(8.dp));Text("Account sign-in · service not configured")}
-    Text("Biometric app lock is a separate security feature and requires Android biometric authentication to be integrated with the app lifecycle.",style=MaterialTheme.typography.bodySmall,color=Muted)
+    Row(verticalAlignment=Alignment.CenterVertically){
+     Column(Modifier.weight(1f),verticalArrangement=Arrangement.spacedBy(3.dp)){
+      Text("Fingerprint / biometric app lock",fontWeight=FontWeight.SemiBold)
+      Text("Ask for a strong biometric or secure device credential when Molecularis is reopened.",style=MaterialTheme.typography.bodySmall,color=Muted)
+     }
+     Switch(checked=biometricEnabled,onCheckedChange={enabled->
+      if(!enabled){
+       biometricEnabled=false
+       securityPrefs.edit().putBoolean("biometric_lock_enabled",false).apply()
+       biometricStatus="App lock disabled."
+      }else{
+       val authenticators=BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL
+       val availability=BiometricManager.from(context).canAuthenticate(authenticators)
+       val activity=context as? FragmentActivity
+       if(availability!=BiometricManager.BIOMETRIC_SUCCESS||activity==null){
+        biometricStatus="Set up a supported fingerprint/biometric or secure screen lock on this device first."
+       }else{
+        val prompt=BiometricPrompt(activity,ContextCompat.getMainExecutor(context),object:BiometricPrompt.AuthenticationCallback(){
+         override fun onAuthenticationSucceeded(result:BiometricPrompt.AuthenticationResult){
+          biometricEnabled=true
+          securityPrefs.edit().putBoolean("biometric_lock_enabled",true).apply()
+          biometricStatus="Biometric app lock enabled. Molecularis will request authentication when reopened."
+         }
+         override fun onAuthenticationError(errorCode:Int,errString:CharSequence){biometricStatus="Could not enable app lock: "+errString}
+         override fun onAuthenticationFailed(){biometricStatus="Biometric not recognized. Try again to enable the lock."}
+        })
+        prompt.authenticate(BiometricPrompt.PromptInfo.Builder().setTitle("Enable Molecularis app lock").setSubtitle("Confirm your fingerprint or secure device credential").setAllowedAuthenticators(authenticators).build())
+       }
+      }
+     })
+    }
+    Text(biometricStatus,style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.primary)
    }
   }
   Card(Modifier.fillMaxWidth()){
