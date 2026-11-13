@@ -90,6 +90,7 @@ data class KnowledgeProcessingCheckpointEntity(@PrimaryKey val bookId:String,val
  @Query("SELECT * FROM books WHERE fileSha256=:sha256 LIMIT 1") suspend fun bookBySha256(sha256:String):BookEntity?
  @Query("SELECT * FROM books WHERE title=:title COLLATE NOCASE ORDER BY importedAt DESC LIMIT 1") suspend fun bookByTitle(title:String):BookEntity?
  @Update suspend fun updateBook(book:BookEntity)
+ @Transaction suspend fun deleteBookAndProcessingState(bookId:String) { clearProcessingCheckpointAndStage(bookId); deleteBook(bookId) }
  @Transaction suspend fun clearProcessingCheckpointAndStage(bookId:String) {
   val checkpoint = processingCheckpoint(bookId)
   if (checkpoint != null) {
@@ -103,13 +104,14 @@ data class KnowledgeProcessingCheckpointEntity(@PrimaryKey val bookId:String,val
  @Insert suspend fun addPassages(passages:List<BookPassageEntity>)
  @Query("DELETE FROM book_passages WHERE bookId=:bookId") suspend fun deletePassages(bookId:String)
  @Query("SELECT * FROM book_passages WHERE bookId=:bookId ORDER BY pageNumber,chunkIndex") suspend fun passages(bookId:String):List<BookPassageEntity>
+ @Query("SELECT * FROM book_passages WHERE bookId=:bookId AND pageNumber=:page ORDER BY chunkIndex") suspend fun passagesAtPage(bookId:String,page:Int)
  @Query("SELECT book_passages.* FROM book_passages JOIN book_passages_fts ON book_passages_fts.rowid = book_passages.rowid WHERE book_passages.bookId=:bookId AND book_passages_fts MATCH :query ORDER BY book_passages.pageNumber LIMIT 100") suspend fun searchInBookIndexed(bookId:String,query:String):List<BookPassageEntity>
  @Query("SELECT book_passages.* FROM book_passages JOIN book_passages_fts ON book_passages_fts.rowid = book_passages.rowid WHERE book_passages.bookId IN (SELECT id FROM books WHERE id NOT GLOB '__stage__*') AND book_passages_fts MATCH :query ORDER BY book_passages.bookId,book_passages.pageNumber LIMIT 100") suspend fun searchAllIndexed(query:String):List<BookPassageEntity>
  @Query("SELECT * FROM book_passages WHERE bookId=:bookId AND text LIKE '%' || :query || '%' ORDER BY pageNumber LIMIT 100") suspend fun searchInBook(bookId:String,query:String):List<BookPassageEntity>
  @Query("SELECT * FROM book_passages WHERE bookId IN (SELECT id FROM books WHERE id NOT GLOB '__stage__*') AND text LIKE '%' || :query || '%' ORDER BY bookId,pageNumber LIMIT 100") suspend fun searchAll(query:String):List<BookPassageEntity>
  @Query("UPDATE books SET pageCount=:pageCount, extractedChars=:extractedChars WHERE id=:bookId") suspend fun updateBookStats(bookId:String,pageCount:Int,extractedChars:Int)
  @Query("DELETE FROM books WHERE id=:bookId") suspend fun deleteBook(bookId:String)
- @Query("DELETE FROM books WHERE id GLOB '__stage__*' AND importedAt < :olderThan") suspend fun cleanupStaleStagingBooks(olderThan:Long)
+ @Query("DELETE FROM books WHERE id GLOB '__stage__*' AND importedAt < :olderThan AND id NOT IN (SELECT stagingBookId FROM knowledge_processing_checkpoints)") suspend fun cleanupStaleStagingBooks(olderThan:Long)
  @Query("UPDATE book_passages SET bookId=:bookId WHERE bookId=:stagingBookId") suspend fun moveStagedPassages(stagingBookId:String,bookId:String)
  @Transaction suspend fun replacePassagesFromStage(bookId:String,stagingBookId:String) {
   deletePassages(bookId)
