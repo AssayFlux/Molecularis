@@ -37,6 +37,8 @@ import org.molecularis.app.features.LessonPdfExporter
 import org.molecularis.app.features.BiochemicalDiagramTemplate
 import org.molecularis.app.features.BiochemicalDiagramTemplates
 import org.molecularis.app.features.BiochemicalDiagramValidator
+import org.molecularis.app.features.DiagramNodeKind
+import org.molecularis.app.features.DiagramConnectionKind
 import org.molecularis.app.features.BiochemicalSvgRenderer
 import org.molecularis.app.features.CommonsImageSearchClient
 import org.molecularis.app.features.CommonsImageCache
@@ -104,6 +106,8 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localMo
     val diagram = diagramResult.getOrElse {
         BiochemicalDiagramTemplates.create(BiochemicalDiagramTemplate.METABOLIC_PATHWAY, topic.ifBlank { "Lesson pathway" }, listOf("Starting metabolite", "Intermediate", "Product"))
     }
+    var editedDiagram by remember(diagram) { mutableStateOf(diagram) }
+    LaunchedEffect(diagram) { diagramStep = 0 }
 
     Column(
         modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(18.dp),
@@ -355,6 +359,86 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localMo
                         label = { Text("Enzymes / reaction labels / interaction notes") }
                     )
                     if (diagramResult.isFailure) Text(diagramResult.exceptionOrNull()?.message ?: "Diagram inputs need attention.", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
+                    if (diagramResult.isSuccess) {
+                        Text("Edit diagram nodes", style = MaterialTheme.typography.labelLarge)
+                        editedDiagram.nodes.forEach { node ->
+                            var kindMenuExpanded by remember(node.id) { mutableStateOf(false) }
+                            Card {
+                                Column(Modifier.fillMaxWidth().padding(10.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                    OutlinedTextField(
+                                        value = node.label,
+                                        onValueChange = { value ->
+                                            editedDiagram = editedDiagram.copy(
+                                                nodes = editedDiagram.nodes.map { if (it.id == node.id) it.copy(label = value.take(160)) else it },
+                                                steps = editedDiagram.steps.map { if (it.index == node.revealStep) it.copy(title = value.take(160)) else it }
+                                            )
+                                        },
+                                        modifier = Modifier.fillMaxWidth(), singleLine = true,
+                                        label = { Text("Component name") }
+                                    )
+                                    OutlinedTextField(
+                                        value = node.detail,
+                                        onValueChange = { value ->
+                                            editedDiagram = editedDiagram.copy(
+                                                nodes = editedDiagram.nodes.map { if (it.id == node.id) it.copy(detail = value.take(500)) else it },
+                                                steps = editedDiagram.steps.map { if (it.index == node.revealStep) it.copy(explanation = value.take(1000)) else it }
+                                            )
+                                        },
+                                        modifier = Modifier.fillMaxWidth(), singleLine = true,
+                                        label = { Text("Teaching detail") }
+                                    )
+                                    Row(verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
+                                        Text("Type: " + node.kind.name.lowercase().replace('_', ' '), modifier = Modifier.weight(1f), style = MaterialTheme.typography.bodySmall)
+                                        TextButton(onClick = { kindMenuExpanded = true }) { Text("Change type") }
+                                        DropdownMenu(expanded = kindMenuExpanded, onDismissRequest = { kindMenuExpanded = false }) {
+                                            DiagramNodeKind.values().forEach { kind ->
+                                                DropdownMenuItem(text = { Text(kind.name.lowercase().replace('_', ' ')) }, onClick = {
+                                                    editedDiagram = editedDiagram.copy(nodes = editedDiagram.nodes.map { if (it.id == node.id) it.copy(kind = kind) else it })
+                                                    kindMenuExpanded = false
+                                                })
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        Text("Edit diagram connections", style = MaterialTheme.typography.labelLarge)
+                        editedDiagram.connections.forEachIndexed { edgeIndex, edge ->
+                            var edgeKindMenuExpanded by remember(edgeIndex) { mutableStateOf(false) }
+                            Card {
+                                Column(Modifier.fillMaxWidth().padding(10.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                    Text(
+                                        editedDiagram.nodes.firstOrNull { it.id == edge.fromId }?.label.orEmpty() + " → " +
+                                            editedDiagram.nodes.firstOrNull { it.id == edge.toId }?.label.orEmpty(),
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+                                    OutlinedTextField(
+                                        value = edge.label,
+                                        onValueChange = { value ->
+                                            editedDiagram = editedDiagram.copy(connections = editedDiagram.connections.mapIndexed { i, item -> if (i == edgeIndex) item.copy(label = value.take(120)) else item })
+                                        },
+                                        modifier = Modifier.fillMaxWidth(), singleLine = true,
+                                        label = { Text("Reaction / interaction label") }
+                                    )
+                                    Row(verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
+                                        Text("Relationship: " + edge.kind.name.lowercase(), modifier = Modifier.weight(1f), style = MaterialTheme.typography.bodySmall)
+                                        TextButton(onClick = { edgeKindMenuExpanded = true }) { Text("Change") }
+                                        DropdownMenu(expanded = edgeKindMenuExpanded, onDismissRequest = { edgeKindMenuExpanded = false }) {
+                                            DiagramConnectionKind.values().forEach { kind ->
+                                                DropdownMenuItem(text = { Text(kind.name.lowercase()) }, onClick = {
+                                                    editedDiagram = editedDiagram.copy(connections = editedDiagram.connections.mapIndexed { i, item -> if (i == edgeIndex) item.copy(kind = kind) else item })
+                                                    edgeKindMenuExpanded = false
+                                                })
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        val editedErrors = BiochemicalDiagramValidator.validate(editedDiagram)
+                        if (editedErrors.isNotEmpty()) Text(editedErrors.joinToString(" "), color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
+                    }
+
                     Text("Reference images · Wikimedia Commons", style = MaterialTheme.typography.labelLarge)
                     OutlinedTextField(value = diagramImageQuery, onValueChange = { diagramImageQuery = it }, modifier = Modifier.fillMaxWidth(), singleLine = true, label = { Text("Search licensed scientific images") })
                     OutlinedButton(
@@ -402,11 +486,11 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localMo
                     OutlinedButton(
                         onClick = { diagramStep = 0; diagramPreview = true },
                         modifier = Modifier.fillMaxWidth(),
-                        enabled = diagramResult.isSuccess
+                        enabled = diagramResult.isSuccess && BiochemicalDiagramValidator.validate(editedDiagram).isEmpty()
                     ) {
                         Icon(Icons.Default.AccountTree, contentDescription = null)
                         Spacer(Modifier.width(8.dp))
-                        Text("Explore " + diagramTemplate.label.lowercase() + " · " + diagram.nodes.size + " components")
+                        Text("Explore " + diagramTemplate.label.lowercase() + " · " + editedDiagram.nodes.size + " components")
                     }
                     OutlinedButton(
                         onClick = { slideIndex = 0; slidePreview = true },
@@ -517,17 +601,17 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localMo
         Text("Slide preview is a presentation scaffold generated from your editable outline. Scientific claims and source excerpts remain subject to professor review.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 
-    if (diagramPreview && diagram.nodes.isNotEmpty()) {
-        val diagramErrors = remember(diagram) { BiochemicalDiagramValidator.validate(diagram) }
-        val svg = remember(diagram, diagramStep) {
-            if (diagramErrors.isEmpty()) BiochemicalSvgRenderer.render(diagram, diagramStep)
+    if (diagramPreview && editedDiagram.nodes.isNotEmpty()) {
+        val diagramErrors = remember(editedDiagram) { BiochemicalDiagramValidator.validate(editedDiagram) }
+        val svg = remember(editedDiagram, diagramStep) {
+            if (diagramErrors.isEmpty()) BiochemicalSvgRenderer.render(editedDiagram, diagramStep)
             else ""
         }
         AlertDialog(
             onDismissRequest = { diagramPreview = false },
             title = {
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                    Text(diagram.template.label + " · " + (diagramStep + 1) + "/" + diagram.steps.size, style = MaterialTheme.typography.titleMedium)
+                    Text(editedDiagram.template.label + " · " + (diagramStep + 1) + "/" + editedDiagram.steps.size, style = MaterialTheme.typography.titleMedium)
                     IconButton(onClick = { diagramPreview = false }) {
                         Icon(Icons.Default.Close, contentDescription = "Close diagram")
                     }
@@ -541,9 +625,9 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localMo
                     if (diagramErrors.isNotEmpty()) {
                         Text(diagramErrors.joinToString(" "), color = MaterialTheme.colorScheme.error)
                     } else {
-                        Text(diagram.steps[diagramStep].title, fontWeight = FontWeight.SemiBold)
+                        Text(editedDiagram.steps[diagramStep].title, fontWeight = FontWeight.SemiBold)
                         Text(
-                            diagram.steps[diagramStep].explanation.ifBlank { "Use this step to introduce the next part of the lesson." },
+                            editedDiagram.steps[diagramStep].explanation.ifBlank { "Use this step to introduce the next part of the lesson." },
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -579,16 +663,16 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localMo
                         Text("Reveal progress", style = MaterialTheme.typography.labelMedium)
                         Slider(
                             value = diagramStep.toFloat(),
-                            onValueChange = { diagramStep = it.toInt().coerceIn(0, diagram.steps.lastIndex) },
-                            valueRange = 0f..diagram.steps.lastIndex.toFloat(),
-                            steps = (diagram.steps.size - 2).coerceAtLeast(0)
+                            onValueChange = { diagramStep = it.toInt().coerceIn(0, editedDiagram.steps.lastIndex) },
+                            valueRange = 0f..editedDiagram.steps.lastIndex.toFloat(),
+                            steps = (editedDiagram.steps.size - 2).coerceAtLeast(0)
                         )
                         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                             TextButton(onClick = { diagramStep = (diagramStep - 1).coerceAtLeast(0) }, enabled = diagramStep > 0) {
                                 Icon(Icons.Default.ArrowBack, contentDescription = null)
                                 Text("Previous")
                             }
-                            TextButton(onClick = { diagramStep = (diagramStep + 1).coerceAtMost(diagram.steps.lastIndex) }, enabled = diagramStep < diagram.steps.lastIndex) {
+                            TextButton(onClick = { diagramStep = (diagramStep + 1).coerceAtMost(editedDiagram.steps.lastIndex) }, enabled = diagramStep < editedDiagram.steps.lastIndex) {
                                 Text("Reveal next")
                                 Icon(Icons.Default.ArrowForward, contentDescription = null)
                             }
