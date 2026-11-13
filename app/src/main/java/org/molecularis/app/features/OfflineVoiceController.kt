@@ -284,7 +284,13 @@ class OfflineVoiceController(
         engine.speak(narrationChunks[narrationIndex].text, TextToSpeech.QUEUE_FLUSH, null, id)
     }
 
-    fun setPronunciationDictionary(source: String) {\n        pronunciationEntries = (BiochemistryPronunciationDictionary.defaults + BiochemistryPronunciationDictionary.parse(source)).associateBy { it.term.lowercase() }.values.sortedByDescending { it.term.length }\n    }\n\n    fun setSpeechRate(rate: Float) {
+    fun setPronunciationDictionary(source: String) {
+        val custom = BiochemistryPronunciationDictionary.parse(source)
+        pronunciationEntries = (BiochemistryPronunciationDictionary.defaults + custom)
+            .associateBy { it.term.lowercase() }
+            .values
+            .sortedByDescending { it.term.length }
+    }
         require(rate in 0.75f..1.35f) { "Narration speed must be between 0.75× and 1.35×." }
         narrationRate = rate
         textToSpeech?.setSpeechRate(rate)

@@ -44,6 +44,7 @@ Open the repository's [Android build workflow](https://github.com/AssayFlux/Mole
 4. Prepare the editable outline. If a compatible LiteRT-LM model is installed and loaded from **Models**, optionally request a local-AI lesson draft.
 5. Review every generated scientific statement against the original textbook before teaching.
 6. Preview slides and diagrams. Use synchronized lesson narration when a compatible offline Android TTS voice is installed; confirm voice availability and behavior in airplane mode on your device.
+7. Open **Schedule** to select a saved lesson, audience, duration, language and start time. Allow notifications. Android WorkManager scheduling is inexact and may be delayed by Doze or manufacturer battery restrictions. Check the schedule history for completion or failure.
 
 ## Models and offline behavior
 
@@ -59,8 +60,9 @@ The textbook OCR pipeline, local database and local-model path are designed for 
 - Search combines local lexical retrieval with optional model-backed embedding components; semantic relevance needs professor-curated evaluation.
 - AI lesson generation is an optional local-model draft and can be wrong or incomplete.
 - Slides are outline-derived; advanced layouts, full-screen presenter mode and speaker notes remain open. PDF and editable PPTX export are implemented but require viewer compatibility testing.
-- Narration synchronization is implemented in software; pronunciation dictionaries, pause/emphasis controls and physical-device audio timing tests remain open.
-- Scheduled autonomous lectures, production authentication/backend, textbook-based scientific acceptance and production signing are not yet complete.
+- Narration synchronization and an editable biochemical pronunciation dictionary are implemented; configurable pauses/emphasis and physical-device audio timing tests remain open.
+- Scheduled lectures use delayed WorkManager execution and foreground offline TTS. The OS may defer starts; playback restarts from the beginning after process interruption. Audience and duration are stored as session metadata, not a promise of exact runtime.
+- Physical-device acceptance, production authentication/backend, textbook-based scientific acceptance and production signing remain open.
 - Physical-device, offline, accessibility, performance and professor acceptance testing remain release gates.
 
 See [ROADMAP.md](ROADMAP.md) for implementation status and remaining milestones.

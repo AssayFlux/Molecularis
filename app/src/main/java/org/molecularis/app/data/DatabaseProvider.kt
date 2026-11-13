@@ -200,7 +200,7 @@ object DatabaseProvider {
             ENCRYPTED_NAME
         )
             .openHelperFactory(SupportOpenHelperFactory(passphrase.copyOf()))
-            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15)
+            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16, MIGRATION_16_17)
             .addCallback(FTS_CALLBACK)
             .setJournalMode(RoomDatabase.JournalMode.TRUNCATE)
             .build()
@@ -225,7 +225,7 @@ object DatabaseProvider {
             AppDatabase::class.java,
             LEGACY_NAME
         )
-            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14)
+            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16, MIGRATION_16_17)
             .addCallback(FTS_CALLBACK)
             .setJournalMode(RoomDatabase.JournalMode.TRUNCATE)
             .build()
@@ -236,7 +236,7 @@ object DatabaseProvider {
             TEMP_NAME
         )
             .openHelperFactory(SupportOpenHelperFactory(passphrase.copyOf()))
-            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14)
+            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16, MIGRATION_16_17)
             .addCallback(FTS_CALLBACK)
             .setJournalMode(RoomDatabase.JournalMode.TRUNCATE)
             .build()
@@ -244,7 +244,7 @@ object DatabaseProvider {
         try {
             val source = legacy.openHelper.writableDatabase
             val target = encryptedTemp.openHelper.writableDatabase
-            val tables = listOf("conversations", "messages", "local_models", "workspace_projects", "knowledge_chunks", "books", "book_passages", "knowledge_books", "knowledge_topics", "saved_lessons", "knowledge_processing_checkpoints", "knowledge_topic_aliases", "knowledge_page_audits", "knowledge_topic_passage_links")
+            val tables = listOf("conversations", "messages", "local_models", "workspace_projects", "knowledge_chunks", "books", "book_passages", "knowledge_books", "knowledge_topics", "saved_lessons", "knowledge_processing_checkpoints", "knowledge_topic_aliases", "knowledge_page_audits", "knowledge_topic_passage_links", "saved_diagrams", "scheduled_lectures")
             target.beginTransaction()
             try {
                 tables.forEach { table -> copyTable(source, target, table) }

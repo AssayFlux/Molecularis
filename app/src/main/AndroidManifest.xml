@@ -2,14 +2,17 @@
  <queries><intent><action android:name="android.speech.RecognitionService"/></intent></queries>
  <uses-permission android:name="android.permission.INTERNET"/>
  <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+ <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"/>
+ <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC"/>
  <uses-permission android:name="android.permission.RECORD_AUDIO"/>
- <application android:allowBackup="false" android:label="Molecularis" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher_round" android:theme="@android:style/Theme.Material.Light.NoActionBar" android:supportsRtl="true">
-  <service android:name="androidx.work.impl.foreground.SystemForegroundService" android:foregroundServiceType="dataSync" tools:node="merge" />
+ <application android:name=".MolecularisApplication" android:allowBackup="false" android:label="Molecularis" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher_round" android:theme="@android:style/Theme.Material.Light.NoActionBar" android:supportsRtl="true">
+  <service android:name="androidx.work.impl.foreground.SystemForegroundService" android:foregroundServiceType="dataSync|mediaPlayback" tools:node="merge" />
   <uses-native-library android:name="libvndksupport.so" android:required="false"/>
   <uses-native-library android:name="libOpenCL.so" android:required="false"/>
   <activity android:name=".MainActivity" android:exported="true" android:windowSoftInputMode="adjustResize">
    <intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter>
   </activity>
+ <receiver android:name=".features.ScheduledLectureActionReceiver" android:exported="false" />
  </application>
 </manifest>

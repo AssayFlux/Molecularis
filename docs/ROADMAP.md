@@ -111,7 +111,9 @@ This roadmap is outcome-based. Complete and validate one usable vertical slice a
 - [x] Persist custom diagram edits (Room-backed, versioned JSON record; reopen and delete from Teaching Studio).
 - [x] Link diagram steps to slide/narration segments (proportional reveal progress follows the active narrated slide; timing validation remains device-dependent).
 
-**Current status:** the diagram engine now has four reusable, typed templates (metabolic pathway, reaction mechanism, feedback regulation and molecular interaction), explicit node positions and biochemical roles, reaction/activation/inhibition/binding/transport edges, coordinate and topology validation, escaped SVG rendering, progressive reveal, and pinch-zoom/two-axis pan in a JavaScript-disabled WebView. Teaching Studio exposes editable component names and enzyme/reaction labels, plus per-node label/detail/role editing and per-edge relationship/label editing. Edits are validated before preview. Templates are structural teaching aids, not chemically validated reaction models; physical-device gesture checks, custom diagram persistence is implemented with a versioned JSON codec and encrypted Room storage; domain-specific stoichiometry/compartments and slide/narration synchronization remain open. Commons image search is optional; only results with declared license metadata are shown, and cached assets retain their attribution/license sidecar. Image insertion into diagram nodes and license-specific reuse review remain open.\n\n**Exit criteria:** at least one pathway can be generated from structured components and revealed in sync with its explanation.
+**Current status:** the diagram engine has four reusable typed templates (metabolic pathway, reaction mechanism, feedback regulation and molecular interaction), explicit node positions and biochemical roles, reaction/activation/inhibition/binding/transport edges, coordinate and topology validation, escaped SVG rendering, progressive reveal, and pinch-zoom/two-axis pan in a JavaScript-disabled WebView. Teaching Studio supports editable node labels/details/roles, editable edge labels/relationships, validated previews and versioned encrypted Room persistence. Narration advances proportional diagram reveal with the active slide. Templates remain structural teaching aids, not chemically validated reaction models; domain-specific stoichiometry and compartments, image insertion into nodes, license-specific reuse review and physical-device gesture tests remain open. Commons search results require declared license metadata and cached assets retain attribution/license sidecars.
+
+**Exit criteria:** at least one pathway can be generated from structured components and revealed in sync with its explanation.
 
 ## Phase 6 — Voice lecture and synchronization
 
@@ -132,36 +134,40 @@ This roadmap is outcome-based. Complete and validate one usable vertical slice a
 
 ## Phase 7 — Autonomous and scheduled teaching
 
-**Goal:** allow a professor to schedule a topic, duration and audience and have the app run the prepared session.
+**Goal:** let a professor schedule a saved lesson and have Molecularis narrate it offline at the selected time.
 
-- [ ] Add lecture scheduler with date/time, topic, audience, duration and language.
-- [ ] Require lesson generation and media readiness before scheduling.
-- [ ] Add preflight checks for storage, voice pack, battery and required permissions.
-- [ ] Use Android-compliant scheduling and foreground media playback.
-- [ ] Add visible notifications, start/stop controls and recovery after process interruption.
-- [ ] Record completion, interruption and failure state.
-- [ ] Test across Android versions and representative OEM battery policies.
+- [x] Add a Schedule screen with date/time, saved lesson, MBBS/MD/DNB/PhD audience, duration and narration language.
+- [x] Require a saved lesson; validate schedule time, duration and language before enqueueing.
+- [x] Add playback preflight for free storage, battery/charging state, notification permission and an installed non-network Android TTS voice for the requested language.
+- [x] Use unique delayed WorkManager work and a foreground media-playback notification. WorkManager timing is inexact and subject to Android Doze/OEM policy; this is not an exact alarm.
+- [x] Add visible notification with Stop action, in-app cancellation and status history.
+- [x] Persist scheduled/running/completed/interrupted/failed/cancelled state and surface failure reasons. WorkManager can restart work after process death; playback restarts from the beginning rather than resuming mid-sentence.
+- [ ] Test across Android versions and representative OEM battery policies on physical devices.
+
+**Current status:** the scheduling flow, encrypted Room schedule records, foreground WorkManager playback, offline-voice selection, preflight checks, notification stop action, cancellation and status reporting are implemented. Duration and audience are retained as session metadata; narration uses the saved lesson outline and does not guarantee a fixed wall-clock lecture duration or automatically regenerate content for a different audience. Scheduled execution must still be accepted on physical devices and OEM battery configurations.
 
 **Exit criteria:** a scheduled, prepared lecture starts and completes on validated devices when required permissions and system conditions are met; failures are visible and recoverable.
 
 ## Phase 8 — Quality, performance and release
 
-**Goal:** make Molecularis dependable for real teaching.
+**Goal:** make Molecularis dependable for real teaching and prepare a reproducible release.
 
-- [ ] Test extraction on representative high-quality and scanned textbooks.
-- [ ] Professor-review factual clarity and level adaptation across MBBS, MD, DNB and PhD.
-- [ ] Test scientific notation, equations, subscripts, Greek letters and pathway labels.
-- [ ] Profile large books, indexing, model memory, battery and thermal behavior.
-- [ ] Test airplane-mode workflows and network-disabled API behavior.
-- [ ] Audit permissions, local data deletion, SVG sanitization and API secret storage.
-- [ ] Add accessibility, font scaling and landscape presentation support.
-- [ ] Prepare signed release, backup/export guidance and crash diagnostics with privacy controls.
+- [ ] Test extraction on representative high-quality and scanned textbooks (device acceptance checklist provided; not yet run).
+- [ ] Professor-review factual clarity and level adaptation across MBBS, MD, DNB and PhD (requires professor-supplied licensed references and sign-off).
+- [ ] Validate scientific notation, equations, subscripts, Greek letters and pathway labels on devices and exported files.
+- [ ] Profile large books, indexing, model memory, battery and thermal behavior on low/mid/high-tier devices.
+- [ ] Run airplane-mode workflows and verify network-disabled API behavior on devices.
+- [x] Add local crash diagnostics that are opt-in, on-device only, exclude user content and can be exported manually; no telemetry/upload.
+- [x] Review manifest permissions, encrypted Room storage, local credential handling, secret storage and SVG input bounds; device penetration/security testing remains open.
+- [x] Preserve system font scaling and orientation-responsive Compose layouts; accessibility scanner, TalkBack and landscape acceptance remain open.
+- [x] Document backup/export, debug installation, release signing requirements, device test matrix and acceptance procedures.
+- [ ] Produce a production-signed release after the owner supplies a private signing key through a secure CI secret (never via chat).
 
-**Exit criteria:** documented device matrix, passing automated tests, professor acceptance of sample lectures and a reproducible release build.
+**Exit criteria:** documented device matrix, passing automated tests, professor acceptance of sample lectures and a reproducible signed release build. Automated CI alone does not satisfy this gate.
 
 ## Large-book import update
 
-The importer accepts PDFs up to 5,000 pages. OCR is performed sequentially and each page's chunks are written in batches of at most 250 passages, avoiding the previous design's full-book text and full-book passage lists in memory. Partial database rows and copied files are cleaned up on failure and cancellation. The import is still a foreground coroutine: keep Molecularis open during import. The 25-million-character ceiling is an additional safety bound, so 5,000 pages is a maximum page count, not a guarantee that every PDF of that size will fit every device. A 5,000-page real-world stress test is still required on representative Android hardware.
+The importer accepts PDFs up to 5,000 pages and 25 million extracted characters. A unique foreground WorkManager job checkpoints each page transactionally, reports progress and resumes from the last committed page after process interruption. Each page writes bounded passage batches; cancellation preserves the prior approved Knowledge Pool content. Real-world 5,000-page stress testing remains a physical-device acceptance task.
 
 ## First milestone status
 

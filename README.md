@@ -19,6 +19,7 @@ The professor selects the topic, student level and duration. Molecularis organiz
 - Build slides and export presentations.
 - Assemble scientific diagrams from reusable SVG components and reveal them progressively.
 - Deliver lectures using voice narration synchronized with slides and diagrams.
+- Schedule saved lessons for offline narration with WorkManager, foreground notifications, stop controls and visible completion/failure history.
 - Schedule prepared teaching sessions, subject to Android background-execution and permission limits.
 - Work offline after books, models, voice packs and other required assets are available.
 - Optionally connect external AI providers; cloud use is never mandatory or silently enabled.
@@ -28,7 +29,7 @@ The professor selects the topic, student level and duration. Molecularis organiz
 - Android application: Kotlin + Jetpack Compose.
 - Structured local data: Room / SQLite.
 - Book and media files: app-private storage or user-selected document locations.
-- Search: SQLite full-text search first; optional local semantic retrieval later.
+- Search: SQLite full-text retrieval with optional local semantic retrieval components.
 - AI: local model adapter plus optional external API adapter.
 - Voice and playback: Android media/TTS adapters, with offline readiness checks.
 - Visuals: structured scientific diagrams rendered as safe SVG.
@@ -55,6 +56,7 @@ The first vertical slice separates **Library source storage** from **Knowledge P
 - [Product vision and requirements](docs/PRODUCT_VISION.md)
 - [Development roadmap](docs/ROADMAP.md)
 - [Android build and installation guide](docs/BUILD_AND_INSTALL.md)
+- [Device acceptance and release checklist](docs/DEVICE_ACCEPTANCE.md)
 - [Proposed architecture](docs/ARCHITECTURE.md)
 - [Astronaut code and UI reuse record](docs/ASTRONAUT_REUSE.md)
 - [Third-party notices](THIRD_PARTY_NOTICES.md)
@@ -69,8 +71,12 @@ Import only books and materials you are authorized to store and process. Images 
 
 ## Current status
 
-An Android application foundation has been adapted from Astronaut and rebranded for Molecularis. The app includes the Compose interface, encrypted Room persistence, local retrieval, model management and Android voice components. Library preserves original PDFs up to the 5,000-page processing ceiling; Knowledge Pool performs page-by-page on-device OCR in bounded batches and stores page-aware passages, metadata candidates, chapter/topic candidates and a transparent readiness score. A 25-million-character safety ceiling also applies; processing remains foreground-only and needs device stress testing.
+The Android foundation, encrypted local persistence, Library/Knowledge Pool separation, page-linked OCR passages, professor review flow, lesson planning, slide preview and PDF/PPTX exports are implemented. Knowledge Pool OCR uses foreground WorkManager with transactional per-page checkpoints and restart recovery; the current limits are 5,000 pages and 25 million extracted characters. Search is local lexical retrieval with optional local semantic components and still needs professor-curated relevance evaluation.
 
-Offline chat and Teaching Studio retrieve matching passages only from professor-reviewed Knowledge Pool sources and include book/page/passage labels in the local model prompt. This is simple lexical retrieval, not a guarantee of completeness or scientific correctness. The Teaching Studio prepares an editable, level-aware outline with retrieved textbook passages. When a compatible LiteRT-LM model is loaded, it can optionally draft a longer explanation using those local excerpts; the excerpts are retained with the draft and professor verification is required. Lessons are saved in the encrypted local database. Numbered outline sections become a navigable slide preview, and the professor can manually narrate each slide with an installed Android TTS voice.
+Teaching Studio supports editable saved lessons, audience levels, structured SVG diagrams with progressive reveal, diagram edit persistence, synchronized slide narration, Android audio-focus handling and a local biochemical pronunciation dictionary. Diagram templates are structural aids, not scientifically validated pathway models. Android TTS quality and offline availability depend on the installed device voice pack.
 
-A validated biochemical diagram schema and XML-escaped SVG renderer are integrated into Teaching Studio as a progressive lesson-flow preview derived from the professor's outline. The diagram can reveal lesson sections step by step; it is not yet a biochemical reaction editor and does not fabricate pathway chemistry. Rich slide authoring and export, diagram pan/zoom and pathway templates, automatic narration timelines, background book ingestion and scheduled autonomous teaching remain open. Phase 1 and Phase 2 source changes have passed Android unit tests and lint in GitHub Actions. Phase 3 now adds source-quality gates for teaching drafts, topic/alias-aware passage retrieval, audience-specific lesson time budgets, and saved-lesson update/copy workflows. Physical-device, textbook relevance and professor acceptance testing remain outstanding. Settings now has separate cards for appearance, font family, colour palette, custom background image, chat/AI behaviour, speech/voice and privacy. A fingerprint/strong-biometric app lock with device-credential fallback is implemented; cloud account sign-in remains unconfigured because the project has no authentication backend/provider yet. Physical-device and professor acceptance testing remain outstanding.
+The Schedule screen stores saved-lesson sessions in encrypted Room and uses delayed WorkManager foreground playback, offline-voice selection, notification controls and completion/interruption/failure states. WorkManager timing is inexact and may be deferred by Doze or OEM policies; playback restarts from the beginning after process interruption. Audience and duration are stored as session metadata and do not guarantee a fixed runtime or automatic content regeneration.
+
+The repository CI workflow runs unit tests, lint, builds a debug APK and uploads a 14-day artifact. Production signing, physical-device/OEM acceptance, airplane-mode verification, large-book performance profiling and professor review against licensed textbooks remain open. Local crash diagnostics are opt-in, stored on-device, omit user content and are never uploaded. Cloud authentication is not configured; cloud AI is optional and requires explicit setup.
+
+**Release gate:** a successful CI debug build is not a production release. Complete the manual checks in [DEVICE_ACCEPTANCE.md](docs/DEVICE_ACCEPTANCE.md), provide licensed scientific references for professor review, and configure the production signing key as private CI secrets before signing a release.

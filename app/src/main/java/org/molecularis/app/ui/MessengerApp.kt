@@ -81,12 +81,13 @@ import org.molecularis.app.features.TrainingJobStatus
 import org.molecularis.app.features.OpenAiCompatibleClient
 import org.molecularis.app.features.RemoteChatMessage
 import org.molecularis.app.features.EncryptedSecretStore
+import org.molecularis.app.features.CrashDiagnostics
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.util.UUID
 
 private val Muted=Color(0xFF65736D)
-private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LIBRARY("Library"),KNOWLEDGE_POOL("Knowledge Pool"),AI_HUB("AI Hub"),MODELS("Models"),TRAINING("Training"),WORKSPACE("Workspace"),ONLINE_AI("Online AI"),SETTINGS("Settings")}
+private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LIBRARY("Library"),KNOWLEDGE_POOL("Knowledge Pool"),SCHEDULED("Schedule"),AI_HUB("AI Hub"),MODELS("Models"),TRAINING("Training"),WORKSPACE("Workspace"),ONLINE_AI("Online AI"),SETTINGS("Settings")}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable fun MessengerApp(){
@@ -356,14 +357,14 @@ private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LI
      NavigationBarItem(selected=section==item,onClick={section=item;moreNavigationExpanded=false},icon={Icon(icon,item.label)},label={Text(item.label,maxLines=1)})
     }
     NavigationBarItem(
-     selected=section==Section.AI_HUB||section==Section.TRAINING||section==Section.ONLINE_AI||section==Section.SETTINGS||section==Section.KNOWLEDGE_POOL,
+     selected=section==Section.AI_HUB||section==Section.TRAINING||section==Section.ONLINE_AI||section==Section.SETTINGS||section==Section.KNOWLEDGE_POOL||section==Section.SCHEDULED,
      onClick={moreNavigationExpanded=true},
      icon={
       Box{
        Icon(Icons.Default.MoreHoriz,"More sections")
        DropdownMenu(expanded=moreNavigationExpanded,onDismissRequest={moreNavigationExpanded=false}){
-        listOf(Section.KNOWLEDGE_POOL,Section.AI_HUB,Section.TRAINING,Section.ONLINE_AI,Section.SETTINGS).forEach{item->
-         val icon=when(item){Section.LIBRARY->Icons.Default.MenuBook;Section.KNOWLEDGE_POOL->Icons.Default.AccountTree;Section.AI_HUB->Icons.Default.Hub;Section.TRAINING->Icons.Default.Tune;Section.ONLINE_AI->Icons.Default.Cloud;else->Icons.Default.Settings}
+        listOf(Section.KNOWLEDGE_POOL,Section.SCHEDULED,Section.AI_HUB,Section.TRAINING,Section.ONLINE_AI,Section.SETTINGS).forEach{item->
+         val icon=when(item){Section.LIBRARY->Icons.Default.MenuBook;Section.KNOWLEDGE_POOL->Icons.Default.AccountTree;Section.SCHEDULED->Icons.Default.Schedule;Section.AI_HUB->Icons.Default.Hub;Section.TRAINING->Icons.Default.Tune;Section.ONLINE_AI->Icons.Default.Cloud;else->Icons.Default.Settings}
          DropdownMenuItem(text={Text(item.label)},leadingIcon={Icon(icon,null)},onClick={section=item;moreNavigationExpanded=false})
         }
        }
@@ -379,6 +380,7 @@ private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LI
     Section.TEACHING->TeachingStudioScreen(db, voiceAvailable = offlineTtsVoices.isNotEmpty(), localModelAvailable = activeModelPath != null && activeModelName != null, onSpeakSlides={segments,onSegment,onState->voiceController.speakSegments(segments,onSegment,{},{playing,paused->narrationPlaying=playing;narrationPaused=paused;onState(playing,paused)})},onPauseNarration={voiceController.pauseSpeaking()},onResumeNarration={voiceController.resumeSpeaking()},onStopNarration={voiceController.stopSpeaking();narrationPlaying=false;narrationPaused=false},onSeekNarration={voiceController.seekSpeakingTo(it)},onNarrationRateChange={rate->voiceController.setSpeechRate(rate)}, onGenerateWithLocalModel = { prompt -> runtime.generate(prompt) })
     Section.LIBRARY->BookLibraryScreen(db)
     Section.KNOWLEDGE_POOL->KnowledgePoolScreen(db)
+    Section.SCHEDULED->ScheduledTeachingScreen(db)
     Section.CHATS->ChatScreen(conversations,conversationId,messages,draft,{draft=it},pendingAttachment?.second,activeModelName,runtimeMessage,loadingModel,sending,voiceListening,
      
      {if(voiceListening)voiceController.stopListening()else if(ContextCompat.checkSelfPermission(context,Manifest.permission.RECORD_AUDIO)==PackageManager.PERMISSION_GRANTED)voiceController.startListening()else microphonePermission.launch(Manifest.permission.RECORD_AUDIO)},
@@ -1076,6 +1078,14 @@ private suspend fun readDatasetBounded(context:Context,uri:Uri):String = withCon
 ){
  val context=LocalContext.current
  val securityPrefs=remember(context){context.getSharedPreferences("molecularis_security",Context.MODE_PRIVATE)}
+ var diagnosticsEnabled by remember { mutableStateOf(CrashDiagnostics.isEnabled(context)) }
+ var diagnosticsExportStatus by remember { mutableStateOf("Crash diagnostics are off by default and never uploaded.") }
+ val diagnosticsExporter = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("text/plain")) { uri ->
+  if(uri!=null) runCatching {
+   context.contentResolver.openOutputStream(uri)?.bufferedWriter()?.use { it.write(CrashDiagnostics.export(context)) }
+  }.onSuccess { diagnosticsExportStatus="Diagnostics exported to the location you selected." }
+   .onFailure { diagnosticsExportStatus="Export failed: ${it.message ?: "unknown error"}" }
+ }
  var biometricEnabled by remember{mutableStateOf(securityPrefs.getBoolean("biometric_lock_enabled",false))}
  var biometricStatus by remember{mutableStateOf("Lock the app with fingerprint or secure device credentials when it is backgrounded.")}
  var languageDraft by remember(languageTag){mutableStateOf(languageTag)}
@@ -1095,6 +1105,20 @@ private suspend fun readDatasetBounded(context:Context,uri:Uri):String = withCon
     Text("SETTINGS",style=MaterialTheme.typography.labelMedium,color=MaterialTheme.colorScheme.primary,fontWeight=FontWeight.Bold)
     Text("Organized around your workflow",style=MaterialTheme.typography.headlineSmall,fontWeight=FontWeight.SemiBold)
     Text("Each area has its own controls. Preferences are stored locally on this device.",color=MaterialTheme.colorScheme.onSurfaceVariant)
+   }
+  }
+  Card(Modifier.fillMaxWidth()){
+   Column(Modifier.padding(16.dp),verticalArrangement=Arrangement.spacedBy(8.dp)){
+    Text("Privacy-preserving diagnostics",style=MaterialTheme.typography.titleLarge,fontWeight=FontWeight.SemiBold)
+    Text("Optional crash metadata stays on this device. It excludes chat content, attachment text, file paths, exception messages and network data. Nothing is uploaded.",style=MaterialTheme.typography.bodySmall,color=Muted)
+    Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.SpaceBetween){
+     Text(if(diagnosticsEnabled)"Local crash diagnostics enabled" else "Local crash diagnostics disabled")
+     Switch(checked=diagnosticsEnabled,onCheckedChange={CrashDiagnostics.setEnabled(context,it);diagnosticsEnabled=it})
+    }
+    OutlinedButton(onClick={diagnosticsExporter.launch("Molecularis-diagnostics.txt")},enabled=CrashDiagnostics.hasLogs(context),modifier=Modifier.fillMaxWidth()){
+     Text("Export local crash diagnostics")
+    }
+    Text(diagnosticsExportStatus,style=MaterialTheme.typography.bodySmall,color=Muted)
    }
   }
   Card(Modifier.fillMaxWidth()){

@@ -16,7 +16,7 @@ permissions:
 
 jobs:
   android-source-checks:
-    name: Android tests and lint only
+    name: Android tests, lint and debug APK
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     steps:
