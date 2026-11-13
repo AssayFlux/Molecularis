@@ -123,6 +123,14 @@ private val MIGRATION_12_13 = object : Migration(12, 13) {
     }
 }
 
+private val FTS_CALLBACK = object : RoomDatabase.Callback() {
+    override fun onCreate(db: SupportSQLiteDatabase) {
+        db.execSQL("CREATE TRIGGER IF NOT EXISTS book_passages_fts_insert AFTER INSERT ON book_passages BEGIN INSERT INTO book_passages_fts(docid,text) VALUES(new.rowid,new.text); END")
+        db.execSQL("CREATE TRIGGER IF NOT EXISTS book_passages_fts_delete AFTER DELETE ON book_passages BEGIN INSERT INTO book_passages_fts(book_passages_fts,docid,text) VALUES('delete',old.rowid,old.text); END")
+        db.execSQL("CREATE TRIGGER IF NOT EXISTS book_passages_fts_update AFTER UPDATE OF text ON book_passages BEGIN INSERT INTO book_passages_fts(book_passages_fts,docid,text) VALUES('delete',old.rowid,old.text); INSERT INTO book_passages_fts(docid,text) VALUES(new.rowid,new.text); END")
+        db.execSQL("INSERT INTO book_passages_fts(book_passages_fts) VALUES('rebuild')")
+    }
+}
 object DatabaseProvider {
     private const val LEGACY_NAME = "molecularis-local.db"
     private const val ENCRYPTED_NAME = "molecularis-secure.db"
@@ -167,6 +175,7 @@ object DatabaseProvider {
         )
             .openHelperFactory(SupportOpenHelperFactory(passphrase.copyOf()))
             .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13)
+            .addCallback(FTS_CALLBACK)
             .setJournalMode(RoomDatabase.JournalMode.TRUNCATE)
             .build()
 
@@ -191,6 +200,7 @@ object DatabaseProvider {
             LEGACY_NAME
         )
             .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13)
+            .addCallback(FTS_CALLBACK)
             .setJournalMode(RoomDatabase.JournalMode.TRUNCATE)
             .build()
 
@@ -201,6 +211,7 @@ object DatabaseProvider {
         )
             .openHelperFactory(SupportOpenHelperFactory(passphrase.copyOf()))
             .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13)
+            .addCallback(FTS_CALLBACK)
             .setJournalMode(RoomDatabase.JournalMode.TRUNCATE)
             .build()
 
