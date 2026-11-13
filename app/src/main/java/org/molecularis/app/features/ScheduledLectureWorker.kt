@@ -6,7 +6,6 @@ import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.media.AudioManager
 import android.media.AudioFocusRequest
-import android.media.AudioFocusRequest
 import android.os.StatFs
 import android.app.PendingIntent
 import android.content.Context
