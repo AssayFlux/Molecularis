@@ -115,7 +115,7 @@ data class KnowledgeBookEntity(
  val passageCount:Int,val topicCount:Int,val qualityScore:Int,
  val reviewState:String="needs_review",val processedAt:Long=System.currentTimeMillis()
 )
-@Entity(tableName="knowledge_topics",indices=[Index("knowledgeBookId"),Index("name")])
+@Entity(tableName="knowledge_topics",indices=[Index("knowledgeBookId"),Index("name"),Index("parentTopicId")])
 data class KnowledgeTopicEntity(
  @PrimaryKey val id:String,val knowledgeBookId:String,val name:String,
  val startPage:Int,val confidence:Float,val evidence:String,val approved:Boolean=false,
@@ -134,17 +134,38 @@ data class KnowledgeTopicAliasEntity(
  @Query("SELECT * FROM knowledge_topic_aliases WHERE topicId=:topicId ORDER BY alias COLLATE NOCASE") suspend fun aliases(topicId:String):List<KnowledgeTopicAliasEntity>
  @Insert(onConflict=OnConflictStrategy.IGNORE) suspend fun addAlias(alias:KnowledgeTopicAliasEntity):Long
  @Query("DELETE FROM knowledge_topic_aliases WHERE id=:aliasId") suspend fun deleteAlias(aliasId:String)
- @Query("UPDATE knowledge_topics SET parentTopicId=:parentId,approved=0 WHERE id=:topicId") suspend fun setTopicParent(topicId:String,parentId:String?)
+ @Query("UPDATE knowledge_topics SET parentTopicId=:parentId,approved=0 WHERE id=:topicId") suspend fun updateTopicParent(topicId:String,parentId:String?)
+ @Transaction suspend fun setTopicParent(topicId:String,parentId:String?) {
+  val topic = topicById(topicId) ?: error("Topic not found")
+  if (parentId != null) {
+   var cursor = topicById(parentId) ?: error("Parent topic not found")
+   require(cursor.knowledgeBookId == topic.knowledgeBookId) { "Parent must belong to the same source book." }
+   val visited = mutableSetOf<String>()
+   while (true) {
+    require(cursor.id != topicId) { "A topic cannot be its own ancestor." }
+    require(visited.add(cursor.id)) { "Existing topic hierarchy contains a cycle." }
+    val next = cursor.parentTopicId ?: break
+    cursor = topicById(next) ?: break
+   }
+  }
+  updateTopicParent(topicId,parentId)
+ }
  @Query("UPDATE knowledge_topics SET parentTopicId=:targetId WHERE parentTopicId=:sourceId") suspend fun reparentChildren(sourceId:String,targetId:String?)
  @Query("INSERT OR IGNORE INTO knowledge_topic_aliases(id,topicId,alias,normalizedAlias) SELECT lower(hex(randomblob(16))),:targetId,alias,normalizedAlias FROM knowledge_topic_aliases WHERE topicId=:sourceId") suspend fun copyAliasesToTopic(sourceId:String,targetId:String)
  @Query("DELETE FROM knowledge_topic_aliases WHERE topicId=:sourceId") suspend fun deleteAliasesForTopic(sourceId:String)
- @Query("UPDATE knowledge_topics SET approved=CASE WHEN approved=1 AND (SELECT approved FROM knowledge_topics WHERE id=:sourceId)=1 THEN 1 ELSE 0 END WHERE id=:targetId") suspend fun reconcileMergedApproval(sourceId:String,targetId:String)
+ @Query("UPDATE knowledge_topics SET startPage=MIN(startPage,(SELECT startPage FROM knowledge_topics WHERE id=:sourceId)),confidence=MAX(confidence,(SELECT confidence FROM knowledge_topics WHERE id=:sourceId)),evidence=evidence || '; Merged: ' || (SELECT evidence FROM knowledge_topics WHERE id=:sourceId),approved=CASE WHEN approved=1 AND (SELECT approved FROM knowledge_topics WHERE id=:sourceId)=1 THEN 1 ELSE 0 END WHERE id=:targetId") suspend fun reconcileMergedApproval(sourceId:String,targetId:String)
  @Query("DELETE FROM knowledge_topics WHERE id=:sourceId") suspend fun deleteTopicById(sourceId:String)
  @Transaction suspend fun mergeTopic(sourceId:String,targetId:String) {
   require(sourceId != targetId)
   val source = topicById(sourceId) ?: error("Source topic not found")
   val target = topicById(targetId) ?: error("Target topic not found")
   require(source.knowledgeBookId == target.knowledgeBookId) { "Topics from different books cannot be merged." }
+  var ancestor:KnowledgeTopicEntity? = target
+  val visited = mutableSetOf<String>()
+  while (ancestor != null && visited.add(ancestor.id)) {
+   require(ancestor.id != sourceId) { "Cannot merge a topic into one of its descendants." }
+   ancestor = ancestor.parentTopicId?.let { topicById(it) }
+  }
   reparentChildren(sourceId,targetId)
   copyAliasesToTopic(sourceId,targetId)
   reconcileMergedApproval(sourceId,targetId)
