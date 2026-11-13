@@ -30,6 +30,9 @@ import org.molecularis.app.features.DiagramConnection
 import org.molecularis.app.features.DiagramStep
 import org.molecularis.app.features.BiochemicalDiagramValidator
 import org.molecularis.app.features.BiochemicalSvgRenderer
+import org.molecularis.app.features.TeachingQualityPolicy
+import org.molecularis.app.features.LessonPlanningPolicy
+import org.molecularis.app.features.TopicOrganization
 import java.util.UUID
 
 @Composable
@@ -42,6 +45,7 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localMo
     var level by remember { mutableStateOf("MBBS") }
     var minutes by remember { mutableFloatStateOf(30f) }
     var outline by remember { mutableStateOf("") }
+    var editingLessonId by remember { mutableStateOf<String?>(null) }
     var status by remember { mutableStateOf("") }
     var preparing by remember { mutableStateOf(false) }
     var generatingExplanation by remember { mutableStateOf(false) }
@@ -86,7 +90,7 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localMo
 
         OutlinedTextField(
             value = topic,
-            onValueChange = { topic = it; outline = ""; status = "" },
+            onValueChange = { topic = it; outline = ""; editingLessonId = null; status = "" },
             modifier = Modifier.fillMaxWidth(),
             label = { Text("Biochemistry topic") },
             placeholder = { Text("e.g. Glycolysis and its regulation") },
@@ -96,7 +100,7 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localMo
         Text("Learner level", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             listOf("MBBS", "MD / DNB", "PhD").forEach { option ->
-                FilterChip(selected = level == option, onClick = { level = option; outline = "" }, label = { Text(option) })
+                FilterChip(selected = level == option, onClick = { level = option; outline = ""; editingLessonId = null }, label = { Text(option) })
             }
         }
 
@@ -117,13 +121,37 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localMo
                         preparing = true
                         status = "Searching professor-reviewed Knowledge Pool sources…"
                         try {
-                            val approvedBookIds = knowledgeBooks.filter { it.reviewState == "approved" }.map { it.bookId }.toSet()
-                            require(approvedBookIds.isNotEmpty()) { "No professor-reviewed sources are available yet. Process a book in Knowledge Pool and mark its source as reviewed first." }
+                            val approvedSources = knowledgeBooks.filter { it.reviewState == "approved" }
+                            val sourceQuality = approvedSources.associate { source ->
+                                source.bookId to TeachingQualityPolicy.assess(
+                                    source.extractedPageCount, source.pagesWithText, source.emptyPages,
+                                    source.shortTextPages, source.duplicatePages, source.passageCount
+                                )
+                            }
+                            val eligibleSources = approvedSources.filter { sourceQuality[it.bookId]?.eligible == true }
+                            val normalizedQuery = TopicOrganization.normalizeName(cleanTopic)
                             val terms = cleanTopic.split(Regex("\\W+")).filter { it.length >= 3 }.distinct().take(8)
-                            val retrieved = terms.flatMap { database.bookDao().searchAll(it).filter { passage -> passage.bookId in approvedBookIds } }
-                                .distinctBy { it.id }
-                                .take(8)
+                            val ftsQuery = terms.joinToString(" ") { "\"" + it.replace("\"", "") + "\"" }
+                            val retrievedCandidates = mutableListOf<org.molecularis.app.data.BookPassageEntity>()
+                            eligibleSources.forEach { source ->
+                                val sourceTopics = database.knowledgePoolDao().topics(source.id).filter { it.approved }
+                                val matchingTopics = sourceTopics.filter { candidate ->
+                                    val candidateName = TopicOrganization.normalizeName(candidate.name)
+                                    val aliases = database.knowledgePoolDao().aliases(candidate.id)
+                                        .map { TopicOrganization.normalizeName(it.alias) }
+                                    candidateName.isNotBlank() && (
+                                        normalizedQuery.contains(candidateName) || candidateName.contains(normalizedQuery) ||
+                                        aliases.any { alias -> alias.isNotBlank() && (normalizedQuery.contains(alias) || alias.contains(normalizedQuery)) }
+                                    )
+                                }
+                                val linked = matchingTopics.flatMap { database.knowledgePoolDao().passagesForTopic(it.id) }
+                                if (linked.isNotEmpty()) retrievedCandidates += linked
+                                else if (ftsQuery.isNotBlank()) retrievedCandidates += database.bookDao().searchInBookIndexed(source.bookId, ftsQuery)
+                            }
+                            val retrieved = retrievedCandidates.distinctBy { it.id }.take(12)
                             val bookTitles = books.associate { it.id to it.title }
+                            val timePlan = LessonPlanningPolicy.allocateTime(minutes.toInt(), level).associateBy { it.title }
+                            val excludedSources = approvedSources.size - eligibleSources.size
                             val depth = when (level) {
                                 "PhD" -> "Molecular mechanisms, experimental evidence, regulation, pathway integration and research questions"
                                 "MD / DNB" -> "Advanced mechanisms, clinical correlations, interpretation and applied problem-solving"
@@ -134,40 +162,51 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localMo
                                 "AUDIENCE: " + level,
                                 "DURATION: " + minutes.toInt() + " minutes",
                                 "",
-                                "1. Learning outcomes",
+                                "1. Learning outcomes · " + (timePlan["Learning outcomes"]?.minutes ?: 0) + " min",
                                 "   - Define the central concepts and terminology",
                                 "   - Explain the sequence of events and the underlying biochemical logic",
                                 "   - Relate regulation to physiological and clinical context",
                                 "",
-                                "2. Prerequisites and orientation",
+                                "2. Prerequisites and orientation · " + (timePlan["Prerequisites and orientation"]?.minutes ?: 0) + " min",
                                 "   - Identify the essential molecules, compartments and prior concepts",
                                 "   - Introduce the central question that the lesson will answer",
                                 "",
-                                "3. Core explanation",
-                                "   - Build the mechanism in a clear stepwise sequence",
+                                "3. Core explanation · " + (timePlan["Core explanation"]?.minutes ?: 0) + " min",
                                 "   - Explain why each step occurs, not only what happens",
-                                "   - Highlight key enzymes, substrates, products and control points",
+                                "   - Define key enzymes, substrates, products and cofactors",
                                 "",
-                                "4. Regulation and integration",
-                                "   - Explain major regulatory signals and rate-controlling steps",
-                                "   - Connect the topic with related metabolic pathways",
+                                "4. Mechanism and pathway integration · " + (timePlan["Mechanism and pathway integration"]?.minutes ?: 0) + " min",
+                                "   - Trace the reaction sequence, compartments and pathway inputs / outputs",
+                                "   - Connect the topic with related metabolic pathways and flux",
                                 "",
-                                "5. Clinical and applied relevance",
+                                "5. Regulation and control · " + (timePlan["Regulation and control"]?.minutes ?: 0) + " min",
+                                "   - Explain allosteric, covalent and hormonal control where relevant",
+                                "   - Identify control points and predict the effect of altered signals",
+                                "",
+                                "6. Clinical and applied relevance · " + (timePlan["Clinical / applied relevance"]?.minutes ?: 0) + " min",
                                 "   - Discuss relevant disorders, laboratory findings or therapeutic links",
                                 "   - Work through one applied example appropriate to " + level,
                                 "",
-                                "6. Visual teaching plan",
-                                "   - Create an overview diagram",
-                                "   - Reveal the mechanism progressively, emphasizing control points",
-                                "",
-                                "7. Recap and retrieval",
-                                "   - Summarize the three most important ideas",
-                                "   - Ask short-answer and application questions",
+                                "7. Visual teaching plan and recap · " + (timePlan["Recap and retrieval"]?.minutes ?: 0) + " min",
+                                "   - Reveal the pathway progressively and emphasize control points",
+                                "   - Summarize the three most important ideas and ask retrieval questions",
                                 "",
                                 "TEACHING EMPHASIS: " + depth,
                                 "",
-                                "LOCAL LIBRARY RETRIEVAL"
+                                "SOURCE QUALITY SCREEN (OCR usability only; not scientific accuracy)",
+                                "Eligible professor-reviewed sources: " + eligibleSources.size,
+                                "Excluded approved sources for low extraction usability: " + excludedSources,
+                                "Gate: at least 35% page text coverage and extraction score >=55/100.",
+                                "",
                             )
+                            eligibleSources.forEach { source ->
+                                val quality = sourceQuality[source.bookId]
+                                sections += "Eligible source: " + (books.firstOrNull { it.id == source.bookId }?.title ?: source.detectedTitle) +
+                                    " · OCR usability " + (quality?.score ?: 0) + "/100 · " +
+                                    ((quality?.textCoverage ?: 0f) * 100).toInt() + "% pages with text"
+                            }
+                            sections += ""
+                            sections += "LOCAL LIBRARY RETRIEVAL"
                             if (retrieved.isEmpty()) {
                                 sections += "No matching passages were found. Import a textbook or broaden the search terms."
                             } else {
@@ -180,10 +219,11 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localMo
                             sections += ""
                             sections += "REVIEW NOTE: This is a locally prepared teaching structure with retrieved source excerpts, not an AI-authored scientific explanation. Verify and expand the scientific content against the source book before teaching."
                             outline = sections.joinToString("\n")
-                            status = if (retrieved.isEmpty()) {
-                                "Outline prepared. No local passages matched; import books or adjust the topic."
-                            } else {
-                                "Outline prepared with " + retrieved.size + " passages from your local library."
+                            editingLessonId = null
+                            status = when {
+                                retrieved.isNotEmpty() -> "Outline prepared with " + retrieved.size + " passages from " + retrieved.map { it.bookId }.distinct().size + " eligible reviewed source(s)."
+                                eligibleSources.isEmpty() -> "A generic editable outline is ready, but all approved sources failed the extraction-usability gate. AI drafting is disabled until usable evidence is available."
+                                else -> "Outline prepared, but no passages matched this topic. AI drafting is disabled until reviewed source evidence is retrieved."
                             }
                         } catch (error: Throwable) {
                             status = "Could not prepare the outline: " + (error.message ?: error.javaClass.simpleName)
@@ -249,11 +289,18 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localMo
                             }
                         },
                         modifier = Modifier.fillMaxWidth(),
-                        enabled = localModelAvailable && !generatingExplanation && !preparing
+                        enabled = localModelAvailable && TeachingQualityPolicy.sourceBlockCount(outline) > 0 && !generatingExplanation && !preparing
                     ) {
                         Icon(Icons.Default.AutoAwesome, contentDescription = null)
                         Spacer(Modifier.width(8.dp))
                         Text(if (generatingExplanation) "Generating explanation…" else "Draft explanation with local AI")
+                    }
+                    if (TeachingQualityPolicy.sourceBlockCount(outline) == 0) {
+                        Text(
+                            "Source-grounded AI drafting is locked: this outline has no eligible reviewed textbook passage blocks. Broaden the topic or improve the source extraction first.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.error
+                        )
                     }
                     if (!localModelAvailable) {
                         Text(
@@ -301,18 +348,20 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localMo
                             scope.launch {
                                 try {
                                     val now = System.currentTimeMillis()
-                                    database.lessonDao().saveLesson(
-                                        SavedLessonEntity(
-                                            id = UUID.randomUUID().toString(),
-                                            title = topic.trim(),
-                                            audienceLevel = level,
-                                            durationMinutes = minutes.toInt(),
-                                            outline = outline,
-                                            createdAt = now,
-                                            updatedAt = now
-                                        )
+                                    val previous = editingLessonId?.let { id -> savedLessons.firstOrNull { it.id == id } }
+                                    val lesson = SavedLessonEntity(
+                                        id = previous?.id ?: UUID.randomUUID().toString(),
+                                        title = topic.trim(),
+                                        audienceLevel = level,
+                                        durationMinutes = minutes.toInt(),
+                                        outline = outline,
+                                        createdAt = previous?.createdAt ?: now,
+                                        updatedAt = now
                                     )
-                                    status = "Lesson saved to the encrypted local database on this device."
+                                    database.lessonDao().saveLesson(lesson)
+                                    editingLessonId = lesson.id
+                                    status = if (previous == null) "Lesson saved to the encrypted local database on this device."
+                                        else "Saved lesson updated on this device."
                                 } catch (error: Throwable) {
                                     status = "Could not save lesson: " + (error.message ?: "unknown error")
                                 }
@@ -322,7 +371,7 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localMo
                     ) {
                         Icon(Icons.Default.Save, contentDescription = null)
                         Spacer(Modifier.width(8.dp))
-                        Text("Save outline on this device")
+                        Text(if (editingLessonId == null) "Save outline on this device" else "Update saved lesson")
                     }
                 }
             }
@@ -341,8 +390,21 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localMo
                             level = lesson.audienceLevel
                             minutes = lesson.durationMinutes.toFloat().coerceIn(10f, 90f)
                             outline = lesson.outline
-                            status = "Loaded saved lesson for editing."
+                            editingLessonId = lesson.id
+                            status = "Loaded saved lesson for editing. Save will update this lesson."
                         }) { Text("Open") }
+                        TextButton(onClick = {
+                            scope.launch {
+                                val now = System.currentTimeMillis()
+                                database.lessonDao().saveLesson(lesson.copy(
+                                    id = UUID.randomUUID().toString(),
+                                    title = lesson.title + " (copy)",
+                                    createdAt = now,
+                                    updatedAt = now
+                                ))
+                                status = "A separate editable copy was saved."
+                            }
+                        }) { Text("Copy") }
                         IconButton(onClick = {
                             scope.launch {
                                 database.lessonDao().deleteLesson(lesson.id)

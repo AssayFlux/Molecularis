@@ -44,36 +44,38 @@ This roadmap is outcome-based. Complete and validate one usable vertical slice a
 
 **Goal:** turn book content into a browsable biochemistry knowledge library.
 
-- [x] Add a first-pass detector for chapter/unit/part headings and likely section headings (heuristic; OCR errors and false positives need review).
-- [ ] Build a topic tree with aliases and duplicate-topic merging.
-- [x] Add professor review controls for detected source metadata and topic candidates, including manual topic creation and editing (merging and hierarchy remain open).
-- [ ] Upgrade current Room keyword search to SQLite FTS5 with filters (current search is basic local keyword matching).
-- [ ] Add duplicate-topic detection, aliasing, hierarchy editing and merge tools.
-- [x] Add a first provenance-aware OCR audit: page coverage, empty/short-text pages, repeated identical OCR pages and heuristic metadata/heading indicators. OCR engine confidence, missing-page verification against PDF structure and passage-level duplicate detection remain open.
-- [ ] Prepare professor-curated, source-cited training/evaluation datasets with validation and holdout splits; never auto-train on raw OCR.
-- [ ] Keep fine-tuning optional and explicit; verify training service security, dataset rights and evaluation before model use.
-- [x] Retrieve page-labelled passages from professor-reviewed Knowledge Pool sources in offline chat prompts (simple lexical matching; source verification remains essential).
-- [ ] Link topic pages to relevant content chunks and page locations.
-- [ ] Add optional local embeddings only after runtime and device tests.
-- [ ] Add a small curated biochemistry topic taxonomy as a starter, not as a replacement for the professor's books.
+- [x] Detect likely chapter and section headings (heuristic; professor review remains required).
+- [x] Organize topics into a hierarchy with aliases, duplicate detection, merge tools and cycle protection.
+- [x] Provide professor review controls for source metadata and topic candidates, including manual topic creation and editing.
+- [x] Keep the compatible SQLite FTS4 index with book/page filters; FTS5 is deferred until Android SQLite compatibility can be guaranteed.
+- [x] Audit page coverage, empty/short pages and repeated OCR pages.
+- [x] Retrieve page-labelled passages from professor-reviewed Knowledge Pool sources in offline chat prompts (lexical retrieval; scientific verification remains essential).
+- [x] Link topic sections to exact OCR passage IDs and page locations using explicit provenance records.
+- [ ] Wire optional local embeddings into ingestion and search after model/runtime/device validation (embedding primitives exist but are not part of the default path).
+- [ ] Prepare professor-curated, source-cited evaluation datasets with validation and holdout splits; never auto-train on raw OCR.
+- [ ] Keep fine-tuning optional and explicit; verify service security, dataset rights and evaluation before model use.
+- [ ] Add a small curated biochemistry starter taxonomy, subordinate to the professor's books.
 
-**Exit criteria:** topic search returns relevant passages from Knowledge Pool sources and the professor can correct the organization.
+**Current status:** topic-to-passage provenance and topic review are implemented. The phase's source-processing and database changes passed Android unit tests and lint. Semantic embeddings, curated scientific evaluation and professor acceptance testing remain future work; keyword retrieval is not a substitute for scientific validation.
+
+**Exit criteria:** topic search returns relevant passages from reviewed sources and the professor can correct topic organization. Retrieval relevance and scientific correctness still require evaluation against the professor's supplied textbooks.
 
 ## Phase 3 — Teaching flow engine
 
 **Goal:** convert a selected topic into a useful lecture plan.
 
 - [x] Define initial audience profiles: MBBS, MD / DNB and PhD.
-- [x] Add a first editable lesson structure and teaching-time selector (fine-grained time budgeting remains open).
+- [x] Add an editable lesson structure with audience-specific minute budgets that sum to the selected duration.
 - [x] Assemble matching local textbook passages into the lesson outline using keyword retrieval.
 - [x] Add an editable template for objectives, prerequisites, explanation, mechanism, regulation, clinical connections, recap and questions (this is a scaffold, not AI-authored scientific teaching).
 - [x] Connect Teaching Studio to the installed LiteRT-LM local model and gate generation on a successfully loaded model.
 - [x] Reuse the optional external AI provider settings and encrypted API-key storage for chat; Teaching Studio's source-grounded draft currently uses the local model only.
-- [x] Add outline editing, local save, reopen and delete (regeneration and duplication remain open).
-- [ ] Test with professor-reviewed sample topics and different audience levels.
-- [ ] Add source-level quality thresholds and refuse low-confidence/unreviewed knowledge for teaching generation.
+- [x] Add outline editing, local save/update, reopen, delete, deterministic re-preparation and saved-lesson duplication.
+- [x] Unit-test source quality gates and audience-specific time allocation.
+- [ ] Evaluate with professor-reviewed sample topics and the supplied biochemistry textbooks.
+- [x] Add a conservative OCR-usability gate for approved sources and lock local AI drafting unless eligible reviewed passage blocks are attached. This is not a scientific-accuracy score.
 
-**Current status:** imported textbook passages can be retrieved into offline chat and Teaching Studio only after their source has been reviewed in Knowledge Pool. Retrieval is simple lexical matching rather than semantic textbook search. The Teaching Studio offers two paths: a deterministic editable outline and an optional draft generated by the installed LiteRT-LM model. The generation prompt includes retrieved textbook excerpts, requests level-appropriate explanation and asks the model not to invent references. Source excerpts are retained alongside the generated draft. Model quality and factual grounding are not guaranteed; professor review against the original books is mandatory. No local model is bundled with the app.
+**Current status:** Teaching Studio now filters to professor-approved sources, screens extraction usability (page-text coverage >=35% and a heuristic score >=55/100), reports source usability, prefers approved topic/alias passage links and falls back to indexed lexical search. AI drafting is disabled when no eligible source passage is attached. Audience-specific section time budgets sum to the requested duration. Saved lessons can be updated in place or duplicated. The local LiteRT-LM model remains optional and is not bundled. The extraction score is not a scientific-accuracy score; generated content still requires professor review against the original books.
 
 **Exit criteria:** a topic plus audience level produces an editable, coherent teaching flow grounded in the imported library. No API key is required for the local/search-based experience.
 
