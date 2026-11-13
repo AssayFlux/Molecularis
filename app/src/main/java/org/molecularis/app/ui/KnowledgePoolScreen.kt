@@ -43,6 +43,7 @@ fun KnowledgePoolScreen(database: AppDatabase) {
     var processingId by remember { mutableStateOf<String?>(null) }
     var selected by remember { mutableStateOf<KnowledgeBookEntity?>(null) }
     var topics by remember { mutableStateOf(emptyList<KnowledgeTopicEntity>()) }
+    var aliases by remember { mutableStateOf(emptyMap<String, List<KnowledgeTopicAliasEntity>>()) }
     var titleDraft by remember { mutableStateOf("") }
     var authorDraft by remember { mutableStateOf("") }
     var publisherDraft by remember { mutableStateOf("") }
@@ -59,6 +60,7 @@ fun KnowledgePoolScreen(database: AppDatabase) {
 
     LaunchedEffect(selected?.id) {
         topics = selected?.let { database.knowledgePoolDao().topics(it.id) }.orEmpty()
+        aliases = topics.associate { it.id to database.knowledgePoolDao().aliases(it.id) }
         titleDraft = selected?.detectedTitle.orEmpty()
         authorDraft = selected?.author.orEmpty()
         publisherDraft = selected?.publisher.orEmpty()
@@ -171,6 +173,103 @@ fun KnowledgePoolScreen(database: AppDatabase) {
                                 var editedPage by remember(topic.id) { mutableStateOf(topic.startPage.toString()) }
                                 OutlinedTextField(editedName, { editedName = it }, modifier = Modifier.fillMaxWidth(), label = { Text("Topic") }, singleLine = true)
                                 OutlinedTextField(editedPage, { editedPage = it.filter(Char::isDigit).take(5) }, modifier = Modifier.fillMaxWidth(), label = { Text("Starting page") }, singleLine = true)
+                                var aliasDraft by remember(topic.id) { mutableStateOf("") }
+                                var parentMenu by remember(topic.id) { mutableStateOf(false) }
+                                var mergeMenu by remember(topic.id) { mutableStateOf(false) }
+                                var mergeTarget by remember(topic.id) { mutableStateOf(topics.firstOrNull { it.id != topic.id }?.id.orEmpty()) }
+                                Text("Parent topic", style = MaterialTheme.typography.labelMedium)
+                                Box {
+                                    OutlinedButton(onClick = { parentMenu = true }, modifier = Modifier.fillMaxWidth()) {
+                                        Text(topics.firstOrNull { it.id == topic.parentTopicId }?.name ?: "Top-level topic")
+                                    }
+                                    DropdownMenu(expanded = parentMenu, onDismissRequest = { parentMenu = false }) {
+                                        DropdownMenuItem(text = { Text("Top-level topic") }, onClick = {
+                                            parentMenu = false
+                                            scope.launch {
+                                                database.knowledgePoolDao().setTopicParent(topic.id, null)
+                                                topics = database.knowledgePoolDao().topics(selected!!.id)
+                                                database.knowledgePoolDao().setReviewState(selected!!.id, "needs_review")
+                                                selected = selected!!.copy(reviewState = "needs_review")
+                                            }
+                                        })
+                                        topics.filter { it.id != topic.id }.forEach { candidate ->
+                                            DropdownMenuItem(text = { Text(candidate.name) }, onClick = {
+                                                parentMenu = false
+                                                scope.launch {
+                                                    runCatching { database.knowledgePoolDao().setTopicParent(topic.id, candidate.id) }
+                                                        .onSuccess {
+                                                            topics = database.knowledgePoolDao().topics(selected!!.id)
+                                                            database.knowledgePoolDao().setReviewState(selected!!.id, "needs_review")
+                                                            selected = selected!!.copy(reviewState = "needs_review")
+                                                            status = "Topic hierarchy updated. Review the topic again before teaching."
+                                                        }
+                                                        .onFailure { status = it.message ?: "Could not update topic hierarchy." }
+                                                }
+                                            })
+                                        }
+                                    }
+                                }
+                                Text("Aliases", style = MaterialTheme.typography.labelMedium)
+                                aliases[topic.id].orEmpty().forEach { alias ->
+                                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                                        Text(alias.alias, style = MaterialTheme.typography.bodySmall)
+                                        TextButton(onClick = {
+                                            scope.launch {
+                                                database.knowledgePoolDao().deleteAlias(alias.id)
+                                                aliases = aliases + (topic.id to database.knowledgePoolDao().aliases(topic.id))
+                                            }
+                                        }) { Text("Remove") }
+                                    }
+                                }
+                                OutlinedTextField(aliasDraft, { aliasDraft = it }, modifier = Modifier.fillMaxWidth(), label = { Text("Add alternate name") }, singleLine = true)
+                                TextButton(onClick = {
+                                    scope.launch {
+                                        val normalized = normalizeTopicAlias(aliasDraft)
+                                        if (normalized.isBlank() || normalized == normalizeTopicAlias(topic.name)) {
+                                            status = "Enter a distinct, non-empty alias."
+                                        } else {
+                                            val result = database.knowledgePoolDao().addAlias(
+                                                KnowledgeTopicAliasEntity(UUID.randomUUID().toString(), topic.id, aliasDraft.trim(), normalized)
+                                            )
+                                            if (result == -1L) status = "That alias already exists for this topic."
+                                            else {
+                                                aliases = aliases + (topic.id to database.knowledgePoolDao().aliases(topic.id))
+                                                aliasDraft = ""
+                                                status = "Alias saved."
+                                            }
+                                        }
+                                    }
+                                }, enabled = aliasDraft.isNotBlank()) { Text("Add alias") }
+                                val possibleDuplicates = topics.filter { it.id != topic.id && normalizeTopicAlias(it.name) == normalizeTopicAlias(topic.name) }
+                                if (possibleDuplicates.isNotEmpty() || topics.size > 1) {
+                                    Text("Merge duplicate topic into", style = MaterialTheme.typography.labelMedium)
+                                    Box {
+                                        OutlinedButton(onClick = { mergeMenu = true }, modifier = Modifier.fillMaxWidth()) {
+                                            Text(topics.firstOrNull { it.id == mergeTarget }?.name ?: "Choose target topic")
+                                        }
+                                        DropdownMenu(expanded = mergeMenu, onDismissRequest = { mergeMenu = false }) {
+                                            topics.filter { it.id != topic.id }.forEach { candidate ->
+                                                DropdownMenuItem(text = { Text(candidate.name) }, onClick = {
+                                                    mergeTarget = candidate.id
+                                                    mergeMenu = false
+                                                })
+                                            }
+                                        }
+                                    }
+                                    TextButton(onClick = {
+                                        scope.launch {
+                                            runCatching { database.knowledgePoolDao().mergeTopic(topic.id, mergeTarget) }
+                                                .onSuccess {
+                                                    topics = database.knowledgePoolDao().topics(selected!!.id)
+                                                    aliases = topics.associate { it.id to database.knowledgePoolDao().aliases(it.id) }
+                                                    database.knowledgePoolDao().setReviewState(selected!!.id, "needs_review")
+                                                    selected = selected!!.copy(reviewState = "needs_review")
+                                                    status = "Topic merged. Verify the surviving topic and its aliases."
+                                                }
+                                                .onFailure { status = it.message ?: "Could not merge topics." }
+                                        }
+                                    }, enabled = mergeTarget.isNotBlank() && mergeTarget != topic.id) { Text("Merge this topic into selected") }
+                                }
                                 Text(
                                     if (topic.evidence == "Added manually by professor") "Professor-created · ${topic.evidence}"
                                     else "Detection confidence ${"%.0f".format(topic.confidence * 100)}% · ${topic.evidence}",
@@ -248,6 +347,8 @@ fun KnowledgePoolScreen(database: AppDatabase) {
 @Composable private fun KnowledgeMetric(label: String, value: String, modifier: Modifier = Modifier) {
     Card(modifier) { Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(2.dp)) { Text(value, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold); Text(label, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant) } }
 }
+
+private fun normalizeTopicAlias(value: String): String = value.trim().lowercase(java.util.Locale.ROOT).replace(Regex("\\s+"), " ")
 
 private fun knowledgeChunks(text: String, maxChars: Int = 1_100): List<String> {
     val normalized = text.replace(Regex("\\s+"), " ").trim()
