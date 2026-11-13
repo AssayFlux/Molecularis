@@ -191,25 +191,6 @@ fun KnowledgePoolScreen(database: AppDatabase) {
                                         }
                                     }
                                 }
-                                var showPageEvidence by remember(topic.id) { mutableStateOf(false) }
-                                var pageEvidence by remember(topic.id) { mutableStateOf(emptyList<BookPassageEntity>()) }
-                                TextButton(onClick = {
-                                    scope.launch {
-                                        showPageEvidence = !showPageEvidence
-                                        if (showPageEvidence) pageEvidence = database.bookDao().passagesAtPage(selected!!.bookId, topic.startPage)
-                                    }
-                                }) { Text(if (showPageEvidence) "Hide source passages" else "View source passages · page " + topic.startPage) }
-                                if (showPageEvidence) {
-                                    if (pageEvidence.isEmpty()) Text("No extracted passages are available at this page.", style = MaterialTheme.typography.bodySmall)
-                                    pageEvidence.forEachIndexed { index, passage ->
-                                        Card(Modifier.fillMaxWidth()) {
-                                            Column(Modifier.padding(8.dp), verticalArrangement = Arrangement.spacedBy(3.dp)) {
-                                                Text("Book page " + passage.pageNumber + " · passage " + (index + 1), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
-                                                Text(passage.text, style = MaterialTheme.typography.bodySmall)
-                                            }
-                                        }
-                                    }
-                                }
                                 OutlinedTextField(editedName, { editedName = it }, modifier = Modifier.fillMaxWidth(), label = { Text("Topic") }, singleLine = true)
                                 OutlinedTextField(editedPage, { editedPage = it.filter(Char::isDigit).take(5) }, modifier = Modifier.fillMaxWidth(), label = { Text("Starting page") }, singleLine = true)
                                 var aliasDraft by remember(topic.id) { mutableStateOf("") }
