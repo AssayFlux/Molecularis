@@ -40,72 +40,109 @@ class KnowledgeProcessingWorker(context: Context, params: WorkerParameters) : Co
         val book = db.bookDao().book(id) ?: return Result.failure()
         val source = File(book.localPath)
         if (!source.isFile) return Result.failure(workDataOf("error" to "Original PDF is missing"))
-        val stageId = "__stage__" + UUID.randomUUID()
-        var staged = false
+
         val reader = OfflineDocumentReader(applicationContext)
         try {
             setForeground(getForegroundInfo())
-            db.bookDao().addBook(book.copy(id = stageId))
-            staged = true
-            var chars = 0
-            var passages = 0
-            val pending = mutableListOf<BookPassageEntity>()
-            val candidates = linkedMapOf<String, Pair<Int, Pair<Float, String>>>()
-            val summary = reader.readPdfPages(Uri.fromFile(source), 5_000) { page, total, text ->
+            var checkpoint = db.bookDao().processingCheckpoint(id)
+            if (checkpoint == null) {
+                val stageId = "__stage__" + id
+                db.withTransaction {
+                    if (db.bookDao().book(stageId) == null) db.bookDao().addBook(book.copy(id = stageId))
+                    checkpoint = KnowledgeProcessingCheckpointEntity(id, stageId, 1, 0, 0)
+                    db.bookDao().saveProcessingCheckpoint(checkpoint!!)
+                }
+            }
+
+            val active = checkpoint!!
+            val stageId = active.stagingBookId
+            var totalChars = active.extractedChars
+            var totalPassages = active.passageCount
+
+            val summary = reader.readPdfPages(
+                uri = Uri.fromFile(source),
+                maxPdfPages = 5_000,
+                startPage = active.nextPage
+            ) { page, total, text ->
                 currentCoroutineContext().ensureActive()
-                chars += text.length
-                require(chars <= MAX_CHARS) { "The 25 million character safety limit was reached." }
-                chunks(text).forEachIndexed { index, chunk ->
-                    pending += BookPassageEntity(UUID.randomUUID().toString(), stageId, index, page, chunk)
-                    if (pending.size >= 250) {
-                        db.bookDao().addPassages(pending.toList())
-                        passages += pending.size
-                        pending.clear()
+                val updatedChars = totalChars + text.length
+                require(updatedChars <= MAX_CHARS) { "The 25 million character safety limit was reached." }
+                val pagePassages = chunks(text).mapIndexed { index, chunk ->
+                    BookPassageEntity(UUID.randomUUID().toString(), stageId, index, page, chunk)
+                }
+                val nextCheckpoint = KnowledgeProcessingCheckpointEntity(
+                    bookId = id,
+                    stagingBookId = stageId,
+                    nextPage = page + 1,
+                    extractedChars = updatedChars,
+                    passageCount = totalPassages + pagePassages.size
+                )
+                // A page's passages and the next-page cursor commit together. If the process
+                // dies before commit, that page is OCRed again; it cannot be silently skipped.
+                db.withTransaction {
+                    if (pagePassages.isNotEmpty()) db.bookDao().addPassages(pagePassages)
+                    db.bookDao().saveProcessingCheckpoint(nextCheckpoint)
+                }
+                totalChars = updatedChars
+                totalPassages = nextCheckpoint.passageCount
+                setProgress(workDataOf("page" to page, "total" to total, "passages" to totalPassages))
+            }
+
+            require(totalChars > 0) { "No readable text was extracted." }
+            val knowledgeId = db.knowledgePoolDao().forBook(id)?.id ?: UUID.randomUUID().toString()
+            val candidates = linkedMapOf<String, Pair<Int, Pair<Float, String>>>()
+            db.bookDao().passages(stageId).forEach { passage ->
+                headings(passage.text).forEach { (name, confidence, evidence) ->
+                    val key = name.lowercase().replace(Regex("\\s+"), " ").trim()
+                    if (key.length >= 4 && key !in candidates) {
+                        candidates[key] = passage.pageNumber to (confidence to evidence)
                     }
                 }
-                headings(text).forEach { (name, confidence, evidence) ->
-                    val key = name.lowercase().replace(Regex("\\s+"), " ").trim()
-                    if (key.length >= 4 && key !in candidates) candidates[key] = page to (confidence to evidence)
-                }
-                setProgress(workDataOf("page" to page, "total" to total, "passages" to passages))
             }
-            if (pending.isNotEmpty()) {
-                db.bookDao().addPassages(pending.toList())
-                passages += pending.size
-                pending.clear()
-            }
-            require(summary.extractedChars > 0) { "No readable text was extracted." }
-            val knowledgeId = db.knowledgePoolDao().forBook(id)?.id ?: UUID.randomUUID().toString()
             val topics = candidates.entries.sortedBy { it.value.first }.take(120).map { (name, info) ->
                 KnowledgeTopicEntity(UUID.randomUUID().toString(), knowledgeId, name, info.first, info.second.first, info.second.second)
             }
-            val quality = ((if (passages > 0) 35 else 0) + if (topics.isNotEmpty()) 15 else 0 +
-                (if (summary.extractedChars / summary.pageCount.coerceAtLeast(1) >= 300) 50 else 0)).coerceIn(0, 100)
+            val quality = (
+                (if (totalPassages > 0) 35 else 0) +
+                (if (topics.isNotEmpty()) 15 else 0) +
+                (if (totalChars / summary.pageCount.coerceAtLeast(1) >= 300) 50 else 0)
+            ).coerceIn(0, 100)
             val metadata = KnowledgeBookEntity(
-                id = knowledgeId, bookId = id, detectedTitle = book.title, author = "", publisher = "",
-                edition = "", subject = "Needs subject review",
-                summary = "Offline OCR extracted " + summary.extractedChars + " characters from " + summary.pageCount +
-                    " pages and indexed " + passages + " page-linked passages. Readiness is heuristic, not a scientific accuracy score.",
-                chapterOutline = topics.joinToString("\n") { it.startPage.toString() + ". " + it.name },
-                extractedPageCount = summary.pageCount, extractedChars = summary.extractedChars,
-                passageCount = passages, topicCount = topics.size, qualityScore = quality, reviewState = "needs_review"
+                id = knowledgeId,
+                bookId = id,
+                detectedTitle = book.title,
+                author = "",
+                publisher = "",
+                edition = "",
+                subject = "Needs subject review",
+                summary = "Offline OCR extracted " + totalChars + " characters from " + summary.pageCount +
+                    " pages and indexed " + totalPassages + " page-linked passages. Readiness is heuristic, not a scientific accuracy score.",
+                chapterOutline = topics.joinToString("\\n") { it.startPage.toString() + ". " + it.name },
+                extractedPageCount = summary.pageCount,
+                extractedChars = totalChars,
+                passageCount = totalPassages,
+                topicCount = topics.size,
+                qualityScore = quality,
+                reviewState = "needs_review"
             )
             db.withTransaction {
                 db.bookDao().replacePassagesFromStage(id, stageId)
-                db.bookDao().updateBookStats(id, summary.pageCount, summary.extractedChars)
+                db.bookDao().updateBookStats(id, summary.pageCount, totalChars)
                 db.knowledgePoolDao().saveBook(metadata)
                 db.knowledgePoolDao().clearTopics(knowledgeId)
                 db.knowledgePoolDao().saveTopics(topics)
+                db.bookDao().deleteProcessingCheckpoint(id)
             }
-            staged = false
-            return Result.success(workDataOf("bookId" to id, "passages" to passages))
+            return Result.success(workDataOf("bookId" to id, "passages" to totalPassages))
         } catch (cancelled: kotlinx.coroutines.CancellationException) {
             throw cancelled
         } catch (error: Exception) {
-            return Result.failure(workDataOf("error" to (error.message ?: error.javaClass.simpleName)))
+            // Keep the staging passages and last committed page cursor for recovery/retry.
+            return if (error is IllegalArgumentException || runAttemptCount >= MAX_RETRIES)
+                Result.failure(workDataOf("error" to (error.message ?: error.javaClass.simpleName)))
+            else Result.retry()
         } finally {
             reader.close()
-            if (staged) runCatching { db.bookDao().deleteBook(stageId) }
         }
     }
 
@@ -114,6 +151,7 @@ class KnowledgeProcessingWorker(context: Context, params: WorkerParameters) : Co
         private const val CHANNEL = "molecularis_knowledge"
         private const val NOTIFICATION_ID = 4107
         private const val MAX_CHARS = 25_000_000
+        private const val MAX_RETRIES = 3
     }
 }
 
@@ -123,7 +161,11 @@ private fun chunks(text: String): List<String> {
     val result = mutableListOf<String>()
     var start = 0
     while (start < normalized.length) {
-        val end = (start + 1_100).coerceAtMost(normalized.length)
+        var end = (start + 1_100).coerceAtMost(normalized.length)
+        if (end < normalized.length) {
+            val boundary = normalized.lastIndexOf(' ', end)
+            if (boundary > start + 550) end = boundary
+        }
         result += normalized.substring(start, end).trim()
         if (end == normalized.length) break
         start = end
@@ -131,12 +173,10 @@ private fun chunks(text: String): List<String> {
     return result
 }
 
-private fun headings(text: String): List<Triple<String, Float, String>> {
-    val result = mutableListOf<Triple<String, Float, String>>()
+private fun headings(text: String): List<Triple<String, Float, String>> =
     text.lineSequence().map { it.trim().replace(Regex("\\s+"), " ") }
-        .filter { it.length in 5..110 }.forEach { line ->
+        .filter { it.length in 5..110 }
+        .mapNotNull { line ->
             val match = Regex("(?i)^(chapter|unit|part)\\s+[0-9ivx]+\\b[:.\\- ]*(.{2,90})$").find(line)
-            if (match != null) result += Triple(match.groupValues[2].trim().ifBlank { line }, 0.88f, line)
-        }
-    return result
-}
+            match?.let { Triple(it.groupValues[2].trim().ifBlank { line }, 0.88f, line) }
+        }.toList()
