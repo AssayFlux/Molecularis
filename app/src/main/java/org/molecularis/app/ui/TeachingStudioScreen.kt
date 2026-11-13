@@ -15,6 +15,9 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Slideshow
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import android.webkit.WebView
@@ -24,6 +27,9 @@ import kotlinx.coroutines.launch
 import org.molecularis.app.data.AppDatabase
 import org.molecularis.app.data.SavedLessonEntity
 import org.molecularis.app.features.LessonSlideBuilder
+import org.molecularis.app.features.SlideTheme
+import org.molecularis.app.features.LessonPptxExporter
+import org.molecularis.app.features.LessonPdfExporter
 import org.molecularis.app.features.BiochemicalDiagram
 import org.molecularis.app.features.DiagramNode
 import org.molecularis.app.features.DiagramConnection
@@ -38,6 +44,7 @@ import java.util.UUID
 @Composable
 fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localModelAvailable: Boolean, onSpeak: (String) -> Unit, onGenerateWithLocalModel: suspend (String) -> String) {
     val scope = rememberCoroutineScope()
+    val context = androidx.compose.ui.platform.LocalContext.current
     val books by database.bookDao().books().collectAsState(initial = emptyList())
     val knowledgeBooks by database.knowledgePoolDao().books().collectAsState(initial = emptyList())
     val savedLessons by database.lessonDao().lessons().collectAsState(initial = emptyList())
@@ -51,9 +58,24 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localMo
     var generatingExplanation by remember { mutableStateOf(false) }
     var slidePreview by remember { mutableStateOf(false) }
     var slideIndex by remember { mutableIntStateOf(0) }
+    var slideTheme by remember { mutableStateOf(SlideTheme.CLASSIC) }
     var diagramPreview by remember { mutableStateOf(false) }
     var diagramStep by remember { mutableIntStateOf(0) }
     val slides = remember(outline, topic, level, minutes) { LessonSlideBuilder.build(outline, topic, level, minutes.toInt()) }
+    val pdfExportLauncher = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/pdf")) { uri ->
+        if (uri != null) runCatching {
+            val stream = context.contentResolver.openOutputStream(uri) ?: error("Could not open PDF destination")
+            stream.use { LessonPdfExporter.write(slides, topic, level, slideTheme, it) }
+        }.onSuccess { status = "PDF presentation exported." }
+            .onFailure { status = "PDF export failed: " + (it.message ?: "unknown error") }
+    }
+    val pptxExportLauncher = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/vnd.openxmlformats-officedocument.presentationml.presentation")) { uri ->
+        if (uri != null) runCatching {
+            val stream = context.contentResolver.openOutputStream(uri) ?: error("Could not open PowerPoint destination")
+            stream.use { it.write(LessonPptxExporter.create(slides, slideTheme)) }
+        }.onSuccess { status = "Editable PowerPoint exported." }
+            .onFailure { status = "PowerPoint export failed: " + (it.message ?: "unknown error") }
+    }
     val diagram = remember(slides, topic) {
         val visibleSlides = slides.take(40)
         BiochemicalDiagram(
@@ -326,7 +348,14 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localMo
                         Icon(Icons.Default.Slideshow, contentDescription = null)
                         Spacer(Modifier.width(8.dp))
                         Text("Preview classroom slides · " + slides.size)
+                    }                    Text("Presentation theme", style = MaterialTheme.typography.labelLarge)
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        SlideTheme.values().forEach { theme ->
+                            FilterChip(selected = slideTheme == theme, onClick = { slideTheme = theme }, label = { Text(theme.label) })
+                        }
                     }
+                    OutlinedButton(onClick = { pdfExportLauncher.launch(topic.ifBlank { "Molecularis lesson" } + ".pdf") }, modifier = Modifier.fillMaxWidth(), enabled = slides.isNotEmpty()) { Text("Export PDF · offline") }
+                    OutlinedButton(onClick = { pptxExportLauncher.launch(topic.ifBlank { "Molecularis lesson" } + ".pptx") }, modifier = Modifier.fillMaxWidth(), enabled = slides.isNotEmpty()) { Text("Export editable PowerPoint") }
                     Button(
                         onClick = { onSpeak(outline) },
                         enabled = voiceAvailable,
@@ -512,12 +541,16 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localMo
                     Modifier.fillMaxWidth().heightIn(min = 260.dp, max = 440.dp).verticalScroll(rememberScrollState()),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    Text(slides[slideIndex].title, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
-                    HorizontalDivider()
-                    slides[slideIndex].points.forEach { point ->
-                        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                            Text("•", color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.titleLarge)
-                            Text(point, style = MaterialTheme.typography.bodyLarge)
+                    Card(colors = CardDefaults.cardColors(containerColor = Color(android.graphics.Color.parseColor(slideTheme.backgroundHex)))) {
+                        Column(Modifier.fillMaxWidth().padding(20.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
+                            Text(slides[slideIndex].title, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, color = Color(android.graphics.Color.parseColor(slideTheme.foregroundHex)))
+                            HorizontalDivider(color = Color(android.graphics.Color.parseColor(slideTheme.accentHex)))
+                            slides[slideIndex].points.forEach { point ->
+                                Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                                    Text("•", color = Color(android.graphics.Color.parseColor(slideTheme.accentHex)), style = MaterialTheme.typography.titleLarge)
+                                    Text(point, style = MaterialTheme.typography.bodyLarge, color = Color(android.graphics.Color.parseColor(slideTheme.foregroundHex)))
+                                }
+                            }
                         }
                     }
                     if (slides[slideIndex].points.isEmpty()) {

@@ -83,16 +83,19 @@ This roadmap is outcome-based. Complete and validate one usable vertical slice a
 
 **Goal:** make a prepared lesson presentable in a classroom.
 
-- [x] Convert numbered lesson-outline sections into an initial local slide model (simple outline-derived preview; rich editable slide authoring remains open).
-- [ ] Build slide themes, layouts and readable typography.
-- [x] Add an in-app slide preview with previous/next navigation (full-screen presenter mode, timing and richer controls remain open).
+- [x] Convert numbered lesson-outline sections into an initial local slide model (outline-derived; rich manual slide authoring remains open).
+- [ ] Build multiple slide layouts and finish typography/accessibility rules across screen sizes.
+- [x] Add an in-app slide preview with previous/next navigation and three selectable themes (full-screen presenter mode and timing remain open).
 - [x] Add per-slide offline TTS playback (manual slide-by-slide narration; automatic timeline synchronization remains open).
 - [x] Extract deterministic slide conversion into a testable component with unit tests.
-- [ ] Add PDF export as the first dependable offline export.
-- [ ] Implement and validate editable PPTX export on Android.
-- [ ] Add speaker notes and slide-to-lesson segment mapping.
+- [x] Add offline PDF export with one landscape slide per page.
+- [x] Add editable PPTX export using native PowerPoint text shapes and a unit-tested Open XML package.
+- [ ] Add editable speaker notes and slide-to-lesson segment mapping.
+- [ ] Validate PDF/PPTX rendering in Android document providers and common presentation viewers on physical devices.
 
-**Current status:** the Teaching Studio can turn the current editable outline into a navigable slide preview and a progressive lesson-flow diagram. The diagram is derived only from the professor's existing outline; it does not invent biochemical pathway reactions. This is a first presentation scaffold, not a finished classroom player; PDF export, PPTX export, speaker notes, automatic slide timing and diagram synchronization remain open.\n\n**Exit criteria:** a saved lesson can be presented offline and exported as a usable presentation file.
+**Current status:** the Teaching Studio now offers Classic, Midnight and Botanical themes, offline PDF export, and editable PPTX generation from the outline-derived slide model. Export actions use Android's document-creation flow, so the professor chooses where each file is saved. PPTX text remains editable in presentation software. The generated files have source-level/package tests, but viewer compatibility, typography on real devices, speaker notes, richer layouts and full-screen presenter controls still require validation and implementation. The generated slides remain a formatting of the professor-edited outline, not independently verified scientific content.
+
+**Exit criteria:** a saved lesson can be presented offline and exported as usable PDF and editable PowerPoint files on validated Android devices.
 
 ## Phase 5 — Scientific SVG diagram engine
 
