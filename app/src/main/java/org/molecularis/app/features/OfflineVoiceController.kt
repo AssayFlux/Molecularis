@@ -12,6 +12,7 @@ import android.speech.ModelDownloadListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
 import android.speech.tts.TextToSpeech
+import android.speech.tts.UtteranceProgressListener
 import android.speech.tts.Voice
 import java.io.Closeable
 import java.util.Locale
@@ -70,6 +71,14 @@ class OfflineVoiceController(
     private var selectedVoiceName: String? = initialTtsVoiceName
     private var languageTag: String = normalizeLanguageTag(initialLanguageTag)
     private var closed = false
+    private var narrationChunks: List<String> = emptyList()
+    private var narrationSlideIndexes: List<Int> = emptyList()
+    private var narrationIndex = 0
+    private var narrationPaused = false
+    private var narrationUtteranceId: String? = null
+    private var narrationOnSegmentStarted: (Int) -> Unit = {}
+    private var narrationOnDone: () -> Unit = {}
+    private var narrationOnStateChanged: (Boolean, Boolean) -> Unit = { _, _ -> }
 
     init {
         textToSpeech = TextToSpeech(appContext) { status ->
@@ -78,6 +87,7 @@ class OfflineVoiceController(
                 onError("Text-to-speech could not be initialized.")
                 return@TextToSpeech
             }
+            engineProgressListener()
             refreshOfflineVoices()
         }
     }
@@ -219,27 +229,116 @@ class OfflineVoiceController(
         onListeningChanged(false)
     }
 
-    /** Speaks long teaching scripts in bounded chunks without truncating at the platform limit. */
-    fun speak(text: String) {
-        if (closed || text.isBlank()) return
-        val engine = textToSpeech ?: run {
-            onError("Speech output is not ready yet.")
-            return
-        }
+    /** Speak long teaching scripts as resumable slide-sized segments. */
+    fun speak(text: String) = speakSegments(splitSpeech(text, 2800))
+
+    fun speakSegments(
+        segments: List<String>,
+        onSegmentStarted: (Int) -> Unit = {},
+        onDone: () -> Unit = {},
+        onStateChanged: (playing: Boolean, paused: Boolean) -> Unit = { _, _ -> }
+    ) {
+        if (closed) return
+        val engine = textToSpeech ?: run { onError("Speech output is not ready yet."); return }
         val voice = selectedVoice ?: run {
             onError("No offline speech voice is installed. Install a local voice in Android text-to-speech settings.")
             return
         }
+        val safeSegments = segments.map(String::trim).filter(String::isNotBlank)
+        if (safeSegments.isEmpty()) { onError("There is no lesson text to narrate."); return }
         engine.voice = voice
-        val chunks = splitSpeech(text, 2800)
-        chunks.forEachIndexed { index, chunk ->
-            engine.speak(
-                chunk,
-                if (index == 0) TextToSpeech.QUEUE_FLUSH else TextToSpeech.QUEUE_ADD,
-                null,
-                "molecularis-lesson-speech-$index"
-            )
+        stopSpeaking()
+        narrationChunks = safeSegments.flatMap { splitSpeech(it, 2600) }
+        narrationSlideIndexes = safeSegments.flatMapIndexed { slide, segment -> splitSpeech(segment, 2600).map { slide } }
+        narrationIndex = 0
+        narrationPaused = false
+        narrationOnSegmentStarted = onSegmentStarted
+        narrationOnDone = onDone
+        narrationOnStateChanged = onStateChanged
+        speakCurrentSegment()
+    }
+
+    private fun speakCurrentSegment() {
+        if (closed || narrationPaused) return
+        val engine = textToSpeech ?: return
+        if (narrationIndex !in narrationChunks.indices) {
+            narrationOnStateChanged(false, false)
+            val done = narrationOnDone
+            clearNarration()
+            done()
+            return
         }
+        val id = "molecularis-narration-${narrationIndex}-${System.nanoTime()}"
+        narrationUtteranceId = id
+        engine.speak(narrationChunks[narrationIndex], TextToSpeech.QUEUE_FLUSH, null, id)
+    }
+
+    fun pauseSpeaking() {
+        if (narrationChunks.isEmpty() || narrationPaused) return
+        narrationPaused = true
+        textToSpeech?.stop()
+        narrationOnStateChanged(false, true)
+    }
+
+    fun resumeSpeaking() {
+        if (!narrationPaused || narrationChunks.isEmpty()) return
+        narrationPaused = false
+        narrationOnStateChanged(true, false)
+        speakCurrentSegment()
+    }
+
+    fun seekSpeakingTo(slideIndex: Int) {
+        if (narrationChunks.isEmpty()) return
+        textToSpeech?.stop()
+        narrationIndex = narrationSlideIndexes.indexOfFirst { it >= slideIndex }
+            .takeIf { it >= 0 } ?: narrationChunks.lastIndex
+        narrationPaused = false
+        narrationOnStateChanged(true, false)
+        speakCurrentSegment()
+    }
+
+    fun stopSpeaking() {
+        textToSpeech?.stop()
+        clearNarration()
+        narrationOnStateChanged(false, false)
+    }
+
+    private fun clearNarration() {
+        narrationChunks = emptyList()
+        narrationSlideIndexes = emptyList()
+        narrationIndex = 0
+        narrationPaused = false
+        narrationUtteranceId = null
+        narrationOnSegmentStarted = {}
+        narrationOnDone = {}
+    }
+
+    private fun engineProgressListener() {
+        textToSpeech?.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
+            override fun onStart(utteranceId: String?) {
+                if (utteranceId != narrationUtteranceId || narrationPaused) return
+                narrationOnSegmentStarted(narrationSlideIndexes.getOrElse(narrationIndex) { narrationIndex })
+                narrationOnStateChanged(true, false)
+            }
+            override fun onDone(utteranceId: String?) {
+                if (utteranceId != narrationUtteranceId || narrationPaused || closed) return
+                narrationIndex += 1
+                speakCurrentSegment()
+            }
+            @Deprecated("Deprecated in Android")
+            override fun onError(utteranceId: String?) {
+                if (utteranceId == narrationUtteranceId && !narrationPaused) {
+                    onError("Narration stopped because the Android speech engine reported an error.")
+                    stopSpeaking()
+                }
+            }
+            override fun onError(utteranceId: String?, errorCode: Int) {
+                if (utteranceId == narrationUtteranceId && !narrationPaused) {
+                    onError("Narration failed (speech engine code $errorCode).")
+                    stopSpeaking()
+                }
+            }
+        })
     }
 
     private fun splitSpeech(text: String, maxChars: Int): List<String> {
@@ -315,6 +414,7 @@ class OfflineVoiceController(
         runCatching { recognizer?.destroy() }
         recognizer = null
         runCatching { textToSpeech?.stop() }
+        clearNarration()
         runCatching { textToSpeech?.shutdown() }
         textToSpeech = null
         offlineVoices = emptyList()

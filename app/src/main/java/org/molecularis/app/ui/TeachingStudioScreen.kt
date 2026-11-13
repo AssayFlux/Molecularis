@@ -688,11 +688,11 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localMo
 
     if (slidePreview && slides.isNotEmpty()) {
         AlertDialog(
-            onDismissRequest = { slidePreview = false },
+            onDismissRequest = { slidePreview = false; onStopNarration(); narrationPlaying = false; narrationPaused = false },
             title = {
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                     Text("Slide " + (slideIndex + 1) + " of " + slides.size, style = MaterialTheme.typography.titleMedium)
-                    IconButton(onClick = { slidePreview = false }) {
+                    IconButton(onClick = { slidePreview = false; onStopNarration(); narrationPlaying = false; narrationPaused = false }) {
                         Icon(Icons.Default.Close, contentDescription = "Close presentation")
                     }
                 }

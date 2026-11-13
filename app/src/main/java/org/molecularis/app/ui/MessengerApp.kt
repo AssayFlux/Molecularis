@@ -372,7 +372,7 @@ private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LI
    Image(painter=if(customBackgroundUri.isNotBlank())rememberAsyncImagePainter(Uri.parse(customBackgroundUri)) else painterResource(id=org.molecularis.app.R.drawable.molecularis_background),contentDescription=null,contentScale=ContentScale.Crop,modifier=Modifier.fillMaxSize().alpha(if(darkAppearance)0.12f else 0.16f))
    Column(Modifier.fillMaxSize()){
    when(section){
-    Section.TEACHING->TeachingStudioScreen(db, voiceAvailable = offlineTtsVoices.isNotEmpty(), localModelAvailable = activeModelPath != null && activeModelName != null, onSpeak = { voiceController.speak(it) }, onGenerateWithLocalModel = { prompt -> runtime.generate(prompt) })
+    Section.TEACHING->TeachingStudioScreen(db, voiceAvailable = offlineTtsVoices.isNotEmpty(), localModelAvailable = activeModelPath != null && activeModelName != null, onSpeak = { voiceController.speak(it) }, onSpeakSlides={segments,onSegment,onState->voiceController.speakSegments(segments,onSegment,{},{playing,paused->narrationPlaying=playing;narrationPaused=paused;onState(playing,paused)})},onPauseNarration={voiceController.pauseSpeaking()},onResumeNarration={voiceController.resumeSpeaking()},onStopNarration={voiceController.stopSpeaking();narrationPlaying=false;narrationPaused=false},onSeekNarration={voiceController.seekSpeakingTo(it)}, onGenerateWithLocalModel = { prompt -> runtime.generate(prompt) })
     Section.LIBRARY->BookLibraryScreen(db)
     Section.KNOWLEDGE_POOL->KnowledgePoolScreen(db)
     Section.CHATS->ChatScreen(conversations,conversationId,messages,draft,{draft=it},pendingAttachment?.second,activeModelName,runtimeMessage,loadingModel,sending,voiceListening,
@@ -724,7 +724,7 @@ private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LI
      IconButton(onClick={showTeachingStudio=false}) { Icon(Icons.Default.Close,"Close teaching studio") }
     }
     HorizontalDivider()
-    TeachingStudioScreen(db,voiceAvailable=offlineTtsVoices.isNotEmpty(),localModelAvailable=activeModelPath!=null&&activeModelName!=null,onSpeak={voiceController.speak(it)},onGenerateWithLocalModel={prompt->runtime.generate(prompt)})
+    TeachingStudioScreen(db,voiceAvailable=offlineTtsVoices.isNotEmpty(),localModelAvailable=activeModelPath!=null&&activeModelName!=null,onSpeak={voiceController.speak(it)},onSpeakSlides={segments,onSegment,onState->voiceController.speakSegments(segments,onSegment,{},{playing,paused->narrationPlaying=playing;narrationPaused=paused;onState(playing,paused)})},onPauseNarration={voiceController.pauseSpeaking()},onResumeNarration={voiceController.resumeSpeaking()},onStopNarration={voiceController.stopSpeaking();narrationPlaying=false;narrationPaused=false},onSeekNarration={voiceController.seekSpeakingTo(it)},onGenerateWithLocalModel={prompt->runtime.generate(prompt)})
    }
   }
  }
