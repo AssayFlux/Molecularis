@@ -64,7 +64,8 @@ data class BookEntity(
  val sourceUri:String,
  val pageCount:Int,
  val extractedChars:Int,
- val importedAt:Long=System.currentTimeMillis()
+ val importedAt:Long=System.currentTimeMillis(),
+ val fileSha256:String?=null
 )
 @Entity(tableName="book_passages",indices=[Index("bookId"),Index("pageNumber")],foreignKeys=[ForeignKey(entity=BookEntity::class,parentColumns=["id"],childColumns=["bookId"],onDelete=ForeignKey.CASCADE)])
 data class BookPassageEntity(
@@ -86,6 +87,16 @@ data class KnowledgeProcessingCheckpointEntity(@PrimaryKey val bookId:String,val
  @Query("SELECT * FROM books WHERE id NOT GLOB '__stage__*' ORDER BY importedAt DESC") fun books():Flow<List<BookEntity>>
  @Insert suspend fun addBook(book:BookEntity)
  @Query("SELECT * FROM books WHERE id=:bookId LIMIT 1") suspend fun book(bookId:String):BookEntity?
+ @Query("SELECT * FROM books WHERE fileSha256=:sha256 LIMIT 1") suspend fun bookBySha256(sha256:String):BookEntity?
+ @Query("SELECT * FROM books WHERE title=:title COLLATE NOCASE ORDER BY importedAt DESC LIMIT 1") suspend fun bookByTitle(title:String):BookEntity?
+ @Update suspend fun updateBook(book:BookEntity)
+ @Transaction suspend fun clearProcessingCheckpointAndStage(bookId:String) {
+  val checkpoint = processingCheckpoint(bookId)
+  if (checkpoint != null) {
+   deleteBook(checkpoint.stagingBookId)
+   deleteProcessingCheckpoint(bookId)
+  }
+ }
  @Query("SELECT * FROM knowledge_processing_checkpoints WHERE bookId=:bookId LIMIT 1") suspend fun processingCheckpoint(bookId:String):KnowledgeProcessingCheckpointEntity?
  @Insert(onConflict=OnConflictStrategy.REPLACE) suspend fun saveProcessingCheckpoint(checkpoint:KnowledgeProcessingCheckpointEntity)
  @Query("DELETE FROM knowledge_processing_checkpoints WHERE bookId=:bookId") suspend fun deleteProcessingCheckpoint(bookId:String)
@@ -198,7 +209,7 @@ data class SavedLessonEntity(
  @Query("DELETE FROM saved_lessons WHERE id=:id") suspend fun deleteLesson(id:String)
 }
 
-@Database(entities=[ConversationEntity::class,MessageEntity::class,LocalModelEntity::class,WorkspaceProjectEntity::class,KnowledgeChunkEntity::class,BookEntity::class,BookPassageEntity::class,KnowledgeBookEntity::class,KnowledgeTopicEntity::class,SavedLessonEntity::class,BookPassageFts::class,KnowledgeProcessingCheckpointEntity::class,KnowledgeTopicAliasEntity::class],version=12,exportSchema=false)
+@Database(entities=[ConversationEntity::class,MessageEntity::class,LocalModelEntity::class,WorkspaceProjectEntity::class,KnowledgeChunkEntity::class,BookEntity::class,BookPassageEntity::class,KnowledgeBookEntity::class,KnowledgeTopicEntity::class,SavedLessonEntity::class,BookPassageFts::class,KnowledgeProcessingCheckpointEntity::class,KnowledgeTopicAliasEntity::class],version=13,exportSchema=false)
 abstract class AppDatabase:RoomDatabase(){
  abstract fun chatDao():ChatDao
  abstract fun modelDao():ModelDao
