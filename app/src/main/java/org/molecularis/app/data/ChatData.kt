@@ -92,7 +92,7 @@ data class KnowledgeProcessingCheckpointEntity(@PrimaryKey val bookId:String,val
  @Query("SELECT * FROM books WHERE fileSha256=:sha256 LIMIT 1") suspend fun bookBySha256(sha256:String):BookEntity?
  @Query("SELECT * FROM books WHERE title=:title COLLATE NOCASE ORDER BY importedAt DESC LIMIT 1") suspend fun bookByTitle(title:String):BookEntity?
  @Update suspend fun updateBook(book:BookEntity)
- @Transaction suspend fun deleteBookAndProcessingState(bookId:String) { clearProcessingCheckpointAndStage(bookId); deleteBook(bookId) }
+ @Transaction suspend fun deleteBookAndProcessingState(bookId:String) { clearProcessingCheckpointAndStage(bookId); deletePageAudits(bookId); deleteBook(bookId) }
  @Transaction suspend fun clearProcessingCheckpointAndStage(bookId:String) {
   val checkpoint = processingCheckpoint(bookId)
   if (checkpoint != null) {
