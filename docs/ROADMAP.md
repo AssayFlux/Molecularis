@@ -144,7 +144,7 @@ This roadmap is outcome-based. Complete and validate one usable vertical slice a
 - [x] Persist scheduled/running/completed/interrupted/failed/cancelled state and surface failure reasons. WorkManager can restart work after process death; playback restarts from the beginning rather than resuming mid-sentence.
 - [ ] Test across Android versions and representative OEM battery policies on physical devices.
 
-**Current status:** the scheduling flow, encrypted Room schedule records, foreground WorkManager playback, offline-voice selection, preflight checks, notification stop action, cancellation and status reporting are implemented. Duration and audience are retained as session metadata; narration uses the saved lesson outline and does not guarantee a fixed wall-clock lecture duration or automatically regenerate content for a different audience. Scheduled execution must still be accepted on physical devices and OEM battery configurations.
+**Current status:** the scheduling flow, encrypted Room schedule records, foreground WorkManager playback, offline-voice selection, preflight checks, notification stop action, cancellation and status reporting are implemented. Duration and audience are retained as session metadata; scheduled playback is currently audio-only and reads the saved lesson outline. It does not automatically open or display the slide deck, guarantee a fixed wall-clock lecture duration, or regenerate content for a different audience. Scheduled execution must still be accepted on physical devices and OEM battery configurations.
 
 **Exit criteria:** a scheduled, prepared lecture starts and completes on validated devices when required permissions and system conditions are met; failures are visible and recoverable.
 

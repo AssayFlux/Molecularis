@@ -44,7 +44,7 @@ Open the repository's [Android build workflow](https://github.com/AssayFlux/Mole
 4. Prepare the editable outline. If a compatible LiteRT-LM model is installed and loaded from **Models**, optionally request a local-AI lesson draft.
 5. Review every generated scientific statement against the original textbook before teaching.
 6. Preview slides and diagrams. Use synchronized lesson narration when a compatible offline Android TTS voice is installed; confirm voice availability and behavior in airplane mode on your device.
-7. Open **Schedule** to select a saved lesson, audience, duration, language and start time. Allow notifications. Android WorkManager scheduling is inexact and may be delayed by Doze or manufacturer battery restrictions. Check the schedule history for completion or failure.
+7. Open **Schedule** to select a saved lesson, audience, duration, language and start time. Allow notifications. Android WorkManager scheduling is inexact and may be delayed by Doze or manufacturer battery restrictions. Scheduled playback is audio-only; it does not automatically open the slide deck. Check the schedule history for completion or failure.
 
 ## Models and offline behavior
 
