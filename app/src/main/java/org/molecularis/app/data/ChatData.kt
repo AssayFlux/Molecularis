@@ -153,12 +153,22 @@ data class KnowledgeTopicEntity(
 data class KnowledgeTopicAliasEntity(
  @PrimaryKey val id:String,val topicId:String,val alias:String,val normalizedAlias:String
 )
+/** Explicit provenance links from reviewed topics to the exact OCR passages that support them. */
+@Entity(tableName="knowledge_topic_passage_links",primaryKeys=["topicId","passageId"],indices=[Index("topicId"),Index("passageId")],foreignKeys=[
+ ForeignKey(entity=KnowledgeTopicEntity::class,parentColumns=["id"],childColumns=["topicId"],onDelete=ForeignKey.CASCADE),
+ ForeignKey(entity=BookPassageEntity::class,parentColumns=["id"],childColumns=["passageId"],onDelete=ForeignKey.CASCADE)
+])
+data class KnowledgeTopicPassageLinkEntity(val topicId:String,val passageId:String,val pageNumber:Int,val linkType:String="section_page_range")
 @Dao interface KnowledgePoolDao {
  @Query("SELECT * FROM knowledge_books ORDER BY processedAt DESC") fun books():Flow<List<KnowledgeBookEntity>>
  @Query("SELECT * FROM knowledge_books WHERE bookId=:bookId LIMIT 1") suspend fun forBook(bookId:String):KnowledgeBookEntity?
  @Insert(onConflict=OnConflictStrategy.REPLACE) suspend fun saveBook(book:KnowledgeBookEntity)
  @Query("UPDATE knowledge_books SET detectedTitle=:title,author=:author,publisher=:publisher,edition=:edition,subject=:subject,reviewState='needs_review' WHERE id=:id") suspend fun updateMetadata(id:String,title:String,author:String,publisher:String,edition:String,subject:String)
  @Query("SELECT * FROM knowledge_topics WHERE knowledgeBookId=:knowledgeBookId ORDER BY COALESCE(parentTopicId,''),startPage,name COLLATE NOCASE") suspend fun topics(knowledgeBookId:String):List<KnowledgeTopicEntity>
+ @Insert(onConflict=OnConflictStrategy.IGNORE) suspend fun addTopicPassageLinks(links:List<KnowledgeTopicPassageLinkEntity>)
+ @Query("SELECT book_passages.* FROM book_passages INNER JOIN knowledge_topic_passage_links ON knowledge_topic_passage_links.passageId=book_passages.id WHERE knowledge_topic_passage_links.topicId=:topicId ORDER BY book_passages.pageNumber,book_passages.chunkIndex") suspend fun passagesForTopic(topicId:String):List<BookPassageEntity>
+ @Query("INSERT OR IGNORE INTO knowledge_topic_passage_links(topicId,passageId,pageNumber,linkType) SELECT :topicId,id,pageNumber,'manual_page' FROM book_passages WHERE bookId=:bookId AND pageNumber=:page") suspend fun linkTopicToPage(topicId:String,bookId:String,page:Int)
+ @Query("INSERT OR IGNORE INTO knowledge_topic_passage_links(topicId,passageId,pageNumber,linkType) SELECT :targetId,passageId,pageNumber,linkType FROM knowledge_topic_passage_links WHERE topicId=:sourceId") suspend fun copyPassageLinks(sourceId:String,targetId:String)
  @Query("SELECT * FROM knowledge_topic_aliases WHERE topicId=:topicId ORDER BY alias COLLATE NOCASE") suspend fun aliases(topicId:String):List<KnowledgeTopicAliasEntity>
  @Insert(onConflict=OnConflictStrategy.IGNORE) suspend fun addAlias(alias:KnowledgeTopicAliasEntity):Long
  @Query("DELETE FROM knowledge_topic_aliases WHERE id=:aliasId") suspend fun deleteAlias(aliasId:String)
@@ -196,6 +206,7 @@ data class KnowledgeTopicAliasEntity(
   }
   reparentChildren(sourceId,targetId)
   copyAliasesToTopic(sourceId,targetId)
+  copyPassageLinks(sourceId,targetId)
   reconcileMergedApproval(sourceId,targetId)
   deleteAliasesForTopic(sourceId)
   deleteTopicById(sourceId)
@@ -228,7 +239,7 @@ data class SavedLessonEntity(
  @Query("DELETE FROM saved_lessons WHERE id=:id") suspend fun deleteLesson(id:String)
 }
 
-@Database(entities=[ConversationEntity::class,MessageEntity::class,LocalModelEntity::class,WorkspaceProjectEntity::class,KnowledgeChunkEntity::class,BookEntity::class,BookPassageEntity::class,KnowledgeBookEntity::class,KnowledgeTopicEntity::class,SavedLessonEntity::class,BookPassageFts::class,KnowledgeProcessingCheckpointEntity::class,KnowledgeTopicAliasEntity::class,KnowledgePageAuditEntity::class],version=14,exportSchema=false)
+@Database(entities=[ConversationEntity::class,MessageEntity::class,LocalModelEntity::class,WorkspaceProjectEntity::class,KnowledgeChunkEntity::class,BookEntity::class,BookPassageEntity::class,KnowledgeBookEntity::class,KnowledgeTopicEntity::class,SavedLessonEntity::class,BookPassageFts::class,KnowledgeProcessingCheckpointEntity::class,KnowledgeTopicAliasEntity::class,KnowledgePageAuditEntity::class,KnowledgeTopicPassageLinkEntity::class],version=15,exportSchema=false)
 abstract class AppDatabase:RoomDatabase(){
  abstract fun chatDao():ChatDao
  abstract fun modelDao():ModelDao

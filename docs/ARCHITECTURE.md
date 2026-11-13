@@ -25,7 +25,7 @@ Initial database entities:
 - Chapter: book relationship, title, page range and hierarchy.
 - Topic: normalized topic name, parent topic and aliases.
 - ContentChunk: text, book/chapter/topic links, page range and chunk order.
-- TopicChunk: many-to-many mapping between topics and content chunks.
+- TopicChunk / TopicPassageLink: many-to-many mapping between reviewed topics and exact source passages, preserving passage IDs and page locations so topic retrieval remains auditable.
 - VisualAsset: local path/URI, topic, origin URL, license/permission note and attribution metadata.
 - Lesson: topic, audience level, language, target duration, status and timestamps.
 - LessonSegment: order, estimated duration, teaching purpose, narration text and slide association.

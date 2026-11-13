@@ -15,6 +15,7 @@ import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 import org.molecularis.app.R
 import org.molecularis.app.data.*
+import org.molecularis.app.features.TopicOrganization
 import java.io.File
 import java.security.MessageDigest
 import java.util.UUID
@@ -119,6 +120,14 @@ class KnowledgeProcessingWorker(context: Context, params: WorkerParameters) : Co
             val topics = candidates.entries.sortedBy { it.value.first }.take(120).map { (name, info) ->
                 KnowledgeTopicEntity(UUID.randomUUID().toString(), knowledgeId, name, info.first, info.second.first, info.second.second)
             }
+            val stagedPassages = db.bookDao().passages(stageId)
+            val pageRanges = TopicOrganization.topicPageRanges(topics, summary.pageCount)
+            val topicLinks = topics.flatMap { topic ->
+                val range = pageRanges[topic.id] ?: return@flatMap emptyList()
+                stagedPassages.asSequence().filter { it.pageNumber in range }.map { passage ->
+                    KnowledgeTopicPassageLinkEntity(topic.id, passage.id, passage.pageNumber)
+                }.toList()
+            }
             val audits = db.bookDao().pageAudits(stageId)
             val pagesWithText = audits.count { it.charCount > 0 }
             val emptyPages = audits.count { it.charCount == 0 }
@@ -160,6 +169,7 @@ class KnowledgeProcessingWorker(context: Context, params: WorkerParameters) : Co
                 db.knowledgePoolDao().saveBook(metadata)
                 db.knowledgePoolDao().clearTopics(knowledgeId)
                 db.knowledgePoolDao().saveTopics(topics)
+                if (topicLinks.isNotEmpty()) db.knowledgePoolDao().addTopicPassageLinks(topicLinks)
                 db.bookDao().deleteProcessingCheckpoint(id)
             }
             return Result.success(workDataOf("bookId" to id, "passages" to totalPassages))

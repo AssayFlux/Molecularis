@@ -131,6 +131,14 @@ private val FTS_CALLBACK = object : RoomDatabase.Callback() {
         db.execSQL("INSERT INTO book_passages_fts(book_passages_fts) VALUES('rebuild')")
     }
 }
+private val MIGRATION_14_15 = object : Migration(14, 15) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("CREATE TABLE IF NOT EXISTS knowledge_topic_passage_links (topicId TEXT NOT NULL, passageId TEXT NOT NULL, pageNumber INTEGER NOT NULL, linkType TEXT NOT NULL, PRIMARY KEY(topicId,passageId), FOREIGN KEY(topicId) REFERENCES knowledge_topics(id) ON UPDATE NO ACTION ON DELETE CASCADE, FOREIGN KEY(passageId) REFERENCES book_passages(id) ON UPDATE NO ACTION ON DELETE CASCADE)")
+        db.execSQL("CREATE INDEX IF NOT EXISTS index_knowledge_topic_passage_links_topicId ON knowledge_topic_passage_links(topicId)")
+        db.execSQL("CREATE INDEX IF NOT EXISTS index_knowledge_topic_passage_links_passageId ON knowledge_topic_passage_links(passageId)")
+    }
+}
+
 private val MIGRATION_13_14 = object : Migration(13, 14) {
     override fun migrate(db: SupportSQLiteDatabase) {
         db.execSQL("ALTER TABLE knowledge_books ADD COLUMN pagesWithText INTEGER NOT NULL DEFAULT 0")
@@ -185,7 +193,7 @@ object DatabaseProvider {
             ENCRYPTED_NAME
         )
             .openHelperFactory(SupportOpenHelperFactory(passphrase.copyOf()))
-            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14)
+            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15)
             .addCallback(FTS_CALLBACK)
             .setJournalMode(RoomDatabase.JournalMode.TRUNCATE)
             .build()
@@ -229,7 +237,7 @@ object DatabaseProvider {
         try {
             val source = legacy.openHelper.writableDatabase
             val target = encryptedTemp.openHelper.writableDatabase
-            val tables = listOf("conversations", "messages", "local_models", "workspace_projects", "knowledge_chunks", "books", "book_passages", "knowledge_books", "knowledge_topics", "saved_lessons", "knowledge_processing_checkpoints", "knowledge_topic_aliases", "knowledge_page_audits")
+            val tables = listOf("conversations", "messages", "local_models", "workspace_projects", "knowledge_chunks", "books", "book_passages", "knowledge_books", "knowledge_topics", "saved_lessons", "knowledge_processing_checkpoints", "knowledge_topic_aliases", "knowledge_page_audits", "knowledge_topic_passage_links")
             target.beginTransaction()
             try {
                 tables.forEach { table -> copyTable(source, target, table) }

@@ -24,6 +24,23 @@ class TopicOrganizationTest {
         assertEquals(listOf("b", "a"), groups.single().map { it.id })
     }
 
+    @Test fun mapsTopicPassagesUntilNextDistinctHeadingPage() {
+        val topics = listOf(
+            topic("a", "Glycolysis", page = 4),
+            topic("b", "Glycolysis regulation", page = 4),
+            topic("c", "Gluconeogenesis", page = 9)
+        )
+        val ranges = TopicOrganization.topicPageRanges(topics, 20)
+        assertEquals(4..8, ranges["a"])
+        assertEquals(4..8, ranges["b"])
+        assertEquals(9..20, ranges["c"])
+    }
+
+    @Test fun clampsInvalidTopicPagesToDocumentBounds() {
+        val ranges = TopicOrganization.topicPageRanges(listOf(topic("a", "Topic", page = 90)), 12)
+        assertEquals(12..12, ranges["a"])
+    }
+
     @Test fun preventsParentingToSelfOrDescendant() {
         val topics = listOf(
             topic("root", "Metabolism"),

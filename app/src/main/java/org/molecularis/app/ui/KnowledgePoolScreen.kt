@@ -177,9 +177,12 @@ fun KnowledgePoolScreen(database: AppDatabase) {
                                 TextButton(onClick = {
                                     scope.launch {
                                         showPageEvidence = !showPageEvidence
-                                        if (showPageEvidence) pageEvidence = database.bookDao().passagesAtPage(selected!!.bookId, topic.startPage)
+                                        if (showPageEvidence) {
+                                            val linked = database.knowledgePoolDao().passagesForTopic(topic.id)
+                                            pageEvidence = linked.ifEmpty { database.bookDao().passagesAtPage(selected!!.bookId, topic.startPage) }
+                                        }
                                     }
-                                }) { Text(if (showPageEvidence) "Hide source passages" else "View source passages · page " + topic.startPage) }
+                                }) { Text(if (showPageEvidence) "Hide source passages" else "View linked source passages · from page " + topic.startPage) }
                                 if (showPageEvidence) {
                                     if (pageEvidence.isEmpty()) Text("No extracted passages are available at this page.", style = MaterialTheme.typography.bodySmall)
                                     pageEvidence.forEachIndexed { index, passage ->

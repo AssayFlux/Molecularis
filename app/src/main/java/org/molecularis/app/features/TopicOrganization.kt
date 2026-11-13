@@ -14,6 +14,17 @@ object TopicOrganization {
             .values.filter { it.size > 1 }
             .map { it.sortedBy { topic -> topic.startPage } }
 
+    /** Each heading owns passages up to (but not including) the next distinct heading page. */
+    fun topicPageRanges(topics: List<KnowledgeTopicEntity>, pageCount: Int): Map<String, IntRange> {
+        if (topics.isEmpty() || pageCount < 1) return emptyMap()
+        val starts = topics.map { it.startPage.coerceIn(1, pageCount) }.distinct().sorted()
+        return topics.associate { topic ->
+            val start = topic.startPage.coerceIn(1, pageCount)
+            val next = starts.firstOrNull { it > start }
+            topic.id to (start..((next?.minus(1) ?: pageCount).coerceAtLeast(start)))
+        }
+    }
+
     fun wouldCreateCycle(topicId: String, parentId: String?, topics: List<KnowledgeTopicEntity>): Boolean {
         if (parentId == null) return false
         var current = topics.firstOrNull { it.id == parentId } ?: return false
