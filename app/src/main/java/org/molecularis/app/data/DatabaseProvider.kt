@@ -107,6 +107,15 @@ private val MIGRATION_10_11 = object : Migration(10, 11) {
     }
 }
 
+private val MIGRATION_11_12 = object : Migration(11, 12) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE knowledge_topics ADD COLUMN parentTopicId TEXT")
+        db.execSQL("CREATE INDEX IF NOT EXISTS index_knowledge_topics_parentTopicId ON knowledge_topics(parentTopicId)")
+        db.execSQL("CREATE TABLE IF NOT EXISTS knowledge_topic_aliases (id TEXT NOT NULL, topicId TEXT NOT NULL, alias TEXT NOT NULL, normalizedAlias TEXT NOT NULL, PRIMARY KEY(id), FOREIGN KEY(topicId) REFERENCES knowledge_topics(id) ON UPDATE NO ACTION ON DELETE CASCADE)")
+        db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS index_knowledge_topic_aliases_topicId_normalizedAlias ON knowledge_topic_aliases(topicId, normalizedAlias)")
+    }
+}
+
 object DatabaseProvider {
     private const val LEGACY_NAME = "molecularis-local.db"
     private const val ENCRYPTED_NAME = "molecularis-secure.db"
@@ -150,7 +159,7 @@ object DatabaseProvider {
             ENCRYPTED_NAME
         )
             .openHelperFactory(SupportOpenHelperFactory(passphrase.copyOf()))
-            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11)
+            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12)
             .setJournalMode(RoomDatabase.JournalMode.TRUNCATE)
             .build()
 
@@ -191,7 +200,7 @@ object DatabaseProvider {
         try {
             val source = legacy.openHelper.writableDatabase
             val target = encryptedTemp.openHelper.writableDatabase
-            val tables = listOf("conversations", "messages", "local_models", "workspace_projects", "knowledge_chunks", "books", "book_passages", "knowledge_books", "knowledge_topics", "saved_lessons", "knowledge_processing_checkpoints")
+            val tables = listOf("conversations", "messages", "local_models", "workspace_projects", "knowledge_chunks", "books", "book_passages", "knowledge_books", "knowledge_topics", "saved_lessons", "knowledge_processing_checkpoints", "knowledge_topic_aliases")
             target.beginTransaction()
             try {
                 tables.forEach { table -> copyTable(source, target, table) }
