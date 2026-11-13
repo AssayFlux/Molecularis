@@ -37,8 +37,6 @@ import kotlin.coroutines.resumeWithException
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.withContext
-import kotlinx.coroutines.NonCancellable
-import kotlinx.coroutines.withContext
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -102,9 +100,6 @@ class ScheduledLectureWorker(context: Context, params: WorkerParameters) : Corou
     private var audioManager: AudioManager? = null
     private var focusRequest: AudioFocusRequest? = null
     private var legacyFocusListener: AudioManager.OnAudioFocusChangeListener? = null
-    private var audioManager: AudioManager? = null
-    private var focusRequest: AudioFocusRequest? = null
-    private var legacyFocusListener: AudioManager.OnAudioFocusChangeListener? = null
 
     override suspend fun getForegroundInfo(): ForegroundInfo {
         val manager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -150,7 +145,6 @@ class ScheduledLectureWorker(context: Context, params: WorkerParameters) : Corou
             val tts = createOfflineEngine(Locale.forLanguageTag(lecture.languageTag))
             engine = tts
             check(requestAudioFocus()) { "Audio focus is unavailable; another app may be using the audio output." }
-            check(requestAudioFocus()) { "Audio focus is unavailable; another app may be using the audio output." }
             val chunks = ScheduledLecturePolicy.chunks(text)
             chunks.forEachIndexed { index, chunk ->
                 currentCoroutineContext().ensureActive()
@@ -170,43 +164,7 @@ class ScheduledLectureWorker(context: Context, params: WorkerParameters) : Corou
             engine?.shutdown()
             engine = null
             abandonAudioFocus()
-            abandonAudioFocus()
         }
-    }
-
-
-    private fun requestAudioFocus(): Boolean {
-        val manager = applicationContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        audioManager = manager
-        val attributes = AudioAttributes.Builder()
-            .setUsage(AudioAttributes.USAGE_MEDIA)
-            .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
-            .build()
-        val listener = AudioManager.OnAudioFocusChangeListener { change ->
-            if (change == AudioManager.AUDIOFOCUS_LOSS || change == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
-                engine?.stop()
-            }
-        }
-        return if (Build.VERSION.SDK_INT >= 26) {
-            val request = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK)
-                .setAudioAttributes(attributes)
-                .setOnAudioFocusChangeListener(listener)
-                .build()
-            focusRequest = request
-            manager.requestAudioFocus(request) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED
-        } else {
-            legacyFocusListener = listener
-            manager.requestAudioFocus(listener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED
-        }
-    }
-
-    private fun abandonAudioFocus() {
-        val manager = audioManager ?: return
-        if (Build.VERSION.SDK_INT >= 26) focusRequest?.let(manager::abandonAudioFocusRequest)
-        else legacyFocusListener?.let(manager::abandonAudioFocus)
-        focusRequest = null
-        legacyFocusListener = null
-        audioManager = null
     }
 
 

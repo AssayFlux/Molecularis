@@ -291,6 +291,8 @@ class OfflineVoiceController(
             .values
             .sortedByDescending { it.term.length }
     }
+
+    fun setSpeechRate(rate: Float) {
         require(rate in 0.75f..1.35f) { "Narration speed must be between 0.75× and 1.35×." }
         narrationRate = rate
         textToSpeech?.setSpeechRate(rate)
