@@ -39,11 +39,11 @@ Open the repository's [Android build workflow](https://github.com/AssayFlux/Mole
 ## First launch
 
 1. Open **Library** and import a PDF textbook that you are permitted to use.
-2. Wait for on-device OCR and passage indexing to finish. The initial importer is foreground-only and currently limits each PDF to 500 pages and 5 million extracted characters.
+2. Start Knowledge Pool processing. The foreground WorkManager job reports progress, supports cancellation and resumes from its last committed page after process interruption. The current limits are 5,000 pages and 25 million extracted characters.
 3. Open **Teaching Studio**, enter a topic, choose MBBS, MD / DNB or PhD, and set the teaching duration.
 4. Prepare the editable outline. If a compatible LiteRT-LM model is installed and loaded from **Models**, optionally request a local-AI lesson draft.
 5. Review every generated scientific statement against the original textbook before teaching.
-6. Preview the outline-derived slides. Use **Read this slide aloud** for manual per-slide narration when an Android TTS voice is available offline.
+6. Preview slides and diagrams. Use synchronized lesson narration when a compatible offline Android TTS voice is installed; confirm voice availability and behavior in airplane mode on your device.
 
 ## Models and offline behavior
 
@@ -55,11 +55,12 @@ The textbook OCR pipeline, local database and local-model path are designed for 
 
 ## Current limitations
 
-- PDF import and OCR run in the foreground; resumable background import is not implemented.
-- Search is local keyword matching, not a complete semantic/FTS5 knowledge engine.
+- PDF import and Knowledge Pool OCR use WorkManager foreground processing with checkpoints; direct PDF text-layer extraction and device stress tests remain open.
+- Search combines local lexical retrieval with optional model-backed embedding components; semantic relevance needs professor-curated evaluation.
 - AI lesson generation is an optional local-model draft and can be wrong or incomplete.
-- Slide preview is derived from numbered outline sections; rich slide authoring and PDF/PPTX export are not yet implemented.
-- Slide narration is manually started one slide at a time; automatic timeline synchronization and scientific diagram reveals are not yet implemented.
+- Slides are outline-derived; advanced layouts, full-screen presenter mode and speaker notes remain open. PDF and editable PPTX export are implemented but require viewer compatibility testing.
+- Narration synchronization is implemented in software; pronunciation dictionaries, pause/emphasis controls and physical-device audio timing tests remain open.
+- Scheduled autonomous lectures, production authentication/backend, textbook-based scientific acceptance and production signing are not yet complete.
 - Physical-device, offline, accessibility, performance and professor acceptance testing remain release gates.
 
 See [ROADMAP.md](ROADMAP.md) for implementation status and remaining milestones.

@@ -70,6 +70,7 @@ class OfflineVoiceController(
     private val audioManager = appContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager
     private var audioFocusRequest: AudioFocusRequest? = null
     private var narrationRate = 1.0f
+    private var pronunciationEntries = BiochemistryPronunciationDictionary.defaults
     private var recognizer: SpeechRecognizer? = null
     private var textToSpeech: TextToSpeech? = null
     private var offlineVoices: List<Voice> = emptyList()
@@ -249,7 +250,7 @@ class OfflineVoiceController(
             onError("No offline speech voice is installed. Install a local voice in Android text-to-speech settings.")
             return
         }
-        val safeSegments = segments.map { it.trim() }.filter { it.isNotBlank() }
+        val safeSegments = segments.map { BiochemistryPronunciationDictionary.apply(it.trim(), pronunciationEntries) }.filter { it.isNotBlank() }
         if (safeSegments.isEmpty()) { onError("There is no lesson text to narrate."); return }
         engine.voice = voice
         stopSpeaking()
@@ -283,7 +284,7 @@ class OfflineVoiceController(
         engine.speak(narrationChunks[narrationIndex].text, TextToSpeech.QUEUE_FLUSH, null, id)
     }
 
-    fun setSpeechRate(rate: Float) {
+    fun setPronunciationDictionary(source: String) {\n        pronunciationEntries = (BiochemistryPronunciationDictionary.defaults + BiochemistryPronunciationDictionary.parse(source)).associateBy { it.term.lowercase() }.values.sortedByDescending { it.term.length }\n    }\n\n    fun setSpeechRate(rate: Float) {
         require(rate in 0.75f..1.35f) { "Narration speed must be between 0.75× and 1.35×." }
         narrationRate = rate
         textToSpeech?.setSpeechRate(rate)

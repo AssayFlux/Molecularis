@@ -144,11 +144,13 @@ private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LI
  var narrationPaused by remember{mutableStateOf(false)}
  val speechPrefs=remember(context){context.getSharedPreferences("molecularis_offline_speech",Context.MODE_PRIVATE)}
  var speechLanguageTag by remember{mutableStateOf(speechPrefs.getString("language_tag",java.util.Locale.getDefault().toLanguageTag())?:java.util.Locale.getDefault().toLanguageTag())}
+ var pronunciationDictionary by remember{mutableStateOf(speechPrefs.getString("pronunciation_dictionary","")?:"")}
  var ttsVoiceName by remember{mutableStateOf(speechPrefs.getString("tts_voice_name",null))}
  var offlineTtsVoices by remember{mutableStateOf(emptyList<org.molecularis.app.features.OfflineTtsVoice>())}
  var recognitionLanguages by remember{mutableStateOf(org.molecularis.app.features.OfflineRecognitionLanguages(emptyList(),emptyList(),emptyList()))}
  var speechStatus by remember{mutableStateOf("Offline speech is device-managed. Check installed language packs before use.")}
  val voiceController=remember(context){OfflineVoiceController(context,onResult={spoken->draft=if(draft.isBlank())spoken else "$draft $spoken"},onError={runtimeMessage=it;speechStatus=it},onListeningChanged={voiceListening=it},initialLanguageTag=speechLanguageTag,initialTtsVoiceName=ttsVoiceName,onVoiceCatalogChanged={voices->offlineTtsVoices=voices;if(ttsVoiceName==null)ttsVoiceName=voices.firstOrNull()?.name})}
+ LaunchedEffect(pronunciationDictionary){ runCatching { voiceController.setPronunciationDictionary(pronunciationDictionary) }.onFailure { speechStatus=it.message ?: "Invalid pronunciation dictionary" } }
  var loadingModel by remember{mutableStateOf(false)}
  var sending by remember{mutableStateOf(false)}
  var showNewProject by remember{mutableStateOf(false)}
@@ -694,7 +696,7 @@ private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LI
      }
     )
     Section.SETTINGS->SettingsScreen(
-     speechLanguageTag,ttsVoiceName,offlineTtsVoices,recognitionLanguages,speechStatus,responseStyle,darkAppearance,accentName,engineOptimization,fontFamilyName,customBackgroundUri,
+     speechLanguageTag,ttsVoiceName,offlineTtsVoices,recognitionLanguages,speechStatus,pronunciationDictionary,responseStyle,darkAppearance,accentName,engineOptimization,fontFamilyName,customBackgroundUri,
      {style->responseStyle=style;personalizationPrefs.edit().putString("response_style",style).apply()},
      {name->accentName=name;personalizationPrefs.edit().putString("accent_name",name).apply()},
      {enabled->darkAppearance=enabled;personalizationPrefs.edit().putBoolean("dark_appearance",enabled).apply()},
@@ -713,7 +715,8 @@ private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LI
      {speechStatus="Checking installed and downloadable on-device language packs…";voiceController.checkRecognitionSupport{support->recognitionLanguages=support;speechStatus="Language support refreshed for $speechLanguageTag."}},
      {voiceController.downloadRecognitionLanguage{speechStatus=it}},
      {name->voiceController.setTtsVoice(name);ttsVoiceName=name;speechPrefs.edit().putString("tts_voice_name",name).apply();speechStatus="Offline voice selected."},
-     {voiceController.speak("Molecularis offline speech is ready.")}
+     {voiceController.speak("Molecularis offline speech is ready.")},
+     {value->pronunciationDictionary=value;speechPrefs.edit().putString("pronunciation_dictionary",value).apply()}
     )
    }
   }}}
@@ -1051,6 +1054,7 @@ private suspend fun readDatasetBounded(context:Context,uri:Uri):String = withCon
  voices:List<org.molecularis.app.features.OfflineTtsVoice>,
  recognition:org.molecularis.app.features.OfflineRecognitionLanguages,
  speechStatus:String,
+ pronunciationDictionary:String,
  responseStyle:String,
  darkAppearance:Boolean,
  accentName:String,
@@ -1067,7 +1071,8 @@ private suspend fun readDatasetBounded(context:Context,uri:Uri):String = withCon
  onCheckLanguages:()->Unit,
  onDownloadLanguage:()->Unit,
  onVoiceSelect:(String)->Unit,
- onTestVoice:()->Unit
+ onTestVoice:()->Unit,
+ onPronunciationChange:(String)->Unit
 ){
  val context=LocalContext.current
  val securityPrefs=remember(context){context.getSharedPreferences("molecularis_security",Context.MODE_PRIVATE)}
@@ -1259,6 +1264,11 @@ private suspend fun readDatasetBounded(context:Context,uri:Uri):String = withCon
     }
     OutlinedButton(onClick=onTestVoice,modifier=Modifier.fillMaxWidth(),enabled=voices.isNotEmpty()){Icon(Icons.Default.VolumeUp,null);Spacer(Modifier.width(8.dp));Text("Test offline voice")}
     Text(speechStatus,color=MaterialTheme.colorScheme.primary,style=MaterialTheme.typography.bodySmall)
+    Text("Custom biochemical pronunciations",style=MaterialTheme.typography.titleMedium,fontWeight=FontWeight.SemiBold)
+    Text("One entry per line: term=spoken form. Example: ATP=A T P. Entries stay on this device and are applied to local narration.",style=MaterialTheme.typography.bodySmall,color=Muted)
+    var pronunciationDraft by remember(pronunciationDictionary){mutableStateOf(pronunciationDictionary)}
+    OutlinedTextField(value=pronunciationDraft,onValueChange={pronunciationDraft=it.take(8000)},modifier=Modifier.fillMaxWidth(),minLines=3,maxLines=6,label={Text("Pronunciation dictionary")})
+    Button(onClick={onPronunciationChange(pronunciationDraft)},modifier=Modifier.fillMaxWidth()){Text("Save pronunciations")}
     Text("Language pack availability is controlled by Android. Android 13+ can expose on-device recognition pack downloads; Android 12 can use already-installed offline recognizers.",style=MaterialTheme.typography.bodySmall,color=Muted)
    }
   }

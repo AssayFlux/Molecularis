@@ -31,12 +31,12 @@ This roadmap is outcome-based. Complete and validate one usable vertical slice a
 - [x] Persist original book metadata in Room; extracted content is now created separately in Knowledge Pool.
 - [x] Preserve PDF page numbers in extracted passage records (chapter-boundary detection remains open).
 - [x] Normalize and chunk extracted text into page-aware passages.
-- [ ] Move Knowledge Pool processing to resumable WorkManager jobs with cancellation/recovery. Current foreground processing now writes to a hidden staging book and atomically swaps passages only after successful full extraction; failed/cancelled re-analysis preserves the previous passage set and reviewed source. Abandoned staging rows left by process death are reclaimed after seven days; WorkManager persistence and resume remain open.
+- [x] Move Knowledge Pool processing to resumable WorkManager jobs with cancellation/recovery. The unique per-book worker checkpoints each page and commits page passages, audit and next-page cursor transactionally; cancellation preserves the previously approved passage set.
 - [x] Add import progress/error feedback and clean up partially imported book rows/files on failure.
 - [x] Add textbook deletion with Room cascade and local PDF file cleanup.
 - [ ] Add duplicate detection and safe reimport/replace workflow.
 
-**Current status:** Library stores the selected original PDF unchanged. Knowledge Pool now performs on-device page OCR after the professor explicitly starts processing, writes passages in bounded batches, detects conservative bibliographic metadata and possible chapter/topic headings, calculates a heuristic readiness score, and provides professor review/approval. The current 5,000-page and 25-million-character limits apply. Processing is foreground-only; resumable WorkManager processing, duplicate detection, progress recovery and direct PDF text-layer extraction remain open.
+**Current status:** Library stores the selected original PDF unchanged. Knowledge Pool uses a unique foreground WorkManager job with per-page transactional checkpoints, progress reporting and cancellation; a restart resumes from the last committed page. It writes passages in bounded batches, detects conservative metadata/topic candidates, calculates a heuristic readiness score and requires professor review. File SHA-256 duplicate detection and a safe re-analysis staging flow exist. The current 5,000-page and 25-million-character limits apply. Direct PDF text-layer extraction and device stress testing remain open.
 
 **Exit criteria:** a professor can import a permitted PDF, inspect extraction status and retrieve its extracted text while offline.
 
@@ -109,7 +109,7 @@ This roadmap is outcome-based. Complete and validate one usable vertical slice a
 - [x] Add Wikimedia Commons image search restricted to HTTPS raster thumbnails with declared license metadata; cache bounded JPEG/PNG/WebP files locally with a JSON sidecar containing source, license, attribution and SHA-256.
 - [x] Add in-studio editing for each node's label, teaching detail and biochemical role, plus each connection's label and relationship type.
 - [x] Persist custom diagram edits (Room-backed, versioned JSON record; reopen and delete from Teaching Studio).
-- [ ] Link diagram steps to slide/narration segments (scheduled for Phase 6).
+- [x] Link diagram steps to slide/narration segments (proportional reveal progress follows the active narrated slide; timing validation remains device-dependent).
 
 **Current status:** the diagram engine now has four reusable, typed templates (metabolic pathway, reaction mechanism, feedback regulation and molecular interaction), explicit node positions and biochemical roles, reaction/activation/inhibition/binding/transport edges, coordinate and topology validation, escaped SVG rendering, progressive reveal, and pinch-zoom/two-axis pan in a JavaScript-disabled WebView. Teaching Studio exposes editable component names and enzyme/reaction labels, plus per-node label/detail/role editing and per-edge relationship/label editing. Edits are validated before preview. Templates are structural teaching aids, not chemically validated reaction models; physical-device gesture checks, custom diagram persistence is implemented with a versioned JSON codec and encrypted Room storage; domain-specific stoichiometry/compartments and slide/narration synchronization remain open. Commons image search is optional; only results with declared license metadata are shown, and cached assets retain their attribution/license sidecar. Image insertion into diagram nodes and license-specific reuse review remain open.\n\n**Exit criteria:** at least one pathway can be generated from structured components and revealed in sync with its explanation.
 
@@ -119,13 +119,14 @@ This roadmap is outcome-based. Complete and validate one usable vertical slice a
 
 - [x] Reuse voice selection and preview in the app settings.
 - [x] Reuse Android local-voice readiness checks and add long-script narration to the Teaching Studio (device voice-pack validation remains open).
-- [x] Add adjustable narration rate (0.75×–1.35×); pronunciation dictionary, inserted pauses and emphasis controls remain open.
+- [x] Add adjustable narration rate (0.75×–1.35×) and a professor-editable biochemical pronunciation dictionary for local TTS.
+- [ ] Add configurable inserted pauses and emphasis controls (Android TTS engine support varies).
 - [x] Synchronize slide-segment narration with slide changes and proportional SVG reveal progress in the Teaching Studio (device timing verification remains open).
 - [x] Add manual per-slide narration using the installed Android TTS voice.\n- [x] Add play, pause, resume, seek and stop controls; resume restarts the current speech segment because Android TTS does not expose character-accurate pause/resume.
 - [x] Add Android audio-focus requests and transient/permanent interruption handling; headset/Bluetooth tests remain open.
 - [ ] Add optional local speech engine only after device and license evaluation.
 
-**Current status:** the Teaching Studio can read its current outline aloud using an installed Android offline TTS voice, splitting long scripts into queued chunks. A presenter can manually request offline TTS for the current slide. Slide-segment narration now advances the presenter slide and proportional diagram reveal step; play/pause/resume/seek/stop controls, adjustable speech rate and Android audio-focus interruption handling are implemented. Resume restarts the current segment, not the exact spoken character. Pronunciation dictionaries, inserted pauses, emphasis controls, Bluetooth/headset testing and physical-device timing validation remain open.
+**Current status:** slide-segment narration advances the presenter slide and proportional diagram reveal step. Play/pause/resume/seek/stop, adjustable speech rate and Android audio-focus interruption handling are implemented. Resume restarts the current segment, not the exact spoken character. A local professor-editable pronunciation dictionary supports terms such as ATP, NADH, NADPH and CoA, with custom term=spoken-form entries. Configurable inserted pauses, emphasis controls, Bluetooth/headset testing and physical-device timing validation remain open. The optional alternative local speech engine is deferred until device, licensing and quality evaluation are possible.
 
 **Exit criteria:** a prepared lesson plays with understandable voice, slides and diagram steps synchronized, including offline operation on a validated device/voice pack.
 
@@ -164,7 +165,7 @@ The importer accepts PDFs up to 5,000 pages. OCR is performed sequentially and e
 
 ## First milestone status
 
-The first vertical slice is implemented in the repository: **import one PDF → extract page text with on-device OCR → search local passages → prepare and edit a structured lesson outline → preview outline-derived slides → save and reopen the lesson → read the outline aloud with Android TTS.** The earlier baseline commit passed unit tests, lint and debug APK assembly. The 5,000-page importer, progressive lesson diagram and cancellation-safe cleanup commits have CI runs queued or in progress; do not treat those commits as verified until their workflows finish. A physical-device/offline acceptance test has not yet been performed. This remains a foundation; it is not yet an AI-generated lecture or a synchronized slide-and-voice presentation.
+The current vertical slice includes **import PDF → checkpointed OCR → reviewed Knowledge Pool → local retrieval → editable lesson → slide preview and PDF/PPTX export → saved lesson → structured SVG diagram with reveal → synchronized slide narration**. This is a software implementation milestone, not a release acceptance claim. Physical-device/offline acceptance, textbook-based scientific review and remaining Phase 7/8 release gates are still required.
 
 ## Delivery discipline
 
