@@ -3,6 +3,9 @@ package org.molecularis.app.features
 import android.annotation.TargetApi
 import android.content.Context
 import android.content.Intent
+import android.media.AudioAttributes
+import android.media.AudioFocusRequest
+import android.media.AudioManager
 import android.os.Build
 import android.os.Bundle
 import android.speech.RecognitionListener
@@ -64,6 +67,9 @@ class OfflineVoiceController(
     private val onVoiceCatalogChanged: (List<OfflineTtsVoice>) -> Unit = {}
 ) : Closeable {
     private val appContext = context.applicationContext
+    private val audioManager = appContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+    private var audioFocusRequest: AudioFocusRequest? = null
+    private var narrationRate = 1.0f
     private var recognizer: SpeechRecognizer? = null
     private var textToSpeech: TextToSpeech? = null
     private var offlineVoices: List<Voice> = emptyList()
@@ -71,8 +77,7 @@ class OfflineVoiceController(
     private var selectedVoiceName: String? = initialTtsVoiceName
     private var languageTag: String = normalizeLanguageTag(initialLanguageTag)
     private var closed = false
-    private var narrationChunks: List<String> = emptyList()
-    private var narrationSlideIndexes: List<Int> = emptyList()
+    private var narrationChunks: List<NarrationChunk> = emptyList()
     private var narrationIndex = 0
     private var narrationPaused = false
     private var narrationUtteranceId: String? = null
@@ -230,7 +235,7 @@ class OfflineVoiceController(
     }
 
     /** Speak long teaching scripts as resumable slide-sized segments. */
-    fun speak(text: String) = speakSegments(splitSpeech(text, 2800))
+    fun speak(text: String) = speakSegments(listOf(text))
 
     fun speakSegments(
         segments: List<String>,
@@ -244,17 +249,22 @@ class OfflineVoiceController(
             onError("No offline speech voice is installed. Install a local voice in Android text-to-speech settings.")
             return
         }
-        val safeSegments = segments.map(String::trim).filter(String::isNotBlank)
+        val safeSegments = segments.map { it.trim() }.filter { it.isNotBlank() }
         if (safeSegments.isEmpty()) { onError("There is no lesson text to narrate."); return }
         engine.voice = voice
         stopSpeaking()
-        narrationChunks = safeSegments.flatMap { splitSpeech(it, 2600) }
-        narrationSlideIndexes = safeSegments.flatMapIndexed { slide, segment -> splitSpeech(segment, 2600).map { slide } }
+        narrationChunks = LessonNarrationTimeline.build(safeSegments)
         narrationIndex = 0
         narrationPaused = false
         narrationOnSegmentStarted = onSegmentStarted
         narrationOnDone = onDone
         narrationOnStateChanged = onStateChanged
+        if (!requestNarrationAudioFocus()) {
+            clearNarration()
+            onError("Audio focus is unavailable. Pause other audio and try again.")
+            return
+        }
+        engine.setSpeechRate(narrationRate)
         speakCurrentSegment()
     }
 
@@ -270,7 +280,37 @@ class OfflineVoiceController(
         }
         val id = "molecularis-narration-${narrationIndex}-${System.nanoTime()}"
         narrationUtteranceId = id
-        engine.speak(narrationChunks[narrationIndex], TextToSpeech.QUEUE_FLUSH, null, id)
+        engine.speak(narrationChunks[narrationIndex].text, TextToSpeech.QUEUE_FLUSH, null, id)
+    }
+
+    fun setSpeechRate(rate: Float) {
+        require(rate in 0.75f..1.35f) { "Narration speed must be between 0.75× and 1.35×." }
+        narrationRate = rate
+        textToSpeech?.setSpeechRate(rate)
+    }
+
+    private fun requestNarrationAudioFocus(): Boolean {
+        val request = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK)
+            .setAudioAttributes(AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_MEDIA)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                .build())
+            .setWillPauseWhenDucked(true)
+            .setOnAudioFocusChangeListener { change ->
+                when (change) {
+                    AudioManager.AUDIOFOCUS_LOSS_TRANSIENT, AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> pauseSpeaking()
+                    AudioManager.AUDIOFOCUS_GAIN -> if (narrationPaused) resumeSpeaking()
+                    AudioManager.AUDIOFOCUS_LOSS -> stopSpeaking()
+                }
+            }
+            .build()
+        audioFocusRequest = request
+        return audioManager.requestAudioFocus(request) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED
+    }
+
+    private fun abandonNarrationAudioFocus() {
+        audioFocusRequest?.let { runCatching { audioManager.abandonAudioFocusRequest(it) } }
+        audioFocusRequest = null
     }
 
     fun pauseSpeaking() {
@@ -290,34 +330,35 @@ class OfflineVoiceController(
     fun seekSpeakingTo(slideIndex: Int) {
         if (narrationChunks.isEmpty()) return
         textToSpeech?.stop()
-        narrationIndex = narrationSlideIndexes.indexOfFirst { it >= slideIndex }
-            .takeIf { it >= 0 } ?: narrationChunks.lastIndex
+        narrationIndex = LessonNarrationTimeline.firstChunkForSlide(narrationChunks, slideIndex)
         narrationPaused = false
         narrationOnStateChanged(true, false)
         speakCurrentSegment()
     }
 
     fun stopSpeaking() {
+        val stateChanged = narrationOnStateChanged
         textToSpeech?.stop()
         clearNarration()
-        narrationOnStateChanged(false, false)
+        stateChanged(false, false)
     }
 
     private fun clearNarration() {
         narrationChunks = emptyList()
-        narrationSlideIndexes = emptyList()
         narrationIndex = 0
         narrationPaused = false
         narrationUtteranceId = null
         narrationOnSegmentStarted = {}
         narrationOnDone = {}
+        narrationOnStateChanged = { _, _ -> }
+        abandonNarrationAudioFocus()
     }
 
     private fun engineProgressListener() {
         textToSpeech?.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
             override fun onStart(utteranceId: String?) {
                 if (utteranceId != narrationUtteranceId || narrationPaused) return
-                narrationOnSegmentStarted(narrationSlideIndexes.getOrElse(narrationIndex) { narrationIndex })
+                narrationOnSegmentStarted(narrationChunks.getOrNull(narrationIndex)?.slideIndex ?: narrationIndex)
                 narrationOnStateChanged(true, false)
             }
             override fun onDone(utteranceId: String?) {
@@ -339,24 +380,6 @@ class OfflineVoiceController(
                 }
             }
         })
-    }
-
-    private fun splitSpeech(text: String, maxChars: Int): List<String> {
-        val remaining = text.trim()
-        if (remaining.length <= maxChars) return listOf(remaining)
-        val result = mutableListOf<String>()
-        var start = 0
-        while (start < remaining.length) {
-            var end = (start + maxChars).coerceAtMost(remaining.length)
-            if (end < remaining.length) {
-                val boundary = remaining.lastIndexOfAny(charArrayOf('.', '!', '?', '\n', ' '), end)
-                if (boundary > start + maxChars / 2) end = boundary + 1
-            }
-            result += remaining.substring(start, end).trim()
-            start = end
-            while (start < remaining.length && remaining[start].isWhitespace()) start++
-        }
-        return result.filter(String::isNotBlank)
     }
 
     @TargetApi(Build.VERSION_CODES.S)

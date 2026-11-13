@@ -119,13 +119,13 @@ This roadmap is outcome-based. Complete and validate one usable vertical slice a
 
 - [x] Reuse voice selection and preview in the app settings.
 - [x] Reuse Android local-voice readiness checks and add long-script narration to the Teaching Studio (device voice-pack validation remains open).
-- [ ] Add narration pacing, pauses, pronunciation dictionary and emphasis controls.
+- [x] Add adjustable narration rate (0.75×–1.35×); pronunciation dictionary, inserted pauses and emphasis controls remain open.
 - [x] Synchronize slide-segment narration with slide changes and proportional SVG reveal progress in the Teaching Studio (device timing verification remains open).
 - [x] Add manual per-slide narration using the installed Android TTS voice.\n- [x] Add play, pause, resume, seek and stop controls; resume restarts the current speech segment because Android TTS does not expose character-accurate pause/resume.
-- [ ] Add audio focus, interruption handling and headset/Bluetooth tests.
+- [x] Add Android audio-focus requests and transient/permanent interruption handling; headset/Bluetooth tests remain open.
 - [ ] Add optional local speech engine only after device and license evaluation.
 
-**Current status:** the Teaching Studio can read its current outline aloud using an installed Android offline TTS voice, splitting long scripts into queued chunks. A presenter can manually request offline TTS for the current slide. Slide-segment narration now advances the presenter slide and proportional diagram reveal step; play/pause/resume/seek/stop controls are present. Resume restarts the current segment, not the exact spoken character. Audio focus/interruption handling and physical device/headset validation remain open.
+**Current status:** the Teaching Studio can read its current outline aloud using an installed Android offline TTS voice, splitting long scripts into queued chunks. A presenter can manually request offline TTS for the current slide. Slide-segment narration now advances the presenter slide and proportional diagram reveal step; play/pause/resume/seek/stop controls, adjustable speech rate and Android audio-focus interruption handling are implemented. Resume restarts the current segment, not the exact spoken character. Pronunciation dictionaries, inserted pauses, emphasis controls, Bluetooth/headset testing and physical-device timing validation remain open.
 
 **Exit criteria:** a prepared lesson plays with understandable voice, slides and diagram steps synchronized, including offline operation on a validated device/voice pack.
 

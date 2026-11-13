@@ -50,7 +50,7 @@ import org.molecularis.app.features.TopicOrganization
 import java.util.UUID
 
 @Composable
-fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localModelAvailable: Boolean, onSpeak: (String) -> Unit, onGenerateWithLocalModel: suspend (String) -> String) {
+fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localModelAvailable: Boolean, onSpeakSlides: (List<String>, (Int) -> Unit, (Boolean, Boolean) -> Unit) -> Unit, onPauseNarration: () -> Unit, onResumeNarration: () -> Unit, onStopNarration: () -> Unit, onSeekNarration: (Int) -> Unit, onNarrationRateChange: (Float) -> Unit, onGenerateWithLocalModel: suspend (String) -> String) {
     val scope = rememberCoroutineScope()
     val context = androidx.compose.ui.platform.LocalContext.current
     val books by database.bookDao().books().collectAsState(initial = emptyList())
@@ -66,6 +66,9 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localMo
     var generatingExplanation by remember { mutableStateOf(false) }
     var slidePreview by remember { mutableStateOf(false) }
     var slideIndex by remember { mutableIntStateOf(0) }
+    var narrationPlaying by remember { mutableStateOf(false) }
+    var narrationPaused by remember { mutableStateOf(false) }
+    var narrationRate by remember { mutableFloatStateOf(1.0f) }
     var slideTheme by remember { mutableStateOf(SlideTheme.CLASSIC) }
     var diagramPreview by remember { mutableStateOf(false) }
     var diagramStep by remember { mutableIntStateOf(0) }
@@ -510,13 +513,13 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localMo
                     OutlinedButton(onClick = { pdfExportLauncher.launch(topic.ifBlank { "Molecularis lesson" } + ".pdf") }, modifier = Modifier.fillMaxWidth(), enabled = slides.isNotEmpty()) { Text("Export PDF · offline") }
                     OutlinedButton(onClick = { pptxExportLauncher.launch(topic.ifBlank { "Molecularis lesson" } + ".pptx") }, modifier = Modifier.fillMaxWidth(), enabled = slides.isNotEmpty()) { Text("Export editable PowerPoint") }
                     Button(
-                        onClick = { onSpeak(outline) },
+                        onClick = { slideIndex = 0; slidePreview = true; onSpeakSlides(slides.map { (it.title + ". " + it.points.joinToString(". ")).take(5200) }, { index -> slideIndex = index; if (editedDiagram.steps.isNotEmpty()) diagramStep = ((index.toFloat() / slides.size.coerceAtLeast(1)) * editedDiagram.steps.size).toInt().coerceIn(0, editedDiagram.steps.lastIndex) }, { playing, paused -> narrationPlaying = playing; narrationPaused = paused }) },
                         enabled = voiceAvailable,
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Icon(Icons.Default.VolumeUp, contentDescription = null)
                         Spacer(Modifier.width(8.dp))
-                        Text("Teach this lesson aloud · offline")
+                        Text("Start synchronized lecture · offline")
                     }
                     if (!voiceAvailable) {
                         Text(
@@ -724,19 +727,34 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localMo
                     TextButton(
                         onClick = {
                             val slide = slides[slideIndex]
-                            onSpeak((slide.title + ". " + slide.points.joinToString(". ")).take(2800))
+                            onSpeakSlides(listOf((slide.title + ". " + slide.points.joinToString(". ")).take(5200)), { }, { playing, paused -> narrationPlaying = playing; narrationPaused = paused })
                         },
                         enabled = voiceAvailable
                     ) {
                         Icon(Icons.Default.VolumeUp, contentDescription = null)
                         Text("Read this slide aloud")
                     }
+                    Text("Narration pace · " + String.format(java.util.Locale.ROOT, "%.2f×", narrationRate), style = MaterialTheme.typography.labelMedium)
+                    Slider(
+                        value = narrationRate,
+                        onValueChange = { narrationRate = it; onNarrationRateChange(it) },
+                        valueRange = 0.75f..1.35f
+                    )
+                    if (narrationPlaying || narrationPaused) {
+                        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
+                            TextButton(onClick = { if (narrationPaused) onResumeNarration() else onPauseNarration() }) {
+                                Text(if (narrationPaused) "Resume" else "Pause")
+                            }
+                            TextButton(onClick = { onStopNarration(); narrationPlaying = false; narrationPaused = false }) { Text("Stop") }
+                        }
+                        Text("Narration follows the active slide. Resume restarts the current spoken segment.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
                     Row(verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
-                        TextButton(onClick = { slideIndex = (slideIndex - 1).coerceAtLeast(0) }, enabled = slideIndex > 0) {
+                        TextButton(onClick = { slideIndex = (slideIndex - 1).coerceAtLeast(0); if (narrationPlaying || narrationPaused) onSeekNarration(slideIndex) }, enabled = slideIndex > 0) {
                             Icon(Icons.Default.ArrowBack, contentDescription = null)
                             Text("Previous")
                         }
-                        TextButton(onClick = { slideIndex = (slideIndex + 1).coerceAtMost(slides.lastIndex) }, enabled = slideIndex < slides.lastIndex) {
+                        TextButton(onClick = { slideIndex = (slideIndex + 1).coerceAtMost(slides.lastIndex); if (narrationPlaying || narrationPaused) onSeekNarration(slideIndex) }, enabled = slideIndex < slides.lastIndex) {
                             Text("Next")
                             Icon(Icons.Default.ArrowForward, contentDescription = null)
                         }
