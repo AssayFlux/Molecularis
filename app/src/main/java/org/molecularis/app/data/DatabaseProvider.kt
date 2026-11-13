@@ -137,7 +137,7 @@ private val MIGRATION_13_14 = object : Migration(13, 14) {
         db.execSQL("ALTER TABLE knowledge_books ADD COLUMN emptyPages INTEGER NOT NULL DEFAULT 0")
         db.execSQL("ALTER TABLE knowledge_books ADD COLUMN shortTextPages INTEGER NOT NULL DEFAULT 0")
         db.execSQL("ALTER TABLE knowledge_books ADD COLUMN duplicatePages INTEGER NOT NULL DEFAULT 0")
-        db.execSQL("CREATE TABLE IF NOT EXISTS knowledge_page_audits (stagingBookId TEXT NOT NULL, pageNumber INTEGER NOT NULL, charCount INTEGER NOT NULL, fingerprint TEXT NOT NULL, qualityFlag TEXT NOT NULL, PRIMARY KEY(stagingBookId,pageNumber))
+        db.execSQL("CREATE TABLE IF NOT EXISTS knowledge_page_audits (stagingBookId TEXT NOT NULL, pageNumber INTEGER NOT NULL, charCount INTEGER NOT NULL, fingerprint TEXT NOT NULL, qualityFlag TEXT NOT NULL, PRIMARY KEY(stagingBookId,pageNumber))")
         db.execSQL("CREATE INDEX IF NOT EXISTS index_knowledge_page_audits_stagingBookId ON knowledge_page_audits(stagingBookId)")
         db.execSQL("CREATE INDEX IF NOT EXISTS index_knowledge_page_audits_fingerprint ON knowledge_page_audits(fingerprint)")
     }
