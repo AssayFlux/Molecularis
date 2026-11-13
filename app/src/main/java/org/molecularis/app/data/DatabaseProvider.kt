@@ -157,6 +157,14 @@ private val MIGRATION_15_16 = object : Migration(15, 16) {
     }
 }
 
+private val MIGRATION_16_17 = object : Migration(16, 17) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("CREATE TABLE IF NOT EXISTS scheduled_lectures (id TEXT NOT NULL, lessonId TEXT NOT NULL, title TEXT NOT NULL, audienceLevel TEXT NOT NULL, durationMinutes INTEGER NOT NULL, languageTag TEXT NOT NULL, scheduledAt INTEGER NOT NULL, status TEXT NOT NULL, workId TEXT, lastError TEXT, updatedAt INTEGER NOT NULL, PRIMARY KEY(id))")
+        db.execSQL("CREATE INDEX IF NOT EXISTS index_scheduled_lectures_scheduledAt ON scheduled_lectures(scheduledAt)")
+        db.execSQL("CREATE INDEX IF NOT EXISTS index_scheduled_lectures_status ON scheduled_lectures(status)")
+    }
+}
+
 object DatabaseProvider {
     private const val LEGACY_NAME = "molecularis-local.db"
     private const val ENCRYPTED_NAME = "molecularis-secure.db"
