@@ -246,11 +246,12 @@ class ScheduledLectureWorker(context: Context, params: WorkerParameters) : Corou
 
     private suspend fun createOfflineEngine(locale: Locale): TextToSpeech =
         suspendCancellableCoroutine { continuation ->
-            lateinit var tts: TextToSpeech
-            tts = TextToSpeech(applicationContext) { status ->
+            val holder = java.util.concurrent.atomic.AtomicReference<TextToSpeech?>()
+            val created = TextToSpeech(applicationContext) { status ->
+                val tts = holder.get()
                 if (!continuation.isActive) {
-                    tts.shutdown()
-                } else if (status != TextToSpeech.SUCCESS) {
+                    tts?.shutdown()
+                } else if (status != TextToSpeech.SUCCESS || tts == null) {
                     continuation.resumeWithException(IllegalStateException("Android text-to-speech initialization failed."))
                 } else {
                     val offlineVoice = tts.voices
@@ -271,7 +272,8 @@ class ScheduledLectureWorker(context: Context, params: WorkerParameters) : Corou
                     }
                 }
             }
-            continuation.invokeOnCancellation { tts.stop(); tts.shutdown() }
+            holder.set(created)
+            continuation.invokeOnCancellation { created.stop(); created.shutdown() }
         }
 
     private suspend fun speakChunk(tts: TextToSpeech, text: String, utteranceId: String) {
