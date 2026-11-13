@@ -29,6 +29,7 @@ import org.molecularis.app.data.BookEntity
 import org.molecularis.app.data.BookPassageEntity
 import java.io.File
 import java.util.UUID
+import java.security.MessageDigest
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -64,6 +65,15 @@ fun BookLibraryScreen(database: AppDatabase) {
                             localFile!!.outputStream().buffered().use { output -> input.copyTo(output) }
                         } ?: error("Could not open the selected PDF.")
                     }
+                    val checksum = withContext(Dispatchers.IO) { sha256File(localFile!!) }
+                    val duplicate = database.bookDao().bookBySha256(checksum)
+                    if (duplicate != null) {
+                        localFile!!.delete()
+                        localFile = null
+                        selectedBook = duplicate
+                        status = "This exact PDF is already in Library as " + duplicate.title + ". No duplicate copy was added."
+                        return@launch
+                    }
                     val book = BookEntity(
                         id = id,
                         title = name.removeSuffix(".pdf").removeSuffix(".PDF"),
@@ -71,7 +81,8 @@ fun BookLibraryScreen(database: AppDatabase) {
                         localPath = localFile!!.absolutePath,
                         sourceUri = uri.toString(),
                         pageCount = 0,
-                        extractedChars = 0
+                        extractedChars = 0,
+                        fileSha256 = checksum
                     )
                     database.bookDao().addBook(book)
                     status = "Added ${book.title} to Library. The original PDF is preserved unchanged. Open Knowledge Pool when you are ready to extract, analyse and organize its content."
@@ -199,4 +210,17 @@ private fun splitChunks(text: String, maxChars: Int = 1100): List<String> {
         start = end
     }
     return chunks
+}
+
+private fun sha256File(file: File): String {
+    val digest = MessageDigest.getInstance("SHA-256")
+    file.inputStream().buffered().use { input ->
+        val buffer = ByteArray(64 * 1024)
+        while (true) {
+            val count = input.read(buffer)
+            if (count < 0) break
+            digest.update(buffer, 0, count)
+        }
+    }
+    return digest.digest().joinToString("") { "%02x".format(it) }
 }
