@@ -82,6 +82,7 @@ data class BookPassageFts(val text: String)
 @Dao interface BookDao {
  @Query("SELECT * FROM books WHERE id NOT GLOB '__stage__*' ORDER BY importedAt DESC") fun books():Flow<List<BookEntity>>
  @Insert suspend fun addBook(book:BookEntity)
+ @Query("SELECT * FROM books WHERE id=:bookId LIMIT 1") suspend fun book(bookId:String):BookEntity?
  @Insert suspend fun addPassages(passages:List<BookPassageEntity>)
  @Query("DELETE FROM book_passages WHERE bookId=:bookId") suspend fun deletePassages(bookId:String)
  @Query("SELECT * FROM book_passages WHERE bookId=:bookId ORDER BY pageNumber,chunkIndex") suspend fun passages(bookId:String):List<BookPassageEntity>
