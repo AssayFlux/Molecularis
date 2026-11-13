@@ -23,6 +23,9 @@ import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.molecularis.app.data.*
+import org.molecularis.app.features.KnowledgeProcessingWorker
+import androidx.work.*
+import kotlinx.coroutines.flow.collect
 import org.molecularis.app.features.OfflineDocumentReader
 import java.io.File
 import java.util.UUID
@@ -66,124 +69,32 @@ fun KnowledgePoolScreen(database: AppDatabase) {
     fun processBook(book: BookEntity) {
         if (processingId != null) return
         processingId = book.id
-        status = "Preparing source analysis for ${book.title}…"
+        status = "Queueing durable textbook analysis for " + book.title + "…"
+        val request = OneTimeWorkRequestBuilder<KnowledgeProcessingWorker>()
+            .setInputData(workDataOf(KnowledgeProcessingWorker.KEY_BOOK_ID to book.id))
+            .addTag("molecularis-knowledge")
+            .build()
+        WorkManager.getInstance(context).enqueueUniqueWork(
+            "knowledge-" + book.id, ExistingWorkPolicy.KEEP, request
+        )
         scope.launch {
-            var chars = 0
-            var passageCount = 0
-            var pending = mutableListOf<BookPassageEntity>()
-            val pageSamples = mutableListOf<Pair<Int, String>>()
-            var pagesWithText = 0
-            var emptyPages = 0
-            var shortTextPages = 0
-            var duplicatePages = 0
-            val pageFingerprints = mutableSetOf<String>()
-            val candidates = linkedMapOf<String, Pair<String, Pair<Int, Pair<Float, String>>>>()
-            val reader = OfflineDocumentReader(context)
-            val stagingBookId = "__stage__${UUID.randomUUID()}"
-            var stageCreated = false
-            try {
-                require(File(book.localPath).isFile) { "The original PDF is missing from local storage." }
-                database.bookDao().addBook(book.copy(id = stagingBookId))
-                stageCreated = true
-                val summary = try {
-                    reader.readPdfPages(Uri.fromFile(File(book.localPath)), maxPdfPages = 5_000) { page, total, text ->
-                        chars += text.length
-                        require(chars <= KNOWLEDGE_MAX_CHARS) { "The 25 million character processing safety limit was reached." }
-                        if (text.isBlank()) {
-                            emptyPages++
-                        } else {
-                            pagesWithText++
-                            if (text.trim().length < 50) shortTextPages++
-                            if (page <= 18) pageSamples += page to text.take(4_000)
-                            val normalizedPage = text.lowercase().replace(Regex("\\s+"), " ").trim()
-                            val fingerprint = MessageDigest.getInstance("SHA-256")
-                                .digest(normalizedPage.toByteArray(Charsets.UTF_8))
-                                .joinToString("") { byte -> "%02x".format(byte) }
-                            if (!pageFingerprints.add(fingerprint)) duplicatePages++
-                        }
-                        val chunks = knowledgeChunks(text)
-                        chunks.forEachIndexed { index, chunk ->
-                            pending += BookPassageEntity(UUID.randomUUID().toString(), stagingBookId, index, page, chunk)
-                            if (pending.size >= 250) {
-                                database.bookDao().addPassages(pending)
-                                passageCount += pending.size
-                                pending = mutableListOf()
-                            }
-                        }
-                        detectChapterHeadings(text).forEach { (heading, confidence, evidence) ->
-                            val key = heading.lowercase().replace(Regex("\\s+"), " ").trim()
-                            if (key.length >= 4 && key !in candidates) candidates[key] = heading to (page to (confidence to evidence))
-                        }
-                        if (page % 10 == 0 || page == total) {
-                            status = "Analysing page $page of $total · $passageCount passages indexed · ${candidates.size} topic candidates"
-                        }
+            WorkManager.getInstance(context)
+                .getWorkInfosForUniqueWorkFlow("knowledge-" + book.id)
+                .collect { infos ->
+                    val info = infos.firstOrNull() ?: return@collect
+                    val page = info.progress.getInt("page", 0)
+                    val total = info.progress.getInt("total", 0)
+                    val passages = info.progress.getInt("passages", 0)
+                    status = when (info.state) {
+                        WorkInfo.State.ENQUEUED -> "Textbook analysis is queued for background processing."
+                        WorkInfo.State.RUNNING -> if (total > 0) "Analysing page " + page + " of " + total + " · " + passages + " passages indexed" else "Preparing textbook analysis…"
+                        WorkInfo.State.SUCCEEDED -> "Knowledge preparation complete for " + book.title + ". Review metadata and approve topic candidates before teaching."
+                        WorkInfo.State.FAILED -> "Analysis failed: " + (info.outputData.getString("error") ?: "unknown error")
+                        WorkInfo.State.CANCELLED -> "Analysis cancelled. Previously reviewed passages remain unchanged."
+                        WorkInfo.State.BLOCKED -> "Textbook analysis is waiting for its prerequisites."
                     }
-                } finally {
-                    reader.close()
+                    if (info.state.isFinished) processingId = null
                 }
-                if (pending.isNotEmpty()) {
-                    database.bookDao().addPassages(pending)
-                    passageCount += pending.size
-                }
-                require(summary.extractedChars > 0) { "No readable text was extracted. Check the PDF quality or OCR language." }
-                val opening = pageSamples.sortedBy { it.first }.joinToString(System.lineSeparator()) { it.second }
-                val detectedTitle = opening.lineSequence().map { it.trim() }.firstOrNull { it.length in 5..140 && !it.contains("copyright", true) } ?: book.title
-                val author = Regex("(?im)^(?:by|author[s]?:)\\s*(.{3,100})$").find(opening)?.groupValues?.get(1)?.trim().orEmpty()
-                val publisher = Regex("(?im)^.{0,30}(?:publishers?|press)\\s*$").find(opening)?.value?.trim().orEmpty()
-                val edition = Regex("(?i)(\\d{1,2}(?:st|nd|rd|th)\\s+edition|edition\\s*[:#]?\\s*\\d{1,2})").find(opening)?.value.orEmpty()
-                val subject = if (("$detectedTitle $opening").contains("biochem", true)) "Biochemistry" else "Needs subject review"
-                val chapters = candidates.values.sortedBy { it.second.first }.take(120)
-                val outline = chapters.joinToString(System.lineSeparator()) { it.second.first.toString() + ". " + it.first + " [confidence " + "%.2f".format(java.util.Locale.US, it.second.second.first) + "]" }
-                val pageCoverage = if (summary.pageCount > 0) pagesWithText.toDouble() / summary.pageCount else 0.0
-                val duplicateRatio = if (pagesWithText > 0) duplicatePages.toDouble() / pagesWithText else 0.0
-                val score = (
-                    (if (passageCount > 0) 20 else 0) +
-                    (pageCoverage * 25).toInt() +
-                    ((1.0 - duplicateRatio.coerceIn(0.0, 1.0)) * 15).toInt() +
-                    (if (chapters.isNotEmpty()) 15 else 0) +
-                    (if (author.isNotBlank()) 8 else 0) +
-                    (if (publisher.isNotBlank()) 5 else 0) +
-                    (if (edition.isNotBlank()) 5 else 0) +
-                    (if (summary.extractedChars.toDouble() / summary.pageCount.coerceAtLeast(1) >= 300.0) 7 else 0)
-                ).coerceIn(0, 100)
-                // Swap staged passages only after the complete PDF has been read and validated.
-                // Failed or cancelled re-analysis leaves the previous reviewed content intact.
-                database.bookDao().replacePassagesFromStage(book.id, stagingBookId)
-                stageCreated = false
-                database.bookDao().updateBookStats(book.id, summary.pageCount, summary.extractedChars)
-                val knowledgeId = database.knowledgePoolDao().forBook(book.id)?.id ?: UUID.randomUUID().toString()
-                database.knowledgePoolDao().saveBook(
-                    KnowledgeBookEntity(
-                        id = knowledgeId, bookId = book.id, detectedTitle = detectedTitle,
-                        author = author, publisher = publisher, edition = edition, subject = subject,
-                        summary = "Extraction audit: $pagesWithText/${summary.pageCount} pages contained OCR text; $emptyPages pages were empty; $shortTextPages pages had fewer than 50 characters; $duplicatePages pages repeated identical OCR text. Indexed $passageCount source-linked passages and detected ${chapters.size} possible headings. Readiness is heuristic, not a scientific accuracy score. Inspect flagged pages in the original PDF before approval.",
-                        chapterOutline = outline, extractedPageCount = summary.pageCount,
-                        extractedChars = summary.extractedChars, passageCount = passageCount,
-                        topicCount = chapters.size, qualityScore = score, reviewState = "needs_review"
-                    )
-                )
-                database.knowledgePoolDao().clearTopics(knowledgeId)
-                database.knowledgePoolDao().saveTopics(chapters.map { (name, info) ->
-                    KnowledgeTopicEntity(
-                        id = UUID.randomUUID().toString(), knowledgeBookId = knowledgeId,
-                        name = name, startPage = info.first, confidence = info.second.first,
-                        evidence = info.second.second
-                    )
-                })
-                status = "Knowledge preparation complete for ${book.title}. Review extracted metadata and approve topic candidates before generating teaching material."
-            } catch (cancelled: CancellationException) {
-                withContext(NonCancellable) {
-                    if (stageCreated) runCatching { database.bookDao().deleteBook(stagingBookId) }
-                }
-                throw cancelled
-            } catch (error: Exception) {
-                if (stageCreated) withContext(NonCancellable) {
-                    runCatching { database.bookDao().deleteBook(stagingBookId) }
-                }
-                status = "Analysis failed for ${book.title}: ${error.message ?: error.javaClass.simpleName}"
-            } finally {
-                processingId = null
-            }
         }
     }
 
@@ -196,7 +107,7 @@ fun KnowledgePoolScreen(database: AppDatabase) {
             KnowledgeMetric("Needs review", pool.count { it.reviewState != "approved" }.toString(), Modifier.weight(1f))
         }
         if (status.isNotBlank()) Text(status, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
-        if (processingId != null) LinearProgressIndicator(Modifier.fillMaxWidth())
+        if (processingId != null) { LinearProgressIndicator(Modifier.fillMaxWidth()); TextButton(onClick = { processingId?.let { WorkManager.getInstance(context).cancelUniqueWork("knowledge-" + it) } }) { Text("Cancel processing") } }
         if (selected != null) {
             TextButton(onClick = { selected = null }) { Text("← All knowledge sources") }
             Card(Modifier.fillMaxWidth()) {
