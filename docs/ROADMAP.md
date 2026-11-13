@@ -103,13 +103,13 @@ This roadmap is outcome-based. Complete and validate one usable vertical slice a
 
 - [x] Define an initial structured diagram schema for nodes, labels, connections and reveal steps (compartments and reaction-specific semantics remain open).
 - [x] Build a safe SVG generator from supported primitives with XML-escaped labels and bounded inputs.
-- [ ] Build SVG rendering, zoom and pan.
-- [ ] Add ordered reveal steps and animation timing.
-- [ ] Create first reusable templates: metabolic pathway, reaction mechanism, feedback regulation and molecular interaction.
+- [x] Build SVG rendering with pinch zoom and two-axis pan in the isolated WebView preview (physical-device gesture validation remains open).
+- [x] Add ordered reveal steps with progressive node/connection reveal; timed animation remains open.
+- [x] Create reusable metabolic pathway, reaction mechanism, feedback regulation and molecular interaction templates with typed biochemical nodes and edges.
 - [ ] Add curated online image search and permitted local caching with rights metadata.
-- [ ] Link diagram steps to slide and narration segments.
+- [ ] Link diagram steps to slide and narration segments (scheduled for Phase 6).
 
-**Current status:** a validated diagram data model, reveal-step filtering, XML-escaped SVG renderer and unit tests are implemented. Teaching Studio now displays a progressive SVG lesson-flow diagram from the editable slide outline, with step navigation. This is not yet a biochemical reaction/pathway editor; professor-authored node editing, pan/zoom, reusable pathway templates and synchronization with lesson narration remain open.\n\n**Exit criteria:** at least one pathway can be generated from structured components and revealed in sync with its explanation.
+**Current status:** the diagram engine now has four reusable, typed templates (metabolic pathway, reaction mechanism, feedback regulation and molecular interaction), explicit node positions and biochemical roles, reaction/activation/inhibition/binding/transport edges, coordinate and topology validation, escaped SVG rendering, progressive reveal, and pinch-zoom/two-axis pan in a JavaScript-disabled WebView. Teaching Studio exposes editable component names and enzyme/reaction labels. Templates are structural teaching aids, not chemically validated reaction models; physical-device gesture checks, richer node/edge editing, domain-specific stoichiometry/compartments, and slide/narration synchronization remain open.\n\n**Exit criteria:** at least one pathway can be generated from structured components and revealed in sync with its explanation.
 
 ## Phase 6 — Voice lecture and synchronization
 

@@ -1,6 +1,7 @@
 package org.molecularis.app.ui
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -30,10 +31,8 @@ import org.molecularis.app.features.LessonSlideBuilder
 import org.molecularis.app.features.SlideTheme
 import org.molecularis.app.features.LessonPptxExporter
 import org.molecularis.app.features.LessonPdfExporter
-import org.molecularis.app.features.BiochemicalDiagram
-import org.molecularis.app.features.DiagramNode
-import org.molecularis.app.features.DiagramConnection
-import org.molecularis.app.features.DiagramStep
+import org.molecularis.app.features.BiochemicalDiagramTemplate
+import org.molecularis.app.features.BiochemicalDiagramTemplates
 import org.molecularis.app.features.BiochemicalDiagramValidator
 import org.molecularis.app.features.BiochemicalSvgRenderer
 import org.molecularis.app.features.TeachingQualityPolicy
@@ -76,26 +75,20 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localMo
         }.onSuccess { status = "Editable PowerPoint exported." }
             .onFailure { status = "PowerPoint export failed: " + (it.message ?: "unknown error") }
     }
-    val diagram = remember(slides, topic) {
-        val visibleSlides = slides.take(40)
-        BiochemicalDiagram(
-            id = "lesson-flow",
-            title = topic.ifBlank { "Lesson flow" }.take(160),
-            nodes = visibleSlides.mapIndexed { index, slide ->
-                DiagramNode(
-                    id = "slide-${index + 1}",
-                    label = slide.title.take(160),
-                    detail = slide.points.joinToString(" · ").take(500),
-                    revealStep = index
-                )
-            },
-            connections = visibleSlides.zipWithNext().mapIndexed { index, _ ->
-                DiagramConnection("slide-${index + 1}", "slide-${index + 2}")
-            },
-            steps = visibleSlides.mapIndexed { index, slide ->
-                DiagramStep(index, slide.title.take(160), slide.points.joinToString(" · ").take(1000))
-            }
-        )
+    var diagramTemplate by remember { mutableStateOf(BiochemicalDiagramTemplate.METABOLIC_PATHWAY) }
+    var diagramComponents by remember { mutableStateOf("Glucose, Glucose-6-phosphate, Fructose-6-phosphate") }
+    var diagramDetails by remember { mutableStateOf("Hexokinase, Phosphoglucose isomerase") }
+    val diagramResult = remember(topic, diagramTemplate, diagramComponents, diagramDetails) {
+        runCatching {
+            BiochemicalDiagramTemplates.create(
+                diagramTemplate, topic.ifBlank { diagramTemplate.label },
+                diagramComponents.split(",").map { it.trim() }.filter(String::isNotBlank),
+                diagramDetails.split(",").map { it.trim() }.filter(String::isNotBlank)
+            )
+        }
+    }
+    val diagram = diagramResult.getOrElse {
+        BiochemicalDiagramTemplates.create(BiochemicalDiagramTemplate.METABOLIC_PATHWAY, topic.ifBlank { "Lesson pathway" }, listOf("Starting metabolite", "Intermediate", "Product"))
     }
 
     Column(
@@ -331,14 +324,31 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localMo
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
+                    Text("Scientific diagram template", style = MaterialTheme.typography.labelLarge)
+                    Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        BiochemicalDiagramTemplate.values().forEach { template ->
+                            FilterChip(selected = diagramTemplate == template, onClick = { diagramTemplate = template }, label = { Text(template.label) })
+                        }
+                    }
+                    OutlinedTextField(
+                        value = diagramComponents, onValueChange = { diagramComponents = it },
+                        modifier = Modifier.fillMaxWidth(), minLines = 2,
+                        label = { Text("Molecules / components (comma-separated)") }
+                    )
+                    OutlinedTextField(
+                        value = diagramDetails, onValueChange = { diagramDetails = it },
+                        modifier = Modifier.fillMaxWidth(), singleLine = true,
+                        label = { Text("Enzymes / reaction labels / interaction notes") }
+                    )
+                    if (diagramResult.isFailure) Text(diagramResult.exceptionOrNull()?.message ?: "Diagram inputs need attention.", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
                     OutlinedButton(
                         onClick = { diagramStep = 0; diagramPreview = true },
                         modifier = Modifier.fillMaxWidth(),
-                        enabled = diagram.nodes.isNotEmpty()
+                        enabled = diagramResult.isSuccess
                     ) {
                         Icon(Icons.Default.AccountTree, contentDescription = null)
                         Spacer(Modifier.width(8.dp))
-                        Text("Explore progressive lesson diagram · " + diagram.nodes.size)
+                        Text("Explore " + diagramTemplate.label.lowercase() + " · " + diagram.nodes.size + " components")
                     }
                     OutlinedButton(
                         onClick = { slideIndex = 0; slidePreview = true },
@@ -348,7 +358,8 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localMo
                         Icon(Icons.Default.Slideshow, contentDescription = null)
                         Spacer(Modifier.width(8.dp))
                         Text("Preview classroom slides · " + slides.size)
-                    }                    Text("Presentation theme", style = MaterialTheme.typography.labelLarge)
+                    }
+                    Text("Presentation theme", style = MaterialTheme.typography.labelLarge)
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         SlideTheme.values().forEach { theme ->
                             FilterChip(selected = slideTheme == theme, onClick = { slideTheme = theme }, label = { Text(theme.label) })
@@ -458,7 +469,7 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localMo
             onDismissRequest = { diagramPreview = false },
             title = {
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                    Text("Lesson flow · " + (diagramStep + 1) + "/" + diagram.steps.size, style = MaterialTheme.typography.titleMedium)
+                    Text(diagram.template.label + " · " + (diagramStep + 1) + "/" + diagram.steps.size, style = MaterialTheme.typography.titleMedium)
                     IconButton(onClick = { diagramPreview = false }) {
                         Icon(Icons.Default.Close, contentDescription = "Close diagram")
                     }
@@ -483,6 +494,14 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localMo
                                 WebView(context).apply {
                                     settings.javaScriptEnabled = false
                                     settings.domStorageEnabled = false
+                                    settings.setSupportZoom(true)
+                                    settings.builtInZoomControls = true
+                                    settings.displayZoomControls = false
+                                    settings.useWideViewPort = true
+                                    settings.setSupportZoom(true)
+                                    settings.builtInZoomControls = true
+                                    settings.displayZoomControls = false
+                                    settings.useWideViewPort = true
                                     settings.allowFileAccess = false
                                     settings.allowContentAccess = false
                                     isVerticalScrollBarEnabled = true
@@ -493,7 +512,7 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localMo
                             update = { webView ->
                                 if (webView.tag != svg) {
                                     webView.tag = svg
-                                    val html = "<!doctype html><html><head><meta name='viewport' content='width=device-width, initial-scale=1'></head><body style='margin:0;padding:8px;background:transparent;'>$svg</body></html>"
+                                    val html = "<!doctype html><html><head><meta name='viewport' content='width=device-width, initial-scale=0.5, maximum-scale=4, user-scalable=yes'><style>html,body{margin:0;padding:0;background:transparent}svg{width:100%;min-width:900px;height:auto;touch-action:pan-x pan-y}</style></head><body>$svg</body></html>"
                                     webView.loadDataWithBaseURL(null, html, "text/html", "UTF-8", null)
                                 }
                             },
