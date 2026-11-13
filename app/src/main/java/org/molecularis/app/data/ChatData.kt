@@ -96,6 +96,7 @@ data class KnowledgeProcessingCheckpointEntity(@PrimaryKey val bookId:String,val
  @Transaction suspend fun clearProcessingCheckpointAndStage(bookId:String) {
   val checkpoint = processingCheckpoint(bookId)
   if (checkpoint != null) {
+   deletePageAudits(checkpoint.stagingBookId)
    deleteBook(checkpoint.stagingBookId)
    deleteProcessingCheckpoint(bookId)
   }
@@ -118,7 +119,9 @@ data class KnowledgeProcessingCheckpointEntity(@PrimaryKey val bookId:String,val
  @Query("SELECT * FROM book_passages WHERE bookId IN (SELECT id FROM books WHERE id NOT GLOB '__stage__*') AND text LIKE '%' || :query || '%' ORDER BY bookId,pageNumber LIMIT 100") suspend fun searchAll(query:String):List<BookPassageEntity>
  @Query("UPDATE books SET pageCount=:pageCount, extractedChars=:extractedChars WHERE id=:bookId") suspend fun updateBookStats(bookId:String,pageCount:Int,extractedChars:Int)
  @Query("DELETE FROM books WHERE id=:bookId") suspend fun deleteBook(bookId:String)
- @Query("DELETE FROM books WHERE id GLOB '__stage__*' AND importedAt < :olderThan AND id NOT IN (SELECT stagingBookId FROM knowledge_processing_checkpoints)") suspend fun cleanupStaleStagingBooks(olderThan:Long)
+ @Query("DELETE FROM knowledge_page_audits WHERE stagingBookId IN (SELECT id FROM books WHERE id GLOB '__stage__*' AND importedAt < :olderThan AND id NOT IN (SELECT stagingBookId FROM knowledge_processing_checkpoints))") suspend fun deleteStalePageAudits(olderThan:Long)
+ @Query("DELETE FROM books WHERE id GLOB '__stage__*' AND importedAt < :olderThan AND id NOT IN (SELECT stagingBookId FROM knowledge_processing_checkpoints)") suspend fun deleteStaleStagingBooksQuery(olderThan:Long)
+ @Transaction suspend fun cleanupStaleStagingBooks(olderThan:Long) { deleteStalePageAudits(olderThan); deleteStaleStagingBooksQuery(olderThan) }
  @Query("UPDATE book_passages SET bookId=:bookId WHERE bookId=:stagingBookId") suspend fun moveStagedPassages(stagingBookId:String,bookId:String)
  @Transaction suspend fun replacePassagesFromStage(bookId:String,stagingBookId:String) {
   deletePassages(bookId)
