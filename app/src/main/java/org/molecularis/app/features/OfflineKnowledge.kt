@@ -56,6 +56,7 @@ class OfflineDocumentReader(private val context: Context) {
     suspend fun readPdfPages(
         uri: Uri,
         maxPdfPages: Int,
+        startPage: Int = 1,
         onPage: suspend (pageNumber: Int, totalPages: Int, text: String) -> Unit
     ): PdfExtractionSummary = withContext(Dispatchers.IO) {
         require(maxPdfPages in 1..5_000) { "PDF import limit must be between 1 and 5,000 pages." }
@@ -65,8 +66,9 @@ class OfflineDocumentReader(private val context: Context) {
                 require(pdf.pageCount <= maxPdfPages) {
                     "PDF has ${pdf.pageCount} pages; limit is $maxPdfPages pages per import."
                 }
+                require(startPage in 1..(pdf.pageCount + 1)) { "Resume page is outside this PDF." }
                 var extractedChars = 0
-                for (index in 0 until pdf.pageCount) {
+                for (index in (startPage - 1) until pdf.pageCount) {
                     val pageText = pdf.openPage(index).use { page ->
                         val scale = min(2.0, 1800.0 / maxOf(page.width, page.height)).toFloat()
                         val bitmap = Bitmap.createBitmap(
