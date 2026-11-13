@@ -239,7 +239,15 @@ data class SavedLessonEntity(
  @Query("DELETE FROM saved_lessons WHERE id=:id") suspend fun deleteLesson(id:String)
 }
 
-@Database(entities=[ConversationEntity::class,MessageEntity::class,LocalModelEntity::class,WorkspaceProjectEntity::class,KnowledgeChunkEntity::class,BookEntity::class,BookPassageEntity::class,KnowledgeBookEntity::class,KnowledgeTopicEntity::class,SavedLessonEntity::class,BookPassageFts::class,KnowledgeProcessingCheckpointEntity::class,KnowledgeTopicAliasEntity::class,KnowledgePageAuditEntity::class,KnowledgeTopicPassageLinkEntity::class],version=15,exportSchema=false)
+@Entity(tableName="saved_diagrams",indices=[Index("updatedAt")])
+data class SavedDiagramEntity(@PrimaryKey val id:String,val title:String,val template:String,val diagramJson:String,val updatedAt:Long=System.currentTimeMillis())
+@Dao interface DiagramDao {
+ @Query("SELECT * FROM saved_diagrams ORDER BY updatedAt DESC") fun diagrams():Flow<List<SavedDiagramEntity>>
+ @Insert(onConflict=OnConflictStrategy.REPLACE) suspend fun saveDiagram(diagram:SavedDiagramEntity)
+ @Query("DELETE FROM saved_diagrams WHERE id=:id") suspend fun deleteDiagram(id:String)
+}
+
+@Database(entities=[ConversationEntity::class,MessageEntity::class,LocalModelEntity::class,WorkspaceProjectEntity::class,KnowledgeChunkEntity::class,BookEntity::class,BookPassageEntity::class,KnowledgeBookEntity::class,KnowledgeTopicEntity::class,SavedLessonEntity::class,BookPassageFts::class,KnowledgeProcessingCheckpointEntity::class,KnowledgeTopicAliasEntity::class,KnowledgePageAuditEntity::class,KnowledgeTopicPassageLinkEntity::class,SavedDiagramEntity::class],version=16,exportSchema=false)
 abstract class AppDatabase:RoomDatabase(){
  abstract fun chatDao():ChatDao
  abstract fun modelDao():ModelDao
@@ -247,5 +255,6 @@ abstract class AppDatabase:RoomDatabase(){
  abstract fun knowledgeDao():KnowledgeDao
  abstract fun bookDao():BookDao
  abstract fun lessonDao():LessonDao
+ abstract fun diagramDao():DiagramDao
  abstract fun knowledgePoolDao():KnowledgePoolDao
 }

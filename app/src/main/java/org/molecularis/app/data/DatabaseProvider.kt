@@ -150,6 +150,13 @@ private val MIGRATION_13_14 = object : Migration(13, 14) {
         db.execSQL("CREATE INDEX IF NOT EXISTS index_knowledge_page_audits_fingerprint ON knowledge_page_audits(fingerprint)")
     }
 }
+private val MIGRATION_15_16 = object : Migration(15, 16) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("CREATE TABLE IF NOT EXISTS saved_diagrams (id TEXT NOT NULL, title TEXT NOT NULL, template TEXT NOT NULL, diagramJson TEXT NOT NULL, updatedAt INTEGER NOT NULL, PRIMARY KEY(id))")
+        db.execSQL("CREATE INDEX IF NOT EXISTS index_saved_diagrams_updatedAt ON saved_diagrams(updatedAt)")
+    }
+}
+
 object DatabaseProvider {
     private const val LEGACY_NAME = "molecularis-local.db"
     private const val ENCRYPTED_NAME = "molecularis-secure.db"
