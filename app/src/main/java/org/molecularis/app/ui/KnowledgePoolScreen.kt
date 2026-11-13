@@ -24,6 +24,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.molecularis.app.data.*
 import org.molecularis.app.features.KnowledgeProcessingWorker
+import org.molecularis.app.features.TopicOrganization
 import androidx.work.*
 import kotlinx.coroutines.flow.collect
 import org.molecularis.app.features.OfflineDocumentReader
@@ -262,7 +263,7 @@ fun KnowledgePoolScreen(database: AppDatabase) {
                                 OutlinedTextField(aliasDraft, { aliasDraft = it }, modifier = Modifier.fillMaxWidth(), label = { Text("Add alternate name") }, singleLine = true)
                                 TextButton(onClick = {
                                     scope.launch {
-                                        val normalized = normalizeTopicAlias(aliasDraft)
+                                        val normalized = TopicOrganization.normalizeName(aliasDraft)
                                         if (normalized.isBlank() || normalized == normalizeTopicAlias(topic.name)) {
                                             status = "Enter a distinct, non-empty alias."
                                         } else {
