@@ -55,7 +55,7 @@ data class KnowledgeChunkEntity(
  @Query("DELETE FROM workspace_projects WHERE id=:id") suspend fun delete(id:Long)
 }
 
-@Entity(tableName="books",indices=[Index("importedAt")])
+@Entity(tableName="books",indices=[Index("importedAt"),Index("fileSha256")])
 data class BookEntity(
  @PrimaryKey val id:String,
  val title:String,
@@ -190,7 +190,9 @@ data class KnowledgeTopicAliasEntity(
  @Query("UPDATE knowledge_topics SET approved=:approved WHERE id=:id") suspend fun setTopicApproved(id:String,approved:Boolean)
  @Query("DELETE FROM knowledge_topics WHERE knowledgeBookId=:knowledgeBookId") suspend fun clearTopics(knowledgeBookId:String)
  @Query("UPDATE knowledge_books SET reviewState=:state WHERE id=:id") suspend fun setReviewState(id:String,state:String)
- @Query("DELETE FROM knowledge_books WHERE bookId=:bookId") suspend fun deleteForBook(bookId:String)
+ @Query("DELETE FROM knowledge_topics WHERE knowledgeBookId IN (SELECT id FROM knowledge_books WHERE bookId=:bookId)") suspend fun deleteTopicsForBook(bookId:String)
+ @Query("DELETE FROM knowledge_books WHERE bookId=:bookId") suspend fun deleteBookMetadataForBook(bookId:String)
+ @Transaction suspend fun deleteForBook(bookId:String) { deleteTopicsForBook(bookId); deleteBookMetadataForBook(bookId) }
 }
 
 @Entity(tableName="saved_lessons",indices=[Index("updatedAt")])
