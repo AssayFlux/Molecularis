@@ -39,6 +39,8 @@ fun BookLibraryScreen(database: AppDatabase) {
     val scope = rememberCoroutineScope()
     val books by database.bookDao().books().collectAsState(initial = emptyList())
     var query by remember { mutableStateOf("") }
+    var fromPage by remember { mutableStateOf("") }
+    var toPage by remember { mutableStateOf("") }
     var importing by remember { mutableStateOf(false) }
     var status by remember { mutableStateOf("") }
     var selectedBook by remember { mutableStateOf<BookEntity?>(null) }
@@ -106,13 +108,15 @@ fun BookLibraryScreen(database: AppDatabase) {
         }
     }
 
-    LaunchedEffect(query, selectedBook?.id) {
+    LaunchedEffect(query, selectedBook?.id, fromPage, toPage) {
         val clean = query.trim()
         val ftsQuery = clean.split(Regex("\\s+")).filter { it.isNotBlank() }
             .joinToString(" ") { "\"" + it.replace("\"", "") + "\"" }
-        results = if (clean.length < 2 || ftsQuery.isBlank()) emptyList()
-        else selectedBook?.let { database.bookDao().searchInBookIndexed(it.id, ftsQuery) }
-            ?: database.bookDao().searchAllIndexed(ftsQuery)
+        val firstPage = fromPage.toIntOrNull()
+        val lastPage = toPage.toIntOrNull()
+        results = if (clean.length < 2 || ftsQuery.isBlank() ||
+            (firstPage != null && lastPage != null && firstPage > lastPage)) emptyList()
+        else database.bookDao().searchFilteredIndexed(ftsQuery, selectedBook?.id, firstPage, lastPage)
     }
 
     Column(Modifier.fillMaxSize().padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -133,6 +137,10 @@ fun BookLibraryScreen(database: AppDatabase) {
             leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
             singleLine = true
         )
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            OutlinedTextField(fromPage, { fromPage = it.filter(Char::isDigit).take(5) }, modifier = Modifier.weight(1f), label = { Text("From page") }, singleLine = true)
+            OutlinedTextField(toPage, { toPage = it.filter(Char::isDigit).take(5) }, modifier = Modifier.weight(1f), label = { Text("To page") }, singleLine = true)
+        }
         if (selectedBook != null) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 TextButton(onClick = { selectedBook = null; query = "" }) { Text("All books") }
