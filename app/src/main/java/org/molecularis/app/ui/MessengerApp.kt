@@ -87,7 +87,7 @@ import java.io.File
 import java.util.UUID
 
 private val Muted=Color(0xFF65736D)
-private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LIBRARY("Library"),KNOWLEDGE_POOL("Knowledge Pool"),SCHEDULED("Schedule"),AI_HUB("AI Hub"),MODELS("Models"),TRAINING("Training"),WORKSPACE("Workspace"),ONLINE_AI("Online AI"),SETTINGS("Settings")}
+private enum class Section(val label:String){HOME("Home"),TEACHING("Teach"),CHATS("Chats"),LIBRARY("Library"),KNOWLEDGE_POOL("Knowledge Pool"),SCHEDULED("Schedule"),AI_HUB("AI Hub"),MODELS("Models"),TRAINING("Training"),WORKSPACE("Workspace"),ONLINE_AI("Online AI"),SETTINGS("Settings")}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable fun MessengerApp(){
@@ -95,7 +95,7 @@ private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LI
  val db= remember{DatabaseProvider.get(context)}
  val runtime= remember{LiteRtRuntime(context)}
  val scope= rememberCoroutineScope()
- var section by remember{mutableStateOf(Section.CHATS)}
+ var section by remember{mutableStateOf(Section.HOME)}
  var moreNavigationExpanded by remember{mutableStateOf(false)}
  var selectedConversation by remember{mutableStateOf<Long?>(null)}
  var draft by remember{mutableStateOf("")}
@@ -351,19 +351,19 @@ private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LI
    Text(section.label,style=MaterialTheme.typography.titleLarge,fontWeight=FontWeight.SemiBold)
   }},actions={if(section==Section.CHATS) IconButton(onClick={scope.launch{selectedConversation=db.chatDao().addConversation(ConversationEntity(title="New conversation"))}}){Icon(Icons.Default.Add,"New chat")}},colors=TopAppBarDefaults.topAppBarColors(containerColor=MaterialTheme.colorScheme.background))},
    bottomBar={if(WindowInsets.ime.getBottom(LocalDensity.current)==0) NavigationBar(containerColor=MaterialTheme.colorScheme.surface, tonalElevation=6.dp){
-    val primarySections=listOf(Section.CHATS,Section.MODELS,Section.WORKSPACE,Section.LIBRARY)
+    val primarySections=listOf(Section.HOME,Section.TEACHING,Section.CHATS,Section.LIBRARY,Section.KNOWLEDGE_POOL)
     primarySections.forEach{item->
-     val icon=when(item){Section.CHATS->Icons.Default.ChatBubbleOutline;Section.MODELS->Icons.Default.Memory;Section.WORKSPACE->Icons.Default.FolderOpen;Section.LIBRARY->Icons.Default.MenuBook;else->Icons.Default.MoreHoriz}
+     val icon=when(item){Section.HOME->Icons.Default.Home;Section.TEACHING->Icons.Default.School;Section.CHATS->Icons.Default.ChatBubbleOutline;Section.LIBRARY->Icons.Default.MenuBook;Section.KNOWLEDGE_POOL->Icons.Default.AccountTree;else->Icons.Default.MoreHoriz}
      NavigationBarItem(selected=section==item,onClick={section=item;moreNavigationExpanded=false},icon={Icon(icon,item.label)},label={Text(item.label,maxLines=1)})
     }
     NavigationBarItem(
-     selected=section==Section.AI_HUB||section==Section.TRAINING||section==Section.ONLINE_AI||section==Section.SETTINGS||section==Section.KNOWLEDGE_POOL||section==Section.SCHEDULED,
+     selected=section==Section.AI_HUB||section==Section.TRAINING||section==Section.ONLINE_AI||section==Section.SETTINGS||section==Section.SCHEDULED||section==Section.MODELS||section==Section.WORKSPACE,
      onClick={moreNavigationExpanded=true},
      icon={
       Box{
        Icon(Icons.Default.MoreHoriz,"More sections")
        DropdownMenu(expanded=moreNavigationExpanded,onDismissRequest={moreNavigationExpanded=false}){
-        listOf(Section.KNOWLEDGE_POOL,Section.SCHEDULED,Section.AI_HUB,Section.TRAINING,Section.ONLINE_AI,Section.SETTINGS).forEach{item->
+        listOf(Section.SCHEDULED,Section.MODELS,Section.WORKSPACE,Section.AI_HUB,Section.TRAINING,Section.ONLINE_AI,Section.SETTINGS).forEach{item->
          val icon=when(item){Section.LIBRARY->Icons.Default.MenuBook;Section.KNOWLEDGE_POOL->Icons.Default.AccountTree;Section.SCHEDULED->Icons.Default.Schedule;Section.AI_HUB->Icons.Default.Hub;Section.TRAINING->Icons.Default.Tune;Section.ONLINE_AI->Icons.Default.Cloud;else->Icons.Default.Settings}
          DropdownMenuItem(text={Text(item.label)},leadingIcon={Icon(icon,null)},onClick={section=item;moreNavigationExpanded=false})
         }
@@ -377,6 +377,7 @@ private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LI
    Image(painter=if(customBackgroundUri.isNotBlank())rememberAsyncImagePainter(Uri.parse(customBackgroundUri)) else painterResource(id=org.molecularis.app.R.drawable.molecularis_background),contentDescription=null,contentScale=ContentScale.Crop,modifier=Modifier.fillMaxSize().alpha(if(darkAppearance)0.12f else 0.16f))
    Column(Modifier.fillMaxSize()){
    when(section){
+    Section.HOME->MolecularisDashboardScreen(bookCount=books.size,reviewedBookCount=knowledgeBooks.count{it.reviewState=="approved"},chatCount=conversations.size,modelCount=models.size,activeModelName=activeModelName,onNavigate={destination->section=when(destination){"teach"->Section.TEACHING;"chat"->Section.CHATS;"library"->Section.LIBRARY;"knowledge"->Section.KNOWLEDGE_POOL;"schedule"->Section.SCHEDULED;"models"->Section.MODELS;else->Section.SETTINGS}})
     Section.TEACHING->TeachingStudioScreen(db, voiceAvailable = offlineTtsVoices.isNotEmpty(), localModelAvailable = activeModelPath != null && activeModelName != null, onSpeakSlides={segments,onSegment,onState->voiceController.speakSegments(segments,onSegment,{},{playing,paused->narrationPlaying=playing;narrationPaused=paused;onState(playing,paused)})},onPauseNarration={voiceController.pauseSpeaking()},onResumeNarration={voiceController.resumeSpeaking()},onStopNarration={voiceController.stopSpeaking();narrationPlaying=false;narrationPaused=false},onSeekNarration={voiceController.seekSpeakingTo(it)},onNarrationRateChange={rate->voiceController.setSpeechRate(rate)}, onGenerateWithLocalModel = { prompt -> runtime.generate(prompt) })
     Section.LIBRARY->BookLibraryScreen(db)
     Section.KNOWLEDGE_POOL->KnowledgePoolScreen(db)
