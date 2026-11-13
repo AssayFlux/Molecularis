@@ -264,7 +264,7 @@ fun KnowledgePoolScreen(database: AppDatabase) {
                                 TextButton(onClick = {
                                     scope.launch {
                                         val normalized = TopicOrganization.normalizeName(aliasDraft)
-                                        if (normalized.isBlank() || normalized == normalizeTopicAlias(topic.name)) {
+                                        if (normalized.isBlank() || normalized == TopicOrganization.normalizeName(topic.name)) {
                                             status = "Enter a distinct, non-empty alias."
                                         } else {
                                             val result = database.knowledgePoolDao().addAlias(
@@ -279,7 +279,7 @@ fun KnowledgePoolScreen(database: AppDatabase) {
                                         }
                                     }
                                 }, enabled = aliasDraft.isNotBlank()) { Text("Add alias") }
-                                val possibleDuplicates = topics.filter { it.id != topic.id && normalizeTopicAlias(it.name) == normalizeTopicAlias(topic.name) }
+                                val possibleDuplicates = topics.filter { it.id != topic.id && TopicOrganization.normalizeName(it.name) == TopicOrganization.normalizeName(topic.name) }
                                 if (possibleDuplicates.isNotEmpty() || topics.size > 1) {
                                     Text("Merge duplicate topic into", style = MaterialTheme.typography.labelMedium)
                                     Box {
@@ -386,8 +386,6 @@ fun KnowledgePoolScreen(database: AppDatabase) {
 @Composable private fun KnowledgeMetric(label: String, value: String, modifier: Modifier = Modifier) {
     Card(modifier) { Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(2.dp)) { Text(value, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold); Text(label, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant) } }
 }
-
-private fun normalizeTopicAlias(value: String): String = value.trim().lowercase(java.util.Locale.ROOT).replace(Regex("\\s+"), " ")
 
 private fun knowledgeChunks(text: String, maxChars: Int = 1_100): List<String> {
     val normalized = text.replace(Regex("\\s+"), " ").trim()
