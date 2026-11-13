@@ -79,10 +79,16 @@ data class BookPassageEntity(
 @Entity(tableName = "book_passages_fts")
 data class BookPassageFts(val text: String)
 
+@Entity(tableName="knowledge_processing_checkpoints")
+data class KnowledgeProcessingCheckpointEntity(@PrimaryKey val bookId:String,val stagingBookId:String,val nextPage:Int,val extractedChars:Int,val passageCount:Int,val updatedAt:Long=System.currentTimeMillis())
+
 @Dao interface BookDao {
  @Query("SELECT * FROM books WHERE id NOT GLOB '__stage__*' ORDER BY importedAt DESC") fun books():Flow<List<BookEntity>>
  @Insert suspend fun addBook(book:BookEntity)
  @Query("SELECT * FROM books WHERE id=:bookId LIMIT 1") suspend fun book(bookId:String):BookEntity?
+ @Query("SELECT * FROM knowledge_processing_checkpoints WHERE bookId=:bookId LIMIT 1") suspend fun processingCheckpoint(bookId:String):KnowledgeProcessingCheckpointEntity?
+ @Insert(onConflict=OnConflictStrategy.REPLACE) suspend fun saveProcessingCheckpoint(checkpoint:KnowledgeProcessingCheckpointEntity)
+ @Query("DELETE FROM knowledge_processing_checkpoints WHERE bookId=:bookId") suspend fun deleteProcessingCheckpoint(bookId:String)
  @Insert suspend fun addPassages(passages:List<BookPassageEntity>)
  @Query("DELETE FROM book_passages WHERE bookId=:bookId") suspend fun deletePassages(bookId:String)
  @Query("SELECT * FROM book_passages WHERE bookId=:bookId ORDER BY pageNumber,chunkIndex") suspend fun passages(bookId:String):List<BookPassageEntity>
@@ -145,7 +151,7 @@ data class SavedLessonEntity(
  @Query("DELETE FROM saved_lessons WHERE id=:id") suspend fun deleteLesson(id:String)
 }
 
-@Database(entities=[ConversationEntity::class,MessageEntity::class,LocalModelEntity::class,WorkspaceProjectEntity::class,KnowledgeChunkEntity::class,BookEntity::class,BookPassageEntity::class,KnowledgeBookEntity::class,KnowledgeTopicEntity::class,SavedLessonEntity::class,BookPassageFts::class],version=10,exportSchema=false)
+@Database(entities=[ConversationEntity::class,MessageEntity::class,LocalModelEntity::class,WorkspaceProjectEntity::class,KnowledgeChunkEntity::class,BookEntity::class,BookPassageEntity::class,KnowledgeBookEntity::class,KnowledgeTopicEntity::class,SavedLessonEntity::class,BookPassageFts::class,KnowledgeProcessingCheckpointEntity::class],version=11,exportSchema=false)
 abstract class AppDatabase:RoomDatabase(){
  abstract fun chatDao():ChatDao
  abstract fun modelDao():ModelDao
