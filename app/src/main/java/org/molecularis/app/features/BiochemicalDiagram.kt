@@ -4,7 +4,7 @@ enum class BiochemicalDiagramTemplate(val label: String) {
     METABOLIC_PATHWAY("Metabolic pathway"), REACTION_MECHANISM("Reaction mechanism"),
     FEEDBACK_REGULATION("Feedback regulation"), MOLECULAR_INTERACTION("Molecular interaction")
 }
-enum class DiagramNodeKind { METABOLITE, ENZYME, REGULATOR, COMPLEX, COMPARTMENT }
+enum class DiagramNodeKind { METABOLITE, ENZYME, REGULATOR, COMPLEX, COMPARTMENT, COFACTOR }
 enum class DiagramConnectionKind { REACTION, ACTIVATION, INHIBITION, BINDING, TRANSPORT }
 
 data class DiagramNode(
@@ -49,10 +49,10 @@ object BiochemicalDiagramTemplates {
                 node("enzyme", names[1], DiagramNodeKind.ENZYME, 500f, 150f, details.getOrNull(0).orEmpty())
                 node("product", names[2], DiagramNodeKind.METABOLITE, 830f, 360f)
                 edges += DiagramConnection("substrate", "product", details.getOrNull(1).orEmpty().ifBlank { "conversion" })
-                edges += DiagramConnection("enzyme", "product", "catalyses", DiagramConnectionKind.ACTIVATION)
+                edges += DiagramConnection("enzyme", "substrate", "substrate binding", DiagramConnectionKind.BINDING)
                 if (names.size == 4) {
-                    node("cofactor", names[3], DiagramNodeKind.COMPARTMENT, 500f, 650f)
-                    edges += DiagramConnection("cofactor", "product", "cofactor", DiagramConnectionKind.TRANSPORT)
+                    node("cofactor", names[3], DiagramNodeKind.COFACTOR, 500f, 650f)
+                    edges += DiagramConnection("cofactor", "product", "cofactor participation", DiagramConnectionKind.REACTION)
                 }
             }
             BiochemicalDiagramTemplate.FEEDBACK_REGULATION -> {
@@ -149,6 +149,7 @@ object BiochemicalSvgRenderer {
                     DiagramNodeKind.ENZYME -> append("<rect x=\"$x\" y=\"$y\" width=\"240\" height=\"104\" rx=\"48\" fill=\"#e9f5ec\" stroke=\"#39845a\" stroke-width=\"3\"/>")
                     DiagramNodeKind.COMPLEX -> append("<ellipse cx=\"").append(c.first).append("\" cy=\"").append(c.second).append("\" rx=\"120\" ry=\"52\" fill=\"#f2eafa\" stroke=\"#7654a8\" stroke-width=\"3\"/>")
                     DiagramNodeKind.COMPARTMENT -> append("<rect x=\"$x\" y=\"$y\" width=\"240\" height=\"104\" rx=\"8\" fill=\"#fff4df\" stroke=\"#b7791f\" stroke-width=\"3\" stroke-dasharray=\"8 5\"/>")
+                    DiagramNodeKind.COFACTOR -> append("<polygon points=\"").append(c.first - 105f).append(",").append(c.second).append(" ").append(c.first - 55f).append(",").append(c.second - 52f).append(" ").append(c.first + 55f).append(",").append(c.second - 52f).append(" ").append(c.first + 105f).append(",").append(c.second).append(" ").append(c.first + 55f).append(",").append(c.second + 52f).append(" ").append(c.first - 55f).append(",").append(c.second + 52f).append("\" fill=\"#fff4df\" stroke=\"#b7791f\" stroke-width=\"3\"/>")
                     DiagramNodeKind.REGULATOR -> append("<polygon points=\"").append(c.first).append(",").append(c.second - 62f).append(" ").append(c.first + 130f).append(",").append(c.second).append(" ").append(c.first).append(",").append(c.second + 62f).append(" ").append(c.first - 130f).append(",").append(c.second).append("\" fill=\"#fff0e8\" stroke=\"#c16b3b\" stroke-width=\"3\"/>")
                 }
                 val titleY = c.second + (if (n.detail.isBlank()) 7f else -8f)

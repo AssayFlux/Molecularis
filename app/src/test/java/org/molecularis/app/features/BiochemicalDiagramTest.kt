@@ -54,7 +54,8 @@ class BiochemicalDiagramTest {
     @Test fun buildsReactionMechanismWithEnzymeAndCofactor() {
         val diagram = BiochemicalDiagramTemplates.create(BiochemicalDiagramTemplate.REACTION_MECHANISM, "Reaction", listOf("Substrate", "Enzyme", "Product", "ATP"))
         assertTrue(diagram.nodes.any { it.kind == DiagramNodeKind.ENZYME })
-        assertTrue(diagram.nodes.any { it.kind == DiagramNodeKind.COMPARTMENT })
+        assertTrue(diagram.nodes.any { it.kind == DiagramNodeKind.COFACTOR })
+        assertTrue(diagram.connections.any { it.kind == DiagramConnectionKind.BINDING })
         assertTrue(BiochemicalDiagramValidator.validate(diagram).isEmpty())
     }
 

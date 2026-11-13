@@ -1,6 +1,7 @@
 package org.molecularis.app.ui
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -19,12 +20,14 @@ import androidx.compose.runtime.*
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import android.webkit.WebView
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
+import coil.compose.rememberAsyncImagePainter
 import org.molecularis.app.data.AppDatabase
 import org.molecularis.app.data.SavedLessonEntity
 import org.molecularis.app.features.LessonSlideBuilder
@@ -35,6 +38,10 @@ import org.molecularis.app.features.BiochemicalDiagramTemplate
 import org.molecularis.app.features.BiochemicalDiagramTemplates
 import org.molecularis.app.features.BiochemicalDiagramValidator
 import org.molecularis.app.features.BiochemicalSvgRenderer
+import org.molecularis.app.features.CommonsImageSearchClient
+import org.molecularis.app.features.CommonsImageCache
+import org.molecularis.app.features.CommonsImageResult
+import org.molecularis.app.features.CachedCommonsImage
 import org.molecularis.app.features.TeachingQualityPolicy
 import org.molecularis.app.features.LessonPlanningPolicy
 import org.molecularis.app.features.TopicOrganization
@@ -78,6 +85,13 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localMo
     var diagramTemplate by remember { mutableStateOf(BiochemicalDiagramTemplate.METABOLIC_PATHWAY) }
     var diagramComponents by remember { mutableStateOf("Glucose, Glucose-6-phosphate, Fructose-6-phosphate") }
     var diagramDetails by remember { mutableStateOf("Hexokinase, Phosphoglucose isomerase") }
+    var diagramImageQuery by remember { mutableStateOf("") }
+    var diagramImageResults by remember { mutableStateOf(emptyList<CommonsImageResult>()) }
+    var diagramImageStatus by remember { mutableStateOf("") }
+    var diagramImageSearching by remember { mutableStateOf(false) }
+    var cachedDiagramImages by remember { mutableStateOf(emptyList<CachedCommonsImage>()) }
+    val diagramImageSearch = remember { CommonsImageSearchClient() }
+    val diagramImageCache = remember(context) { CommonsImageCache(context) }
     val diagramResult = remember(topic, diagramTemplate, diagramComponents, diagramDetails) {
         runCatching {
             BiochemicalDiagramTemplates.create(
@@ -341,6 +355,50 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localMo
                         label = { Text("Enzymes / reaction labels / interaction notes") }
                     )
                     if (diagramResult.isFailure) Text(diagramResult.exceptionOrNull()?.message ?: "Diagram inputs need attention.", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
+                    Text("Reference images · Wikimedia Commons", style = MaterialTheme.typography.labelLarge)
+                    OutlinedTextField(value = diagramImageQuery, onValueChange = { diagramImageQuery = it }, modifier = Modifier.fillMaxWidth(), singleLine = true, label = { Text("Search licensed scientific images") })
+                    OutlinedButton(
+                        onClick = {
+                            scope.launch {
+                                diagramImageSearching = true
+                                diagramImageStatus = "Searching Wikimedia Commons…"
+                                try {
+                                    diagramImageResults = diagramImageSearch.search(diagramImageQuery.ifBlank { topic }, limit = 8)
+                                    diagramImageStatus = "Found " + diagramImageResults.size + " images with declared license metadata."
+                                } catch (error: Throwable) {
+                                    diagramImageStatus = "Image search failed: " + (error.message ?: error.javaClass.simpleName)
+                                } finally { diagramImageSearching = false }
+                            }
+                        },
+                        enabled = !diagramImageSearching && (diagramImageQuery.isNotBlank() || topic.isNotBlank()),
+                        modifier = Modifier.fillMaxWidth()
+                    ) { Text(if (diagramImageSearching) "Searching…" else "Search Commons images") }
+                    diagramImageResults.take(6).forEach { result ->
+                        Card {
+                            Column(Modifier.fillMaxWidth().padding(12.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                Image(painter = rememberAsyncImagePainter(result.thumbnailUrl), contentDescription = result.title, modifier = Modifier.fillMaxWidth().height(150.dp), contentScale = ContentScale.Fit)
+                                Text(result.title, fontWeight = FontWeight.SemiBold)
+                                Text("License: " + result.licenseName, style = MaterialTheme.typography.bodySmall)
+                                Text("Source: " + result.sourcePageUrl, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                if (result.attribution.isNotBlank()) Text("Attribution: " + result.attribution, style = MaterialTheme.typography.bodySmall)
+                                if (result.licenseUrl.isNotBlank()) Text(result.licenseUrl, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                TextButton(onClick = {
+                                    scope.launch {
+                                        diagramImageStatus = "Caching image and license metadata…"
+                                        try {
+                                            val cached = diagramImageCache.cache(result)
+                                            cachedDiagramImages = cachedDiagramImages + cached
+                                            diagramImageStatus = "Cached locally with license sidecar: " + cached.title
+                                        } catch (error: Throwable) {
+                                            diagramImageStatus = "Could not cache image: " + (error.message ?: error.javaClass.simpleName)
+                                        }
+                                    }
+                                }) { Text("Cache image + rights metadata") }
+                            }
+                        }
+                    }
+                    if (cachedDiagramImages.isNotEmpty()) Text("Locally cached references: " + cachedDiagramImages.size + " · license and attribution metadata saved alongside each file.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
+                    if (diagramImageStatus.isNotBlank()) Text(diagramImageStatus, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     OutlinedButton(
                         onClick = { diagramStep = 0; diagramPreview = true },
                         modifier = Modifier.fillMaxWidth(),
