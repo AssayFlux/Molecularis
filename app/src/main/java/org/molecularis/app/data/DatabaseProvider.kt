@@ -131,6 +131,17 @@ private val FTS_CALLBACK = object : RoomDatabase.Callback() {
         db.execSQL("INSERT INTO book_passages_fts(book_passages_fts) VALUES('rebuild')")
     }
 }
+private val MIGRATION_13_14 = object : Migration(13, 14) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE knowledge_books ADD COLUMN pagesWithText INTEGER NOT NULL DEFAULT 0")
+        db.execSQL("ALTER TABLE knowledge_books ADD COLUMN emptyPages INTEGER NOT NULL DEFAULT 0")
+        db.execSQL("ALTER TABLE knowledge_books ADD COLUMN shortTextPages INTEGER NOT NULL DEFAULT 0")
+        db.execSQL("ALTER TABLE knowledge_books ADD COLUMN duplicatePages INTEGER NOT NULL DEFAULT 0")
+        db.execSQL("CREATE TABLE IF NOT EXISTS knowledge_page_audits (stagingBookId TEXT NOT NULL, pageNumber INTEGER NOT NULL, charCount INTEGER NOT NULL, fingerprint TEXT NOT NULL, qualityFlag TEXT NOT NULL, PRIMARY KEY(stagingBookId,pageNumber))
+        db.execSQL("CREATE INDEX IF NOT EXISTS index_knowledge_page_audits_stagingBookId ON knowledge_page_audits(stagingBookId)")
+        db.execSQL("CREATE INDEX IF NOT EXISTS index_knowledge_page_audits_fingerprint ON knowledge_page_audits(fingerprint)")
+    }
+}
 object DatabaseProvider {
     private const val LEGACY_NAME = "molecularis-local.db"
     private const val ENCRYPTED_NAME = "molecularis-secure.db"
@@ -174,7 +185,7 @@ object DatabaseProvider {
             ENCRYPTED_NAME
         )
             .openHelperFactory(SupportOpenHelperFactory(passphrase.copyOf()))
-            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13)
+            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14)
             .addCallback(FTS_CALLBACK)
             .setJournalMode(RoomDatabase.JournalMode.TRUNCATE)
             .build()
@@ -218,7 +229,7 @@ object DatabaseProvider {
         try {
             val source = legacy.openHelper.writableDatabase
             val target = encryptedTemp.openHelper.writableDatabase
-            val tables = listOf("conversations", "messages", "local_models", "workspace_projects", "knowledge_chunks", "books", "book_passages", "knowledge_books", "knowledge_topics", "saved_lessons", "knowledge_processing_checkpoints", "knowledge_topic_aliases")
+            val tables = listOf("conversations", "messages", "local_models", "workspace_projects", "knowledge_chunks", "books", "book_passages", "knowledge_books", "knowledge_topics", "saved_lessons", "knowledge_processing_checkpoints", "knowledge_topic_aliases", "knowledge_page_audits")
             target.beginTransaction()
             try {
                 tables.forEach { table -> copyTable(source, target, table) }
