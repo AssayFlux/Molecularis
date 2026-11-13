@@ -80,6 +80,8 @@ data class BookPassageEntity(
 @Entity(tableName = "book_passages_fts")
 data class BookPassageFts(val text: String)
 
+@Entity(tableName="knowledge_page_audits",primaryKeys=["stagingBookId","pageNumber"],indices=[Index("stagingBookId"),Index("fingerprint")])
+data class KnowledgePageAuditEntity(val stagingBookId:String,val pageNumber:Int,val charCount:Int,val fingerprint:String,val qualityFlag:String)
 @Entity(tableName="knowledge_processing_checkpoints")
 data class KnowledgeProcessingCheckpointEntity(@PrimaryKey val bookId:String,val stagingBookId:String,val nextPage:Int,val extractedChars:Int,val passageCount:Int,val updatedAt:Long=System.currentTimeMillis())
 
@@ -99,6 +101,11 @@ data class KnowledgeProcessingCheckpointEntity(@PrimaryKey val bookId:String,val
   }
  }
  @Query("SELECT * FROM knowledge_processing_checkpoints WHERE bookId=:bookId LIMIT 1") suspend fun processingCheckpoint(bookId:String):KnowledgeProcessingCheckpointEntity?
+ @Query("SELECT COUNT(*) FROM knowledge_page_audits WHERE stagingBookId=:stageId AND fingerprint=:fingerprint") suspend fun pageFingerprintCount(stageId:String,fingerprint:String):Int
+ @Insert(onConflict=OnConflictStrategy.REPLACE) suspend fun savePageAudit(audit:KnowledgePageAuditEntity)
+ @Query("SELECT * FROM knowledge_page_audits WHERE stagingBookId=:stageId ORDER BY pageNumber") suspend fun pageAudits(stageId:String):List<KnowledgePageAuditEntity>
+ @Query("DELETE FROM knowledge_page_audits WHERE stagingBookId=:stageId") suspend fun deletePageAudits(stageId:String)
+ @Query("UPDATE knowledge_page_audits SET stagingBookId=:bookId WHERE stagingBookId=:stageId") suspend fun movePageAudits(stageId:String,bookId:String)
  @Insert(onConflict=OnConflictStrategy.REPLACE) suspend fun saveProcessingCheckpoint(checkpoint:KnowledgeProcessingCheckpointEntity)
  @Query("DELETE FROM knowledge_processing_checkpoints WHERE bookId=:bookId") suspend fun deleteProcessingCheckpoint(bookId:String)
  @Insert suspend fun addPassages(passages:List<BookPassageEntity>)
@@ -126,7 +133,11 @@ data class KnowledgeBookEntity(
  val publisher:String,val edition:String,val subject:String,val summary:String,
  val chapterOutline:String,val extractedPageCount:Int,val extractedChars:Int,
  val passageCount:Int,val topicCount:Int,val qualityScore:Int,
- val reviewState:String="needs_review",val processedAt:Long=System.currentTimeMillis()
+ val reviewState:String="needs_review",val processedAt:Long=System.currentTimeMillis(),
+ @ColumnInfo(defaultValue="0") val pagesWithText:Int=0,
+ @ColumnInfo(defaultValue="0") val emptyPages:Int=0,
+ @ColumnInfo(defaultValue="0") val shortTextPages:Int=0,
+ @ColumnInfo(defaultValue="0") val duplicatePages:Int=0
 )
 @Entity(tableName="knowledge_topics",indices=[Index("knowledgeBookId"),Index("name"),Index("parentTopicId")])
 data class KnowledgeTopicEntity(
@@ -213,7 +224,7 @@ data class SavedLessonEntity(
  @Query("DELETE FROM saved_lessons WHERE id=:id") suspend fun deleteLesson(id:String)
 }
 
-@Database(entities=[ConversationEntity::class,MessageEntity::class,LocalModelEntity::class,WorkspaceProjectEntity::class,KnowledgeChunkEntity::class,BookEntity::class,BookPassageEntity::class,KnowledgeBookEntity::class,KnowledgeTopicEntity::class,SavedLessonEntity::class,BookPassageFts::class,KnowledgeProcessingCheckpointEntity::class,KnowledgeTopicAliasEntity::class],version=13,exportSchema=false)
+@Database(entities=[ConversationEntity::class,MessageEntity::class,LocalModelEntity::class,WorkspaceProjectEntity::class,KnowledgeChunkEntity::class,BookEntity::class,BookPassageEntity::class,KnowledgeBookEntity::class,KnowledgeTopicEntity::class,SavedLessonEntity::class,BookPassageFts::class,KnowledgeProcessingCheckpointEntity::class,KnowledgeTopicAliasEntity::class,KnowledgePageAuditEntity::class],version=14,exportSchema=false)
 abstract class AppDatabase:RoomDatabase(){
  abstract fun chatDao():ChatDao
  abstract fun modelDao():ModelDao
