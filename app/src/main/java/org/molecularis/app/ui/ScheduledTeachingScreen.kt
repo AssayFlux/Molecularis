@@ -143,13 +143,30 @@ fun ScheduledTeachingScreen(database: AppDatabase) {
                     Text("${SimpleDateFormat("EEE, d MMM yyyy • HH:mm", Locale.getDefault()).format(row.scheduledAt)} · ${row.audienceLevel} · ${row.durationMinutes} min")
                     Text("Status: ${row.status}", color = MaterialTheme.colorScheme.secondary)
                     if (row.lastError != null) Text(row.lastError, color = MaterialTheme.colorScheme.error)
-                    if (row.status == "scheduled" || row.status == "running") {
+                    if (row.status == "scheduled") {
+                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            TextButton(onClick = {
+                                scope.launch {
+                                    val immediate = row.copy(scheduledAt = System.currentTimeMillis(), status = "scheduled", lastError = null)
+                                    database.scheduledLectureDao().save(immediate)
+                                    val workId = ScheduledLectureScheduler.enqueue(context, immediate)
+                                    database.scheduledLectureDao().save(immediate.copy(workId = workId.toString()))
+                                }
+                            }) { Text("Start now") }
+                            TextButton(onClick = {
+                                scope.launch {
+                                    ScheduledLectureScheduler.cancel(context, row.id)
+                                    database.scheduledLectureDao().updateStatus(row.id, "cancelled", null)
+                                }
+                            }) { Text("Cancel") }
+                        }
+                    } else if (row.status == "running") {
                         TextButton(onClick = {
                             scope.launch {
                                 ScheduledLectureScheduler.cancel(context, row.id)
                                 database.scheduledLectureDao().updateStatus(row.id, "cancelled", null)
                             }
-                        }) { Text("Cancel lecture") }
+                        }) { Text("Stop lecture") }
                     }
                 }
             }

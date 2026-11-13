@@ -39,7 +39,7 @@ object CrashDiagnostics {
                         out.appendLine("  ${frame.className.take(200)}.${frame.methodName.take(120)}(${frame.fileName?.take(120)}:${frame.lineNumber})")
                     }
                 }
-                directory.listFiles()?.filter { it.name.startsWith("crash-") }?.sortedByDescending { it.lastModified() }?.drop(3)?.forEach(File::delete)
+                directory.listFiles()?.filter { it.name.startsWith("crash-") }?.sortedByDescending { it.lastModified() }?.drop(3)?.forEach { it.delete() }
             }
             previous?.uncaughtException(thread, error)
         }
