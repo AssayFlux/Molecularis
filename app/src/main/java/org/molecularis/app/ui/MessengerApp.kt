@@ -726,7 +726,7 @@ private enum class Section(val label:String){TEACHING("Teach"),CHATS("Chats"),LI
      IconButton(onClick={showTeachingStudio=false}) { Icon(Icons.Default.Close,"Close teaching studio") }
     }
     HorizontalDivider()
-    TeachingStudioScreen(db,voiceAvailable=offlineTtsVoices.isNotEmpty(),localModelAvailable=activeModelPath!=null&&activeModelName!=null,onSpeakSlides={segments,onSegment,onState->voiceController.speakSegments(segments,onSegment,{},{playing,paused->narrationPlaying=playing;narrationPaused=paused;onState(playing,paused)})},onPauseNarration={voiceController.pauseSpeaking()},onResumeNarration={voiceController.resumeSpeaking()},onStopNarration={voiceController.stopSpeaking();narrationPlaying=false;narrationPaused=false},onSeekNarration={voiceController.seekSpeakingTo(it)},onGenerateWithLocalModel={prompt->runtime.generate(prompt)})
+    TeachingStudioScreen(db,voiceAvailable=offlineTtsVoices.isNotEmpty(),localModelAvailable=activeModelPath!=null&&activeModelName!=null,onSpeakSlides={segments,onSegment,onState->voiceController.speakSegments(segments,onSegment,{},{playing,paused->narrationPlaying=playing;narrationPaused=paused;onState(playing,paused)})},onPauseNarration={voiceController.pauseSpeaking()},onResumeNarration={voiceController.resumeSpeaking()},onStopNarration={voiceController.stopSpeaking();narrationPlaying=false;narrationPaused=false},onSeekNarration={voiceController.seekSpeakingTo(it)},onNarrationRateChange={rate->voiceController.setSpeechRate(rate)},onGenerateWithLocalModel={prompt->runtime.generate(prompt)})
    }
   }
  }
