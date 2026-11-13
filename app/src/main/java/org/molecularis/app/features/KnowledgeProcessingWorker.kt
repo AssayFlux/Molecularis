@@ -16,6 +16,7 @@ import kotlinx.coroutines.ensureActive
 import org.molecularis.app.R
 import org.molecularis.app.data.*
 import java.io.File
+import java.security.MessageDigest
 import java.util.UUID
 
 class KnowledgeProcessingWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
@@ -70,6 +71,21 @@ class KnowledgeProcessingWorker(context: Context, params: WorkerParameters) : Co
                 val pagePassages = chunks(text).mapIndexed { index, chunk ->
                     BookPassageEntity(UUID.randomUUID().toString(), stageId, index, page, chunk)
                 }
+                val normalizedPage = text.lowercase().replace(Regex("\\s+"), " ").trim()
+                val fingerprint = sha256(normalizedPage)
+                val duplicatePage = normalizedPage.isNotBlank() && db.bookDao().pageFingerprintCount(stageId, fingerprint) > 0
+                val pageAudit = KnowledgePageAuditEntity(
+                    stagingBookId = stageId,
+                    pageNumber = page,
+                    charCount = text.trim().length,
+                    fingerprint = fingerprint,
+                    qualityFlag = when {
+                        normalizedPage.isBlank() -> "empty"
+                        duplicatePage -> "duplicate"
+                        text.trim().length < 50 -> "short"
+                        else -> "ok"
+                    }
+                )
                 val nextCheckpoint = KnowledgeProcessingCheckpointEntity(
                     bookId = id,
                     stagingBookId = stageId,
@@ -81,6 +97,7 @@ class KnowledgeProcessingWorker(context: Context, params: WorkerParameters) : Co
                 // dies before commit, that page is OCRed again; it cannot be silently skipped.
                 db.withTransaction {
                     if (pagePassages.isNotEmpty()) db.bookDao().addPassages(pagePassages)
+                    db.bookDao().savePageAudit(pageAudit)
                     db.bookDao().saveProcessingCheckpoint(nextCheckpoint)
                 }
                 totalChars = updatedChars
@@ -102,11 +119,15 @@ class KnowledgeProcessingWorker(context: Context, params: WorkerParameters) : Co
             val topics = candidates.entries.sortedBy { it.value.first }.take(120).map { (name, info) ->
                 KnowledgeTopicEntity(UUID.randomUUID().toString(), knowledgeId, name, info.first, info.second.first, info.second.second)
             }
-            val quality = (
-                (if (totalPassages > 0) 35 else 0) +
-                (if (topics.isNotEmpty()) 15 else 0) +
-                (if (totalChars / summary.pageCount.coerceAtLeast(1) >= 300) 50 else 0)
-            ).coerceIn(0, 100)
+            val audits = db.bookDao().pageAudits(stageId)
+            val pagesWithText = audits.count { it.charCount > 0 }
+            val emptyPages = audits.count { it.charCount == 0 }
+            val shortTextPages = audits.count { it.charCount in 1..49 }
+            val duplicatePages = audits.count { it.qualityFlag == "duplicate" }
+            val coverageScore = (pagesWithText * 40 / summary.pageCount.coerceAtLeast(1))
+            val duplicatePenalty = (duplicatePages * 2).coerceAtMost(20)
+            val quality = (coverageScore + (if (totalPassages > 0) 30 else 0) +
+                (if (topics.isNotEmpty()) 10 else 0) - duplicatePenalty).coerceIn(0, 100)
             val metadata = KnowledgeBookEntity(
                 id = knowledgeId,
                 bookId = id,
@@ -116,17 +137,25 @@ class KnowledgeProcessingWorker(context: Context, params: WorkerParameters) : Co
                 edition = "",
                 subject = "Needs subject review",
                 summary = "Offline OCR extracted " + totalChars + " characters from " + summary.pageCount +
-                    " pages and indexed " + totalPassages + " page-linked passages. Readiness is heuristic, not a scientific accuracy score.",
+                    " pages and indexed " + totalPassages + " page-linked passages. Page audit: " +
+                    pagesWithText + " with text, " + emptyPages + " empty, " + shortTextPages +
+                    " short, " + duplicatePages + " repeated OCR pages. Readiness is heuristic, not a scientific accuracy score.",
                 chapterOutline = topics.joinToString("\\n") { it.startPage.toString() + ". " + it.name },
                 extractedPageCount = summary.pageCount,
                 extractedChars = totalChars,
                 passageCount = totalPassages,
                 topicCount = topics.size,
                 qualityScore = quality,
-                reviewState = "needs_review"
+                reviewState = "needs_review",
+                pagesWithText = pagesWithText,
+                emptyPages = emptyPages,
+                shortTextPages = shortTextPages,
+                duplicatePages = duplicatePages
             )
             db.withTransaction {
                 db.bookDao().replacePassagesFromStage(id, stageId)
+                db.bookDao().deletePageAudits(id)
+                db.bookDao().movePageAudits(stageId, id)
                 db.bookDao().updateBookStats(id, summary.pageCount, totalChars)
                 db.knowledgePoolDao().saveBook(metadata)
                 db.knowledgePoolDao().clearTopics(knowledgeId)
@@ -153,6 +182,11 @@ class KnowledgeProcessingWorker(context: Context, params: WorkerParameters) : Co
         private const val MAX_CHARS = 25_000_000
         private const val MAX_RETRIES = 3
     }
+}
+
+private fun sha256(value: String): String {
+    val digest = MessageDigest.getInstance("SHA-256").digest(value.toByteArray(Charsets.UTF_8))
+    return digest.joinToString("") { "%02x".format(it) }
 }
 
 private fun chunks(text: String): List<String> {
