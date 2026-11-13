@@ -118,14 +118,40 @@ data class KnowledgeBookEntity(
 @Entity(tableName="knowledge_topics",indices=[Index("knowledgeBookId"),Index("name")])
 data class KnowledgeTopicEntity(
  @PrimaryKey val id:String,val knowledgeBookId:String,val name:String,
- val startPage:Int,val confidence:Float,val evidence:String,val approved:Boolean=false
+ val startPage:Int,val confidence:Float,val evidence:String,val approved:Boolean=false,
+ val parentTopicId:String?=null
+)
+@Entity(tableName="knowledge_topic_aliases",indices=[Index(value=["topicId","normalizedAlias"],unique=true)],foreignKeys=[ForeignKey(entity=KnowledgeTopicEntity::class,parentColumns=["id"],childColumns=["topicId"],onDelete=ForeignKey.CASCADE)])
+data class KnowledgeTopicAliasEntity(
+ @PrimaryKey val id:String,val topicId:String,val alias:String,val normalizedAlias:String
 )
 @Dao interface KnowledgePoolDao {
  @Query("SELECT * FROM knowledge_books ORDER BY processedAt DESC") fun books():Flow<List<KnowledgeBookEntity>>
  @Query("SELECT * FROM knowledge_books WHERE bookId=:bookId LIMIT 1") suspend fun forBook(bookId:String):KnowledgeBookEntity?
  @Insert(onConflict=OnConflictStrategy.REPLACE) suspend fun saveBook(book:KnowledgeBookEntity)
  @Query("UPDATE knowledge_books SET detectedTitle=:title,author=:author,publisher=:publisher,edition=:edition,subject=:subject,reviewState='needs_review' WHERE id=:id") suspend fun updateMetadata(id:String,title:String,author:String,publisher:String,edition:String,subject:String)
- @Query("SELECT * FROM knowledge_topics WHERE knowledgeBookId=:knowledgeBookId ORDER BY startPage") suspend fun topics(knowledgeBookId:String):List<KnowledgeTopicEntity>
+ @Query("SELECT * FROM knowledge_topics WHERE knowledgeBookId=:knowledgeBookId ORDER BY COALESCE(parentTopicId,''),startPage,name COLLATE NOCASE") suspend fun topics(knowledgeBookId:String):List<KnowledgeTopicEntity>
+ @Query("SELECT * FROM knowledge_topic_aliases WHERE topicId=:topicId ORDER BY alias COLLATE NOCASE") suspend fun aliases(topicId:String):List<KnowledgeTopicAliasEntity>
+ @Insert(onConflict=OnConflictStrategy.IGNORE) suspend fun addAlias(alias:KnowledgeTopicAliasEntity):Long
+ @Query("DELETE FROM knowledge_topic_aliases WHERE id=:aliasId") suspend fun deleteAlias(aliasId:String)
+ @Query("UPDATE knowledge_topics SET parentTopicId=:parentId,approved=0 WHERE id=:topicId") suspend fun setTopicParent(topicId:String,parentId:String?)
+ @Query("UPDATE knowledge_topics SET parentTopicId=:targetId WHERE parentTopicId=:sourceId") suspend fun reparentChildren(sourceId:String,targetId:String?)
+ @Query("INSERT OR IGNORE INTO knowledge_topic_aliases(id,topicId,alias,normalizedAlias) SELECT lower(hex(randomblob(16))),:targetId,alias,normalizedAlias FROM knowledge_topic_aliases WHERE topicId=:sourceId") suspend fun copyAliasesToTopic(sourceId:String,targetId:String)
+ @Query("DELETE FROM knowledge_topic_aliases WHERE topicId=:sourceId") suspend fun deleteAliasesForTopic(sourceId:String)
+ @Query("UPDATE knowledge_topics SET approved=CASE WHEN approved=1 AND (SELECT approved FROM knowledge_topics WHERE id=:sourceId)=1 THEN 1 ELSE 0 END WHERE id=:targetId") suspend fun reconcileMergedApproval(sourceId:String,targetId:String)
+ @Query("DELETE FROM knowledge_topics WHERE id=:sourceId") suspend fun deleteTopicById(sourceId:String)
+ @Transaction suspend fun mergeTopic(sourceId:String,targetId:String) {
+  require(sourceId != targetId)
+  val source = topicById(sourceId) ?: error("Source topic not found")
+  val target = topicById(targetId) ?: error("Target topic not found")
+  require(source.knowledgeBookId == target.knowledgeBookId) { "Topics from different books cannot be merged." }
+  reparentChildren(sourceId,targetId)
+  copyAliasesToTopic(sourceId,targetId)
+  reconcileMergedApproval(sourceId,targetId)
+  deleteAliasesForTopic(sourceId)
+  deleteTopicById(sourceId)
+ }
+ @Query("SELECT * FROM knowledge_topics WHERE id=:id LIMIT 1") suspend fun topicById(id:String):KnowledgeTopicEntity?
  @Insert(onConflict=OnConflictStrategy.REPLACE) suspend fun saveTopics(topics:List<KnowledgeTopicEntity>)
  @Insert(onConflict=OnConflictStrategy.REPLACE) suspend fun addTopic(topic:KnowledgeTopicEntity)
  @Query("UPDATE knowledge_topics SET name=:name,startPage=:startPage,approved=0 WHERE id=:id") suspend fun updateTopicDetails(id:String,name:String,startPage:Int)
@@ -151,7 +177,7 @@ data class SavedLessonEntity(
  @Query("DELETE FROM saved_lessons WHERE id=:id") suspend fun deleteLesson(id:String)
 }
 
-@Database(entities=[ConversationEntity::class,MessageEntity::class,LocalModelEntity::class,WorkspaceProjectEntity::class,KnowledgeChunkEntity::class,BookEntity::class,BookPassageEntity::class,KnowledgeBookEntity::class,KnowledgeTopicEntity::class,SavedLessonEntity::class,BookPassageFts::class,KnowledgeProcessingCheckpointEntity::class],version=11,exportSchema=false)
+@Database(entities=[ConversationEntity::class,MessageEntity::class,LocalModelEntity::class,WorkspaceProjectEntity::class,KnowledgeChunkEntity::class,BookEntity::class,BookPassageEntity::class,KnowledgeBookEntity::class,KnowledgeTopicEntity::class,SavedLessonEntity::class,BookPassageFts::class,KnowledgeProcessingCheckpointEntity::class,KnowledgeTopicAliasEntity::class],version=12,exportSchema=false)
 abstract class AppDatabase:RoomDatabase(){
  abstract fun chatDao():ChatDao
  abstract fun modelDao():ModelDao
