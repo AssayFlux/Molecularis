@@ -2,74 +2,58 @@
 
 ## The destination
 
-Molecularis is a personal, dependable biochemistry teaching assistant for the Android device. It helps a professor turn trusted biochemistry learning material into clear, memorable teaching—and, when asked, can teach a prepared lesson aloud with synchronized slides and scientific diagrams.
+Molecularis is a user-built, offline-first learning and teaching workspace. A person chooses a subject, adds books and other authorized materials, reviews the knowledge extracted from those sources, and creates one or more AI professor roles to help explain, teach, question, and organize that subject.
 
-The product succeeds when a professor can move from **“I need to teach this topic”** to a coherent, accurate, engaging lesson with as little friction as possible, even without an internet connection.
+The intended experience is not a single preconfigured biochemistry tutor. It is a reusable framework for many subjects and many professor roles, with the active subject's sources, learning goals, and safety constraints made explicit.
 
 ## Who it serves
 
-The primary user is a biochemistry professor teaching learners across MBBS, MD, DNB and PhD levels. The same scientific topic must be explainable at different depths: from foundational clinical understanding to advanced mechanisms and research-level nuance.
-
-Students are the audience for lessons. The professor remains in control of source material, level, emphasis, duration and delivery.
+- Independent learners building a personal knowledge library.
+- Educators preparing lessons and assessments from selected course materials.
+- Researchers organizing domain-specific references and comparing source evidence.
+- Professionals maintaining a private reference workspace.
+- Study groups and institutions, where future collaboration and governance features are implemented.
 
 ## The core experience
 
-1. **Build a trusted library.** Import textbooks, notes, lecture files and other materials supplied by the professor. Keep original files on-device and preserve useful structure such as chapters, pages, tables and figures.
-2. **Understand and organize.** Extract text, recognize scanned pages when needed, and organize content into subjects, topics, subtopics and concepts. Make the local library searchable.
-3. **Prepare to teach.** Given a topic, learner level and available time, create a logical teaching flow: prerequisites, learning objectives, explanation, mechanisms, clinical relevance, examples, misconceptions, recap and questions.
-4. **Make science visible.** Build clear scientific diagrams from structured, reusable SVG elements. Reveal pathways and labels progressively as the explanation unfolds.
-5. **Teach with voice and slides.** Let the professor present manually or ask Molecularis to deliver a prepared lesson using narration and synchronized slides. The professor can pause, resume, navigate and intervene.
-6. **Improve the lesson.** Allow review and editing of teaching flows, slides, diagrams and narration before delivery.
+1. **Create a subject workspace.** Name a subject, define its scope, add optional sub-disciplines, and choose the learner or professional level.
+2. **Add sources.** Import books, notes, papers, and supported documents the user is authorized to process. Preserve original files separately from derived text.
+3. **Build a Knowledge Pool.** Extract text, retain page boundaries, audit extraction quality, organize topics, and let the user correct metadata and topic structures.
+4. **Review evidence.** Approve sources and topic links. Preserve exact source, page, passage, version, and processing provenance.
+5. **Create professor roles.** Configure one or more roles (for example, foundational tutor, advanced lecturer, examiner, research-methods mentor) with domain, audience, objectives, and boundaries.
+6. **Learn and create.** Use subject-scoped chat, lesson plans, slides, diagrams, quizzes, notes, and other supported study tools.
+7. **Verify and improve.** Inspect evidence, correct mistakes, compare outputs against source material, and export reproducible evaluation records where consented.
 
 ## Product principles
 
-- **Scientific understanding first.** Optimize for conceptual clarity, causal reasoning and useful explanation—not for producing long blocks of text.
-- **Professor-directed.** The professor chooses the topic, level, time, source library and teaching intent. Generated material is editable and never presented as infallible.
-- **Offline by default.** Core library, search, lesson preparation and playback should work locally wherever technically feasible. Network-dependent features must be explicit.
-- **Trusted materials.** Use the professor's supplied sources as the foundation. Clearly distinguish source-grounded content from general model knowledge internally.
-- **Right depth for the learner.** MBBS, postgraduate and doctoral explanations should differ in vocabulary, detail, assumptions and emphasis.
-- **Visual and auditory teaching.** Slides, diagrams and narration are one coordinated lesson—not disconnected outputs.
-- **Fast and dependable.** Import and indexing may take time, but everyday teaching workflows should be responsive, recoverable and predictable.
-- **Privacy and ownership.** Keep books and personal teaching materials on-device by default. Never upload them to an external service without clear, informed permission.
-- **Honest capability.** SQLite stores and retrieves knowledge; it does not generate explanations by itself. Local generation requires a compatible on-device model. If a model or offline voice is unavailable, say so plainly.
-- **Respect rights.** Track provenance and reuse permissions for imported and externally sourced media. Do not assume that an image found online is free to reuse.
+- **User-defined domain:** no single academic discipline is the product's identity. Domain-specific features are modular extensions.
+- **Evidence before confidence:** distinguish source-supported statements from general model knowledge; never fabricate citations.
+- **Human review:** extracted topics and generated teaching content are candidates for review, not unquestionable truth.
+- **Traceability:** retain document identity, checksum, page, passage, processing version, and approval state wherever possible.
+- **Offline by default:** local library and search should not require cloud access. Network inference must be explicit.
+- **Plural expertise:** multiple professor roles may coexist in one subject workspace without mixing their prompts or permissions.
+- **User control:** the user owns workspace configuration and can remove sources and derived material.
+- **Reproducibility:** record model/provider identity, prompt/template version, retrieval settings, source set, and timestamps for research-relevant outputs.
+- **Safety by domain:** higher-risk disciplines require additional guardrails, disclaimers, and expert oversight.
+- **Honest capability:** do not claim model training when the system has only extracted and indexed documents. Do not claim accuracy, learning gain, or clinical/legal competence without evaluation.
 
-## The product boundary
+## Research integrity
 
-Molecularis is not intended to be a generic chatbot, a replacement for the professor, a medical decision-support system, or an unreviewed textbook generator. It is a teaching workspace that helps a professor understand, structure, visualize and deliver biochemistry lessons.
+Molecularis should be studied as a socio-technical system: document ingestion, retrieval, human review, AI generation, and learner interaction all affect outcomes. Research must report model/provider, version, hardware, corpus composition and rights, language, prompt and retrieval configuration, inclusion/exclusion criteria, missing data, failures, and human-review procedures. Educational outcomes require a suitable comparison design and validated measures. Software unit tests alone cannot establish educational benefit.
 
-It must not invent source quotations, fabricate references, conceal uncertainty, or silently send private material to a cloud provider.
+## Product boundary
 
-## Experience standards
+Molecularis is a learning and knowledge-work aid. It is not an authority that replaces educators, domain experts, clinicians, lawyers, financial advisers, or institutional review. It must not silently upload private documents, train on user content without explicit informed consent, or present generated text as verified fact.
 
-A successful lesson should:
-- state clear learning objectives and establish prerequisites;
-- explain mechanisms in a sequence that makes causal relationships understandable;
-- define unfamiliar terms and explain important abbreviations;
-- connect molecular mechanisms to physiology, pathology and clinical relevance when appropriate;
-- use accurate, legible diagrams that reveal progressively;
-- match its duration and depth to the professor's settings;
-- finish with a concise synthesis and useful retrieval questions;
-- remain editable and reviewable before autonomous delivery.
+## Definition of success
 
-## Technical direction
+A user can:
+- Create multiple distinct subject workspaces.
+- Add sources to the intended subject without accidental cross-contamination.
+- Build and review a page-linked Knowledge Pool.
+- Configure multiple professor roles for the same subject.
+- Ask questions and create teaching material with visible evidence and uncertainty.
+- Reproduce a prior output from its recorded source, model, prompt, and retrieval configuration.
+- Export or delete their own data with understandable consequences.
 
-- Native Android application using Kotlin and Jetpack Compose.
-- Room/SQLite for structured local data, with full-text search as the dependable baseline.
-- Original PDFs and media stored as files or document URIs, not as large database blobs.
-- A modular content-ingestion pipeline for PDF text extraction, OCR, metadata and topic organization.
-- A lesson domain model that separates content, slides, diagram states, narration and timing.
-- A local AI provider abstraction; optional remote providers only with explicit user consent.
-- Android text-to-speech as an initial voice path, with offline voice availability checked on the device.
-- Background work for import, indexing and model downloads; foreground media playback for active lessons.
-- Automated tests for ingestion, retrieval, lesson structure, diagram timelines and critical UI state.
-
-Astronaut is the source project for reusable implementation and interface patterns. Molecularis may reuse its code and UI broadly, while adapting package identity, branding, navigation, data models and workflows to this teaching mission. Retain third-party notices and licence obligations for all reused components.
-
-## First meaningful milestone
-
-A professor can import a PDF, see its extracted content, search for a biochemistry topic, inspect relevant passages, generate and edit a structured teaching outline, and save that outline locally. This is the first end-to-end workflow on which later slides, diagrams, voice and autonomous teaching will build.
-
-## Long-term measure of success
-
-Molecularis becomes the professor's reliable teaching companion: a well-organized local knowledge library and a capable lesson studio that can prepare and deliver scientifically sound, level-appropriate biochemistry teaching—anytime, anywhere, with the professor in control.
+These are target capabilities. Each must be marked implemented only after end-to-end tests and user-facing verification.
