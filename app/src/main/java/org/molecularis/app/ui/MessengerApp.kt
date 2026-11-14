@@ -798,7 +798,7 @@ private enum class Section(val label:String){HOME("Home"),TEACHING("Lectures"),C
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Composable private fun ChatScreen(conversations:List<ConversationEntity>,selectedId:Long?,messages:List<MessageEntity>,draft:String,onDraftChange:(String)->Unit,attachmentName:String?,activeModelName:String?,runtimeMessage:String,loading:Boolean,sending:Boolean,voiceListening:Boolean,onVoice:()->Unit,onSpeak:(String)->Unit,onAttach:()->Unit,onClearAttachment:()->Unit,onSelect:(Long)->Unit,onDelete:(Long)->Unit,onlineEnabled:Boolean,onSend:()->Unit,onTeach:()->Unit,onLibrary:()->Unit,onModels:()->Unit,onAiHub:()->Unit){
+@Composable private fun ChatScreen(conversations:List<ConversationEntity>,selectedId:Long?,messages:List<MessageEntity>,draft:String,onDraftChange:(String)->Unit,attachmentName:String?,activeModelName:String?,runtimeMessage:String,loading:Boolean,sending:Boolean,voiceListening:Boolean,onVoice:()->Unit,onSpeak:(String)->Unit,onAttach:()->Unit,onClearAttachment:()->Unit,onSelect:(Long)->Unit,onDelete:(Long)->Unit,onlineEnabled:Boolean,onSend:()->Unit,onTeach:()->Unit,onLibrary:()->Unit,onModels:()->Unit,onAiHub:()->Unit,chatBackgroundColor:String="#F4F6F8",chatBackgroundImage:String="",chatFontFamily:String="SansSerif",chatFontColor:String="#20242B",chatFontSize:Int=16){
  var pendingDelete by remember{mutableStateOf<Long?>(null)}
  var historyExpanded by remember{mutableStateOf(false)}
  var actionsExpanded by remember{mutableStateOf(false)}
@@ -1071,6 +1071,8 @@ private suspend fun readDatasetBounded(context:Context,uri:Uri):String = withCon
  engineOptimization:String,
  fontFamilyName:String,
  backgroundUri:String,
+ chatBackgroundColor:String,chatBackgroundImage:String,chatFontFamily:String,chatFontColor:String,chatFontSize:Int,
+ onChatBackgroundColorChange:(String)->Unit,onChatBackgroundImageChange:(String)->Unit,onChatFontFamilyChange:(String)->Unit,onChatFontColorChange:(String)->Unit,onChatFontSizeChange:(Int)->Unit,
  onResponseStyleChange:(String)->Unit,
  onAccentChange:(String)->Unit,
  onDarkAppearanceChange:(Boolean)->Unit,
@@ -1101,6 +1103,7 @@ private suspend fun readDatasetBounded(context:Context,uri:Uri):String = withCon
  var languageMenu by remember{mutableStateOf(false)}
  val languageOptions=(listOf(languageTag,java.util.Locale.getDefault().toLanguageTag(),"en-US","hi-IN","bn-IN")+recognition.installed+recognition.downloadable+recognition.pending).distinct()
  val duplicateVoiceLabels=voices.groupingBy{it.label}.eachCount()
+ val chatBackgroundPicker=rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()){uri->if(uri!=null){runCatching{context.contentResolver.takePersistableUriPermission(uri,Intent.FLAG_GRANT_READ_URI_PERMISSION)};onChatBackgroundImageChange(uri.toString())}}
  val backgroundPicker=rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()){uri->
   if(uri!=null){
    runCatching{context.contentResolver.takePersistableUriPermission(uri,Intent.FLAG_GRANT_READ_URI_PERMISSION)}
@@ -1249,6 +1252,21 @@ private suspend fun readDatasetBounded(context:Context,uri:Uri):String = withCon
   Card(Modifier.fillMaxWidth()){
    Column(Modifier.padding(16.dp),verticalArrangement=Arrangement.spacedBy(10.dp)){
     Text("Chat & AI behaviour",style=MaterialTheme.typography.titleLarge,fontWeight=FontWeight.SemiBold)
+    Text("Customisation · Chat workspace",style=MaterialTheme.typography.titleLarge,fontWeight=FontWeight.SemiBold)
+    Text("Change the conversation canvas independently of the rest of the app.",style=MaterialTheme.typography.bodySmall,color=Muted)
+    var chatBgDraft by remember(chatBackgroundColor){mutableStateOf(chatBackgroundColor)}
+    var chatTextDraft by remember(chatFontColor){mutableStateOf(chatFontColor)}
+    OutlinedTextField(chatBgDraft,{chatBgDraft=it.uppercase()},modifier=Modifier.fillMaxWidth(),label={Text("Chat background colour · HEX")},singleLine=true)
+    Button(onClick={onChatBackgroundColorChange(chatBgDraft)},enabled=chatBgDraft.matches(Regex("#[A-F0-9]{6}")),modifier=Modifier.fillMaxWidth()){Text("Apply chat background colour")}
+    OutlinedButton(onClick={chatBackgroundPicker.launch(arrayOf("image/*"))},modifier=Modifier.fillMaxWidth()){Icon(Icons.Default.Image,null);Spacer(Modifier.width(8.dp));Text(if(chatBackgroundImage.isBlank())"Choose chat background image" else "Change chat background image")}
+    if(chatBackgroundImage.isNotBlank())TextButton(onClick={onChatBackgroundImageChange("")}){Text("Remove chat background image")}
+    OutlinedTextField(chatTextDraft,{chatTextDraft=it.uppercase()},modifier=Modifier.fillMaxWidth(),label={Text("Chat font colour · HEX")},singleLine=true)
+    Button(onClick={onChatFontColorChange(chatTextDraft)},enabled=chatTextDraft.matches(Regex("#[A-F0-9]{6}")),modifier=Modifier.fillMaxWidth()){Text("Apply font colour")}
+    Text("Chat font family",style=MaterialTheme.typography.titleMedium,fontWeight=FontWeight.SemiBold)
+    Row(horizontalArrangement=Arrangement.spacedBy(6.dp)){listOf("SansSerif" to "Sans","Serif" to "Serif","Monospace" to "Mono","Cursive" to "Cursive").forEach{(value,label)->FilterChip(selected=chatFontFamily==value,onClick={onChatFontFamilyChange(value)},label={Text(label)},modifier=Modifier.weight(1f))}}
+    Text("Chat font size · $chatFontSize sp",style=MaterialTheme.typography.titleMedium,fontWeight=FontWeight.SemiBold)
+    Slider(value=chatFontSize.toFloat(),onValueChange={onChatFontSizeChange(it.toInt())},valueRange=12f..22f,steps=9)
+    Text("Preview · Molecularis study conversations",fontFamily=chatFontFamily.toChatFontFamily(),fontSize=chatFontSize.sp,color=parseChatColor(chatFontColor,MaterialTheme.colorScheme.onSurface))
     Text("Response style",style=MaterialTheme.typography.titleMedium,fontWeight=FontWeight.SemiBold)
     Row(horizontalArrangement=Arrangement.spacedBy(6.dp)){
      listOf("concise" to "Concise","balanced" to "Balanced","detailed" to "Detailed").forEach{(value,label)->FilterChip(selected=responseStyle==value,onClick={onResponseStyleChange(value)},label={Text(label)})}
@@ -1313,6 +1331,8 @@ private suspend fun readDatasetBounded(context:Context,uri:Uri):String = withCon
  }
 @Composable private fun InfoCard(title:String,body:String){Card(Modifier.fillMaxWidth().padding(bottom=10.dp)){Column(Modifier.padding(16.dp)){Text(title,fontWeight=FontWeight.SemiBold);Spacer(Modifier.height(4.dp));Text(body,color=Muted,style=MaterialTheme.typography.bodyMedium)}}}
 @Composable private fun EmptyState(title:String,body:String){Column(Modifier.fillMaxWidth().padding(vertical=24.dp),horizontalAlignment=Alignment.CenterHorizontally){Text(title,fontWeight=FontWeight.SemiBold);Text(body,color=Muted,style=MaterialTheme.typography.bodySmall)}}
+private fun parseChatColor(value:String,fallback:Color):Color=runCatching{Color(android.graphics.Color.parseColor(value))}.getOrDefault(fallback)
+private fun String.toChatFontFamily():FontFamily=when(this){"Serif"->FontFamily.Serif;"Monospace"->FontFamily.Monospace;"Cursive"->FontFamily.Cursive;else->FontFamily.SansSerif}
 private fun parseChatColor(value:String,fallback:Color):Color=runCatching{Color(android.graphics.Color.parseColor(value))}.getOrDefault(fallback)
 private fun String.toChatFontFamily():FontFamily=when(this){"Serif"->FontFamily.Serif;"Monospace"->FontFamily.Monospace;"Cursive"->FontFamily.Cursive;else->FontFamily.SansSerif}
 private fun friendlyLanguageName(tag:String):String {
