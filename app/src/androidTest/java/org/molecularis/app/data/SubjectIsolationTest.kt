@@ -65,6 +65,10 @@ class SubjectIsolationTest {
             )
         )
 
+        database.openHelper.writableDatabase.execSQL(
+            "INSERT INTO book_passages_fts(book_passages_fts) VALUES('rebuild')"
+        )
+
         database.knowledgePoolDao().saveBook(
             KnowledgeBookEntity(
                 id = "math-kb", bookId = "math-book", detectedTitle = "Algebra", author = "",
@@ -119,6 +123,8 @@ class SubjectIsolationTest {
 
         assertEquals(listOf("math-book"), database.bookDao().booksForSubject("math").first().map { it.id })
         assertEquals(listOf("math-passage"), database.bookDao().searchAllForSubject("math", "sharedterm").map { it.id })
+        assertEquals(listOf("math-passage"), database.bookDao().searchFilteredIndexedForSubject("sharedterm", "math", null, null, null).map { it.id })
+        assertEquals(listOf("math-prof"), database.professorProfileDao().profiles("math").first().map { it.id })
         assertEquals(listOf("math-kb"), database.knowledgePoolDao().booksForSubject("math").first().map { it.id })
         assertEquals(listOf("Math chat"), database.chatDao().conversationsForSubject("math").first().map { it.title })
         assertEquals(listOf("math-lesson"), database.lessonDao().lessonsForSubject("math").first().map { it.id })
