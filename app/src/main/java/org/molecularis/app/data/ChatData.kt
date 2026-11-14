@@ -273,7 +273,7 @@ data class KnowledgeTopicPassageLinkEntity(val topicId:String,val passageId:Stri
  @Transaction suspend fun deleteForBook(bookId:String) { deleteTopicsForBook(bookId); deleteBookMetadataForBook(bookId) }
 }
 
-@Entity(tableName="saved_lessons",indices=[Index("updatedAt")])
+@Entity(tableName="saved_lessons",indices=[Index("updatedAt"),Index("subjectId")])
 data class SavedLessonEntity(
  @PrimaryKey val id:String,
  val title:String,
@@ -281,10 +281,12 @@ data class SavedLessonEntity(
  val durationMinutes:Int,
  val outline:String,
  val createdAt:Long=System.currentTimeMillis(),
- val updatedAt:Long=System.currentTimeMillis()
+ val updatedAt:Long=System.currentTimeMillis(),
+ @ColumnInfo(defaultValue="'legacy-default'") val subjectId:String="legacy-default"
 )
 @Dao interface LessonDao {
  @Query("SELECT * FROM saved_lessons ORDER BY updatedAt DESC") fun lessons():Flow<List<SavedLessonEntity>>
+ @Query("SELECT * FROM saved_lessons WHERE subjectId=:subjectId ORDER BY updatedAt DESC") fun lessonsForSubject(subjectId:String):Flow<List<SavedLessonEntity>>
  @Insert(onConflict=OnConflictStrategy.REPLACE) suspend fun saveLesson(lesson:SavedLessonEntity)
  @Query("SELECT * FROM saved_lessons WHERE id=:id LIMIT 1") suspend fun lesson(id:String):SavedLessonEntity?
  @Query("DELETE FROM saved_lessons WHERE id=:id") suspend fun deleteLesson(id:String)
