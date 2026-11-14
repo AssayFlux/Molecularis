@@ -34,10 +34,10 @@ import java.security.MessageDigest
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BookLibraryScreen(database: AppDatabase) {
+fun BookLibraryScreen(database: AppDatabase, subjectId:String) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val books by database.bookDao().books().collectAsState(initial = emptyList())
+    val books by database.bookDao().booksForSubject(subjectId).collectAsState(initial = emptyList())
     var query by remember { mutableStateOf("") }
     var fromPage by remember { mutableStateOf("") }
     var toPage by remember { mutableStateOf("") }
@@ -72,7 +72,7 @@ fun BookLibraryScreen(database: AppDatabase) {
                         } ?: error("Could not open the selected PDF.")
                     }
                     val checksum = withContext(Dispatchers.IO) { sha256File(localFile!!) }
-                    val duplicate = database.bookDao().bookBySha256(checksum)
+                    val duplicate = database.bookDao().bookBySha256(checksum)?.takeIf { it.subjectId == subjectId }
                     if (duplicate != null) {
                         localFile!!.delete()
                         localFile = null
@@ -88,7 +88,8 @@ fun BookLibraryScreen(database: AppDatabase) {
                         sourceUri = uri.toString(),
                         pageCount = 0,
                         extractedChars = 0,
-                        fileSha256 = checksum
+                        fileSha256 = checksum,
+                        subjectId = subjectId
                     )
                     database.bookDao().addBook(book)
                     status = "Added ${book.title} to Library. The original PDF is preserved unchanged. Open Knowledge Pool when you are ready to extract, analyse and organize its content."
