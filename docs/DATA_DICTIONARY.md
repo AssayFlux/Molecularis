@@ -1,55 +1,71 @@
 # Molecularis data dictionary and provenance model
 
-## Purpose
+## Purpose and implementation status
 
-This is the target conceptual model for the multi-subject architecture. It documents both existing repository concepts and required additions. Do not infer that every target entity is already implemented in Room.
+This document distinguishes entities already present in Room from concepts still planned. The active subject boundary is implemented for the primary learning workflows; this does not imply that every derived artifact or every specialist module is fully scoped.
 
-| Entity | Key fields | Status in current repository |
+| Entity | Key fields | Current status |
 |---|---|---|
-| SubjectWorkspace | id, name, description, taxonomy, language, defaults, createdAt | Required; not yet first-class |
-| ProfessorProfile | id, subjectId, name, role, instructions, audience, goals, boundaries, promptVersion | Required; not yet first-class |
-| Book | id, subjectId, title, originalFileName, localPath, sourceUri, checksum, rightsBasis, importedAt | Existing book lacks subjectId and rights metadata |
-| KnowledgeBook | id, bookId, detected metadata, subject, reviewState, extraction metrics | Existing; subject is detected metadata, not workspace ownership |
-| Passage | id, bookId, pageNumber, chunkIndex, text, extractionVersion | Existing page-linked passage concept |
-| Topic | id, knowledgeBookId, name, parentTopicId, confidence, evidence, approved | Existing; book/knowledge-book scoped |
-| TopicPassageLink | topicId, passageId, pageNumber, linkType | Existing provenance link |
-| Conversation | id, subjectId, professorProfileId, createdAt | Existing conversation lacks subject/profile scope |
-| Message | id, conversationId, role, content, timestamp, status | Existing conversation message |
-| Lesson | id, subjectId, professorProfileId, sourceSetHash, promptVersion, modelVersion, reviewState | Existing saved lesson lacks full provenance fields |
-| EvaluationRun | id, subjectId, appCommit, modelVersion, configHash, datasetVersion, timestamp | Required; not yet implemented |
+| SubjectWorkspace | id, name, description, disciplineCode, languageTag, timestamps, isDefault | Implemented in Room; create, select, edit |
+| ProfessorProfile | id, subjectId, name, role, instructions, learnerLevel, tone, objectives, sourcePolicy, safetyBoundaries, promptVersion | Implemented in Room; create, select, edit; configuration only, not model training |
+| Book | id, subjectId, title, localPath, sourceUri, checksum, importedAt | Implemented; import uses active subject |
+| KnowledgeBook | id, bookId, detected metadata, reviewState, extraction metrics | Existing; workspace scope inherited through source Book |
+| Passage | id, bookId, pageNumber, chunkIndex, text | Existing; workspace scope inherited through source Book |
+| Topic | id, knowledgeBookId, name, parentTopicId, confidence, evidence, approved | Existing; scope inherited through KnowledgeBook/Book |
+| TopicPassageLink | topicId, passageId, pageNumber, linkType | Existing; passage/book relationship provides scope |
+| Conversation | id, subjectId, professorProfileId, workspaceProjectId, createdAt | Implemented; subject-filtered list and profile selection |
+| Message | id, conversationId, role, content, status, provider/model, promptVersion/hash, sourceSetHash, retrievalConfig | Implemented; provenance fields populated for successful assistant answers |
+| WorkspaceProject | id, subjectId, name, description, timestamps | Implemented; scoped to active subject |
+| Lesson | id, subjectId, professorProfileId, promptVersion, outline, timestamps | Implemented; subject-filtered saved lessons; source/model provenance is incomplete |
+| ScheduledLecture | id, lessonId, subjectId, schedule, status, workId | Implemented; scoped and validates lesson ownership before playback |
+| SavedDiagram | id, title, template, diagramJson, updatedAt | Existing storage concept; not yet integrated into subject-scoped saved-output workflows |
+| EvaluationRun | id, subjectId, appCommit, modelVersion, configHash, datasetVersion, timestamp | Planned; no first-class experiment-run table yet |
 
 ## Core invariants
 
-1. Every source document belongs to exactly one subject workspace unless the user explicitly creates a shared-source relationship.
-2. Every derived passage inherits the source's subject scope.
-3. Every topic-to-passage link must point to a passage belonging to the same subject scope.
-4. Every conversation has an explicit subject scope. A professor profile must belong to that same subject.
-5. Retrieval queries are scoped by subject ID before ranking. Filtering after global retrieval is insufficient.
-6. Cross-subject retrieval is a separate explicit user action and must label the source subject.
-7. Deleting a source must remove or orphan its derived passages, topic links, cached vectors, and dependent citations according to a documented retention policy.
+1. Every imported source book has one subjectId.
+2. Every derived passage is owned by a book; retrieval must join through the book and filter by its subjectId before ranking or returning results.
+3. Knowledge Pool records are scoped through their source book. A detected KnowledgeBook.subject is metadata, not the workspace ID.
+4. Every conversation has a subjectId; a selected professor profile must belong to the same subject.
+5. Saved lessons, workspace projects, and scheduled lectures carry subjectId; scheduled playback verifies that the referenced lesson has the same subject.
+6. Cross-subject retrieval is not currently offered as an implicit fallback. A future comparison workflow must be an explicit user action and label each source's subject.
+7. Deleting a source must remove or orphan derived passages, topic links, cached vectors, and dependent citations according to a documented retention policy. Full derived-data deletion verification remains a release gate.
 8. A source replacement creates a new checksum/version and must not silently rewrite the provenance of previously generated content.
-9. Store model/provider, prompt template version, retrieval configuration, source-set hash, and generation timestamp for reproducibility.
+9. Successful chat answers record provider/model, professor profile, prompt version and hash, source-set hash (when sources were retrieved), and retrieval configuration. This metadata is not yet uniformly attached to every generated artifact.
 10. Do not store API secrets in these entities; use secure platform storage.
 
-## Suggested relational relationships
+## Relational relationships
 
 - SubjectWorkspace 1—N Book
 - SubjectWorkspace 1—N ProfessorProfile
 - SubjectWorkspace 1—N Conversation
+- SubjectWorkspace 1—N WorkspaceProject
 - SubjectWorkspace 1—N Lesson
+- SubjectWorkspace 1—N ScheduledLecture
 - Book 1—N Passage
 - Book 1—0..1 KnowledgeBook processing record
 - KnowledgeBook 1—N Topic
 - Topic N—N Passage through TopicPassageLink
 - ProfessorProfile 1—N Conversation and Lesson
-- EvaluationRun N—1 SubjectWorkspace (or an explicitly declared multi-subject scope)
+- EvaluationRun N—1 SubjectWorkspace (planned)
 
-## Migration strategy
+## Migration 17 → 18
 
-1. Add a default legacy workspace (e.g., "My first subject") and assign existing books and conversations to it.
-2. Do not automatically label every existing book "Biochemistry"; preserve the detected metadata as metadata and ask the user to confirm the workspace subject.
-3. Add nullable subject IDs first, backfill and verify counts, then enforce non-null constraints in a later migration.
-4. Preserve existing foreign-key cascades and FTS triggers.
-5. Add database-level indexes and constraints for workspace scope.
-6. Add migration tests using populated databases from every supported schema version.
-7. Add two-subject integration fixtures with similar terms and verify zero unauthorized leakage.
+The additive Room migration:
+1. Creates subject_workspaces and professor_profiles.
+2. Creates a default legacy-default workspace and legacy-professor-default profile.
+3. Adds subjectId to existing books, conversations, workspace projects, saved lessons, and scheduled lectures, defaulting existing rows to legacy-default.
+4. Adds professorProfileId to conversations and saved lessons.
+5. Adds provider/model, prompt version/hash, source-set hash, and retrieval configuration fields to messages.
+6. Adds indexes for subject/profile lookups.
+
+Existing content is preserved in the default workspace. The migration does not guess a discipline from old branding or detected book metadata. A populated-database migration test across supported historical versions remains required before release. New installs seed the same default workspace/profile in the Room creation callback.
+
+## Validation requirements
+
+- Two-subject fixture with overlapping vocabulary; library search and retrieval must return only the active subject.
+- Conversation, professor, lesson, project, and schedule lists must remain scoped after switching subjects and restarting the app.
+- Attempted profile/lesson mismatch must be rejected by application logic and covered by tests.
+- Test migration from a populated version-17 database and verify row counts, foreign keys, FTS state, and encrypted-copy integrity.
+- Verify source deletion and replacement across passages, topics, vector chunks, citations, and exports.
+- Add explicit cross-subject comparison only with visible user consent and source subject labels.
