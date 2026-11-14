@@ -175,12 +175,13 @@ The current vertical slice includes **import PDF → checkpointed OCR → review
 
 ## Delivery discipline
 
-- Work directly on the main branch only.
-- Re-read the current main state before each change.
-- Keep commits small and buildable.
+- Prefer short-lived feature branches and reviewed pull requests; protect the default branch when repository settings permit.
+- Re-read the current default-branch state before each change.
+- Keep commits focused, attributable, and buildable.
 - Add tests with each data or processing feature.
 - Do not claim a feature is offline until it has been tested with airplane mode enabled and required local assets installed.
 - Record device-dependent limitations rather than hiding them.
+- Update the research governance, reproducibility record, and limitations when a change affects study validity or claims.
 
 
 ## Phase 10 — Multi-subject and multi-professor platform
@@ -203,3 +204,23 @@ The current vertical slice includes **import PDF → checkpointed OCR → review
 **Exit criteria:** a user can create at least two independent subjects, add and process books in each, create multiple professor roles, and verify that chat and retrieval never cross subject boundaries without explicit consent.
 
 See [MULTI_SUBJECT_ARCHITECTURE.md](MULTI_SUBJECT_ARCHITECTURE.md), [DATA_DICTIONARY.md](DATA_DICTIONARY.md), and [RESEARCH_READINESS.md](RESEARCH_READINESS.md).
+
+
+## Phase 11 — Research operations and release provenance
+
+**Goal:** make every research-relevant build, dataset, and evaluation traceable without overstating the evidence.
+
+- [x] Add repository contribution, security, and community conduct policies.
+- [x] Add software citation metadata and research workspace guidance.
+- [x] Define ethics, consent, privacy, corpus-rights, and AI governance expectations.
+- [x] Define immutable run, corpus, model, prompt, retrieval, and artifact provenance requirements.
+- [x] Publish a current limitations and claims-boundary document.
+- [ ] Add a machine-readable experiment-run schema and validation.
+- [ ] Add an automated release manifest containing commit, toolchain, artifact SHA-256, and dependency inventory.
+- [ ] Add dependency vulnerability and license scanning with reviewed exceptions.
+- [ ] Add a documented threat model and data-flow diagram validated against the implementation.
+- [ ] Add reproducible analysis scripts and a versioned expert annotation rubric.
+- [ ] Add a frozen, rights-cleared evaluation corpus and held-out test set.
+- [ ] Publish the first technical evaluation report with baselines, confidence intervals, failures, and limitations.
+
+**Exit criteria:** an independent researcher can identify the exact software, model, corpus, configuration, artifact, and analysis behind each reported result, and can reproduce the permitted portions of the evaluation.
