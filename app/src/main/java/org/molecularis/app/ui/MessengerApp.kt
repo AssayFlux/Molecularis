@@ -458,7 +458,7 @@ private enum class Section(val label:String){HOME("Home"),TEACHING("Lectures"),C
      confirmButton={TextButton(enabled=subjectNameDraft.isNotBlank(),onClick={scope.launch{
       db.subjectWorkspaceDao().update(activeWorkspace.copy(name=subjectNameDraft.trim(),description=subjectDescriptionDraft.trim(),updatedAt=System.currentTimeMillis()))
       showEditSubjectDialog=false
-     }){Text("Save")}},
+     }}){Text("Save")}},
      dismissButton={TextButton(onClick={showEditSubjectDialog=false}){Text("Cancel")}}
     )
     if(showEditProfessorDialog && activeProfessor!=null) AlertDialog(
@@ -472,7 +472,7 @@ private enum class Section(val label:String){HOME("Home"),TEACHING("Lectures"),C
      confirmButton={TextButton(enabled=professorNameDraft.isNotBlank(),onClick={scope.launch{
       db.professorProfileDao().update(activeProfessor.copy(name=professorNameDraft.trim(),role=professorRoleDraft.trim().ifBlank{"evidence-aware learning professor"},instructions=professorInstructionsDraft.trim(),updatedAt=System.currentTimeMillis()))
       showEditProfessorDialog=false
-     }){Text("Save")}},
+     }}){Text("Save")}},
      dismissButton={TextButton(onClick={showEditProfessorDialog=false}){Text("Cancel")}}
     )
     if(showNewSubjectDialog) AlertDialog(
@@ -490,7 +490,7 @@ private enum class Section(val label:String){HOME("Home"),TEACHING("Lectures"),C
       activeSubjectId=id;activeProfessorProfileId=profileId
       workspacePrefs.edit().putString("active_subject_id",id).putString("active_professor_profile_id",profileId).apply()
       showNewSubjectDialog=false
-     }){Text("Create")}},
+     }}){Text("Create")}},
      dismissButton={TextButton(onClick={showNewSubjectDialog=false}){Text("Cancel")}}
     )
     if(showNewProfessorDialog) AlertDialog(
@@ -505,7 +505,7 @@ private enum class Section(val label:String){HOME("Home"),TEACHING("Lectures"),C
       val id=UUID.randomUUID().toString();val now=System.currentTimeMillis()
       db.professorProfileDao().add(ProfessorProfileEntity(id=id,subjectId=activeSubjectId,name=professorNameDraft.trim(),role=professorRoleDraft.trim().ifBlank{"evidence-aware learning professor"},instructions=professorInstructionsDraft.trim(),createdAt=now,updatedAt=now,isDefault=professorProfiles.isEmpty()))
       activeProfessorProfileId=id;workspacePrefs.edit().putString("active_professor_profile_id",id).apply();showNewProfessorDialog=false
-     }){Text("Create")}},
+     }}){Text("Create")}},
      dismissButton={TextButton(onClick={showNewProfessorDialog=false}){Text("Cancel")}}
     )
    when(section){
@@ -909,7 +909,7 @@ private enum class Section(val label:String){HOME("Home"),TEACHING("Lectures"),C
   OutlinedTextField(projectDescription,{projectDescription=it},label={Text("Description")},minLines=2)
  }},confirmButton={TextButton(onClick={
   if(projectName.isNotBlank()) scope.launch{db.workspaceDao().add(WorkspaceProjectEntity(name=projectName.trim(),description=projectDescription.trim(),subjectId=activeSubjectId));projectName="";projectDescription="";showNewProject=false}
- }){Text("Create")}},dismissButton={TextButton(onClick={showNewProject=false}){Text("Cancel")}})
+ }}){Text("Create")}},dismissButton={TextButton(onClick={showNewProject=false}){Text("Cancel")}})
 }
 
 
