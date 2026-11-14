@@ -50,6 +50,8 @@ Research-oriented design, evaluation protocol, data dictionary, study protocol t
 - [Multi-subject and multi-professor architecture](docs/MULTI_SUBJECT_ARCHITECTURE.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [Device acceptance checklist](docs/DEVICE_ACCEPTANCE.md)
+- [Manuscript template](research/MANUSCRIPT_TEMPLATE.md)
+- [Evaluation annotation CSV template](research/ANNOTATION_TEMPLATE.csv)
 
 No efficacy, accuracy, learning-gain, or superiority claim should be made until a preregistered or prospectively specified evaluation has been completed and results are reported transparently. Repository tests demonstrate software behaviour, not educational effectiveness or scientific correctness.
 
