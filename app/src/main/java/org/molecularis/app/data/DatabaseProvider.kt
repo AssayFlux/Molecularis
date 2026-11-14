@@ -181,6 +181,8 @@ private val MIGRATION_17_18 = object : Migration(17, 18) {
         db.execSQL("ALTER TABLE conversations ADD COLUMN professorProfileId TEXT")
         db.execSQL("CREATE INDEX IF NOT EXISTS index_conversations_subjectId ON conversations(subjectId)")
         db.execSQL("CREATE INDEX IF NOT EXISTS index_conversations_professorProfileId ON conversations(professorProfileId)")
+        db.execSQL("ALTER TABLE saved_lessons ADD COLUMN subjectId TEXT NOT NULL DEFAULT 'legacy-default'")
+        db.execSQL("CREATE INDEX IF NOT EXISTS index_saved_lessons_subjectId ON saved_lessons(subjectId)")
         val now = System.currentTimeMillis()
         db.execSQL("INSERT OR IGNORE INTO subject_workspaces(id,name,description,disciplineCode,languageTag,createdAt,updatedAt,isDefault) VALUES('legacy-default','My first subject','Migrated workspace for existing library and conversations',NULL,'en',$now,$now,1)")
         db.execSQL("INSERT OR IGNORE INTO professor_profiles(id,subjectId,name,role,instructions,learnerLevel,tone,objectives,sourcePolicy,safetyBoundaries,promptVersion,createdAt,updatedAt,isDefault) VALUES('legacy-professor-default','legacy-default','General professor','evidence-aware learning professor','','general','clear and supportive','','Prefer reviewed workspace sources; distinguish evidence from general knowledge.','Do not provide individualized high-impact professional decisions.','1',$now,$now,1)")
