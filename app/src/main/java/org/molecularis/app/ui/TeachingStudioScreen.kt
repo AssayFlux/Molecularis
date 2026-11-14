@@ -61,6 +61,7 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localMo
     var minutes by remember { mutableFloatStateOf(30f) }
     var outline by remember { mutableStateOf("") }
     var editingLessonId by remember { mutableStateOf<String?>(null) }
+    var pendingDeleteLesson by remember { mutableStateOf<String?>(null) }
     var status by remember { mutableStateOf("") }
     var preparing by remember { mutableStateOf(false) }
     var generatingExplanation by remember { mutableStateOf(false) }
@@ -118,7 +119,7 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localMo
     ) {
         Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.72f))) {
             Column(Modifier.fillMaxWidth().padding(18.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text("MOLECULARIS TEACHING STUDIO", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
+                Text("MOLECULARIS LECTURE STUDIO", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
                 Text("Turn a topic into a lesson.", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
                 Text("Choose the learner level and available time. Molecularis will prepare an editable teaching structure and attach relevant passages from your local textbook library.", style = MaterialTheme.typography.bodyMedium)
             }
@@ -562,7 +563,7 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localMo
             }
         }
         if (savedLessons.isNotEmpty()) {
-            Text("Saved lessons · " + savedLessons.size, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+            Text("My Lectures · " + savedLessons.size, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
             savedLessons.take(8).forEach { lesson ->
                 Card {
                     Row(Modifier.fillMaxWidth().padding(12.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -590,16 +591,18 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localMo
                                 status = "A separate editable copy was saved."
                             }
                         }) { Text("Copy") }
-                        IconButton(onClick = {
-                            scope.launch {
-                                database.lessonDao().deleteLesson(lesson.id)
-                                status = "Saved lesson removed."
-                            }
-                        }) { Icon(Icons.Default.Delete, contentDescription = "Delete saved lesson") }
+                        IconButton(onClick = { pendingDeleteLesson = lesson.id }) { Icon(Icons.Default.Delete, contentDescription = "Delete saved lecture") }
                     }
                 }
             }
         }
+        if (pendingDeleteLesson != null) AlertDialog(
+            onDismissRequest = { pendingDeleteLesson = null },
+            title = { Text("Delete this lecture?") },
+            text = { Text("This removes the saved lecture from this device. Its source books and Knowledge Pool records are not affected.") },
+            confirmButton = { TextButton(onClick = { val id = pendingDeleteLesson; if (id != null) scope.launch { database.lessonDao().deleteLesson(id); if (editingLessonId == id) editingLessonId = null; status = "Lecture deleted."; pendingDeleteLesson = null } }) { Text("Delete lecture") } },
+            dismissButton = { TextButton(onClick = { pendingDeleteLesson = null }) { Text("Cancel") } }
+        )
         if (status.isNotBlank()) Text(status, color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.bodySmall)
         Text("Slide preview is a presentation scaffold generated from your editable outline. Scientific claims and source excerpts remain subject to professor review.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
     }
