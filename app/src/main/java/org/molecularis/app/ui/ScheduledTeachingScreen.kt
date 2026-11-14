@@ -29,17 +29,17 @@ import java.util.Locale
 import java.util.UUID
 
 @Composable
-fun ScheduledTeachingScreen(database: AppDatabase) {
+fun ScheduledTeachingScreen(database: AppDatabase, subjectId:String) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val lessons by database.lessonDao().lessons().collectAsState(initial = emptyList())
-    val scheduled by database.scheduledLectureDao().lectures().collectAsState(initial = emptyList())
+    val lessons by database.lessonDao().lessonsForSubject(subjectId).collectAsState(initial = emptyList())
+    val scheduled by database.scheduledLectureDao().lecturesForSubject(subjectId).collectAsState(initial = emptyList())
     var selectedLessonId by remember(lessons) { mutableStateOf(lessons.firstOrNull()?.id.orEmpty()) }
     var scheduledAt by remember { mutableLongStateOf(System.currentTimeMillis() + 3_600_000L) }
     var duration by remember { mutableStateOf("45") }
     var language by remember { mutableStateOf(Locale.getDefault().toLanguageTag().ifBlank { "en-US" }) }
-    var audience by remember { mutableStateOf("MBBS") }
-    var message by remember { mutableStateOf("Choose a saved lesson and schedule a local offline narration.") }
+    var audience by remember { mutableStateOf("General") }
+    var message by remember { mutableStateOf("Choose a saved lesson in this subject and schedule a local offline narration.") }
 
     val scheduleNow: () -> Unit = {
         scope.launch {
@@ -60,7 +60,8 @@ fun ScheduledTeachingScreen(database: AppDatabase) {
                     audienceLevel = audience,
                     durationMinutes = minutes,
                     languageTag = language.trim(),
-                    scheduledAt = scheduledAt
+                    scheduledAt = scheduledAt,
+                    subjectId = subjectId
                 )
                 runCatching {
                     database.scheduledLectureDao().save(row)
@@ -98,7 +99,7 @@ fun ScheduledTeachingScreen(database: AppDatabase) {
         }
         Text("Audience", style = MaterialTheme.typography.titleMedium)
         Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            listOf("MBBS", "MD", "DNB", "PhD").forEach { level ->
+            listOf("General", "Undergraduate", "Graduate / Research").forEach { level ->
                 FilterChip(selected = audience == level, onClick = { audience = level }, label = { Text(level) })
             }
         }
