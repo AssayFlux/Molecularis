@@ -1,54 +1,65 @@
 # Multi-subject and multi-professor architecture
 
+## Current implementation boundary
+
+Molecularis now has an initial first-class subject-workspace and professor-profile implementation. Room entities and a version-18 migration provide a default legacy workspace; the app exposes create/select/edit flows; and the principal library, Knowledge Pool, chat, projects, saved lessons, and scheduled lectures are scoped by subject ID.
+
+The architecture is not yet a complete general-purpose multi-domain platform. Subject isolation still requires successful CI and populated-database migration validation. The biochemical diagram editor remains a specialist tool, cross-subject comparison is not yet a user-facing opt-in workflow, and not every generated artifact has complete provenance.
+
 ## Design decision
 
-Molecularis should be a platform with a generic core and optional domain packs. Biochemistry-specific pronunciation, pathway diagrams, medical audience profiles, and domain taxonomies remain useful modules, but must not shape the global prompt or force every workspace into a biomedical workflow.
+Molecularis should be a platform with a generic core and optional domain packs. Biochemistry-specific pronunciation, pathway diagrams, medical audience profiles, and domain taxonomies must not shape the global prompt or force every workspace into a biomedical workflow.
 
 ## Workspace model
 
-A SubjectWorkspace is the top-level boundary for user-selected sources, Knowledge Pool records, conversations, professor profiles, lessons, and evaluation records. Users can create as many workspaces as local storage and device performance permit. Each workspace has a name, description, optional taxonomy/discipline code, language, intended learner levels, and domain-specific safety profile.
+A SubjectWorkspace is the top-level boundary for user-selected sources, Knowledge Pool records, conversations, professor profiles, projects, lessons, and scheduled teaching. The current entity includes a stable ID, name, description, optional discipline code, language tag, timestamps, and a default marker. Workspace lifecycle currently supports creation, selection, and editing; archival/deletion and data-transfer tooling remain planned.
+
+Existing records are migrated into a default workspace named “My first subject.” The app does not infer that every legacy source is biochemistry.
 
 ## Professor profiles
 
-A professor profile is a named configuration, not a separately trained model. It can define:
-- Display name and pedagogical role.
-- Subject/workspace ID.
-- Learner level and prerequisites.
-- Teaching objectives and preferred structure.
-- Tone, language, response length, and assessment style.
-- Source-use policy and citation format.
-- Explicit safety boundaries.
-- Prompt-template version and creation/update timestamps.
+A professor profile is a named configuration, not a separately trained model. Current fields include:
+- Subject/workspace ID and display name.
+- Pedagogical role.
+- Learner level, tone, and teaching objectives.
+- Custom instructions.
+- Source-use policy and safety boundaries.
+- Prompt-template version and timestamps.
+
+The app supports creating, selecting, and editing profiles. Deletion, profile import/export, and a richer configuration editor remain planned. User-configured role labels and instructions are treated as preferences, not trusted system instructions.
 
 Several profiles may share one subject's Knowledge Pool while maintaining distinct instructions. Do not claim that creating a profile fine-tunes or trains an AI model.
 
 ## Core request flow
 
 1. User selects a workspace and professor profile.
-2. The app validates that the profile belongs to the active workspace.
-3. Retrieval is executed with a mandatory workspace filter.
-4. The system constructs a prompt from the generic base policy, domain profile, professor profile, learner level, and retrieved evidence.
-5. Retrieved evidence is labelled with source ID, title, page, passage ID, and retrieval score.
-6. The model generates a response or abstains when evidence is inadequate.
-7. The app stores provenance metadata with the result.
-8. The user can inspect citations, correct the answer, and flag unsupported claims.
+2. The app presents only books, Knowledge Pool records, conversations, projects, lessons, and scheduled lectures belonging to that subject.
+3. Retrieval joins passages to their source book and filters by the active subject before ranking or returning evidence.
+4. The prompt is composed from generic system policy, the active subject label, selected professor preferences, learner context, and retrieved evidence.
+5. Retrieved evidence is labelled with source, page, and passage information.
+6. Local and configured remote chat receive the same constructed prompt/context; remote inference remains opt-in and may transmit prompt/source text to the configured provider.
+7. Successful assistant messages record provider/model, profile ID, prompt version/hash, source-set hash when available, and retrieval configuration.
+8. Scheduled lecture playback verifies that the scheduled row and saved lesson share the same subject ID.
 
 ## Domain packs
 
-A domain pack may contribute specialized renderers, vocabulary, notation, templates, safety policy, and evaluation rubrics. It must be optional and versioned. The generic core must still operate if no domain pack is installed.
+A domain pack may contribute specialized renderers, vocabulary, notation, templates, safety policy, and evaluation rubrics. It must be optional and versioned. The generic core must still operate if no domain pack is installed. The current biochemical diagram editor should be treated as a specialist module, not evidence of general diagram support.
 
-## Database migration
+## Database and migration
 
-Follow the additive migration plan in DATA_DICTIONARY.md. Migrate existing content to a user-confirmed legacy workspace. Never silently infer a user's academic discipline from the app's former branding or from a book title.
+Room schema version 18 adds subject workspaces, professor profiles, and subject/provenance columns to existing records. Existing books, conversations, projects, lessons, and schedules are assigned to legacy-default. See [DATA_DICTIONARY.md](DATA_DICTIONARY.md) for exact migration details.
 
-## Required acceptance tests
+The migration is additive and must be tested against populated databases from supported prior versions. The current instrumentation fixture tests DAO-level isolation for two subjects with overlapping vocabulary; it does not replace migration tests, physical-device testing, or security review.
+
+## Acceptance tests
 
 - Create two subjects and add at least two source documents to each.
-- Verify library lists and Knowledge Pool lists are scoped correctly.
-- Verify two professor profiles in one subject have separate settings.
+- Verify library lists, FTS search, Knowledge Pool lists, and chat retrieval are scoped correctly.
+- Verify two professor profiles in one subject have independent settings and can be selected/edited.
 - Verify conversation switching does not leak history or professor configuration.
 - Use identical query terms in both subjects and assert retrieval only returns active-subject passage IDs.
-- Explicitly request cross-subject comparison and verify sources are labelled by subject.
-- Delete a source and assert that its derived passages, vector rows, and links are removed or marked unavailable.
-- Reopen the app and verify selected workspace/profile persistence.
-- Migrate a populated legacy database without loss or duplicate rows.
+- Verify projects, saved lessons, and schedules remain scoped after subject switching and process restart.
+- Verify scheduled playback refuses a lesson/lecture subject mismatch.
+- Migrate a populated legacy database without loss or duplicate rows; verify encrypted copy and FTS indexes.
+- Verify source deletion and replacement remove or invalidate derived records and cached retrieval data.
+- Implement explicit cross-subject comparison only with visible consent and subject-labelled evidence.
