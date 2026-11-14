@@ -517,6 +517,10 @@ private enum class Section(val label:String){HOME("Home"),TEACHING("Lectures"),C
     Section.AI_HUB->Column(Modifier.fillMaxSize().padding(12.dp),verticalArrangement=Arrangement.spacedBy(8.dp)){
       Text("AI workspace",style=MaterialTheme.typography.titleLarge,fontWeight=FontWeight.SemiBold)
       Text("All model, provider, training and collaboration tools are managed here.",style=MaterialTheme.typography.bodySmall,color=Muted)
+      Text("Inference context",style=MaterialTheme.typography.titleMedium,fontWeight=FontWeight.SemiBold)
+      Text("Choose how much recent conversation context the active model receives.",style=MaterialTheme.typography.bodySmall,color=Muted)
+      Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),horizontalArrangement=Arrangement.spacedBy(6.dp)){listOf("memory" to "Memory saver","speed" to "Faster","balanced" to "Balanced","quality" to "More context").forEach{(value,label)->FilterChip(selected=engineOptimization==value,onClick={engineOptimization=value;enginePrefs.edit().putString("optimization",value).apply()},label={Text(label)})}}
+      Text(when(engineOptimization){"memory"->"Last 2 completed turns";"speed"->"Last 4 completed turns";"quality"->"Last 24 completed turns";else->"Last 12 completed turns"},style=MaterialTheme.typography.labelSmall,color=MaterialTheme.colorScheme.primary)
       Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),horizontalArrangement=Arrangement.spacedBy(8.dp)){
        OutlinedButton(onClick={section=Section.MODELS}){Icon(Icons.Default.Memory,null);Spacer(Modifier.width(6.dp));Text("Models")}
        OutlinedButton(onClick={section=Section.ONLINE_AI}){Icon(Icons.Default.Cloud,null);Spacer(Modifier.width(6.dp));Text("Online AI")}
@@ -1286,12 +1290,6 @@ private suspend fun readDatasetBounded(context:Context,uri:Uri):String = withCon
     Row(horizontalArrangement=Arrangement.spacedBy(6.dp)){
      listOf("concise" to "Concise","balanced" to "Balanced","detailed" to "Detailed").forEach{(value,label)->FilterChip(selected=responseStyle==value,onClick={onResponseStyleChange(value)},label={Text(label)})}
     }
-    Text("Context and performance",style=MaterialTheme.typography.titleMedium,fontWeight=FontWeight.SemiBold)
-    Text("Choose how much recent chat context is sent to the local model.",style=MaterialTheme.typography.bodySmall,color=Muted)
-    Column(verticalArrangement=Arrangement.spacedBy(4.dp)){
-     listOf("memory" to "Memory saver","speed" to "Faster","balanced" to "Balanced","quality" to "More context").forEach{(value,label)->FilterChip(selected=engineOptimization==value,onClick={onEngineOptimizationChange(value)},label={Text(label)})}
-    }
-    Text(when(engineOptimization){"memory"->"Uses the last 2 completed turns.";"speed"->"Uses the last 4 completed turns.";"quality"->"Uses the last 24 completed turns.";else->"Uses the last 12 completed turns."},style=MaterialTheme.typography.labelSmall,color=MaterialTheme.colorScheme.primary)
    }
   }
   Card(Modifier.fillMaxWidth()){
