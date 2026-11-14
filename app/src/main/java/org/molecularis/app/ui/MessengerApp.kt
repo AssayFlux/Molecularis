@@ -105,8 +105,11 @@ private enum class Section(val label:String){HOME("Home"),TEACHING("Lectures"),C
  var activeSubjectId by remember{mutableStateOf(workspacePrefs.getString("active_subject_id","legacy-default")?:"legacy-default")}
  var activeProfessorProfileId by remember{mutableStateOf(workspacePrefs.getString("active_professor_profile_id","legacy-professor-default")?:"legacy-professor-default")}
  var showNewSubjectDialog by remember{mutableStateOf(false)}
+ var showEditSubjectDialog by remember{mutableStateOf(false)}
  var showNewProfessorDialog by remember{mutableStateOf(false)}
+ var showEditProfessorDialog by remember{mutableStateOf(false)}
  var subjectNameDraft by remember{mutableStateOf("")}
+ var subjectDescriptionDraft by remember{mutableStateOf("")}
  var professorNameDraft by remember{mutableStateOf("")}
  var professorRoleDraft by remember{mutableStateOf("evidence-aware learning professor")}
  var professorInstructionsDraft by remember{mutableStateOf("")}
@@ -426,7 +429,8 @@ private enum class Section(val label:String){HOME("Home"),TEACHING("Lectures"),C
       DropdownMenu(expanded=subjectMenuExpanded,onDismissRequest={subjectMenuExpanded=false}){
        workspaces.forEach{workspace->DropdownMenuItem(text={Text(workspace.name)},onClick={activeSubjectId=workspace.id;subjectMenuExpanded=false;selectedConversation=null})}
        HorizontalDivider()
-       DropdownMenuItem(text={Text("Create subject…")},onClick={subjectMenuExpanded=false;subjectNameDraft="";showNewSubjectDialog=true})
+       DropdownMenuItem(text={Text("Edit current subject…")},enabled=activeWorkspace!=null,onClick={subjectMenuExpanded=false;subjectNameDraft=activeWorkspace?.name.orEmpty();subjectDescriptionDraft=activeWorkspace?.description.orEmpty();showEditSubjectDialog=true})
+       DropdownMenuItem(text={Text("Create subject…")},onClick={subjectMenuExpanded=false;subjectNameDraft="";subjectDescriptionDraft="";showNewSubjectDialog=true})
       }
      }
      Box{
@@ -438,10 +442,38 @@ private enum class Section(val label:String){HOME("Home"),TEACHING("Lectures"),C
       DropdownMenu(expanded=professorMenuExpanded,onDismissRequest={professorMenuExpanded=false}){
        professorProfiles.forEach{profile->DropdownMenuItem(text={Column{Text(profile.name);Text(profile.role,style=MaterialTheme.typography.bodySmall)}},onClick={activeProfessorProfileId=profile.id;workspacePrefs.edit().putString("active_professor_profile_id",profile.id).apply();professorMenuExpanded=false;scope.launch{conversationId?.let{db.chatDao().setProfessorProfile(it,activeSubjectId,profile.id)}}})}
        HorizontalDivider()
+       DropdownMenuItem(text={Text("Edit current profile…")},enabled=activeProfessor!=null,onClick={professorMenuExpanded=false;professorNameDraft=activeProfessor?.name.orEmpty();professorRoleDraft=activeProfessor?.role.orEmpty();professorInstructionsDraft=activeProfessor?.instructions.orEmpty();showEditProfessorDialog=true})
        DropdownMenuItem(text={Text("Create professor profile…")},onClick={professorMenuExpanded=false;professorNameDraft="";professorRoleDraft="evidence-aware learning professor";professorInstructionsDraft="";showNewProfessorDialog=true})
       }
      }
     }
+    if(showEditSubjectDialog && activeWorkspace!=null) AlertDialog(
+     onDismissRequest={showEditSubjectDialog=false},
+     title={Text("Edit subject workspace")},
+     text={Column(verticalArrangement=Arrangement.spacedBy(8.dp)){
+      OutlinedTextField(value=subjectNameDraft,onValueChange={subjectNameDraft=it},label={Text("Subject name")},singleLine=true)
+      OutlinedTextField(value=subjectDescriptionDraft,onValueChange={subjectDescriptionDraft=it},label={Text("Description and scope")},minLines=2)
+     }},
+     confirmButton={TextButton(enabled=subjectNameDraft.isNotBlank(),onClick={scope.launch{
+      db.subjectWorkspaceDao().update(activeWorkspace.copy(name=subjectNameDraft.trim(),description=subjectDescriptionDraft.trim(),updatedAt=System.currentTimeMillis()))
+      showEditSubjectDialog=false
+     }){Text("Save")}},
+     dismissButton={TextButton(onClick={showEditSubjectDialog=false}){Text("Cancel")}}
+    )
+    if(showEditProfessorDialog && activeProfessor!=null) AlertDialog(
+     onDismissRequest={showEditProfessorDialog=false},
+     title={Text("Edit professor profile")},
+     text={Column(verticalArrangement=Arrangement.spacedBy(8.dp)){
+      OutlinedTextField(value=professorNameDraft,onValueChange={professorNameDraft=it},label={Text("Profile name")},singleLine=true)
+      OutlinedTextField(value=professorRoleDraft,onValueChange={professorRoleDraft=it},label={Text("Teaching role")},singleLine=true)
+      OutlinedTextField(value=professorInstructionsDraft,onValueChange={professorInstructionsDraft=it},label={Text("Instructions and teaching goals")},minLines=3)
+     }},
+     confirmButton={TextButton(enabled=professorNameDraft.isNotBlank(),onClick={scope.launch{
+      db.professorProfileDao().update(activeProfessor.copy(name=professorNameDraft.trim(),role=professorRoleDraft.trim().ifBlank{"evidence-aware learning professor"},instructions=professorInstructionsDraft.trim(),updatedAt=System.currentTimeMillis()))
+      showEditProfessorDialog=false
+     }){Text("Save")}},
+     dismissButton={TextButton(onClick={showEditProfessorDialog=false}){Text("Cancel")}}
+    )
     if(showNewSubjectDialog) AlertDialog(
      onDismissRequest={showNewSubjectDialog=false},
      title={Text("Create subject workspace")},
