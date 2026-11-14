@@ -73,6 +73,12 @@ fun TeachingStudioScreen(database: AppDatabase, subjectId:String, subjectName:St
     var slideTheme by remember { mutableStateOf(SlideTheme.CLASSIC) }
     var diagramPreview by remember { mutableStateOf(false) }
     var diagramStep by remember { mutableIntStateOf(0) }
+    LaunchedEffect(subjectId) {
+        topic = ""
+        outline = ""
+        editingLessonId = null
+        status = ""
+    }
     val slides = remember(outline, topic, level, minutes) { LessonSlideBuilder.build(outline, topic, level, minutes.toInt()) }
     val pdfExportLauncher = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/pdf")) { uri ->
         if (uri != null) runCatching {
