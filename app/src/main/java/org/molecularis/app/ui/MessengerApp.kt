@@ -10,6 +10,7 @@ import android.net.Uri
 import android.os.StatFs
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.room.withTransaction
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.fragment.app.FragmentActivity
@@ -481,9 +482,11 @@ private enum class Section(val label:String){HOME("Home"),TEACHING("Lectures"),C
      confirmButton={TextButton(enabled=subjectNameDraft.isNotBlank(),onClick={scope.launch{
       val id=UUID.randomUUID().toString()
       val now=System.currentTimeMillis()
-      db.subjectWorkspaceDao().add(SubjectWorkspaceEntity(id=id,name=subjectNameDraft.trim(),createdAt=now,updatedAt=now))
       val profileId=UUID.randomUUID().toString()
-      db.professorProfileDao().add(ProfessorProfileEntity(id=profileId,subjectId=id,name="General professor",isDefault=true,createdAt=now,updatedAt=now))
+      db.withTransaction {
+       db.subjectWorkspaceDao().add(SubjectWorkspaceEntity(id=id,name=subjectNameDraft.trim(),createdAt=now,updatedAt=now))
+       db.professorProfileDao().add(ProfessorProfileEntity(id=profileId,subjectId=id,name="General professor",isDefault=true,createdAt=now,updatedAt=now))
+      }
       activeSubjectId=id;activeProfessorProfileId=profileId
       workspacePrefs.edit().putString("active_subject_id",id).putString("active_professor_profile_id",profileId).apply()
       showNewSubjectDialog=false
