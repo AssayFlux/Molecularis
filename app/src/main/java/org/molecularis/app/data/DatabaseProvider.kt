@@ -129,6 +129,9 @@ private val FTS_CALLBACK = object : RoomDatabase.Callback() {
         db.execSQL("CREATE TRIGGER IF NOT EXISTS book_passages_fts_delete AFTER DELETE ON book_passages BEGIN INSERT INTO book_passages_fts(book_passages_fts,docid,text) VALUES('delete',old.rowid,old.text); END")
         db.execSQL("CREATE TRIGGER IF NOT EXISTS book_passages_fts_update AFTER UPDATE OF text ON book_passages BEGIN INSERT INTO book_passages_fts(book_passages_fts,docid,text) VALUES('delete',old.rowid,old.text); INSERT INTO book_passages_fts(docid,text) VALUES(new.rowid,new.text); END")
         db.execSQL("INSERT INTO book_passages_fts(book_passages_fts) VALUES('rebuild')")
+        val now = System.currentTimeMillis()
+        db.execSQL("INSERT OR IGNORE INTO subject_workspaces(id,name,description,disciplineCode,languageTag,createdAt,updatedAt,isDefault) VALUES('legacy-default','My first subject','Default learning workspace',NULL,'en',$now,$now,1)")
+        db.execSQL("INSERT OR IGNORE INTO professor_profiles(id,subjectId,name,role,instructions,learnerLevel,tone,objectives,sourcePolicy,safetyBoundaries,promptVersion,createdAt,updatedAt,isDefault) VALUES('legacy-professor-default','legacy-default','General professor','evidence-aware learning professor','','general','clear and supportive','','Prefer reviewed workspace sources; distinguish evidence from general knowledge.','Do not provide individualized high-impact professional decisions.','1',$now,$now,1)")
     }
 }
 private val MIGRATION_14_15 = object : Migration(14, 15) {
