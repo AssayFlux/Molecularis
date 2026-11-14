@@ -30,7 +30,7 @@ This document distinguishes what the repository currently demonstrates from what
 9. Add exportable provenance for each answer/lesson: source-set hash, document checksum, page/passage IDs, retrieval scores/configuration, provider/model version, prompt template version, timestamp, and user review state.
 10. Add a clear source-rights and retention workflow. Users must confirm that they have authority to process each imported source.
 
-## Publication-quality study requirements
+## Governance and reproducibility documents\n\nThe project now defines supporting standards in [RESEARCH_GOVERNANCE.md](RESEARCH_GOVERNANCE.md), [REPRODUCIBILITY.md](REPRODUCIBILITY.md), and [LIMITATIONS.md](LIMITATIONS.md). These are policy and planning artifacts, not proof that a study, audit, or validation has been completed.\n\n## Publication-quality study requirements
 
 - Specify the research question, hypotheses, primary and secondary outcomes, comparator, inclusion/exclusion criteria, sample-size rationale, and analysis plan before data collection.
 - Use a frozen application commit, model/provider version, prompt version, corpus manifest, and evaluation set.
@@ -65,4 +65,4 @@ Not justified without additional evidence:
 - Statistical analysis and limitations.
 - Threat model, privacy statement, and ethics determination.
 - Reproducibility instructions and environment versions.
-- A clear distinction between implemented, experimentally evaluated, and planned features.
+- A clear distinction between implemented, experimentally evaluated, and planned features.\n- A software citation record ([CITATION.cff](../CITATION.cff)) and immutable release artifact metadata.
