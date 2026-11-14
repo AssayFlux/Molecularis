@@ -50,6 +50,14 @@ fun BookLibraryScreen(database: AppDatabase, subjectId:String) {
     var shelfRefresh by remember { mutableIntStateOf(0) }
     var shelfMenuFor by remember { mutableStateOf<String?>(null) }
 
+    LaunchedEffect(subjectId) {
+        selectedBook = null
+        query = ""
+        results = emptyList()
+        fromPage = ""
+        toPage = ""
+    }
+
     val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         if (uri != null && !importing) {
             scope.launch {
