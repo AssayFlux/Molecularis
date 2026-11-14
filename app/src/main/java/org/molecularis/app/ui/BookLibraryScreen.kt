@@ -45,6 +45,10 @@ fun BookLibraryScreen(database: AppDatabase) {
     var status by remember { mutableStateOf("") }
     var selectedBook by remember { mutableStateOf<BookEntity?>(null) }
     var results by remember { mutableStateOf(emptyList<BookPassageEntity>()) }
+    val shelfPreferences = remember(context) { context.getSharedPreferences("molecularis_library_shelves", android.content.Context.MODE_PRIVATE) }
+    val shelfNames = listOf("Core Biochemistry", "Molecular Biology", "Cell Biology", "Genetics", "Reference", "Unsorted")
+    var shelfRefresh by remember { mutableIntStateOf(0) }
+    var shelfMenuFor by remember { mutableStateOf<String?>(null) }
 
     val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         if (uri != null && !importing) {
@@ -177,23 +181,43 @@ fun BookLibraryScreen(database: AppDatabase) {
             }
         } else {
             LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                items(books, key = { it.id }) { book ->
-                    Card(Modifier.fillMaxWidth().clickable { selectedBook = book; query = "" }) {
-                        Row(Modifier.fillMaxWidth().padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
-                            Icon(Icons.Default.MenuBook, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(28.dp))
-                            Spacer(Modifier.width(12.dp))
-                            Column(Modifier.weight(1f)) {
-                                Text(book.title, fontWeight = FontWeight.SemiBold)
-                                Text(if (book.pageCount == 0) "Original PDF stored · not yet processed" else book.pageCount.toString() + " pages · " + book.extractedChars + " extracted characters", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                            }
-                            IconButton(onClick = {
-                                scope.launch {
-                                    database.knowledgePoolDao().deleteForBook(book.id)
-                                    database.bookDao().deleteBookAndProcessingState(book.id)
-                                    withContext(Dispatchers.IO) { File(book.localPath).delete() }
-                                    status = "Removed " + book.title + " from this device."
+                shelfNames.forEach { shelf ->
+                    val shelfBooks = books.filter { shelfRefresh >= 0 && (shelfPreferences.getString(it.id, "Unsorted") ?: "Unsorted") == shelf }
+                    if (shelfBooks.isNotEmpty()) {
+                        item(key = "shelf-$shelf") {
+                            Text(shelf + " · " + shelfBooks.size, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(top = 8.dp, bottom = 2.dp))
+                        }
+                        items(shelfBooks, key = { it.id }) { book ->
+                            Card(Modifier.fillMaxWidth().clickable { selectedBook = book; query = "" }) {
+                                Row(Modifier.fillMaxWidth().padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
+                                    Icon(Icons.Default.MenuBook, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(28.dp))
+                                    Spacer(Modifier.width(12.dp))
+                                    Column(Modifier.weight(1f)) {
+                                        Text(book.title, fontWeight = FontWeight.SemiBold)
+                                        Text(if (book.pageCount == 0) "Original PDF stored · not yet processed" else book.pageCount.toString() + " pages · " + book.extractedChars + " extracted characters", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                        Box {
+                                            TextButton(onClick = { shelfMenuFor = book.id }) { Text("Shelf: " + shelfPreferences.getString(book.id, "Unsorted")) }
+                                            DropdownMenu(expanded = shelfMenuFor == book.id, onDismissRequest = { shelfMenuFor = null }) {
+                                                shelfNames.forEach { destination ->
+                                                    DropdownMenuItem(text = { Text(destination) }, onClick = {
+                                                        shelfPreferences.edit().putString(book.id, destination).apply()
+                                                        shelfRefresh++
+                                                        shelfMenuFor = null
+                                                    })
+                                                }
+                                            }
+                                        }
+                                    }
+                                    IconButton(onClick = {
+                                        scope.launch {
+                                            database.knowledgePoolDao().deleteForBook(book.id)
+                                            database.bookDao().deleteBookAndProcessingState(book.id)
+                                            withContext(Dispatchers.IO) { File(book.localPath).delete() }
+                                            status = "Removed " + book.title + " from this device."
+                                        }
+                                    }) { Icon(Icons.Default.Delete, contentDescription = "Delete textbook") }
                                 }
-                            }) { Icon(Icons.Default.Delete, contentDescription = "Delete textbook") }
+                            }
                         }
                     }
                 }
