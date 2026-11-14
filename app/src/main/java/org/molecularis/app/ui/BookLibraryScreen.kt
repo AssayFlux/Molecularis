@@ -72,7 +72,7 @@ fun BookLibraryScreen(database: AppDatabase, subjectId:String) {
                         } ?: error("Could not open the selected PDF.")
                     }
                     val checksum = withContext(Dispatchers.IO) { sha256File(localFile!!) }
-                    val duplicate = database.bookDao().bookBySha256(checksum)?.takeIf { it.subjectId == subjectId }
+                    val duplicate = database.bookDao().bookBySha256InSubject(checksum, subjectId)
                     if (duplicate != null) {
                         localFile!!.delete()
                         localFile = null
