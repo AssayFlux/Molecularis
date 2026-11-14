@@ -47,6 +47,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.layout.imePadding
 import androidx.documentfile.provider.DocumentFile
 import kotlinx.coroutines.CancellationException
@@ -815,7 +816,7 @@ private enum class Section(val label:String){HOME("Home"),TEACHING("Lectures"),C
  val messageListState=rememberLazyListState()
  LaunchedEffect(selectedId,messages.size){if(messages.isNotEmpty())messageListState.animateScrollToItem(messages.lastIndex)}
  Box(Modifier.fillMaxSize()){
-  if(chatBackgroundImage.isNotBlank()) Image(painter=rememberAsyncImagePainter(Uri.parse(chatBackgroundImage)),contentDescription=null,contentScale=ContentScale.Crop,modifier=Modifier.fillMaxSize()) else Box(Modifier.fillMaxSize().background(parseChatColor(chatBackgroundColor,Color(0xFFF4F6F8))))
+  if(chatBackgroundImage.isNotBlank()) Image(painter=rememberAsyncImagePainter(Uri.parse(chatBackgroundImage)),contentDescription=null,contentScale=ContentScale.Crop,modifier=Modifier.fillMaxSize().alpha(0.22f)) else Box(Modifier.fillMaxSize().background(parseChatColor(chatBackgroundColor,Color(0xFFF4F6F8))))
   Column(Modifier.fillMaxSize().padding(horizontal=16.dp)){
   if(conversations.isNotEmpty()) Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically){
    Box(Modifier.weight(1f)){
