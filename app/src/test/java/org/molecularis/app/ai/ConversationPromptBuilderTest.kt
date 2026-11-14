@@ -41,6 +41,24 @@ class ConversationPromptBuilderTest {
         assertTrue(prompt.contains("Assistant: valid"))
     }
 
+    @Test fun supportsAUserDefinedDomainAndProfessorRole() {
+        val prompt = ConversationPromptBuilder.build(
+            emptyList(),
+            "Explain eigenvectors",
+            domainContext = "Applied Mathematics",
+            teachingRole = "graduate mathematics professor"
+        )
+        assertTrue(prompt.contains("Applied Mathematics"))
+        assertTrue(prompt.contains("graduate mathematics professor"))
+        assertFalse(prompt.contains("biochemistry teaching assistant"))
+    }
+
+    @Test fun defaultPromptIsDisciplineNeutral() {
+        val prompt = ConversationPromptBuilder.build(emptyList(), "Explain photosynthesis")
+        assertTrue(prompt.contains("academic and professional disciplines"))
+        assertFalse(prompt.contains("biochemistry teaching assistant"))
+    }
+
     @Test fun rejectsBlankCurrentMessage() {
         try {
             ConversationPromptBuilder.build(emptyList(), "  ")
