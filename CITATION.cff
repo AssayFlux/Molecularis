@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+message: "If you use Molecularis in research, please cite the software and the exact release or commit evaluated."
+title: "Molecularis"
+type: software
+url: "https://github.com/AssayFlux/Molecularis"
+repository-code: "https://github.com/AssayFlux/Molecularis"
+abstract: "An Android application for local document ingestion, human-reviewed knowledge organization, and source-grounded learning workflows. Research claims must be limited to the exact implementation and evaluation reported."
+keywords:
+  - Android
+  - educational technology
+  - information retrieval
+  - retrieval-augmented generation
+  - offline-first software
+  - provenance
+license: MIT
