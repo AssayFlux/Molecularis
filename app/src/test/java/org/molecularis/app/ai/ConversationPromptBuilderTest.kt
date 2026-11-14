@@ -53,6 +53,19 @@ class ConversationPromptBuilderTest {
         assertFalse(prompt.contains("biochemistry teaching assistant"))
     }
 
+    @Test fun includesSelectedProfessorConfigurationWithoutCallingItTraining() {
+        val prompt = ConversationPromptBuilder.build(
+            emptyList(),
+            "Explain limits",
+            domainContext = "Mathematics",
+            teachingRole = "Socratic tutor",
+            professorInstructions = "Ask one guiding question at a time."
+        )
+        assertTrue(prompt.contains("Socratic tutor"))
+        assertTrue(prompt.contains("Ask one guiding question at a time"))
+        assertTrue(prompt.contains("not model training"))
+    }
+
     @Test fun defaultPromptIsDisciplineNeutral() {
         val prompt = ConversationPromptBuilder.build(emptyList(), "Explain photosynthesis")
         assertTrue(prompt.contains("academic and professional disciplines"))
