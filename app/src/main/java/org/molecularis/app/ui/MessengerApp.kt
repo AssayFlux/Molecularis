@@ -357,19 +357,19 @@ private enum class Section(val label:String){HOME("Home"),TEACHING("Lectures"),C
    Text(section.label,style=MaterialTheme.typography.titleLarge,fontWeight=FontWeight.SemiBold)
   }},actions={if(section==Section.CHATS) IconButton(onClick={scope.launch{selectedConversation=db.chatDao().addConversation(ConversationEntity(title="New conversation"))}}){Icon(Icons.Default.Add,"New chat")}},colors=TopAppBarDefaults.topAppBarColors(containerColor=MaterialTheme.colorScheme.background))},
    bottomBar={if(WindowInsets.ime.getBottom(LocalDensity.current)==0) NavigationBar(containerColor=MaterialTheme.colorScheme.surface, tonalElevation=6.dp){
-    val primarySections=listOf(Section.HOME,Section.TEACHING,Section.CHATS,Section.LIBRARY,Section.KNOWLEDGE_POOL,Section.AI_HUB,Section.SETTINGS)
+    val primarySections=listOf(Section.HOME,Section.TEACHING,Section.CHATS,Section.LIBRARY,Section.KNOWLEDGE_POOL,Section.AI_HUB)
     primarySections.forEach{item->
      val icon=when(item){Section.HOME->Icons.Default.Home;Section.TEACHING->Icons.Default.School;Section.CHATS->Icons.Default.ChatBubbleOutline;Section.LIBRARY->Icons.Default.MenuBook;Section.KNOWLEDGE_POOL->Icons.Default.AccountTree;Section.AI_HUB->Icons.Default.Hub;Section.SETTINGS->Icons.Default.Settings;else->Icons.Default.MoreHoriz}
      NavigationBarItem(selected=section==item,onClick={section=item;moreNavigationExpanded=false},icon={Icon(icon,item.label)},label={Text(item.label,maxLines=1)})
     }
     NavigationBarItem(
-     selected=section==Section.SCHEDULED||section==Section.WORKSPACE,
+     selected=section==Section.SETTINGS||section==Section.SCHEDULED||section==Section.WORKSPACE,
      onClick={moreNavigationExpanded=true},
      icon={
       Box{
        Icon(Icons.Default.MoreHoriz,"More sections")
        DropdownMenu(expanded=moreNavigationExpanded,onDismissRequest={moreNavigationExpanded=false}){
-        listOf(Section.SCHEDULED,Section.WORKSPACE).forEach{item->
+        listOf(Section.SETTINGS,Section.SCHEDULED,Section.WORKSPACE).forEach{item->
          val icon=when(item){Section.LIBRARY->Icons.Default.MenuBook;Section.KNOWLEDGE_POOL->Icons.Default.AccountTree;Section.SCHEDULED->Icons.Default.Schedule;Section.AI_HUB->Icons.Default.Hub;Section.TRAINING->Icons.Default.Tune;Section.ONLINE_AI->Icons.Default.Cloud;else->Icons.Default.Settings}
          DropdownMenuItem(text={Text(item.label)},leadingIcon={Icon(icon,null)},onClick={section=item;moreNavigationExpanded=false})
         }
@@ -513,7 +513,15 @@ private enum class Section(val label:String){HOME("Home"),TEACHING("Lectures"),C
        }
       }
      }, onTeach={showTeachingStudio=true}, onLibrary={section=Section.LIBRARY}, onModels={section=Section.MODELS}, onAiHub={section=Section.AI_HUB},chatBackgroundColor=chatBackgroundColor,chatBackgroundImage=chatBackgroundImage,chatFontFamily=chatFontFamily,chatFontColor=chatFontColor,chatFontSize=chatFontSize)
-    Section.AI_HUB->CollaborationScreen(models,collaborationPrompt,{collaborationPrompt=it},collaborationStatus,collaborating){
+    Section.AI_HUB->Column(Modifier.fillMaxSize().padding(12.dp),verticalArrangement=Arrangement.spacedBy(8.dp)){
+      Text("AI workspace",style=MaterialTheme.typography.titleLarge,fontWeight=FontWeight.SemiBold)
+      Text("All model, provider, training and collaboration tools are managed here.",style=MaterialTheme.typography.bodySmall,color=Muted)
+      Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),horizontalArrangement=Arrangement.spacedBy(8.dp)){
+       OutlinedButton(onClick={section=Section.MODELS}){Icon(Icons.Default.Memory,null);Spacer(Modifier.width(6.dp));Text("Models")}
+       OutlinedButton(onClick={section=Section.ONLINE_AI}){Icon(Icons.Default.Cloud,null);Spacer(Modifier.width(6.dp));Text("Online AI")}
+       OutlinedButton(onClick={section=Section.TRAINING}){Icon(Icons.Default.Tune,null);Spacer(Modifier.width(6.dp));Text("Training")}
+      }
+      Box(Modifier.weight(1f)) { CollaborationScreen(models,collaborationPrompt,{collaborationPrompt=it},collaborationStatus,collaborating){
      val prompt=collaborationPrompt.trim()
      if(prompt.isNotBlank()&&!collaborating){
       collaborating=true
@@ -559,6 +567,8 @@ private enum class Section(val label:String){HOME("Home"),TEACHING("Lectures"),C
         }
         collaborating=false
        }
+      }
+     }
       }
      }
     }
