@@ -139,6 +139,7 @@ class ScheduledLectureWorker(context: Context, params: WorkerParameters) : Corou
                 error("Notification permission is disabled. Enable notifications and schedule the lecture again.")
             }
             val lesson = db.lessonDao().lesson(lecture.lessonId) ?: error("The saved lesson no longer exists.")
+            require(lesson.subjectId == lecture.subjectId) { "The scheduled lecture and saved lesson belong to different subjects." }
             val text = ScheduledLecturePolicy.narrationText(lesson.outline)
             require(text.isNotBlank()) { "The saved lesson has no narration text." }
             db.scheduledLectureDao().updateStatus(id, "running", null)
