@@ -1,14 +1,42 @@
 package org.molecularis.app.data
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
-@Entity(tableName="conversations")
-data class ConversationEntity(@PrimaryKey(autoGenerate=true) val id:Long=0,val title:String,val createdAt:Long=System.currentTimeMillis(),val archived:Boolean=false,val pinned:Boolean=false,val workspaceProjectId:Long?=null)
+@Entity(tableName="subject_workspaces", indices=[Index("updatedAt")])
+data class SubjectWorkspaceEntity(
+ @PrimaryKey val id:String,
+ val name:String,
+ val description:String="",
+ val disciplineCode:String?=null,
+ val languageTag:String="en",
+ val createdAt:Long=System.currentTimeMillis(),
+ val updatedAt:Long=System.currentTimeMillis(),
+ val isDefault:Boolean=false
+)
+@Entity(tableName="professor_profiles", indices=[Index("subjectId"),Index("updatedAt")])
+data class ProfessorProfileEntity(
+ @PrimaryKey val id:String,
+ val subjectId:String,
+ val name:String,
+ val role:String="evidence-aware learning professor",
+ val instructions:String="",
+ val learnerLevel:String="general",
+ val tone:String="clear and supportive",
+ val objectives:String="",
+ val sourcePolicy:String="Prefer reviewed workspace sources; distinguish evidence from general knowledge.",
+ val safetyBoundaries:String="Do not provide individualized high-impact professional decisions.",
+ val promptVersion:String="1",
+ val createdAt:Long=System.currentTimeMillis(),
+ val updatedAt:Long=System.currentTimeMillis(),
+ val isDefault:Boolean=false
+)
+@Entity(tableName="conversations", indices=[Index("subjectId"),Index("professorProfileId")])
+data class ConversationEntity(@PrimaryKey(autoGenerate=true) val id:Long=0,val title:String,val createdAt:Long=System.currentTimeMillis(),val archived:Boolean=false,val pinned:Boolean=false,val workspaceProjectId:Long?=null,@ColumnInfo(defaultValue="'legacy-default'") val subjectId:String="legacy-default",val professorProfileId:String?=null)
 @Entity(tableName="messages",indices=[Index("conversationId")])
-data class MessageEntity(@PrimaryKey(autoGenerate=true) val id:Long=0,val conversationId:Long,val body:String,val role:String,val createdAt:Long=System.currentTimeMillis(),val status:String="complete",val attachmentUri:String?=null,val attachmentName:String?=null,val attachmentText:String?=null)
+data class MessageEntity(@PrimaryKey(autoGenerate=true) val id:Long=0,val conversationId:Long,val body:String,val role:String,val createdAt:Long=System.currentTimeMillis(),val status:String="complete",val attachmentUri:String?=null,val attachmentName:String?=null,val attachmentText:String?=null,val professorProfileId:String?=null,val modelProvider:String?=null,val modelVersion:String?=null,val promptVersion:String?=null,val promptHash:String?=null,val sourceSetHash:String?=null,val retrievalConfig:String?=null)
 @Entity(tableName="local_models")
 data class LocalModelEntity(@PrimaryKey val uri:String,val displayName:String,val mimeType:String?,val sizeBytes:Long,val importedAt:Long=System.currentTimeMillis(),val runtimeStatus:String="not_connected",val modelPath:String?=null)
-@Entity(tableName="workspace_projects")
-data class WorkspaceProjectEntity(@PrimaryKey(autoGenerate=true) val id:Long=0,val name:String,val description:String="",val createdAt:Long=System.currentTimeMillis(),val updatedAt:Long=System.currentTimeMillis())
+@Entity(tableName="workspace_projects",indices=[Index("subjectId")])
+data class WorkspaceProjectEntity(@PrimaryKey(autoGenerate=true) val id:Long=0,val name:String,val description:String="",val createdAt:Long=System.currentTimeMillis(),val updatedAt:Long=System.currentTimeMillis(),@ColumnInfo(defaultValue="'legacy-default'") val subjectId:String="legacy-default")
 
 /** Encrypted Room row containing one source-labelled chunk and its local embedding vector. */
 @Entity(tableName="knowledge_chunks",indices=[Index("source"),Index("embeddingModelId"),Index("scopeId")])
@@ -24,16 +52,34 @@ data class KnowledgeChunkEntity(
  val createdAt:Long=System.currentTimeMillis()
 )
 
+@Dao interface SubjectWorkspaceDao {
+ @Query("SELECT * FROM subject_workspaces ORDER BY isDefault DESC,updatedAt DESC") fun workspaces():Flow<List<SubjectWorkspaceEntity>>
+ @Query("SELECT * FROM subject_workspaces WHERE id=:id LIMIT 1") suspend fun workspace(id:String):SubjectWorkspaceEntity?
+ @Insert(onConflict=OnConflictStrategy.ABORT) suspend fun add(workspace:SubjectWorkspaceEntity)
+ @Update suspend fun update(workspace:SubjectWorkspaceEntity)
+ @Query("UPDATE subject_workspaces SET updatedAt=:updatedAt WHERE id=:id") suspend fun touch(id:String,updatedAt:Long=System.currentTimeMillis())
+ @Query("SELECT * FROM subject_workspaces WHERE isDefault=1 LIMIT 1") suspend fun defaultWorkspace():SubjectWorkspaceEntity?
+}
+@Dao interface ProfessorProfileDao {
+ @Query("SELECT * FROM professor_profiles WHERE subjectId=:subjectId ORDER BY isDefault DESC,updatedAt DESC") fun profiles(subjectId:String):Flow<List<ProfessorProfileEntity>>
+ @Query("SELECT * FROM professor_profiles WHERE id=:id LIMIT 1") suspend fun profile(id:String):ProfessorProfileEntity?
+ @Insert(onConflict=OnConflictStrategy.ABORT) suspend fun add(profile:ProfessorProfileEntity)
+ @Update suspend fun update(profile:ProfessorProfileEntity)
+ @Query("DELETE FROM professor_profiles WHERE id=:id") suspend fun delete(id:String)
+ @Query("SELECT * FROM professor_profiles WHERE subjectId=:subjectId AND isDefault=1 LIMIT 1") suspend fun defaultProfile(subjectId:String):ProfessorProfileEntity?
+}
 @Dao interface ChatDao {
  @Query("SELECT * FROM conversations WHERE archived=0 ORDER BY pinned DESC,createdAt DESC") fun conversations():Flow<List<ConversationEntity>>
+ @Query("SELECT * FROM conversations WHERE archived=0 AND subjectId=:subjectId ORDER BY pinned DESC,createdAt DESC") fun conversationsForSubject(subjectId:String):Flow<List<ConversationEntity>>
  @Query("SELECT * FROM messages WHERE conversationId=:id ORDER BY createdAt,id") fun messages(id:Long):Flow<List<MessageEntity>>
  @Insert suspend fun addConversation(item:ConversationEntity):Long
  @Insert suspend fun addMessage(item:MessageEntity):Long
  @Query("UPDATE messages SET attachmentText=:text WHERE id=:id") suspend fun updateAttachmentText(id:Long,text:String)
  @Query("SELECT * FROM messages WHERE conversationId=:id AND attachmentText IS NOT NULL ORDER BY createdAt DESC LIMIT 5") suspend fun attachmentMessages(id:Long):List<MessageEntity>
  @Query("SELECT * FROM conversations WHERE id=:id LIMIT 1") suspend fun conversation(id:Long):ConversationEntity?
- @Query("SELECT * FROM conversations WHERE workspaceProjectId=:projectId AND archived=0 ORDER BY createdAt DESC LIMIT 1") suspend fun latestProjectConversation(projectId:Long):ConversationEntity?
+ @Query("SELECT * FROM conversations WHERE workspaceProjectId=:projectId AND subjectId=:subjectId AND archived=0 ORDER BY createdAt DESC LIMIT 1") suspend fun latestProjectConversation(projectId:Long,subjectId:String):ConversationEntity?
  @Query("UPDATE conversations SET title=:title WHERE id=:id") suspend fun rename(id:Long,title:String)
+ @Query("UPDATE conversations SET professorProfileId=:profileId WHERE id=:conversationId AND subjectId=:subjectId") suspend fun setProfessorProfile(conversationId:Long,subjectId:String,profileId:String?)
  @Query("DELETE FROM messages WHERE conversationId=:id") suspend fun deleteMessages(id:Long)
  @Query("DELETE FROM conversations WHERE id=:id") suspend fun deleteConversation(id:Long)
 }
@@ -51,11 +97,12 @@ data class KnowledgeChunkEntity(
 }
 @Dao interface WorkspaceDao {
  @Query("SELECT * FROM workspace_projects ORDER BY updatedAt DESC") fun projects():Flow<List<WorkspaceProjectEntity>>
+ @Query("SELECT * FROM workspace_projects WHERE subjectId=:subjectId ORDER BY updatedAt DESC") fun projectsForSubject(subjectId:String):Flow<List<WorkspaceProjectEntity>>
  @Insert suspend fun add(project:WorkspaceProjectEntity):Long
  @Query("DELETE FROM workspace_projects WHERE id=:id") suspend fun delete(id:Long)
 }
 
-@Entity(tableName="books",indices=[Index("importedAt"),Index("fileSha256")])
+@Entity(tableName="books",indices=[Index("importedAt"),Index("fileSha256"),Index("subjectId")])
 data class BookEntity(
  @PrimaryKey val id:String,
  val title:String,
@@ -65,7 +112,8 @@ data class BookEntity(
  val pageCount:Int,
  val extractedChars:Int,
  val importedAt:Long=System.currentTimeMillis(),
- val fileSha256:String?=null
+ val fileSha256:String?=null,
+ @ColumnInfo(defaultValue="'legacy-default'") val subjectId:String="legacy-default"
 )
 @Entity(tableName="book_passages",indices=[Index("bookId"),Index("pageNumber")],foreignKeys=[ForeignKey(entity=BookEntity::class,parentColumns=["id"],childColumns=["bookId"],onDelete=ForeignKey.CASCADE)])
 data class BookPassageEntity(
@@ -87,9 +135,12 @@ data class KnowledgeProcessingCheckpointEntity(@PrimaryKey val bookId:String,val
 
 @Dao interface BookDao {
  @Query("SELECT * FROM books WHERE id NOT GLOB '__stage__*' ORDER BY importedAt DESC") fun books():Flow<List<BookEntity>>
+ @Query("SELECT * FROM books WHERE id NOT GLOB '__stage__*' AND subjectId=:subjectId ORDER BY importedAt DESC") fun booksForSubject(subjectId:String):Flow<List<BookEntity>>
+ @Query("SELECT * FROM books WHERE id=:bookId AND subjectId=:subjectId LIMIT 1") suspend fun bookInSubject(bookId:String,subjectId:String):BookEntity?
  @Insert suspend fun addBook(book:BookEntity)
  @Query("SELECT * FROM books WHERE id=:bookId LIMIT 1") suspend fun book(bookId:String):BookEntity?
  @Query("SELECT * FROM books WHERE fileSha256=:sha256 LIMIT 1") suspend fun bookBySha256(sha256:String):BookEntity?
+ @Query("SELECT * FROM books WHERE fileSha256=:sha256 AND subjectId=:subjectId LIMIT 1") suspend fun bookBySha256InSubject(sha256:String,subjectId:String):BookEntity?
  @Query("SELECT * FROM books WHERE title=:title COLLATE NOCASE ORDER BY importedAt DESC LIMIT 1") suspend fun bookByTitle(title:String):BookEntity?
  @Update suspend fun updateBook(book:BookEntity)
  @Transaction suspend fun deleteBookAndProcessingState(bookId:String) { clearProcessingCheckpointAndStage(bookId); deletePageAudits(bookId); deleteBook(bookId) }
@@ -116,8 +167,10 @@ data class KnowledgeProcessingCheckpointEntity(@PrimaryKey val bookId:String,val
  @Query("SELECT book_passages.* FROM book_passages JOIN book_passages_fts ON book_passages_fts.rowid = book_passages.rowid WHERE book_passages.bookId=:bookId AND book_passages_fts MATCH :query ORDER BY book_passages.pageNumber LIMIT 100") suspend fun searchInBookIndexed(bookId:String,query:String):List<BookPassageEntity>
  @Query("SELECT book_passages.* FROM book_passages JOIN book_passages_fts ON book_passages_fts.rowid = book_passages.rowid WHERE book_passages.bookId IN (SELECT id FROM books WHERE id NOT GLOB '__stage__*') AND book_passages_fts MATCH :query ORDER BY book_passages.bookId,book_passages.pageNumber LIMIT 100") suspend fun searchAllIndexed(query:String):List<BookPassageEntity>
  @Query("SELECT book_passages.* FROM book_passages JOIN book_passages_fts ON book_passages_fts.rowid = book_passages.rowid WHERE book_passages_fts MATCH :query AND (:bookId IS NULL OR book_passages.bookId=:bookId) AND (:fromPage IS NULL OR book_passages.pageNumber>=:fromPage) AND (:toPage IS NULL OR book_passages.pageNumber<=:toPage) ORDER BY book_passages.bookId,book_passages.pageNumber LIMIT 100") suspend fun searchFilteredIndexed(query:String,bookId:String?,fromPage:Int?,toPage:Int?):List<BookPassageEntity>
+ @Query("SELECT p.* FROM book_passages p JOIN books b ON b.id=p.bookId JOIN book_passages_fts ON book_passages_fts.rowid=p.rowid WHERE book_passages_fts MATCH :query AND b.subjectId=:subjectId AND b.id NOT GLOB '__stage__*' AND (:bookId IS NULL OR p.bookId=:bookId) AND (:fromPage IS NULL OR p.pageNumber>=:fromPage) AND (:toPage IS NULL OR p.pageNumber<=:toPage) ORDER BY p.bookId,p.pageNumber LIMIT 100") suspend fun searchFilteredIndexedForSubject(query:String,subjectId:String,bookId:String?,fromPage:Int?,toPage:Int?):List<BookPassageEntity>
  @Query("SELECT * FROM book_passages WHERE bookId=:bookId AND text LIKE '%' || :query || '%' ORDER BY pageNumber LIMIT 100") suspend fun searchInBook(bookId:String,query:String):List<BookPassageEntity>
  @Query("SELECT * FROM book_passages WHERE bookId IN (SELECT id FROM books WHERE id NOT GLOB '__stage__*') AND text LIKE '%' || :query || '%' ORDER BY bookId,pageNumber LIMIT 100") suspend fun searchAll(query:String):List<BookPassageEntity>
+ @Query("SELECT p.* FROM book_passages p INNER JOIN books b ON b.id=p.bookId WHERE b.subjectId=:subjectId AND b.id NOT GLOB '__stage__*' AND p.text LIKE '%' || :query || '%' ORDER BY p.bookId,p.pageNumber LIMIT 100") suspend fun searchAllForSubject(subjectId:String,query:String):List<BookPassageEntity>
  @Query("UPDATE books SET pageCount=:pageCount, extractedChars=:extractedChars WHERE id=:bookId") suspend fun updateBookStats(bookId:String,pageCount:Int,extractedChars:Int)
  @Query("DELETE FROM books WHERE id=:bookId") suspend fun deleteBook(bookId:String)
  @Query("DELETE FROM knowledge_page_audits WHERE stagingBookId IN (SELECT id FROM books WHERE id GLOB '__stage__*' AND importedAt < :olderThan AND id NOT IN (SELECT stagingBookId FROM knowledge_processing_checkpoints))") suspend fun deleteStalePageAudits(olderThan:Long)
@@ -161,6 +214,7 @@ data class KnowledgeTopicAliasEntity(
 data class KnowledgeTopicPassageLinkEntity(val topicId:String,val passageId:String,val pageNumber:Int,val linkType:String="section_page_range")
 @Dao interface KnowledgePoolDao {
  @Query("SELECT * FROM knowledge_books ORDER BY processedAt DESC") fun books():Flow<List<KnowledgeBookEntity>>
+ @Query("SELECT kb.* FROM knowledge_books kb INNER JOIN books b ON b.id=kb.bookId WHERE b.subjectId=:subjectId ORDER BY kb.processedAt DESC") fun booksForSubject(subjectId:String):Flow<List<KnowledgeBookEntity>>
  @Query("SELECT * FROM knowledge_books WHERE bookId=:bookId LIMIT 1") suspend fun forBook(bookId:String):KnowledgeBookEntity?
  @Insert(onConflict=OnConflictStrategy.REPLACE) suspend fun saveBook(book:KnowledgeBookEntity)
  @Query("UPDATE knowledge_books SET detectedTitle=:title,author=:author,publisher=:publisher,edition=:edition,subject=:subject,reviewState='needs_review' WHERE id=:id") suspend fun updateMetadata(id:String,title:String,author:String,publisher:String,edition:String,subject:String)
@@ -223,7 +277,7 @@ data class KnowledgeTopicPassageLinkEntity(val topicId:String,val passageId:Stri
  @Transaction suspend fun deleteForBook(bookId:String) { deleteTopicsForBook(bookId); deleteBookMetadataForBook(bookId) }
 }
 
-@Entity(tableName="saved_lessons",indices=[Index("updatedAt")])
+@Entity(tableName="saved_lessons",indices=[Index("updatedAt"),Index("subjectId")])
 data class SavedLessonEntity(
  @PrimaryKey val id:String,
  val title:String,
@@ -231,10 +285,14 @@ data class SavedLessonEntity(
  val durationMinutes:Int,
  val outline:String,
  val createdAt:Long=System.currentTimeMillis(),
- val updatedAt:Long=System.currentTimeMillis()
+ val updatedAt:Long=System.currentTimeMillis(),
+ @ColumnInfo(defaultValue="'legacy-default'") val subjectId:String="legacy-default",
+ val professorProfileId:String?=null,
+ @ColumnInfo(defaultValue="'1'") val promptVersion:String="1"
 )
 @Dao interface LessonDao {
  @Query("SELECT * FROM saved_lessons ORDER BY updatedAt DESC") fun lessons():Flow<List<SavedLessonEntity>>
+ @Query("SELECT * FROM saved_lessons WHERE subjectId=:subjectId ORDER BY updatedAt DESC") fun lessonsForSubject(subjectId:String):Flow<List<SavedLessonEntity>>
  @Insert(onConflict=OnConflictStrategy.REPLACE) suspend fun saveLesson(lesson:SavedLessonEntity)
  @Query("SELECT * FROM saved_lessons WHERE id=:id LIMIT 1") suspend fun lesson(id:String):SavedLessonEntity?
  @Query("DELETE FROM saved_lessons WHERE id=:id") suspend fun deleteLesson(id:String)
@@ -248,8 +306,10 @@ data class SavedDiagramEntity(@PrimaryKey val id:String,val title:String,val tem
  @Query("DELETE FROM saved_diagrams WHERE id=:id") suspend fun deleteDiagram(id:String)
 }
 
-@Database(entities=[ConversationEntity::class,MessageEntity::class,LocalModelEntity::class,WorkspaceProjectEntity::class,KnowledgeChunkEntity::class,BookEntity::class,BookPassageEntity::class,KnowledgeBookEntity::class,KnowledgeTopicEntity::class,SavedLessonEntity::class,BookPassageFts::class,KnowledgeProcessingCheckpointEntity::class,KnowledgeTopicAliasEntity::class,KnowledgePageAuditEntity::class,KnowledgeTopicPassageLinkEntity::class,SavedDiagramEntity::class,ScheduledLectureEntity::class],version=17,exportSchema=false)
+@Database(entities=[SubjectWorkspaceEntity::class,ProfessorProfileEntity::class,ConversationEntity::class,MessageEntity::class,LocalModelEntity::class,WorkspaceProjectEntity::class,KnowledgeChunkEntity::class,BookEntity::class,BookPassageEntity::class,KnowledgeBookEntity::class,KnowledgeTopicEntity::class,SavedLessonEntity::class,BookPassageFts::class,KnowledgeProcessingCheckpointEntity::class,KnowledgeTopicAliasEntity::class,KnowledgePageAuditEntity::class,KnowledgeTopicPassageLinkEntity::class,SavedDiagramEntity::class,ScheduledLectureEntity::class],version=18,exportSchema=false)
 abstract class AppDatabase:RoomDatabase(){
+ abstract fun subjectWorkspaceDao():SubjectWorkspaceDao
+ abstract fun professorProfileDao():ProfessorProfileDao
  abstract fun chatDao():ChatDao
  abstract fun modelDao():ModelDao
  abstract fun workspaceDao():WorkspaceDao

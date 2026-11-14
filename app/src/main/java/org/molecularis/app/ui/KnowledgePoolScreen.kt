@@ -35,11 +35,11 @@ import java.security.MessageDigest
 private const val KNOWLEDGE_MAX_CHARS = 25_000_000
 
 @Composable
-fun KnowledgePoolScreen(database: AppDatabase) {
+fun KnowledgePoolScreen(database: AppDatabase, subjectId:String) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val library by database.bookDao().books().collectAsState(initial = emptyList())
-    val pool by database.knowledgePoolDao().books().collectAsState(initial = emptyList())
+    val library by database.bookDao().booksForSubject(subjectId).collectAsState(initial = emptyList())
+    val pool by database.knowledgePoolDao().booksForSubject(subjectId).collectAsState(initial = emptyList())
     var status by remember { mutableStateOf("Your source books stay unchanged in Library. Process a copy into structured knowledge here.") }
     var processingId by remember { mutableStateOf<String?>(null) }
     var selected by remember { mutableStateOf<KnowledgeBookEntity?>(null) }
@@ -52,6 +52,12 @@ fun KnowledgePoolScreen(database: AppDatabase) {
     var subjectDraft by remember { mutableStateOf("") }
     var newTopicName by remember { mutableStateOf("") }
     var newTopicPage by remember { mutableStateOf("1") }
+
+    LaunchedEffect(subjectId) {
+        selected = null
+        topics = emptyList()
+        aliases = emptyMap()
+    }
 
     LaunchedEffect(Unit) {
         // Android may kill the process before the coroutine cleanup handler can run.

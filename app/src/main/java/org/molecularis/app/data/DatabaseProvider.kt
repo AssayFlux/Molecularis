@@ -129,6 +129,9 @@ private val FTS_CALLBACK = object : RoomDatabase.Callback() {
         db.execSQL("CREATE TRIGGER IF NOT EXISTS book_passages_fts_delete AFTER DELETE ON book_passages BEGIN INSERT INTO book_passages_fts(book_passages_fts,docid,text) VALUES('delete',old.rowid,old.text); END")
         db.execSQL("CREATE TRIGGER IF NOT EXISTS book_passages_fts_update AFTER UPDATE OF text ON book_passages BEGIN INSERT INTO book_passages_fts(book_passages_fts,docid,text) VALUES('delete',old.rowid,old.text); INSERT INTO book_passages_fts(docid,text) VALUES(new.rowid,new.text); END")
         db.execSQL("INSERT INTO book_passages_fts(book_passages_fts) VALUES('rebuild')")
+        val now = System.currentTimeMillis()
+        db.execSQL("INSERT OR IGNORE INTO subject_workspaces(id,name,description,disciplineCode,languageTag,createdAt,updatedAt,isDefault) VALUES('legacy-default','My first subject','Default learning workspace',NULL,'en',$now,$now,1)")
+        db.execSQL("INSERT OR IGNORE INTO professor_profiles(id,subjectId,name,role,instructions,learnerLevel,tone,objectives,sourcePolicy,safetyBoundaries,promptVersion,createdAt,updatedAt,isDefault) VALUES('legacy-professor-default','legacy-default','General professor','evidence-aware learning professor','','general','clear and supportive','','Prefer reviewed workspace sources; distinguish evidence from general knowledge.','Do not provide individualized high-impact professional decisions.','1',$now,$now,1)")
     }
 }
 private val MIGRATION_14_15 = object : Migration(14, 15) {
@@ -162,6 +165,40 @@ private val MIGRATION_16_17 = object : Migration(16, 17) {
         db.execSQL("CREATE TABLE IF NOT EXISTS scheduled_lectures (id TEXT NOT NULL, lessonId TEXT NOT NULL, title TEXT NOT NULL, audienceLevel TEXT NOT NULL, durationMinutes INTEGER NOT NULL, languageTag TEXT NOT NULL, scheduledAt INTEGER NOT NULL, status TEXT NOT NULL, workId TEXT, lastError TEXT, updatedAt INTEGER NOT NULL, PRIMARY KEY(id))")
         db.execSQL("CREATE INDEX IF NOT EXISTS index_scheduled_lectures_scheduledAt ON scheduled_lectures(scheduledAt)")
         db.execSQL("CREATE INDEX IF NOT EXISTS index_scheduled_lectures_status ON scheduled_lectures(status)")
+    }
+}
+
+private val MIGRATION_17_18 = object : Migration(17, 18) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("CREATE TABLE IF NOT EXISTS subject_workspaces (id TEXT NOT NULL, name TEXT NOT NULL, description TEXT NOT NULL, disciplineCode TEXT, languageTag TEXT NOT NULL, createdAt INTEGER NOT NULL, updatedAt INTEGER NOT NULL, isDefault INTEGER NOT NULL, PRIMARY KEY(id))")
+        db.execSQL("CREATE INDEX IF NOT EXISTS index_subject_workspaces_updatedAt ON subject_workspaces(updatedAt)")
+        db.execSQL("CREATE TABLE IF NOT EXISTS professor_profiles (id TEXT NOT NULL, subjectId TEXT NOT NULL, name TEXT NOT NULL, role TEXT NOT NULL, instructions TEXT NOT NULL, learnerLevel TEXT NOT NULL, tone TEXT NOT NULL, objectives TEXT NOT NULL, sourcePolicy TEXT NOT NULL, safetyBoundaries TEXT NOT NULL, promptVersion TEXT NOT NULL, createdAt INTEGER NOT NULL, updatedAt INTEGER NOT NULL, isDefault INTEGER NOT NULL, PRIMARY KEY(id))")
+        db.execSQL("CREATE INDEX IF NOT EXISTS index_professor_profiles_subjectId ON professor_profiles(subjectId)")
+        db.execSQL("CREATE INDEX IF NOT EXISTS index_professor_profiles_updatedAt ON professor_profiles(updatedAt)")
+        db.execSQL("ALTER TABLE workspace_projects ADD COLUMN subjectId TEXT NOT NULL DEFAULT 'legacy-default'")
+        db.execSQL("CREATE INDEX IF NOT EXISTS index_workspace_projects_subjectId ON workspace_projects(subjectId)")
+        db.execSQL("ALTER TABLE books ADD COLUMN subjectId TEXT NOT NULL DEFAULT 'legacy-default'")
+        db.execSQL("CREATE INDEX IF NOT EXISTS index_books_subjectId ON books(subjectId)")
+        db.execSQL("ALTER TABLE conversations ADD COLUMN subjectId TEXT NOT NULL DEFAULT 'legacy-default'")
+        db.execSQL("ALTER TABLE conversations ADD COLUMN professorProfileId TEXT")
+        db.execSQL("CREATE INDEX IF NOT EXISTS index_conversations_subjectId ON conversations(subjectId)")
+        db.execSQL("CREATE INDEX IF NOT EXISTS index_conversations_professorProfileId ON conversations(professorProfileId)")
+        db.execSQL("ALTER TABLE saved_lessons ADD COLUMN subjectId TEXT NOT NULL DEFAULT 'legacy-default'")
+        db.execSQL("CREATE INDEX IF NOT EXISTS index_saved_lessons_subjectId ON saved_lessons(subjectId)")
+        db.execSQL("ALTER TABLE saved_lessons ADD COLUMN professorProfileId TEXT")
+        db.execSQL("ALTER TABLE saved_lessons ADD COLUMN promptVersion TEXT NOT NULL DEFAULT '1'")
+        db.execSQL("ALTER TABLE messages ADD COLUMN professorProfileId TEXT")
+        db.execSQL("ALTER TABLE messages ADD COLUMN modelProvider TEXT")
+        db.execSQL("ALTER TABLE messages ADD COLUMN modelVersion TEXT")
+        db.execSQL("ALTER TABLE messages ADD COLUMN promptVersion TEXT")
+        db.execSQL("ALTER TABLE messages ADD COLUMN promptHash TEXT")
+        db.execSQL("ALTER TABLE messages ADD COLUMN sourceSetHash TEXT")
+        db.execSQL("ALTER TABLE messages ADD COLUMN retrievalConfig TEXT")
+        db.execSQL("ALTER TABLE scheduled_lectures ADD COLUMN subjectId TEXT NOT NULL DEFAULT 'legacy-default'")
+        db.execSQL("CREATE INDEX IF NOT EXISTS index_scheduled_lectures_subjectId ON scheduled_lectures(subjectId)")
+        val now = System.currentTimeMillis()
+        db.execSQL("INSERT OR IGNORE INTO subject_workspaces(id,name,description,disciplineCode,languageTag,createdAt,updatedAt,isDefault) VALUES('legacy-default','My first subject','Migrated workspace for existing library and conversations',NULL,'en',$now,$now,1)")
+        db.execSQL("INSERT OR IGNORE INTO professor_profiles(id,subjectId,name,role,instructions,learnerLevel,tone,objectives,sourcePolicy,safetyBoundaries,promptVersion,createdAt,updatedAt,isDefault) VALUES('legacy-professor-default','legacy-default','General professor','evidence-aware learning professor','','general','clear and supportive','','Prefer reviewed workspace sources; distinguish evidence from general knowledge.','Do not provide individualized high-impact professional decisions.','1',$now,$now,1)")
     }
 }
 
@@ -208,7 +245,7 @@ object DatabaseProvider {
             ENCRYPTED_NAME
         )
             .openHelperFactory(SupportOpenHelperFactory(passphrase.copyOf()))
-            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16, MIGRATION_16_17)
+            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16, MIGRATION_16_17, MIGRATION_17_18)
             .addCallback(FTS_CALLBACK)
             .setJournalMode(RoomDatabase.JournalMode.TRUNCATE)
             .build()
@@ -233,7 +270,7 @@ object DatabaseProvider {
             AppDatabase::class.java,
             LEGACY_NAME
         )
-            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16, MIGRATION_16_17)
+            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16, MIGRATION_16_17, MIGRATION_17_18)
             .addCallback(FTS_CALLBACK)
             .setJournalMode(RoomDatabase.JournalMode.TRUNCATE)
             .build()
@@ -244,7 +281,7 @@ object DatabaseProvider {
             TEMP_NAME
         )
             .openHelperFactory(SupportOpenHelperFactory(passphrase.copyOf()))
-            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16, MIGRATION_16_17)
+            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16, MIGRATION_16_17, MIGRATION_17_18)
             .addCallback(FTS_CALLBACK)
             .setJournalMode(RoomDatabase.JournalMode.TRUNCATE)
             .build()
@@ -252,7 +289,7 @@ object DatabaseProvider {
         try {
             val source = legacy.openHelper.writableDatabase
             val target = encryptedTemp.openHelper.writableDatabase
-            val tables = listOf("conversations", "messages", "local_models", "workspace_projects", "knowledge_chunks", "books", "book_passages", "knowledge_books", "knowledge_topics", "saved_lessons", "knowledge_processing_checkpoints", "knowledge_topic_aliases", "knowledge_page_audits", "knowledge_topic_passage_links", "saved_diagrams", "scheduled_lectures")
+            val tables = listOf("conversations", "messages", "local_models", "workspace_projects", "knowledge_chunks", "books", "book_passages", "knowledge_books", "knowledge_topics", "saved_lessons", "knowledge_processing_checkpoints", "knowledge_topic_aliases", "knowledge_page_audits", "knowledge_topic_passage_links", "saved_diagrams", "scheduled_lectures", "subject_workspaces", "professor_profiles")
             target.beginTransaction()
             try {
                 tables.forEach { table -> copyTable(source, target, table) }

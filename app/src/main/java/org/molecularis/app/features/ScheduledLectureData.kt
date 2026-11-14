@@ -9,7 +9,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 
-@Entity(tableName = "scheduled_lectures", indices = [Index("scheduledAt"), Index("status")])
+@Entity(tableName = "scheduled_lectures", indices = [Index("scheduledAt"), Index("status"), Index("subjectId")])
 data class ScheduledLectureEntity(
     @PrimaryKey val id: String,
     val lessonId: String,
@@ -21,13 +21,17 @@ data class ScheduledLectureEntity(
     val status: String = "scheduled",
     val workId: String? = null,
     val lastError: String? = null,
-    val updatedAt: Long = System.currentTimeMillis()
+    val updatedAt: Long = System.currentTimeMillis(),
+    @androidx.room.ColumnInfo(defaultValue = "'legacy-default'") val subjectId: String = "legacy-default"
 )
 
 @Dao
 interface ScheduledLectureDao {
     @Query("SELECT * FROM scheduled_lectures ORDER BY scheduledAt DESC")
     fun lectures(): Flow<List<ScheduledLectureEntity>>
+
+    @Query("SELECT * FROM scheduled_lectures WHERE subjectId=:subjectId ORDER BY scheduledAt DESC")
+    fun lecturesForSubject(subjectId: String): Flow<List<ScheduledLectureEntity>>
 
     @Query("SELECT * FROM scheduled_lectures WHERE id=:id LIMIT 1")
     suspend fun lecture(id: String): ScheduledLectureEntity?
