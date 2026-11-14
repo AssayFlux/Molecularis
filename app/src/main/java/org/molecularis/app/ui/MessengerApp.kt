@@ -360,7 +360,7 @@ private enum class Section(val label:String){HOME("Home"),TEACHING("Lectures"),C
     val primarySections=listOf(Section.HOME,Section.TEACHING,Section.CHATS,Section.LIBRARY,Section.KNOWLEDGE_POOL,Section.AI_HUB)
     primarySections.forEach{item->
      val icon=when(item){Section.HOME->Icons.Default.Home;Section.TEACHING->Icons.Default.School;Section.CHATS->Icons.Default.ChatBubbleOutline;Section.LIBRARY->Icons.Default.MenuBook;Section.KNOWLEDGE_POOL->Icons.Default.AccountTree;Section.AI_HUB->Icons.Default.Hub;Section.SETTINGS->Icons.Default.Settings;else->Icons.Default.MoreHoriz}
-     NavigationBarItem(selected=section==item,onClick={section=item;moreNavigationExpanded=false},icon={Icon(icon,item.label)},label={Text(item.label,maxLines=1)})
+     NavigationBarItem(selected=section==item||(item==Section.AI_HUB&&(section==Section.MODELS||section==Section.TRAINING||section==Section.ONLINE_AI)),onClick={section=item;moreNavigationExpanded=false},icon={Icon(icon,item.label)},label={Text(item.label,maxLines=1)})
     }
     NavigationBarItem(
      selected=section==Section.SETTINGS||section==Section.SCHEDULED||section==Section.WORKSPACE,
@@ -1229,7 +1229,7 @@ private suspend fun readDatasetBounded(context:Context,uri:Uri):String = withCon
   }
   Card(Modifier.fillMaxWidth()){
    Column(Modifier.padding(16.dp),verticalArrangement=Arrangement.spacedBy(10.dp)){
-    Text("Appearance & personalization",style=MaterialTheme.typography.titleLarge,fontWeight=FontWeight.SemiBold)
+    Text("Customisation · App appearance",style=MaterialTheme.typography.titleLarge,fontWeight=FontWeight.SemiBold)
     Row(verticalAlignment=Alignment.CenterVertically){
      Column(Modifier.weight(1f)){Text("Dark appearance",fontWeight=FontWeight.Medium);Text(if(darkAppearance)"Enabled · low-glare workspace" else "Disabled · light workspace",style=MaterialTheme.typography.bodySmall,color=Muted)}
      Switch(checked=darkAppearance,onCheckedChange=onDarkAppearanceChange)
@@ -1264,8 +1264,8 @@ private suspend fun readDatasetBounded(context:Context,uri:Uri):String = withCon
   }
   Card(Modifier.fillMaxWidth()){
    Column(Modifier.padding(16.dp),verticalArrangement=Arrangement.spacedBy(10.dp)){
-    Text("Chat & AI behaviour",style=MaterialTheme.typography.titleLarge,fontWeight=FontWeight.SemiBold)
-    Text("Customisation · Chat workspace",style=MaterialTheme.typography.titleLarge,fontWeight=FontWeight.SemiBold)
+    Text("Customisation · Study preferences",style=MaterialTheme.typography.titleLarge,fontWeight=FontWeight.SemiBold)
+    Text("Chat workspace appearance",style=MaterialTheme.typography.titleMedium,fontWeight=FontWeight.SemiBold)
     Text("Change the conversation canvas independently of the rest of the app.",style=MaterialTheme.typography.bodySmall,color=Muted)
     var chatBgDraft by remember(chatBackgroundColor){mutableStateOf(chatBackgroundColor)}
     var chatTextDraft by remember(chatFontColor){mutableStateOf(chatFontColor)}
@@ -1280,6 +1280,7 @@ private suspend fun readDatasetBounded(context:Context,uri:Uri):String = withCon
     Text("Chat font size · $chatFontSize sp",style=MaterialTheme.typography.titleMedium,fontWeight=FontWeight.SemiBold)
     Slider(value=chatFontSize.toFloat(),onValueChange={onChatFontSizeChange(it.toInt())},valueRange=12f..22f,steps=9)
     Text("Preview · Molecularis study conversations",fontFamily=chatFontFamily.toChatFontFamily(),fontSize=chatFontSize.sp,color=parseChatColor(chatFontColor,MaterialTheme.colorScheme.onSurface))
+    OutlinedButton(onClick={onChatBackgroundColorChange("#F4F6F8");onChatBackgroundImageChange("");onChatFontFamilyChange("SansSerif");onChatFontColorChange("#20242B");onChatFontSizeChange(16)},modifier=Modifier.fillMaxWidth()){Text("Reset chat customisation")}
     Text("Response style",style=MaterialTheme.typography.titleMedium,fontWeight=FontWeight.SemiBold)
     Row(horizontalArrangement=Arrangement.spacedBy(6.dp)){
      listOf("concise" to "Concise","balanced" to "Balanced","detailed" to "Detailed").forEach{(value,label)->FilterChip(selected=responseStyle==value,onClick={onResponseStyleChange(value)},label={Text(label)})}
@@ -1294,7 +1295,7 @@ private suspend fun readDatasetBounded(context:Context,uri:Uri):String = withCon
   }
   Card(Modifier.fillMaxWidth()){
    Column(Modifier.padding(16.dp),verticalArrangement=Arrangement.spacedBy(10.dp)){
-    Text("Speech & voice",style=MaterialTheme.typography.titleLarge,fontWeight=FontWeight.SemiBold)
+    Text("Voices & speech",style=MaterialTheme.typography.titleLarge,fontWeight=FontWeight.SemiBold)
     Text("Speech controls are grouped separately from appearance and AI preferences. Recognition uses the device's on-device speech provider; text-to-speech uses installed offline voices.",style=MaterialTheme.typography.bodySmall,color=Muted)
     Box{
      OutlinedButton(onClick={languageMenu=true},modifier=Modifier.fillMaxWidth()){
@@ -1337,7 +1338,7 @@ private suspend fun readDatasetBounded(context:Context,uri:Uri):String = withCon
   }
   Card(Modifier.fillMaxWidth()){
    Column(Modifier.padding(16.dp),verticalArrangement=Arrangement.spacedBy(6.dp)){
-    Text("Privacy & device",style=MaterialTheme.typography.titleLarge,fontWeight=FontWeight.SemiBold)
+    Text("Privacy, security & device",style=MaterialTheme.typography.titleLarge,fontWeight=FontWeight.SemiBold)
     Text("Offline-first: chats, books and models remain on this device. External AI is optional and disabled unless you explicitly enable it. A compatible .litertlm model must be installed separately for local chat generation.",style=MaterialTheme.typography.bodySmall,color=Muted)
    }
   }
