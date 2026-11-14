@@ -1,0 +1,1 @@
+record_id,subject_id,source_id,source_sha256,source_page,passage_id,query_id,query_text,query_type,answerable_from_corpus,gold_relevance_grade,required_claim_id,gold_claim_text,expected_citation,annotator_id,annotator_role,confidence,adjudication_status,adjudication_note
