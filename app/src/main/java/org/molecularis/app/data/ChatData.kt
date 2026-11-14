@@ -35,8 +35,8 @@ data class ConversationEntity(@PrimaryKey(autoGenerate=true) val id:Long=0,val t
 data class MessageEntity(@PrimaryKey(autoGenerate=true) val id:Long=0,val conversationId:Long,val body:String,val role:String,val createdAt:Long=System.currentTimeMillis(),val status:String="complete",val attachmentUri:String?=null,val attachmentName:String?=null,val attachmentText:String?=null,val professorProfileId:String?=null,val modelProvider:String?=null,val modelVersion:String?=null,val promptVersion:String?=null,val promptHash:String?=null,val sourceSetHash:String?=null,val retrievalConfig:String?=null)
 @Entity(tableName="local_models")
 data class LocalModelEntity(@PrimaryKey val uri:String,val displayName:String,val mimeType:String?,val sizeBytes:Long,val importedAt:Long=System.currentTimeMillis(),val runtimeStatus:String="not_connected",val modelPath:String?=null)
-@Entity(tableName="workspace_projects")
-data class WorkspaceProjectEntity(@PrimaryKey(autoGenerate=true) val id:Long=0,val name:String,val description:String="",val createdAt:Long=System.currentTimeMillis(),val updatedAt:Long=System.currentTimeMillis())
+@Entity(tableName="workspace_projects",indices=[Index("subjectId")])
+data class WorkspaceProjectEntity(@PrimaryKey(autoGenerate=true) val id:Long=0,val name:String,val description:String="",val createdAt:Long=System.currentTimeMillis(),val updatedAt:Long=System.currentTimeMillis(),@ColumnInfo(defaultValue="'legacy-default'") val subjectId:String="legacy-default")
 
 /** Encrypted Room row containing one source-labelled chunk and its local embedding vector. */
 @Entity(tableName="knowledge_chunks",indices=[Index("source"),Index("embeddingModelId"),Index("scopeId")])
@@ -97,6 +97,7 @@ data class KnowledgeChunkEntity(
 }
 @Dao interface WorkspaceDao {
  @Query("SELECT * FROM workspace_projects ORDER BY updatedAt DESC") fun projects():Flow<List<WorkspaceProjectEntity>>
+ @Query("SELECT * FROM workspace_projects WHERE subjectId=:subjectId ORDER BY updatedAt DESC") fun projectsForSubject(subjectId:String):Flow<List<WorkspaceProjectEntity>>
  @Insert suspend fun add(project:WorkspaceProjectEntity):Long
  @Query("DELETE FROM workspace_projects WHERE id=:id") suspend fun delete(id:Long)
 }
