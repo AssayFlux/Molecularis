@@ -909,7 +909,7 @@ private enum class Section(val label:String){HOME("Home"),TEACHING("Lectures"),C
   OutlinedTextField(projectDescription,{projectDescription=it},label={Text("Description")},minLines=2)
  }},confirmButton={TextButton(onClick={
   if(projectName.isNotBlank()) scope.launch{db.workspaceDao().add(WorkspaceProjectEntity(name=projectName.trim(),description=projectDescription.trim(),subjectId=activeSubjectId));projectName="";projectDescription="";showNewProject=false}
- }}){Text("Create")}},dismissButton={TextButton(onClick={showNewProject=false}){Text("Cancel")}})
+ }){Text("Create")}},dismissButton={TextButton(onClick={showNewProject=false}){Text("Cancel")}})
 }
 
 
