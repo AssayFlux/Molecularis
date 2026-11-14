@@ -53,6 +53,12 @@ fun KnowledgePoolScreen(database: AppDatabase, subjectId:String) {
     var newTopicName by remember { mutableStateOf("") }
     var newTopicPage by remember { mutableStateOf("1") }
 
+    LaunchedEffect(subjectId) {
+        selected = null
+        topics = emptyList()
+        aliases = emptyMap()
+    }
+
     LaunchedEffect(Unit) {
         // Android may kill the process before the coroutine cleanup handler can run.
         // Reclaim only abandoned staging rows older than seven days.
