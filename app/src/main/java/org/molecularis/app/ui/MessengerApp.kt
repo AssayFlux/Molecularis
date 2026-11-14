@@ -87,7 +87,7 @@ import java.io.File
 import java.util.UUID
 
 private val Muted=Color(0xFF65736D)
-private enum class Section(val label:String){HOME("Home"),TEACHING("Teach"),CHATS("Chats"),LIBRARY("Library"),KNOWLEDGE_POOL("Knowledge Pool"),SCHEDULED("Schedule"),AI_HUB("AI Hub"),MODELS("Models"),TRAINING("Training"),WORKSPACE("Workspace"),ONLINE_AI("Online AI"),SETTINGS("Settings")}
+private enum class Section(val label:String){HOME("Home"),TEACHING("Lectures"),CHATS("Chats"),LIBRARY("Library"),KNOWLEDGE_POOL("Knowledge Pool"),SCHEDULED("Schedule"),AI_HUB("AI Hub"),MODELS("Models"),TRAINING("Training"),WORKSPACE("Workspace"),ONLINE_AI("Online AI"),SETTINGS("Settings")}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable fun MessengerApp(){
@@ -847,15 +847,11 @@ private enum class Section(val label:String){HOME("Home"),TEACHING("Teach"),CHAT
  }
  if(actionsExpanded) ModalBottomSheet(onDismissRequest={actionsExpanded=false}) {
   Column(Modifier.fillMaxWidth().navigationBarsPadding().padding(horizontal=20.dp,vertical=12.dp),verticalArrangement=Arrangement.spacedBy(10.dp)) {
-   Text("Molecularis tools",style=MaterialTheme.typography.titleLarge,fontWeight=FontWeight.SemiBold)
-   Text("Keep chatting here. Open a focused tool only when you need it.",style=MaterialTheme.typography.bodySmall,color=Muted)
-   Button(onClick={actionsExpanded=false;onTeach()},modifier=Modifier.fillMaxWidth()) { Icon(Icons.Default.School,null);Spacer(Modifier.width(10.dp));Text("Teach a lesson") }
+   Text("Study tools",style=MaterialTheme.typography.titleLarge,fontWeight=FontWeight.SemiBold)
+   Text("Bring your sources into the conversation, or turn what you learn into a lecture.",style=MaterialTheme.typography.bodySmall,color=Muted)
+   Button(onClick={actionsExpanded=false;onTeach()},modifier=Modifier.fillMaxWidth()) { Icon(Icons.Default.School,null);Spacer(Modifier.width(10.dp));Text("Build a lecture") }
    OutlinedButton(onClick={actionsExpanded=false;onAttach()},modifier=Modifier.fillMaxWidth()) { Icon(Icons.Default.AttachFile,null);Spacer(Modifier.width(10.dp));Text("Attach a document or image") }
-   OutlinedButton(onClick={actionsExpanded=false;onLibrary()},modifier=Modifier.fillMaxWidth()) { Icon(Icons.Default.MenuBook,null);Spacer(Modifier.width(10.dp));Text("Textbook library") }
-   Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(10.dp)) {
-    OutlinedButton(onClick={actionsExpanded=false;onModels()},modifier=Modifier.weight(1f)) { Icon(Icons.Default.Memory,null);Spacer(Modifier.width(6.dp));Text("Models") }
-    OutlinedButton(onClick={actionsExpanded=false;onAiHub()},modifier=Modifier.weight(1f)) { Icon(Icons.Default.Hub,null);Spacer(Modifier.width(6.dp));Text("AI tools") }
-   }
+   OutlinedButton(onClick={actionsExpanded=false;onLibrary()},modifier=Modifier.fillMaxWidth()) { Icon(Icons.Default.MenuBook,null);Spacer(Modifier.width(10.dp));Text("Open Library") }
   }
  }
 }
