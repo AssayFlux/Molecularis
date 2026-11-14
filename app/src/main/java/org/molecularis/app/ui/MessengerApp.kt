@@ -477,7 +477,7 @@ private enum class Section(val label:String){HOME("Home"),TEACHING("Lectures"),C
     Section.TEACHING->TeachingStudioScreen(db, activeSubjectId, activeWorkspace?.name ?: "Subject", activeProfessor, voiceAvailable = offlineTtsVoices.isNotEmpty(), localModelAvailable = activeModelPath != null && activeModelName != null, onSpeakSlides={segments,onSegment,onState->voiceController.speakSegments(segments,onSegment,{},{playing,paused->narrationPlaying=playing;narrationPaused=paused;onState(playing,paused)})},onPauseNarration={voiceController.pauseSpeaking()},onResumeNarration={voiceController.resumeSpeaking()},onStopNarration={voiceController.stopSpeaking();narrationPlaying=false;narrationPaused=false},onSeekNarration={voiceController.seekSpeakingTo(it)},onNarrationRateChange={rate->voiceController.setSpeechRate(rate)}, onGenerateWithLocalModel = { prompt -> runtime.generate(prompt) })
     Section.LIBRARY->BookLibraryScreen(db,activeSubjectId)
     Section.KNOWLEDGE_POOL->KnowledgePoolScreen(db,activeSubjectId)
-    Section.SCHEDULED->ScheduledTeachingScreen(db)
+    Section.SCHEDULED->ScheduledTeachingScreen(db,activeSubjectId)
     Section.CHATS->ChatScreen(conversations,conversationId,messages,draft,{draft=it},pendingAttachment?.second,activeModelName,runtimeMessage,loadingModel,sending,voiceListening,
      
      {if(voiceListening)voiceController.stopListening()else if(ContextCompat.checkSelfPermission(context,Manifest.permission.RECORD_AUDIO)==PackageManager.PERMISSION_GRANTED)voiceController.startListening()else microphonePermission.launch(Manifest.permission.RECORD_AUDIO)},
