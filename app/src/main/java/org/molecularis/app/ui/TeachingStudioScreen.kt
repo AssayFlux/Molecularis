@@ -55,7 +55,7 @@ fun TeachingStudioScreen(database: AppDatabase, subjectId:String, voiceAvailable
     val context = androidx.compose.ui.platform.LocalContext.current
     val books by database.bookDao().booksForSubject(subjectId).collectAsState(initial = emptyList())
     val knowledgeBooks by database.knowledgePoolDao().booksForSubject(subjectId).collectAsState(initial = emptyList())
-    val savedLessons by database.lessonDao().lessons().collectAsState(initial = emptyList())
+    val savedLessons by database.lessonDao().lessonsForSubject(subjectId).collectAsState(initial = emptyList())
     var topic by remember { mutableStateOf("") }
     var level by remember { mutableStateOf("MBBS") }
     var minutes by remember { mutableFloatStateOf(30f) }
@@ -542,7 +542,8 @@ fun TeachingStudioScreen(database: AppDatabase, subjectId:String, voiceAvailable
                                         durationMinutes = minutes.toInt(),
                                         outline = outline,
                                         createdAt = previous?.createdAt ?: now,
-                                        updatedAt = now
+                                        updatedAt = now,
+                                        subjectId = subjectId
                                     )
                                     database.lessonDao().saveLesson(lesson)
                                     editingLessonId = lesson.id
