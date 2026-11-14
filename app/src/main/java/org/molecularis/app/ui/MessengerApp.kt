@@ -513,7 +513,7 @@ private enum class Section(val label:String){HOME("Home"),TEACHING("Lectures"),C
         }catch(error:Throwable){db.chatDao().addMessage(MessageEntity(conversationId=target,body="Attachment processing failed: "+(error.message?:error.javaClass.simpleName),role="assistant",status="error"))}finally{draft="";pendingAttachment=null;sending=false}
        }
       }
-     }, onTeach={showTeachingStudio=true}, onLibrary={section=Section.LIBRARY}, onModels={section=Section.MODELS}, onAiHub={section=Section.AI_HUB},chatBackgroundColor=chatBackgroundColor,chatBackgroundImage=chatBackgroundImage,chatFontFamily=chatFontFamily,chatFontColor=chatFontColor,chatFontSize=chatFontSize)
+     }, onTeach={showTeachingStudio=true}, onLibrary={section=Section.LIBRARY}, onKnowledge={section=Section.KNOWLEDGE_POOL}, onModels={section=Section.MODELS}, onAiHub={section=Section.AI_HUB},chatBackgroundColor=chatBackgroundColor,chatBackgroundImage=chatBackgroundImage,chatFontFamily=chatFontFamily,chatFontColor=chatFontColor,chatFontSize=chatFontSize)
     Section.AI_HUB->Column(Modifier.fillMaxSize().padding(12.dp),verticalArrangement=Arrangement.spacedBy(8.dp)){
       Text("AI workspace",style=MaterialTheme.typography.titleLarge,fontWeight=FontWeight.SemiBold)
       Text("All model, provider, training and collaboration tools are managed here.",style=MaterialTheme.typography.bodySmall,color=Muted)
@@ -813,7 +813,7 @@ private enum class Section(val label:String){HOME("Home"),TEACHING("Lectures"),C
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Composable private fun ChatScreen(conversations:List<ConversationEntity>,selectedId:Long?,messages:List<MessageEntity>,draft:String,onDraftChange:(String)->Unit,attachmentName:String?,activeModelName:String?,runtimeMessage:String,loading:Boolean,sending:Boolean,voiceListening:Boolean,onVoice:()->Unit,onSpeak:(String)->Unit,onAttach:()->Unit,onClearAttachment:()->Unit,onSelect:(Long)->Unit,onDelete:(Long)->Unit,onlineEnabled:Boolean,onSend:()->Unit,onTeach:()->Unit,onLibrary:()->Unit,onModels:()->Unit,onAiHub:()->Unit,chatBackgroundColor:String="#F4F6F8",chatBackgroundImage:String="",chatFontFamily:String="SansSerif",chatFontColor:String="#20242B",chatFontSize:Int=16){
+@Composable private fun ChatScreen(conversations:List<ConversationEntity>,selectedId:Long?,messages:List<MessageEntity>,draft:String,onDraftChange:(String)->Unit,attachmentName:String?,activeModelName:String?,runtimeMessage:String,loading:Boolean,sending:Boolean,voiceListening:Boolean,onVoice:()->Unit,onSpeak:(String)->Unit,onAttach:()->Unit,onClearAttachment:()->Unit,onSelect:(Long)->Unit,onDelete:(Long)->Unit,onlineEnabled:Boolean,onSend:()->Unit,onTeach:()->Unit,onLibrary:()->Unit,onKnowledge:()->Unit,onModels:()->Unit,onAiHub:()->Unit,chatBackgroundColor:String="#F4F6F8",chatBackgroundImage:String="",chatFontFamily:String="SansSerif",chatFontColor:String="#20242B",chatFontSize:Int=16){
  var pendingDelete by remember{mutableStateOf<Long?>(null)}
  var historyExpanded by remember{mutableStateOf(false)}
  var actionsExpanded by remember{mutableStateOf(false)}
@@ -881,6 +881,7 @@ private enum class Section(val label:String){HOME("Home"),TEACHING("Lectures"),C
    Button(onClick={actionsExpanded=false;onTeach()},modifier=Modifier.fillMaxWidth()) { Icon(Icons.Default.School,null);Spacer(Modifier.width(10.dp));Text("Build a lecture") }
    OutlinedButton(onClick={actionsExpanded=false;onAttach()},modifier=Modifier.fillMaxWidth()) { Icon(Icons.Default.AttachFile,null);Spacer(Modifier.width(10.dp));Text("Attach a document or image") }
    OutlinedButton(onClick={actionsExpanded=false;onLibrary()},modifier=Modifier.fillMaxWidth()) { Icon(Icons.Default.MenuBook,null);Spacer(Modifier.width(10.dp));Text("Open Library") }
+   OutlinedButton(onClick={actionsExpanded=false;onKnowledge()},modifier=Modifier.fillMaxWidth()) { Icon(Icons.Default.AccountTree,null);Spacer(Modifier.width(10.dp));Text("Open Knowledge Pool") }
   }
  }
 }
