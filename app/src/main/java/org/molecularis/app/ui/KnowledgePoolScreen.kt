@@ -72,7 +72,7 @@ fun KnowledgePoolScreen(database: AppDatabase) {
     fun processBook(book: BookEntity) {
         if (processingId != null) return
         processingId = book.id
-        status = "Queueing durable textbook analysis for " + book.title + "…"
+        status = "Queueing durable document analysis for " + book.title + "…"
         val request = OneTimeWorkRequestBuilder<KnowledgeProcessingWorker>()
             .setInputData(workDataOf(KnowledgeProcessingWorker.KEY_BOOK_ID to book.id))
             .addTag("molecularis-knowledge")
@@ -89,12 +89,12 @@ fun KnowledgePoolScreen(database: AppDatabase) {
                     val total = info.progress.getInt("total", 0)
                     val passages = info.progress.getInt("passages", 0)
                     status = when (info.state) {
-                        WorkInfo.State.ENQUEUED -> "Textbook analysis is queued for background processing."
-                        WorkInfo.State.RUNNING -> if (total > 0) "Analysing page " + page + " of " + total + " · " + passages + " passages indexed" else "Preparing textbook analysis…"
+                        WorkInfo.State.ENQUEUED -> "Document analysis is queued for background processing."
+                        WorkInfo.State.RUNNING -> if (total > 0) "Analysing page " + page + " of " + total + " · " + passages + " passages indexed" else "Preparing document analysis…"
                         WorkInfo.State.SUCCEEDED -> "Knowledge preparation complete for " + book.title + ". Review metadata and approve topic candidates before teaching."
                         WorkInfo.State.FAILED -> "Analysis failed: " + (info.outputData.getString("error") ?: "unknown error")
                         WorkInfo.State.CANCELLED -> "Analysis cancelled. Previously reviewed passages remain unchanged."
-                        WorkInfo.State.BLOCKED -> "Textbook analysis is waiting for its prerequisites."
+                        WorkInfo.State.BLOCKED -> "Document analysis is waiting for its prerequisites."
                     }
                     if (info.state.isFinished) processingId = null
                 }
@@ -135,7 +135,7 @@ fun KnowledgePoolScreen(database: AppDatabase) {
                             scope.launch {
                                 database.knowledgePoolDao().setReviewState(selected!!.id, "approved")
                                 selected = selected!!.copy(reviewState = "approved")
-                                status = "Source marked as professor-reviewed. Individual topic approvals remain visible below."
+                                status = "Source marked as user-reviewed. Individual topic approvals remain visible below."
                             }
                         },
                         modifier = Modifier.fillMaxWidth(),
@@ -152,7 +152,7 @@ fun KnowledgePoolScreen(database: AppDatabase) {
                                 database.knowledgePoolDao().addTopic(KnowledgeTopicEntity(
                                     id = UUID.randomUUID().toString(), knowledgeBookId = selected!!.id,
                                     name = newTopicName.trim(), startPage = page, confidence = 0f,
-                                    evidence = "Added manually by professor", approved = false
+                                    evidence = "Added manually by user", approved = false
                                 ))
                                 topics = database.knowledgePoolDao().topics(selected!!.id)
                                 newTopicName = ""
@@ -166,7 +166,7 @@ fun KnowledgePoolScreen(database: AppDatabase) {
                         enabled = newTopicName.isNotBlank() &&
                             (newTopicPage.toIntOrNull() ?: 0) in 1..(library.firstOrNull { it.id == selected?.bookId }?.pageCount ?: 0)
                     ) { Text("Add topic") }
-                    if (topics.isEmpty()) Text("No reliable headings were detected. You can add professor-authored topics above.", style = MaterialTheme.typography.bodySmall)
+                    if (topics.isEmpty()) Text("No reliable headings were detected. You can add user-authored topics above.", style = MaterialTheme.typography.bodySmall)
                     topics.forEach { topic ->
                         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -294,7 +294,7 @@ fun KnowledgePoolScreen(database: AppDatabase) {
                                     }, enabled = mergeTarget.isNotBlank() && mergeTarget != topic.id) { Text("Merge this topic into selected") }
                                 }
                                 Text(
-                                    if (topic.evidence == "Added manually by professor") "Professor-created · ${topic.evidence}"
+                                    if (topic.evidence == "Added manually by user") "User-created · ${topic.evidence}"
                                     else "Detection confidence ${"%.0f".format(topic.confidence * 100)}% · ${topic.evidence}",
                                     style = MaterialTheme.typography.labelSmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -306,7 +306,7 @@ fun KnowledgePoolScreen(database: AppDatabase) {
                                         topics = database.knowledgePoolDao().topics(selected!!.id)
                                         database.knowledgePoolDao().setReviewState(selected!!.id, "needs_review")
                                         selected = selected!!.copy(reviewState = "needs_review")
-                                        status = "Topic updated; its approval was reset for professor review."
+                                        status = "Topic updated; its approval was reset for user review."
                                     }
                                 }, enabled = editedName.isNotBlank() && editedPage.toIntOrNull() != null) { Text("Save topic") }
                             }
