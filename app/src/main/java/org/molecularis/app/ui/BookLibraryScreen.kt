@@ -121,7 +121,7 @@ fun BookLibraryScreen(database: AppDatabase, subjectId:String) {
         }
     }
 
-    LaunchedEffect(query, selectedBook?.id, fromPage, toPage) {
+    LaunchedEffect(subjectId, query, selectedBook?.id, fromPage, toPage) {
         val clean = query.trim()
         val ftsQuery = clean.split(Regex("\\s+")).filter { it.isNotBlank() }
             .joinToString(" ") { "\"" + it.replace("\"", "") + "\"" }
@@ -129,7 +129,7 @@ fun BookLibraryScreen(database: AppDatabase, subjectId:String) {
         val lastPage = toPage.toIntOrNull()
         results = if (clean.length < 2 || ftsQuery.isBlank() ||
             (firstPage != null && lastPage != null && firstPage > lastPage)) emptyList()
-        else database.bookDao().searchFilteredIndexed(ftsQuery, selectedBook?.id, firstPage, lastPage)
+        else database.bookDao().searchFilteredIndexedForSubject(ftsQuery, subjectId, selectedBook?.id, firstPage, lastPage)
     }
 
     Column(Modifier.fillMaxSize().padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
