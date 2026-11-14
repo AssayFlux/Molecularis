@@ -359,7 +359,7 @@ private enum class Section(val label:String){HOME("Home"),TEACHING("Lectures"),C
    bottomBar={if(WindowInsets.ime.getBottom(LocalDensity.current)==0) NavigationBar(containerColor=MaterialTheme.colorScheme.surface, tonalElevation=6.dp){
     val primarySections=listOf(Section.HOME,Section.TEACHING,Section.CHATS,Section.LIBRARY,Section.KNOWLEDGE_POOL,Section.AI_HUB,Section.SETTINGS)
     primarySections.forEach{item->
-     val icon=when(item){Section.HOME->Icons.Default.Home;Section.TEACHING->Icons.Default.School;Section.CHATS->Icons.Default.ChatBubbleOutline;Section.LIBRARY->Icons.Default.MenuBook;Section.KNOWLEDGE_POOL->Icons.Default.AccountTree;else->Icons.Default.MoreHoriz}
+     val icon=when(item){Section.HOME->Icons.Default.Home;Section.TEACHING->Icons.Default.School;Section.CHATS->Icons.Default.ChatBubbleOutline;Section.LIBRARY->Icons.Default.MenuBook;Section.KNOWLEDGE_POOL->Icons.Default.AccountTree;Section.AI_HUB->Icons.Default.Hub;Section.SETTINGS->Icons.Default.Settings;else->Icons.Default.MoreHoriz}
      NavigationBarItem(selected=section==item,onClick={section=item;moreNavigationExpanded=false},icon={Icon(icon,item.label)},label={Text(item.label,maxLines=1)})
     }
     NavigationBarItem(
@@ -804,7 +804,9 @@ private enum class Section(val label:String){HOME("Home"),TEACHING("Lectures"),C
  var actionsExpanded by remember{mutableStateOf(false)}
  val messageListState=rememberLazyListState()
  LaunchedEffect(selectedId,messages.size){if(messages.isNotEmpty())messageListState.animateScrollToItem(messages.lastIndex)}
- Column(Modifier.fillMaxSize().padding(horizontal=16.dp)){
+ Box(Modifier.fillMaxSize()){
+  if(chatBackgroundImage.isNotBlank()) Image(painter=rememberAsyncImagePainter(Uri.parse(chatBackgroundImage)),contentDescription=null,contentScale=ContentScale.Crop,modifier=Modifier.fillMaxSize()) else Box(Modifier.fillMaxSize().background(parseChatColor(chatBackgroundColor,Color(0xFFF4F6F8))))
+  Column(Modifier.fillMaxSize().padding(horizontal=16.dp)){
   if(conversations.isNotEmpty()) Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically){
    Box(Modifier.weight(1f)){
     OutlinedButton(onClick={historyExpanded=true},modifier=Modifier.fillMaxWidth()){
@@ -855,6 +857,7 @@ private enum class Section(val label:String){HOME("Home"),TEACHING("Lectures"),C
    }
   }
   Text((if(onlineEnabled)"Online · remote provider" else "On-device · "+(activeModelName?: "No model loaded")),style=MaterialTheme.typography.labelSmall,color=MaterialTheme.colorScheme.primary,modifier=Modifier.padding(top=6.dp,bottom=8.dp))
+  }
  }
  if(actionsExpanded) ModalBottomSheet(onDismissRequest={actionsExpanded=false}) {
   Column(Modifier.fillMaxWidth().navigationBarsPadding().padding(horizontal=20.dp,vertical=12.dp),verticalArrangement=Arrangement.spacedBy(10.dp)) {
