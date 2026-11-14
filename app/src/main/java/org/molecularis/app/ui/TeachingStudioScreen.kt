@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import coil.compose.rememberAsyncImagePainter
 import org.molecularis.app.data.AppDatabase
+import org.molecularis.app.data.ProfessorProfileEntity
 import org.molecularis.app.data.SavedLessonEntity
 import org.molecularis.app.features.LessonSlideBuilder
 import org.molecularis.app.features.SlideTheme
