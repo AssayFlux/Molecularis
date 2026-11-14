@@ -570,7 +570,7 @@ private enum class Section(val label:String){HOME("Home"),TEACHING("Lectures"),C
            }
            val sourceIds=textbookMatchCounts.keys.sorted()
             val sourceSetMaterial=(sourceIds + listOfNotNull(attachment?.second)).joinToString("|")
-            val sourceSetHash=MessageDigest.getInstance("SHA-256").digest(sourceSetMaterial.toByteArray(Charsets.UTF_8)).joinToString(""){byte->"%02x".format(byte)}
+            val sourceSetHash=if(sourceSetMaterial.isBlank()) null else MessageDigest.getInstance("SHA-256").digest(sourceSetMaterial.toByteArray(Charsets.UTF_8)).joinToString(""){byte->"%02x".format(byte)}
             val prompt=ConversationPromptBuilder.build(
             messages.filter{it.status=="complete"}.takeLast(when(engineOptimization){"speed"->4;"memory"->2;"quality"->24;else->12}).map{PromptTurn(it.role,it.body)},
             augmentedQuestion,
@@ -611,6 +611,7 @@ private enum class Section(val label:String){HOME("Home"),TEACHING("Lectures"),C
              modelProvider=if(onlineEnabled) onlineBaseUrl else "local-liteRT",
              modelVersion=if(onlineEnabled) onlineModelId else activeModelName,
              promptVersion=activeProfessor?.promptVersion ?: "1",
+             promptHash=MessageDigest.getInstance("SHA-256").digest(prompt.toByteArray(Charsets.UTF_8)).joinToString(""){byte->"%02x".format(byte)},
              sourceSetHash=sourceSetHash,
              retrievalConfig="lexical-subject-filter-approved-only-top6-v1"
             ))
