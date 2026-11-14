@@ -204,7 +204,11 @@ fun TeachingStudioScreen(database: AppDatabase, subjectId:String, subjectName:St
                                 "LESSON: " + cleanTopic,
                                 "AUDIENCE: " + level,
                                 "DURATION: " + minutes.toInt() + " minutes",
+                                "PROFESSOR PROFILE: " + (professorProfile?.name ?: "General professor") + " · " + (professorProfile?.role ?: "evidence-aware learning professor"),
+                                "PROFILE OBJECTIVES: " + (professorProfile?.objectives?.takeIf { it.isNotBlank() } ?: "Build understanding, critical reasoning and independent learning."),
+                                "PROFILE GUIDANCE: " + (professorProfile?.instructions?.takeIf { it.isNotBlank() } ?: "Adapt explanations to the learner and distinguish evidence from general knowledge."),
                                 "",
+
                                 "1. Learning outcomes · " + (timePlan["Learning outcomes"]?.minutes ?: 0) + " min",
                                 "   - Define the central concepts and terminology",
                                 "   - Explain the underlying reasoning, relationships and relevant processes", 
@@ -352,7 +356,8 @@ fun TeachingStudioScreen(database: AppDatabase, subjectId:String, subjectName:St
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
-                    Text("Scientific diagram template", style = MaterialTheme.typography.labelLarge)
+                    Text("Biochemical pathway diagram · specialist tool", style = MaterialTheme.typography.labelLarge)
+                    Text("This editor currently supports biochemical pathway diagrams only. It is not a general-purpose diagram generator for every subject.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                         BiochemicalDiagramTemplate.values().forEach { template ->
                             FilterChip(selected = diagramTemplate == template, onClick = { diagramTemplate = template }, label = { Text(template.label) })
