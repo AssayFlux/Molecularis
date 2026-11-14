@@ -50,11 +50,11 @@ import org.molecularis.app.features.TopicOrganization
 import java.util.UUID
 
 @Composable
-fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localModelAvailable: Boolean, onSpeakSlides: (List<String>, (Int) -> Unit, (Boolean, Boolean) -> Unit) -> Unit, onPauseNarration: () -> Unit, onResumeNarration: () -> Unit, onStopNarration: () -> Unit, onSeekNarration: (Int) -> Unit, onNarrationRateChange: (Float) -> Unit, onGenerateWithLocalModel: suspend (String) -> String) {
+fun TeachingStudioScreen(database: AppDatabase, subjectId:String, voiceAvailable: Boolean, localModelAvailable: Boolean, onSpeakSlides: (List<String>, (Int) -> Unit, (Boolean, Boolean) -> Unit) -> Unit, onPauseNarration: () -> Unit, onResumeNarration: () -> Unit, onStopNarration: () -> Unit, onSeekNarration: (Int) -> Unit, onNarrationRateChange: (Float) -> Unit, onGenerateWithLocalModel: suspend (String) -> String) {
     val scope = rememberCoroutineScope()
     val context = androidx.compose.ui.platform.LocalContext.current
-    val books by database.bookDao().books().collectAsState(initial = emptyList())
-    val knowledgeBooks by database.knowledgePoolDao().books().collectAsState(initial = emptyList())
+    val books by database.bookDao().booksForSubject(subjectId).collectAsState(initial = emptyList())
+    val knowledgeBooks by database.knowledgePoolDao().booksForSubject(subjectId).collectAsState(initial = emptyList())
     val savedLessons by database.lessonDao().lessons().collectAsState(initial = emptyList())
     var topic by remember { mutableStateOf("") }
     var level by remember { mutableStateOf("MBBS") }
