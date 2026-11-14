@@ -189,6 +189,7 @@ private val MIGRATION_17_18 = object : Migration(17, 18) {
         db.execSQL("ALTER TABLE messages ADD COLUMN modelProvider TEXT")
         db.execSQL("ALTER TABLE messages ADD COLUMN modelVersion TEXT")
         db.execSQL("ALTER TABLE messages ADD COLUMN promptVersion TEXT")
+        db.execSQL("ALTER TABLE messages ADD COLUMN promptHash TEXT")
         db.execSQL("ALTER TABLE messages ADD COLUMN sourceSetHash TEXT")
         db.execSQL("ALTER TABLE messages ADD COLUMN retrievalConfig TEXT")
         db.execSQL("ALTER TABLE scheduled_lectures ADD COLUMN subjectId TEXT NOT NULL DEFAULT 'legacy-default'")
