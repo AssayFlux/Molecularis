@@ -46,7 +46,7 @@ fun BookLibraryScreen(database: AppDatabase) {
     var selectedBook by remember { mutableStateOf<BookEntity?>(null) }
     var results by remember { mutableStateOf(emptyList<BookPassageEntity>()) }
     val shelfPreferences = remember(context) { context.getSharedPreferences("molecularis_library_shelves", android.content.Context.MODE_PRIVATE) }
-    val shelfNames = listOf("Core Biochemistry", "Molecular Biology", "Cell Biology", "Genetics", "Reference", "Unsorted")
+    val shelfNames = listOf("Core texts", "Research papers", "Course notes", "Reference", "Other", "Unsorted")
     var shelfRefresh by remember { mutableIntStateOf(0) }
     var shelfMenuFor by remember { mutableStateOf<String?>(null) }
 
@@ -61,8 +61,8 @@ fun BookLibraryScreen(database: AppDatabase) {
                 try {
                     val name = context.contentResolver.query(uri, arrayOf(android.provider.OpenableColumns.DISPLAY_NAME), null, null, null)?.use { cursor ->
                         if (cursor.moveToFirst()) cursor.getString(0) else null
-                    } ?: "Biochemistry textbook.pdf"
-                    require(name.endsWith(".pdf", true)) { "Please select a PDF textbook." }
+                    } ?: "Study material.pdf"
+                    require(name.endsWith(".pdf", true)) { "Please select a PDF document." }
                     val bookDir = File(context.filesDir, "books").apply { mkdirs() }
                     val safeName = name.replace(Regex("[^A-Za-z0-9._-]"), "_").take(100)
                     localFile = File(bookDir, "$id-$safeName")
@@ -124,7 +124,7 @@ fun BookLibraryScreen(database: AppDatabase) {
     }
 
     Column(Modifier.fillMaxSize().padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        Text("Textbook library", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+        Text("Study library", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
         Text("Library is your source shelf. Add original books here first; extraction, quality analysis and topic organization happen separately in Knowledge Pool.", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
         Button(onClick = { picker.launch(arrayOf("application/pdf")) }, enabled = !importing, modifier = Modifier.fillMaxWidth()) {
             Icon(Icons.Default.UploadFile, contentDescription = null)
@@ -176,7 +176,7 @@ fun BookLibraryScreen(database: AppDatabase) {
                 Column(Modifier.fillMaxWidth().padding(24.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Icon(Icons.Default.MenuBook, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(36.dp))
                     Text("Your library is empty", fontWeight = FontWeight.SemiBold)
-                    Text("Import a PDF to start building your private biochemistry knowledge base.", style = MaterialTheme.typography.bodySmall)
+                    Text("Import a PDF to build your private, source-based knowledge library.", style = MaterialTheme.typography.bodySmall)
                 }
             }
         } else {
@@ -215,7 +215,7 @@ fun BookLibraryScreen(database: AppDatabase) {
                                             withContext(Dispatchers.IO) { File(book.localPath).delete() }
                                             status = "Removed " + book.title + " from this device."
                                         }
-                                    }) { Icon(Icons.Default.Delete, contentDescription = "Delete textbook") }
+                                    }) { Icon(Icons.Default.Delete, contentDescription = "Delete source document") }
                                 }
                             }
                         }
