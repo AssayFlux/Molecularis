@@ -211,7 +211,7 @@ private enum class Section(val label:String){HOME("Home"),TEACHING("Lectures"),C
  val models by db.modelDao().models().collectAsState(initial=emptyList())
  val books by db.bookDao().booksForSubject(activeSubjectId).collectAsState(initial=emptyList())
  val knowledgeBooks by db.knowledgePoolDao().booksForSubject(activeSubjectId).collectAsState(initial=emptyList())
- val projects by db.workspaceDao().projects().collectAsState(initial=emptyList())
+ val projects by db.workspaceDao().projectsForSubject(activeSubjectId).collectAsState(initial=emptyList())
  LaunchedEffect(workspaces){
   if(workspaces.isNotEmpty() && workspaces.none{it.id==activeSubjectId}){
    activeSubjectId=workspaces.firstOrNull{it.isDefault}?.id?:workspaces.first().id
@@ -905,7 +905,7 @@ private enum class Section(val label:String){HOME("Home"),TEACHING("Lectures"),C
   OutlinedTextField(projectName,{projectName=it},label={Text("Project name")},singleLine=true)
   OutlinedTextField(projectDescription,{projectDescription=it},label={Text("Description")},minLines=2)
  }},confirmButton={TextButton(onClick={
-  if(projectName.isNotBlank()) scope.launch{db.workspaceDao().add(WorkspaceProjectEntity(name=projectName.trim(),description=projectDescription.trim()));projectName="";projectDescription="";showNewProject=false}
+  if(projectName.isNotBlank()) scope.launch{db.workspaceDao().add(WorkspaceProjectEntity(name=projectName.trim(),description=projectDescription.trim(),subjectId=activeSubjectId));projectName="";projectDescription="";showNewProject=false}
  }){Text("Create")}},dismissButton={TextButton(onClick={showNewProject=false}){Text("Cancel")}})
 }
 
