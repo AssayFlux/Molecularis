@@ -549,7 +549,9 @@ fun TeachingStudioScreen(database: AppDatabase, subjectId:String, subjectName:St
                                         outline = outline,
                                         createdAt = previous?.createdAt ?: now,
                                         updatedAt = now,
-                                        subjectId = subjectId
+                                        subjectId = subjectId,
+                                        professorProfileId = professorProfile?.id,
+                                        promptVersion = professorProfile?.promptVersion ?: "1"
                                     )
                                     database.lessonDao().saveLesson(lesson)
                                     editingLessonId = lesson.id
