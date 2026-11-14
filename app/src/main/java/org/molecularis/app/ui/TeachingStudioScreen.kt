@@ -564,7 +564,7 @@ fun TeachingStudioScreen(database: AppDatabase, voiceAvailable: Boolean, localMo
         }
         if (savedLessons.isNotEmpty()) {
             Text("My Lectures · " + savedLessons.size, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
-            savedLessons.take(8).forEach { lesson ->
+            savedLessons.forEach { lesson ->
                 Card {
                     Row(Modifier.fillMaxWidth().padding(12.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         Column(Modifier.weight(1f)) {
