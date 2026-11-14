@@ -79,6 +79,7 @@ data class KnowledgeChunkEntity(
  @Query("SELECT * FROM conversations WHERE id=:id LIMIT 1") suspend fun conversation(id:Long):ConversationEntity?
  @Query("SELECT * FROM conversations WHERE workspaceProjectId=:projectId AND archived=0 ORDER BY createdAt DESC LIMIT 1") suspend fun latestProjectConversation(projectId:Long):ConversationEntity?
  @Query("UPDATE conversations SET title=:title WHERE id=:id") suspend fun rename(id:Long,title:String)
+ @Query("UPDATE conversations SET professorProfileId=:profileId WHERE id=:conversationId AND subjectId=:subjectId") suspend fun setProfessorProfile(conversationId:Long,subjectId:String,profileId:String?)
  @Query("DELETE FROM messages WHERE conversationId=:id") suspend fun deleteMessages(id:Long)
  @Query("DELETE FROM conversations WHERE id=:id") suspend fun deleteConversation(id:Long)
 }
@@ -138,6 +139,7 @@ data class KnowledgeProcessingCheckpointEntity(@PrimaryKey val bookId:String,val
  @Insert suspend fun addBook(book:BookEntity)
  @Query("SELECT * FROM books WHERE id=:bookId LIMIT 1") suspend fun book(bookId:String):BookEntity?
  @Query("SELECT * FROM books WHERE fileSha256=:sha256 LIMIT 1") suspend fun bookBySha256(sha256:String):BookEntity?
+ @Query("SELECT * FROM books WHERE fileSha256=:sha256 AND subjectId=:subjectId LIMIT 1") suspend fun bookBySha256InSubject(sha256:String,subjectId:String):BookEntity?
  @Query("SELECT * FROM books WHERE title=:title COLLATE NOCASE ORDER BY importedAt DESC LIMIT 1") suspend fun bookByTitle(title:String):BookEntity?
  @Update suspend fun updateBook(book:BookEntity)
  @Transaction suspend fun deleteBookAndProcessingState(bookId:String) { clearProcessingCheckpointAndStage(bookId); deletePageAudits(bookId); deleteBook(bookId) }
