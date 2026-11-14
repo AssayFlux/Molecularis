@@ -175,6 +175,8 @@ private val MIGRATION_17_18 = object : Migration(17, 18) {
         db.execSQL("CREATE TABLE IF NOT EXISTS professor_profiles (id TEXT NOT NULL, subjectId TEXT NOT NULL, name TEXT NOT NULL, role TEXT NOT NULL, instructions TEXT NOT NULL, learnerLevel TEXT NOT NULL, tone TEXT NOT NULL, objectives TEXT NOT NULL, sourcePolicy TEXT NOT NULL, safetyBoundaries TEXT NOT NULL, promptVersion TEXT NOT NULL, createdAt INTEGER NOT NULL, updatedAt INTEGER NOT NULL, isDefault INTEGER NOT NULL, PRIMARY KEY(id))")
         db.execSQL("CREATE INDEX IF NOT EXISTS index_professor_profiles_subjectId ON professor_profiles(subjectId)")
         db.execSQL("CREATE INDEX IF NOT EXISTS index_professor_profiles_updatedAt ON professor_profiles(updatedAt)")
+        db.execSQL("ALTER TABLE workspace_projects ADD COLUMN subjectId TEXT NOT NULL DEFAULT 'legacy-default'")
+        db.execSQL("CREATE INDEX IF NOT EXISTS index_workspace_projects_subjectId ON workspace_projects(subjectId)")
         db.execSQL("ALTER TABLE books ADD COLUMN subjectId TEXT NOT NULL DEFAULT 'legacy-default'")
         db.execSQL("CREATE INDEX IF NOT EXISTS index_books_subjectId ON books(subjectId)")
         db.execSQL("ALTER TABLE conversations ADD COLUMN subjectId TEXT NOT NULL DEFAULT 'legacy-default'")
