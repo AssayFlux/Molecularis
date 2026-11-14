@@ -435,7 +435,7 @@ private enum class Section(val label:String){HOME("Home"),TEACHING("Lectures"),C
        Icon(Icons.Default.ArrowDropDown,null)
       }
       DropdownMenu(expanded=professorMenuExpanded,onDismissRequest={professorMenuExpanded=false}){
-       professorProfiles.forEach{profile->DropdownMenuItem(text={Column{Text(profile.name);Text(profile.role,style=MaterialTheme.typography.bodySmall)}},onClick={activeProfessorProfileId=profile.id;workspacePrefs.edit().putString("active_professor_profile_id",profile.id).apply();professorMenuExpanded=false})}
+       professorProfiles.forEach{profile->DropdownMenuItem(text={Column{Text(profile.name);Text(profile.role,style=MaterialTheme.typography.bodySmall)}},onClick={activeProfessorProfileId=profile.id;workspacePrefs.edit().putString("active_professor_profile_id",profile.id).apply();professorMenuExpanded=false;scope.launch{conversationId?.let{db.chatDao().setProfessorProfile(it,activeSubjectId,profile.id)}}})}
        HorizontalDivider()
        DropdownMenuItem(text={Text("Create professor profile…")},onClick={professorMenuExpanded=false;professorNameDraft="";professorRoleDraft="evidence-aware learning professor";professorInstructionsDraft="";showNewProfessorDialog=true})
       }
