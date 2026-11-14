@@ -181,3 +181,25 @@ The current vertical slice includes **import PDF → checkpointed OCR → review
 - Add tests with each data or processing feature.
 - Do not claim a feature is offline until it has been tested with airplane mode enabled and required local assets installed.
 - Record device-dependent limitations rather than hiding them.
+
+
+## Phase 10 — Multi-subject and multi-professor platform
+
+**Goal:** make subject selection and professor profiles first-class, end-to-end concepts rather than relying on biochemistry-specific defaults.
+
+- [ ] Add SubjectWorkspace entity, repository, navigation and create/edit/archive flows.
+- [ ] Add subject selection during book import; allow one subject to own many books.
+- [ ] Scope Knowledge Pool processing, topic review, search, chat, lessons, and saved outputs by subject ID.
+- [ ] Add multiple ProfessorProfile configurations per subject (role, audience, objectives, tone, source policy, safety boundaries, prompt version).
+- [ ] Compose prompts from generic system policy + active domain + selected professor + learner context + retrieved evidence.
+- [ ] Add a user-visible active subject/profile selector and persistent selection.
+- [ ] Add explicit opt-in cross-subject comparison, with subject labels on all evidence.
+- [ ] Add additive Room migrations and populated-database migration tests; backfill legacy content into a user-confirmed workspace.
+- [ ] Add end-to-end isolation tests using overlapping vocabulary across at least two subjects.
+- [ ] Replace biochemistry-specific UI labels in generic workflows; retain specialist tools as optional domain packs.
+- [ ] Add non-biochemistry document and teaching templates, subject to supported formats and model quality.
+- [ ] Record model/provider, prompt version, retrieval configuration, source-set hash and generation timestamp for reproducibility.
+
+**Exit criteria:** a user can create at least two independent subjects, add and process books in each, create multiple professor roles, and verify that chat and retrieval never cross subject boundaries without explicit consent.
+
+See [MULTI_SUBJECT_ARCHITECTURE.md](MULTI_SUBJECT_ARCHITECTURE.md), [DATA_DICTIONARY.md](DATA_DICTIONARY.md), and [RESEARCH_READINESS.md](RESEARCH_READINESS.md).
