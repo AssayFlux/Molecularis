@@ -27,6 +27,14 @@ jobs:
           java-version: "17"
       - name: Run Android unit tests only
         run: ./gradlew --no-daemon :app:testDebugUnitTest --stacktrace
+      - name: Run subject isolation instrumentation tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          arch: x86_64
+          profile: pixel_2
+          disable-animations: true
+          script: ./gradlew --no-daemon :app:connectedDebugAndroidTest --stacktrace
       - name: Run Android lint
         run: ./gradlew --no-daemon :app:lintDebug --stacktrace
       - name: Assemble debug APK
