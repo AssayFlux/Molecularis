@@ -87,7 +87,7 @@ import java.io.File
 import java.util.UUID
 
 private val Muted=Color(0xFF65736D)
-private enum class Section(val label:String){HOME("Home"),TEACHING("Lectures"),CHATS("Chats"),LIBRARY("Library"),KNOWLEDGE_POOL("Knowledge Pool"),SCHEDULED("Schedule"),AI_HUB("AI Hub"),MODELS("Models"),TRAINING("Training"),WORKSPACE("Workspace"),ONLINE_AI("Online AI"),SETTINGS("Settings")}
+private enum class Section(val label:String){HOME("Home"),TEACHING("Lectures"),CHATS("Chats"),LIBRARY("Library"),KNOWLEDGE_POOL("Knowledge"),SCHEDULED("Schedule"),AI_HUB("AI Hub"),MODELS("Models"),TRAINING("Training"),WORKSPACE("Workspace"),ONLINE_AI("Online AI"),SETTINGS("Settings")}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable fun MessengerApp(){
@@ -131,6 +131,12 @@ private enum class Section(val label:String){HOME("Home"),TEACHING("Lectures"),C
  var accentName by remember{mutableStateOf(personalizationPrefs.getString("accent_name","Sage")?:"Sage")}
  var fontFamilyName by remember{mutableStateOf(personalizationPrefs.getString("font_family","SansSerif")?:"SansSerif")}
  var customBackgroundUri by remember{mutableStateOf(personalizationPrefs.getString("background_uri","")?:"")}
+ val chatPrefs=remember(context){context.getSharedPreferences("molecularis_chat_appearance",Context.MODE_PRIVATE)}
+ var chatBackgroundColor by remember{mutableStateOf(chatPrefs.getString("background_color","#F4F6F8")?:"#F4F6F8")}
+ var chatBackgroundImage by remember{mutableStateOf(chatPrefs.getString("background_image","")?:"")}
+ var chatFontFamily by remember{mutableStateOf(chatPrefs.getString("font_family","SansSerif")?:"SansSerif")}
+ var chatFontColor by remember{mutableStateOf(chatPrefs.getString("font_color","#20242B")?:"#20242B")}
+ var chatFontSize by remember{mutableIntStateOf(chatPrefs.getInt("font_size",16))}
  val enginePrefs=remember(context){context.getSharedPreferences("molecularis_engine",Context.MODE_PRIVATE)}
  var engineOptimization by remember{mutableStateOf(enginePrefs.getString("optimization","balanced")?:"balanced")}
  val onlinePrefs=remember(context){context.getSharedPreferences("molecularis_online_ai",Context.MODE_PRIVATE)}
@@ -351,19 +357,19 @@ private enum class Section(val label:String){HOME("Home"),TEACHING("Lectures"),C
    Text(section.label,style=MaterialTheme.typography.titleLarge,fontWeight=FontWeight.SemiBold)
   }},actions={if(section==Section.CHATS) IconButton(onClick={scope.launch{selectedConversation=db.chatDao().addConversation(ConversationEntity(title="New conversation"))}}){Icon(Icons.Default.Add,"New chat")}},colors=TopAppBarDefaults.topAppBarColors(containerColor=MaterialTheme.colorScheme.background))},
    bottomBar={if(WindowInsets.ime.getBottom(LocalDensity.current)==0) NavigationBar(containerColor=MaterialTheme.colorScheme.surface, tonalElevation=6.dp){
-    val primarySections=listOf(Section.HOME,Section.TEACHING,Section.CHATS,Section.LIBRARY,Section.KNOWLEDGE_POOL)
+    val primarySections=listOf(Section.HOME,Section.TEACHING,Section.CHATS,Section.LIBRARY,Section.KNOWLEDGE_POOL,Section.AI_HUB,Section.SETTINGS)
     primarySections.forEach{item->
      val icon=when(item){Section.HOME->Icons.Default.Home;Section.TEACHING->Icons.Default.School;Section.CHATS->Icons.Default.ChatBubbleOutline;Section.LIBRARY->Icons.Default.MenuBook;Section.KNOWLEDGE_POOL->Icons.Default.AccountTree;else->Icons.Default.MoreHoriz}
      NavigationBarItem(selected=section==item,onClick={section=item;moreNavigationExpanded=false},icon={Icon(icon,item.label)},label={Text(item.label,maxLines=1)})
     }
     NavigationBarItem(
-     selected=section==Section.AI_HUB||section==Section.TRAINING||section==Section.ONLINE_AI||section==Section.SETTINGS||section==Section.SCHEDULED||section==Section.MODELS||section==Section.WORKSPACE,
+     selected=section==Section.SCHEDULED||section==Section.WORKSPACE,
      onClick={moreNavigationExpanded=true},
      icon={
       Box{
        Icon(Icons.Default.MoreHoriz,"More sections")
        DropdownMenu(expanded=moreNavigationExpanded,onDismissRequest={moreNavigationExpanded=false}){
-        listOf(Section.SCHEDULED,Section.MODELS,Section.WORKSPACE,Section.AI_HUB,Section.TRAINING,Section.ONLINE_AI,Section.SETTINGS).forEach{item->
+        listOf(Section.SCHEDULED,Section.WORKSPACE).forEach{item->
          val icon=when(item){Section.LIBRARY->Icons.Default.MenuBook;Section.KNOWLEDGE_POOL->Icons.Default.AccountTree;Section.SCHEDULED->Icons.Default.Schedule;Section.AI_HUB->Icons.Default.Hub;Section.TRAINING->Icons.Default.Tune;Section.ONLINE_AI->Icons.Default.Cloud;else->Icons.Default.Settings}
          DropdownMenuItem(text={Text(item.label)},leadingIcon={Icon(icon,null)},onClick={section=item;moreNavigationExpanded=false})
         }
@@ -506,7 +512,7 @@ private enum class Section(val label:String){HOME("Home"),TEACHING("Lectures"),C
         }catch(error:Throwable){db.chatDao().addMessage(MessageEntity(conversationId=target,body="Attachment processing failed: "+(error.message?:error.javaClass.simpleName),role="assistant",status="error"))}finally{draft="";pendingAttachment=null;sending=false}
        }
       }
-     }, onTeach={showTeachingStudio=true}, onLibrary={section=Section.LIBRARY}, onModels={section=Section.MODELS}, onAiHub={section=Section.AI_HUB})
+     }, onTeach={showTeachingStudio=true}, onLibrary={section=Section.LIBRARY}, onModels={section=Section.MODELS}, onAiHub={section=Section.AI_HUB},chatBackgroundColor=chatBackgroundColor,chatBackgroundImage=chatBackgroundImage,chatFontFamily=chatFontFamily,chatFontColor=chatFontColor,chatFontSize=chatFontSize)
     Section.AI_HUB->CollaborationScreen(models,collaborationPrompt,{collaborationPrompt=it},collaborationStatus,collaborating){
      val prompt=collaborationPrompt.trim()
      if(prompt.isNotBlank()&&!collaborating){
@@ -699,7 +705,12 @@ private enum class Section(val label:String){HOME("Home"),TEACHING("Lectures"),C
      }
     )
     Section.SETTINGS->SettingsScreen(
-     speechLanguageTag,ttsVoiceName,offlineTtsVoices,recognitionLanguages,speechStatus,pronunciationDictionary,responseStyle,darkAppearance,accentName,engineOptimization,fontFamilyName,customBackgroundUri,
+     speechLanguageTag,ttsVoiceName,offlineTtsVoices,recognitionLanguages,speechStatus,pronunciationDictionary,responseStyle,darkAppearance,accentName,engineOptimization,fontFamilyName,customBackgroundUri,chatBackgroundColor,chatBackgroundImage,chatFontFamily,chatFontColor,chatFontSize,
+      {value->chatBackgroundColor=value;chatPrefs.edit().putString("background_color",value).apply()},
+      {value->chatBackgroundImage=value;chatPrefs.edit().putString("background_image",value).apply()},
+      {value->chatFontFamily=value;chatPrefs.edit().putString("font_family",value).apply()},
+      {value->chatFontColor=value;chatPrefs.edit().putString("font_color",value).apply()},
+      {value->chatFontSize=value;chatPrefs.edit().putInt("font_size",value).apply()},
      {style->responseStyle=style;personalizationPrefs.edit().putString("response_style",style).apply()},
      {name->accentName=name;personalizationPrefs.edit().putString("accent_name",name).apply()},
      {enabled->darkAppearance=enabled;personalizationPrefs.edit().putBoolean("dark_appearance",enabled).apply()},
@@ -822,10 +833,10 @@ private enum class Section(val label:String){HOME("Home"),TEACHING("Lectures"),C
     Row(Modifier.fillMaxWidth(),horizontalArrangement=if(mine)Arrangement.End else Arrangement.Start){
      Surface(color=if(mine)MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface,shape=RoundedCornerShape(if(mine)22.dp else 16.dp),modifier=Modifier.widthIn(max=340.dp)){
       Column(Modifier.padding(14.dp)){
-       if(message.body.isNotBlank()) Text(message.body,color=MaterialTheme.colorScheme.onSurface)
+       if(message.body.isNotBlank()) Text(message.body,color=parseChatColor(chatFontColor,MaterialTheme.colorScheme.onSurface),fontFamily=chatFontFamily.toChatFontFamily(),fontSize=chatFontSize.sp)
        if(!mine&&message.body.isNotBlank()) Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.End){IconButton(onClick={onSpeak(message.body)}){Icon(Icons.Default.VolumeUp,"Read response aloud",tint=MaterialTheme.colorScheme.primary)}}
        if(message.attachmentName!=null){Row(verticalAlignment=Alignment.CenterVertically){Icon(Icons.Default.AttachFile,null,tint=MaterialTheme.colorScheme.primary,modifier=Modifier.size(16.dp));Text(message.attachmentName,color=MaterialTheme.colorScheme.primary,style=MaterialTheme.typography.labelMedium)}}
-       Text(if(mine)"You" else "Molecularis",style=MaterialTheme.typography.labelSmall,color=MaterialTheme.colorScheme.primary)
+       Text(if(mine)"You" else "Molecularis",style=MaterialTheme.typography.labelSmall,color=parseChatColor(chatFontColor,MaterialTheme.colorScheme.primary))
       }
      }
     }
@@ -839,7 +850,7 @@ private enum class Section(val label:String){HOME("Home"),TEACHING("Lectures"),C
    Row(Modifier.padding(start=6.dp,end=8.dp,top=4.dp,bottom=4.dp),verticalAlignment=Alignment.CenterVertically){
     IconButton(onClick={actionsExpanded=true}){Icon(Icons.Default.AttachFile,"Teaching tools and attachments",tint=MaterialTheme.colorScheme.primary)}
     IconButton(onClick=onVoice,enabled=!sending){Icon(if(voiceListening)Icons.Default.MicOff else Icons.Default.Mic,if(voiceListening)"Listening" else "Speak message",tint=if(voiceListening)MaterialTheme.colorScheme.primary else Muted)}
-    TextField(draft,onDraftChange,Modifier.weight(1f),placeholder={Text("Message privately…")},maxLines=5,enabled=!sending,colors=TextFieldDefaults.colors(focusedContainerColor=Color.Transparent,unfocusedContainerColor=Color.Transparent,focusedIndicatorColor=Color.Transparent,unfocusedIndicatorColor=Color.Transparent))
+    TextField(draft,onDraftChange,Modifier.weight(1f),placeholder={Text("Message privately…")},textStyle=MaterialTheme.typography.bodyLarge.copy(fontFamily=chatFontFamily.toChatFontFamily(),fontSize=chatFontSize.sp,color=parseChatColor(chatFontColor,MaterialTheme.colorScheme.onSurface)),maxLines=5,enabled=!sending,colors=TextFieldDefaults.colors(focusedContainerColor=Color.Transparent,unfocusedContainerColor=Color.Transparent,focusedIndicatorColor=Color.Transparent,unfocusedIndicatorColor=Color.Transparent))
     IconButton(onClick=onSend,enabled=!sending&&(draft.isNotBlank()||attachmentName!=null)){if(sending)CircularProgressIndicator(Modifier.size(20.dp),strokeWidth=2.dp)else Icon(Icons.Default.Send,"Send",tint=MaterialTheme.colorScheme.primary)}
    }
   }
@@ -1302,6 +1313,8 @@ private suspend fun readDatasetBounded(context:Context,uri:Uri):String = withCon
  }
 @Composable private fun InfoCard(title:String,body:String){Card(Modifier.fillMaxWidth().padding(bottom=10.dp)){Column(Modifier.padding(16.dp)){Text(title,fontWeight=FontWeight.SemiBold);Spacer(Modifier.height(4.dp));Text(body,color=Muted,style=MaterialTheme.typography.bodyMedium)}}}
 @Composable private fun EmptyState(title:String,body:String){Column(Modifier.fillMaxWidth().padding(vertical=24.dp),horizontalAlignment=Alignment.CenterHorizontally){Text(title,fontWeight=FontWeight.SemiBold);Text(body,color=Muted,style=MaterialTheme.typography.bodySmall)}}
+private fun parseChatColor(value:String,fallback:Color):Color=runCatching{Color(android.graphics.Color.parseColor(value))}.getOrDefault(fallback)
+private fun String.toChatFontFamily():FontFamily=when(this){"Serif"->FontFamily.Serif;"Monospace"->FontFamily.Monospace;"Cursive"->FontFamily.Cursive;else->FontFamily.SansSerif}
 private fun friendlyLanguageName(tag:String):String {
  val locale=java.util.Locale.forLanguageTag(tag)
  val display=locale.getDisplayName(java.util.Locale.getDefault())
