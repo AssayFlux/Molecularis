@@ -627,7 +627,7 @@ private enum class Section(val label:String){HOME("Home"),TEACHING("Lectures"),C
        val previousName=activeModelName
        try{
         if(previousPath!=null){runtime.unload();activeModelPath=null;activeModelName=null}
-        val target=conversationId?:db.chatDao().addConversation(ConversationEntity(title="Model collaboration"))
+        val target=conversationId?:db.chatDao().addConversation(ConversationEntity(title="Model collaboration",subjectId=activeSubjectId,professorProfileId=activeProfessor?.id))
         val provider=LiteRtModelProvider(context)
         val catalog=ModelCatalog()
         models.filter{it.modelPath!=null&&File(it.modelPath).isFile}.distinctBy{it.modelPath}.forEach{model->
@@ -768,8 +768,8 @@ private enum class Section(val label:String){HOME("Home"),TEACHING("Lectures"),C
     )
     Section.WORKSPACE->WorkspaceScreen(projects,{showNewProject=true},{project->
      scope.launch{
-      val existing=db.chatDao().latestProjectConversation(project.id)
-      val id=existing?.id?:db.chatDao().addConversation(ConversationEntity(title=project.name,workspaceProjectId=project.id))
+      val existing=db.chatDao().latestProjectConversation(project.id,activeSubjectId)
+      val id=existing?.id?:db.chatDao().addConversation(ConversationEntity(title=project.name,workspaceProjectId=project.id,subjectId=activeSubjectId,professorProfileId=activeProfessor?.id))
       selectedConversation=id
       section=Section.CHATS
      }
