@@ -13,20 +13,25 @@ A gap may be deferred only when the integration remains bounded, honest about it
 
 | Engine / library | Molecularis integration state | Deferred gaps |
 |---|---|---|
-| Biopython | Optional host PairwiseAligner adapter integrated; Android feasibility prototype exists | Exact file-level licence and wheel notices; device runtime/16 KB proof; parser differential corpus; FASTQ encoding metadata; structure identity preservation; broader alignment modes |
-| Parasail | Source audit complete; not yet integrated | Fresh maintenance/security review; exact licence/citation notices; checked score-width/saturation; differential corpus; host build; Android NEON/JNI/16 KB proof |
-| HTSlib / pysam | Optional host BAM/CRAM streaming and indexed-region adapter exists | Lossless record/header/tags/mate/base-modification model; reference/index provenance; decompression/time/resource limits; broader SAM/BAM/CRAM fixtures; native supply-chain and binary notices; Android feasibility |
-| Biotite | Optional host mmCIF adapter integrated in `structure_biotite.py`; Molecularis-owned atom records and provenance | Python >=3.12 host profile; Rust extension packaging; BinaryCIF input; author/label identifier mapping; biological assemblies; optional annotation fidelity; dependency/licence audit; differential fixtures |
-| RDKit | Optional host chemistry adapter exists | Broader stereochemistry/isotope/salt/tautomer/aromaticity corpus; graph/resource ceilings and isolation; exact transitive SBOM/notices; Android feasibility |
-| AutoDock Vina | Optional host docking runner exists | Receptor/ligand preparation workflow; reproducibility across builds; redocking/cross-docking and enrichment benchmarks; resource isolation; binary provenance/licence inventory |
-| OpenMM | Optional CPU runner for caller-prepared systems exists | Approved system preparation; force-field and ligand parameter provenance; biomolecular reference systems; energy/stability convergence checks; resource/cancellation controls; no general remote-worker exposure |
-| Mol* | Viewer assets/prototype only | Full Molecularis data bridge; offline packaging/runtime; accessibility; large-structure performance; security review |
-| SciPy | Host validation/reference use | No Android bundle; per-workflow pinning; reference tests for all dependent methods; environment isolation |
-| ESM / AlphaFold | Not production-integrated | Exact model/weight licences; model provenance; supported runtime/hardware; memory/storage budgets; confidence calibration; benchmark datasets |
-| HMMER / BLAST | Optional adapters/probes; not a unified service | Reproducible database packs; versioned search parameters; result provenance; native packaging/licence review; resource limits |
-| NUPACK / NUAD | Not integrated | Current source and licence audit; thermodynamic dependency graph; model/data provenance; independent reference fixtures |
-| GROMACS | Not integrated | Source/licence/build review; platform/runtime strategy; force-field and preparation governance; benchmark and output interoperability |
-| Samtools / BCFtools | Available through HTSlib/pysam ecosystem, not exposed as complete Molecularis services | Tool-specific command/API contracts; exact bundled notices; reference concordance and normalization fixtures; safe subprocess isolation |
+| Biopython | Optional host PairwiseAligner adapter and Android feasibility prototype | File-level licence/notices; device runtime and 16 KB proof; parser differential corpus; FASTQ encoding metadata; full structure identity; broader alignment modes |
+| Biotite | Optional host mmCIF adapter in `structure_biotite.py` | Python >=3.12 isolated profile; Rust packaging; BinaryCIF; author/label mapping; biological assemblies; annotation fidelity; differential fixtures |
+| Parasail | New optional global/local affine-gap traceback adapter in `scientific_engines.py` | Python/native binding pin; score-width/saturation corpus; tie and gap convention comparisons; SIMD/NEON/16 KB proof; exact custom licence and citation notices |
+| pysam | Optional host BAM/CRAM streaming and indexed-region adapter | Lossless tags/mates/header/base-modification model; reference/index provenance; decompression/time/resource limits; broader format fixtures |
+| HTSlib | Exposed through the pysam adapter | Native binary provenance; bundled htscodecs/samtools/bcftools notices; format differential corpus; Android feasibility |
+| BCFtools | Runtime discovery in engine registry; executable not invoked by Molecularis yet | Safe command contract; normalization/reference concordance; plugin and bundled-notice audit; isolated execution |
+| Samtools | Runtime discovery in engine registry; executable not invoked by Molecularis yet | Safe command contract for view/sort/index/flagstat; header and sort semantics; bundled-notice audit; isolated execution |
+| ESM | Isolated local-process prediction contract can carry model provenance | No ESM-specific loader; model/weight terms; accelerator/memory profile; embedding and confidence benchmarks |
+| AlphaFold | Isolated local-process prediction contract and strict prediction-envelope validation | No bundled model/data; model/database terms; supported deployment profile; confidence calibration and benchmark datasets |
+| Mol* | Offline Android viewer assets/prototype | Full Molecularis data bridge; offline runtime verification; accessibility; large-structure performance; security review |
+| MolProbity | Runtime discovery only; no Molecularis validation adapter yet | Component-level source/licence review; command/API contract; validation method provenance; curated validation corpus |
+| RDKit | Optional host chemistry adapter | Stereochemistry/isotope/salt/tautomer/aromaticity corpus; graph/resource ceilings; transitive SBOM/notices; Android feasibility |
+| AutoDock Vina | Optional host docking runner | Preparation workflow; reproducibility across builds; redocking/cross-docking/enrichment benchmarks; isolation; binary provenance |
+| OpenMM | Optional CPU runner for caller-prepared systems | Approved system preparation; force-field/ligand parameter provenance; reference systems; convergence; cancellation/resource controls |
+| GROMACS | Runtime discovery only; no Molecularis execution adapter yet | Source/licence/build review; TPR/trajectory contracts; force-field governance; platform/runtime strategy; benchmark interoperability |
+| SciPy | Host validation/reference use | Per-workflow pinning; no Android bundle; reference tests for all dependent methods; environment isolation |
+| NUAD | Not integrated; upstream identity/source/licence not established in this pass | Resolve canonical upstream project and exact API; source/licence/dependency audit; thermodynamic model and design validation |
+| NUPACK | Not integrated; no verified redistributable upstream source/API in this pass | Confirm access/licensing and supported API; thermodynamic model provenance; runtime profile; independent reference fixtures |
+| Galaxy | Not integrated; source API reviewed, server not deployed | API client, auth/credential lifecycle, server operations, workflow mapping, job data controls and security review |
 
 ## First integration increment (2026-11-21)
 
@@ -67,3 +72,14 @@ These states are independent. Never infer one from another. Update status only w
 - Added `python/molecularis/structure_biotite.py`: lazy optional Biotite backend, bounded UTF-8 input, explicit model selection, atom-count bound, finite coordinate checks, input SHA-256, and Molecularis-owned primitive atom records. No Biotite/NumPy objects escape the adapter.
 - Added `tests/test_structure_biotite.py` with optional dependency contract and input-bound tests. Tests were not executed in this repository-editing session.
 - The adapter currently accepts text mmCIF only. BinaryCIF, biological assembly expansion, author/label identifier reconciliation and broader differential validation remain deferred.
+
+
+## Coordinated integration increment (2026-11-21)
+
+- Added `python/molecularis/scientific_engines.py` with a stable inventory for all 18 requested tools, lazy runtime discovery (without importing model weights), and a Molecularis-owned Parasail global/local affine-gap traceback adapter.
+- Added `tests/test_scientific_engines.py` for the 18-engine inventory, discovery semantics, input ceilings and optional Parasail contract. These tests have not been executed in this repository-editing session.
+- Source-level inspection in this pass covered Parasail's `src/sw.c` and `src/nw.c`; HTSlib's `sam.c`; Samtools' `bam_sort.c`; BCFtools' `mpileup.c`; AlphaFold's `run_alphafold.py`; RDKit's `SmilesParse.cpp`; OpenMM's `simulation.py`; GROMACS' `md.cpp`; SciPy's `stats/_stats_py.py`; and Galaxy's workflow API implementation. Existing audits cover Biopython, Biotite, pysam/HTSlib, RDKit, Vina, and OpenMM.
+- ESM's expected `esm/pretrained.py` path and the guessed NUAD/NUPACK source paths did not resolve in the upstream repositories queried; MolProbity's canonical source/API was not established. These are explicitly not marked as integrated.
+- The registry distinguishes integrated adapters, process-contract integrations, viewer assets, runtime discovery, and not-yet-integrated tools. A discovered executable or importable package is not evidence of a working workflow.
+- The new Parasail adapter rejects inputs outside its configured alphabet, bounds alignment cells, checks saturation and returns traceback plus score. It does not claim parity with the existing Molecularis or Biopython aligners until differential tests are run.
+- No model weights, reference databases, native binaries, or third-party source files were copied or bundled.
