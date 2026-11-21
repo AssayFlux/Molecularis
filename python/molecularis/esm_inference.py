@@ -7,7 +7,6 @@ operator; this module never downloads weights or executes remote model code.
 from __future__ import annotations
 
 import hashlib
-import os
 from pathlib import Path
 from typing import Any
 
@@ -92,7 +91,10 @@ def run_esm_embeddings(
     if total_residues > max_total_residues:
         raise ValueError("total residues exceed max_total_residues")
 
-    path = Path(model_path).expanduser().resolve(strict=True)
+    raw_path = Path(model_path).expanduser()
+    if raw_path.is_symlink():
+        raise ValueError("model_path must not be a symbolic link")
+    path = raw_path.resolve(strict=True)
     model_hash, model_bytes, model_files = _model_digest(path, max_bytes=max_model_bytes)
     if model_hash != expected_model_sha256:
         raise ValueError("ESM model directory digest does not match expected_model_sha256")
@@ -124,7 +126,7 @@ def run_esm_embeddings(
         for offset in range(0, len(normalized), batch_size):
             batch = normalized[offset:offset + batch_size]
             encoded = tokenizer(
-                batch, return_tensors="pt", padding=True, truncation=False,
+                [" ".join(sequence) for sequence in batch], return_tensors="pt", padding=True, truncation=False,
                 add_special_tokens=True,
             )
             input_ids = encoded["input_ids"]
@@ -139,10 +141,8 @@ def run_esm_embeddings(
                 token_mask = masks[local_index].bool()
                 special_mask = torch.tensor(
                     tokenizer.get_special_tokens_mask(
-                        tokenizer.encode(sequence, add_special_tokens=True),
-                        already_has_special_tokens=True,
-                    ),
-                    dtype=torch.bool,
+                        input_ids[local_index].tolist(), already_has_special_tokens=True,
+                    ), dtype=torch.bool,
                 )
                 if special_mask.numel() != token_mask.numel():
                     raise RuntimeError("Tokenizer special-token mask length mismatch")
