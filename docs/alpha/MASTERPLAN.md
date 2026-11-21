@@ -20,7 +20,7 @@ The preferred core languages are C++, Rust and Python.
 - C++17 or a later explicitly approved standard: performance-critical numerical kernels, simulation/geometry kernels, mature native scientific-library bindings and measured hotspots.
 - Rust: memory-safe parsers, format validation, provenance/security-sensitive services, worker supervisors, resource controls and native cross-platform components.
 - Python: scientific orchestration, research APIs, reference implementations, workflow composition and adapters where the scientific ecosystem materially benefits.
-- TypeScript/JavaScript: browser/PWA user interface, visualization integration and browser-safe client logic. This is a necessary platform language, not a replacement for the preferred scientific core.
+- UI implementation language(s): determined by the cross-platform framework feasibility spike. TypeScript/JavaScript may be used inside an installed desktop/mobile shell if justified, but does not make the product website-first or replace the scientific core.
 - SQL: persistence and migrations.
 - C/CUDA/OpenCL or other runtimes only when required by a selected upstream engine and accepted in a documented decision; do not introduce additional general-purpose languages casually.
 
@@ -51,7 +51,7 @@ No claim is made here that every component in the repository is complete, produc
 - Institutional/HPC connector: queued jobs via institution-approved scheduler/API.
 - Cloud compute: optional, opt-in, cost-transparent and region/policy-aware.
 
-The browser must never be treated as a trusted execution sandbox for arbitrary scientific code. Heavy workloads are jobs with resource limits, cancellation, logs, artifacts and provenance.
+The application UI must never be treated as a security boundary or trusted execution sandbox for arbitrary scientific code. Heavy workloads are jobs with resource limits, cancellation, logs, artifacts and provenance.
 
 ## 5. Core product domains
 
