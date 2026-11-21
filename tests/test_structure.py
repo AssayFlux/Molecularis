@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from kinetics.structure import Atom, rmsd
+from molecularis.structure import Atom, rmsd
 
 
 def atom(serial: int, x: float, y: float, z: float) -> Atom:
@@ -39,7 +39,7 @@ def test_rmsd_and_contact_cutoff_reject_non_finite_values() -> None:
 
 
 def test_mmcif_atom_site_loop_parses_coordinates_and_altloc() -> None:
-    from kinetics.structure import parse_mmcif
+    from molecularis.structure import parse_mmcif
 
     cif = """data_demo
 loop_
@@ -67,7 +67,7 @@ ATOM 3 N N GLY A 1 A 1.0 0.0 0.0
 
 
 def test_mmcif_rejects_non_finite_coordinates() -> None:
-    from kinetics.structure import parse_mmcif
+    from molecularis.structure import parse_mmcif
 
     cif = """data_demo
 loop_
@@ -92,7 +92,7 @@ ATOM 1 C CA GLY A 1 NaN 0.0 0.0
 def test_sasa_single_atom_area_and_occlusion_are_deterministic() -> None:
     from math import pi
 
-    from kinetics.structure import solvent_accessible_surface_area
+    from molecularis.structure import solvent_accessible_surface_area
 
     single = solvent_accessible_surface_area([atom(1, 0, 0, 0)], sphere_points=48)
     assert single["total_area_angstrom2"] == pytest.approx(4 * pi * (1.7 + 1.4) ** 2)
@@ -106,7 +106,7 @@ def test_sasa_single_atom_area_and_occlusion_are_deterministic() -> None:
 
 
 def test_sasa_rejects_unsupported_elements_and_invalid_resolution() -> None:
-    from kinetics.structure import solvent_accessible_surface_area
+    from molecularis.structure import solvent_accessible_surface_area
 
     unknown = Atom(1, "X", "UNK", "A", 1, 0.0, 0.0, 0.0, "")
     with pytest.raises(ValueError, match="Unsupported"):
@@ -117,7 +117,7 @@ def test_sasa_rejects_unsupported_elements_and_invalid_resolution() -> None:
 
 
 def test_structural_interaction_candidates_use_explicit_geometry() -> None:
-    from kinetics.structure import interaction_candidates
+    from molecularis.structure import interaction_candidates
 
     atoms = [
         Atom(1, "NZ", "LYS", "A", 1, 0.0, 0.0, 0.0, "N"),

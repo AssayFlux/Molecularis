@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from kinetics.s4_process import (
+from molecularis.s4_process import (
     PinnedSubprocessPredictionEngine,
     run_pinned_local_prediction,
 )
@@ -110,7 +110,7 @@ def test_pinned_local_prediction_rejects_nonzero_exit(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     engine = _engine(tmp_path)
-    import kinetics.s4_process as module
+    import molecularis.s4_process as module
 
     class Failed:
         returncode = 2

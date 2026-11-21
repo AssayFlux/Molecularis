@@ -4,9 +4,9 @@ import hashlib
 
 import pytest
 
-from kinetics.s4_engine import run_local_structure_prediction
-from kinetics.structure import Atom
-from kinetics.structure_view import prepare_viewer_payload
+from molecularis.s4_engine import run_local_structure_prediction
+from molecularis.structure import Atom
+from molecularis.structure_view import prepare_viewer_payload
 
 
 class _FakeEngine:

@@ -6,9 +6,9 @@ from pathlib import Path
 
 from jsonschema import Draft202012Validator
 
-from kinetics.gff3 import parse_gff3
-from kinetics.sequence import SequenceRecord
-from kinetics.sequence_reference import ReferencePack, local_alignment_reference_search
+from molecularis.gff3 import parse_gff3
+from molecularis.sequence import SequenceRecord
+from molecularis.sequence_reference import ReferencePack, local_alignment_reference_search
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -42,7 +42,7 @@ def test_gff3_import_result_matches_versioned_schema() -> None:
 
 
 def test_gff3_transcript_cds_result_matches_versioned_schema() -> None:
-    from kinetics.gff3_transcripts import reconstruct_gff3_cds
+    from molecularis.gff3_transcripts import reconstruct_gff3_cds
 
     annotation = parse_gff3([
         "##gff-version 3\n",
