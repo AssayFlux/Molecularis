@@ -1,6 +1,6 @@
 # Molecularis Work Backlog
 
-Mark an item complete only with a commit SHA and verification evidence. Service A implementation is explicitly authorized; the Core/MSDE platform acceptance gate remains open and must not be reported as passed.
+Mark an item complete only with a commit SHA and verification evidence. Services A and B are authorized; the Core/MSDE platform acceptance gate remains open and must not be reported as passed.
 
 ## P0 — Trustworthy baseline
 

@@ -57,7 +57,7 @@ def test_artifact_round_trip(tmp_path):
     ("statistics", {"length": 9, "gc_fraction": 3/9, "a": 3, "c": 1, "g": 2, "t": 3}),
     ("reverse_complement", {"sequence": "TTAAGCCAT"}),
     ("transcribe", {"sequence": "AUGGCUUAA"}),
-    ("translate", {"protein": "MA", "table_id": 1}),
+    ("translate", {"protein": "MA*", "table_id": 1}),
 ])
 def test_rulebook_capability_operations(tmp_path, operation, expected):
     p = runtime(tmp_path)
@@ -95,5 +95,20 @@ def test_byte_budget_and_wrong_artifact_type(tmp_path):
         other = p.ingest(b"{}", media_type="application/json", schema_id="other.v1")
         with pytest.raises(ValidationError, match="not a Sequence"):
             load_sequence(p, other.artifact_id)
+    finally:
+        p.close()
+
+def test_complete_cds_translation_omits_terminal_stop(tmp_path):
+    p = runtime(tmp_path)
+    try:
+        artifact = ingest_sequence(p, SequenceDocument("complete-cds", "ATGGCTTAA"))
+        values = p.execute(
+            sequence_rulebook("translate", parameters={"cds": True}),
+            {"sequence_artifact_id": artifact.artifact_id},
+        )
+        result = values["sequence_result"]["result"]
+        assert result["protein"] == "MA"
+        assert result["cds_validation"] == "passed"
+        assert result["terminal_stop_codon"] == "TAA"
     finally:
         p.close()

@@ -1,7 +1,7 @@
 # Service and Platform Status Register
 
 Last verified: 2026-11-21  
-Current implementation commit: [7e0785a781a9423746717c3f96c2ad7ed6a1f92a](https://github.com/AssayFlux/Molecularis/commit/fb2afc2017eb0e74e4d4e9209d33323f5b279e6c).
+Current implementation commit: [4bb14ab342fbdd5a9c4193393fb607aa0ffb37b2](https://github.com/AssayFlux/Molecularis/commit/4bb14ab342fbdd5a9c4193393fb607aa0ffb37b2).
 
 A scaffold or specification does not imply implementation or scientific validation.
 
