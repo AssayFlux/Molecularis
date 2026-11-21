@@ -1,3 +1,8 @@
+> **HISTORICAL / SUPERSEDED FOR EXECUTION (2026-11-21):** This document is retained as source history and technical evidence. Do not use it as an active roadmap or implementation authority. The current repository-first plan is [docs/MASTER_PLAN.md](../MASTER_PLAN.md) for files in `docs/`, or [Master Plan](../MASTER_PLAN.md) for files in `docs/alpha/`. Current exact inventory: [REPOSITORY_BASELINE.md](../REPOSITORY_BASELINE.md); capability mapping: [CAPABILITY_STATUS.md](../CAPABILITY_STATUS.md). Reconcile any still-useful details into the current plan before implementation. No completion or validation claim is implied by this historical document.
+
+---
+
+
 # Alpha Initial Implementation Backlog
 
 This is a prioritized backlog, not a claim that tasks are underway or complete. Each item needs an owner, acceptance criteria, tests and evidence link before closure.
