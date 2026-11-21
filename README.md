@@ -111,7 +111,7 @@ See the [v0.1.0 and v0.1.1 release plan](docs/release-plan-v0.1.0-v0.1.1.md).
 ## ABOUT
 **Molecularis** is an open-source scientific research workbench from **AssayFlux Scientific Systems**. It combines an Android-native, offline-first application with a Python research core and selected C++ and Rust components. Sequence, structure, chemistry, kinetics and omics foundations sit behind versioned contracts and a capability registry.
 
-The project prioritises reproducibility, provenance, bounded inputs and explicit limitations. It is a research-engineering prototype, not a clinically validated platform.
+The project prioritises reproducibility, provenance, bounded inputs and explicit limitations. It is a research-engineering prototype, not a clinically validated platform. See the [Molecularis identity migration and compatibility contract](docs/brand-migration.md) for retained legacy identifiers and integration aliases.
 
 <table>
   <tr>
