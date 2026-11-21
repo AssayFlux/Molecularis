@@ -12,9 +12,9 @@
 - Android Explore integration: bounded FASTA QC (record length, GC fraction and ambiguous-symbol count) and bounded FASTQ read-quality summary (explicit Phred+33/Phred+64, read/base counts, mean Phred and Q20/Q30 fractions) through the embedded Python adapter. These are local analysis cards, not yet the full SAF-import → durable job → result/provenance/export workflow.
 
 ## Current source
-- Domain workflows: `python/kinetics/sequence.py`, `python/kinetics/genomics.py`, `python/kinetics/workflows.py`.
-- Android bridge: `android/app/src/main/python/kinetics_probe.py` and `android/app/src/main/java/org/assayflux/kinetics/SequenceQcRunner.kt`.
-- Explore UI: `android/app/src/main/java/org/assayflux/kinetics/KineticsUi.kt`.
+- Domain workflows: `python/molecularis/sequence.py`, `python/molecularis/genomics.py`, `python/molecularis/workflows.py`.
+- Android bridge: `android/app/src/main/python/molecularis_probe.py` and `android/app/src/main/java/org/assayflux/molecularis/SequenceQcRunner.kt`.
+- Explore UI: `android/app/src/main/java/org/assayflux/molecularis/MolecularisUi.kt`.
 - Regression tests: `tests/test_research_primitives.py`, `tests/test_genomics.py`, `tests/test_fasta_workflow.py`.
 - Exact Android CI evidence for the FASTA/FASTQ cards: [run #2033](https://github.com/AssayFlux/Kinetics/actions/runs/42484179938), source `037befa8e9d22099e250dd22d3c4d772a6457034`.
 

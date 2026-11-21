@@ -147,7 +147,7 @@ internal fun MolecularisAppShell(
                         Modifier.fillMaxWidth().height(160.dp).padding(horizontal = 24.dp, vertical = 20.dp),
                         verticalArrangement = Arrangement.Bottom,
                     ) {
-                        Text("KINETICS", style = MaterialTheme.typography.headlineSmall,
+                        Text("MOLECULARIS", style = MaterialTheme.typography.headlineSmall,
                             fontWeight = FontWeight.SemiBold, letterSpacing = 1.4.sp)
                         Spacer(Modifier.height(6.dp))
                         Text("COMPUTATIONAL RESEARCH", style = MaterialTheme.typography.labelSmall,
@@ -200,7 +200,7 @@ internal fun MolecularisAppShell(
                             showProfile -> "Profile"
                             selectedServiceId != null -> capabilities.firstOrNull { it.id == selectedServiceId }?.name ?: "Service"
                             tab == MolecularisTab.Home -> ""
-                            else -> "KINETICS"
+                            else -> "MOLECULARIS"
                         },
                         subtitle = when {
                             showSearch -> "Jobs and registered capabilities"
@@ -1772,7 +1772,7 @@ private fun SettingsScreen(
             } }
             item { SettingGroup("DATA PACKS & LICENCES", "Reference packs require version, source, checksum and licence metadata. Third-party engines retain their own terms.") }
             item { SettingGroup("ACCESSIBILITY", "System light/dark mode and font scaling are respected. Status is conveyed with text, not colour alone.") }
-            item { SettingGroup("ABOUT KINETICS", "Research Mode · Version 0.0.1 · Apache-2.0 project code. Not for clinical use.") }
+            item { SettingGroup("ABOUT MOLECULARIS", "Research Mode · Version 0.0.1 · Apache-2.0 project code. Not for clinical use.") }
             if (debugBuild) item {
                 SettingGroup("DESIGN SYSTEM · DEVELOPER", "Open the live V1 component gallery. This route is available only in debug builds.") {
                     OutlinedButton(onClick = onOpenComponentGallery, modifier = Modifier.fillMaxWidth()) {
@@ -1951,7 +1951,7 @@ internal fun BiometricLockScreen(
 
 @Composable
 private fun Footer() {
-    Text("KINETICS · Research Mode only · Not for clinical use",
+    Text("MOLECULARIS · Research Mode only · Not for clinical use",
         Modifier.fillMaxWidth().padding(vertical = 8.dp), color = MaterialTheme.colorScheme.onSurfaceVariant,
         style = MaterialTheme.typography.labelSmall, letterSpacing = .8.sp)
 }

@@ -78,7 +78,7 @@ internal fun MolecularisOnboardingScreen(
                     verticalArrangement = Arrangement.spacedBy(20.dp),
                 ) {
                     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                        Text("KINETICS", style = MaterialTheme.typography.labelLarge,
+                        Text("MOLECULARIS", style = MaterialTheme.typography.labelLarge,
                             color = MaterialTheme.colorScheme.onSurfaceVariant, fontWeight = FontWeight.SemiBold)
                         Text("Your research workspace.", style = MaterialTheme.typography.headlineLarge,
                             color = MaterialTheme.colorScheme.onSurface)

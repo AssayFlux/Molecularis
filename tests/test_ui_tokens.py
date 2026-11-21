@@ -74,7 +74,7 @@ def test_active_palette_text_and_secondary_text_meet_wcag_aa_contrast() -> None:
     for family in ("light", "dark"):
         theme = next(
             item for item in families[family]["themes"]
-            if item["id"] == f"kinetics_{family}_classic"
+            if item["id"] == f"molecularis_{family}_classic"
         )
         for foreground in ("text", "muted"):
             for background in ("background", "surface", "surface_alt"):
