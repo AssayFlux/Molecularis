@@ -1,21 +1,38 @@
-# Architecture — R0 baseline
+# Architecture — Alpha All-Device Target
 
-This records intended boundaries, not an implemented runtime.
+**Status:** Target architecture, not a claim of implemented runtime.  
+**Authority:** NORTH_STAR.md, ROADMAP.md and DECISIONS.md.
 
-- Android/Kotlin/Jetpack Compose: presentation shell only; no scientific calculations.
-- Python: scientific orchestration and reference-level workflows.
-- Rust: parsers/QC and performance-sensitive utilities only where measured need justifies them.
-- C++17: numerical kernels and JNI boundaries only where feasibility and benchmarks justify them.
-- C: upstream C engine cross-compilation only.
-- TypeScript/JavaScript: offline WebView visualisation only.
-- SQLite: local metadata/provenance store.
-- Optional remote node: authenticated, encrypted, user-configured compute; not present in R0.
+## Product clients
+- Responsive TypeScript web application/PWA is the primary client for phone, tablet, laptop and desktop.
+- Optional desktop packaging reuses the same web client and API.
+- Android/Kotlin is legacy migration context, not the product foundation.
 
-The registry links tools to engines, data packs and domains. Empty collections are deliberate until concrete capabilities and evidence exist. No new language, engine tier, runtime executable download, clinical feature or network telemetry is introduced. Android implementation choices remain subject to R1 feasibility and owner gates.
+## Scientific and platform language ownership
+- Python: scientific orchestration, APIs, reference workflows and ecosystem adapters.
+- Rust: safe parsers, validation, local-node supervisor, worker lifecycle and resource controls.
+- C++17+: measured numerical kernels and native scientific libraries.
+- TypeScript/JavaScript: browser/PWA UI, visualization and offline client behavior.
+- SQL and versioned JSON Schema/OpenAPI: persistence and interface contracts.
 
+## Runtime topology
+- Web client handles presentation, lightweight validation and visualization.
+- API/control plane manages identity, projects, artifacts, jobs, policy and provenance.
+- Isolated workers execute approved scientific engines.
+- Molecularis Node is an opt-in local connector for workstation files, CPU/GPU and native engines.
+- Institutional/HPC connectors submit jobs through institution-approved schedulers.
+- PostgreSQL is the shared metadata store; object storage holds large artifacts; SQLite may remain for local node metadata/cache.
 
-## Owner-directed engineering and integration standard
+## Contracts and boundaries
+Use versioned schemas and explicit semantic versions for all cross-component messages. Prefer process/IPC boundaries for independently deployed services and a narrow stable C ABI for native libraries. Do not expose language exceptions/panics across boundaries. Every job has an immutable manifest, resource limits, cancellation and provenance.
 
-The detailed target language ownership, interface contracts, boundary ABI rules, workflow, testing obligations and project profile are maintained in [ENGINEERING_INTEGRATION_STANDARD.md](ENGINEERING_INTEGRATION_STANDARD.md). The cross-component JSON envelope contract is [engine-envelope-v1.schema.json](../api/engine-envelope-v1.schema.json).
+## Scientific engines
+Engines are optional, isolated profiles with exact versions, license/model/data review, resource profiles, validation datasets and documented limitations. A registry entry does not imply integration or validation.
 
-This standard supplements this architecture baseline. It does not imply that target components or interfaces are already implemented. See the status and migration notes in the standard before changing any boundary.
+## Security
+The API is not an arbitrary code execution host. Uploaded data, notebooks, archives and engine inputs are untrusted. Workers have explicit mounts, least privilege, quotas, network policy and audit events. Local-node pairing is explicit and revocable.
+
+## Migration
+Preserve useful scientific code, tests, schemas, provenance and user data. Replace Android UI/lifecycle/storage incrementally only after parity and migration tests. See docs/alpha/MIGRATION_PLAN.md.
+
+See docs/alpha/MASTERPLAN.md for the full architecture and milestone plan.
