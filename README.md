@@ -1,8 +1,7 @@
-> **ALPHA BRANCH — REPOSITORY-AUDITED DESKTOP-FIRST DEVELOPMENT**  
-> Molecularis is an installed scientific research application. Desktop applications for **Linux, Windows and macOS** are the first product delivery; Android and Apple iOS/iPadOS follow on shared scientific logic, project formats and contracts. A website/PWA is not the first product. The UI framework remains undecided pending a measured five-platform feasibility spike. Preferred core languages: **C++, Rust and Python**.  
-> **Current registry audit:** 130 entries — 68 source-present tool declarations, 62 planned UI/settings/security entries, and **0 scientifically validated entries**. Source presence is not validation.  
+> **MOLECULARIS — REPOSITORY-FIRST, DESKTOP-FIRST DEVELOPMENT**  
+> Molecularis is an installed, offline-capable scientific research application. The first complete product is a desktop application for **Linux, Windows and macOS**, followed by Android and iOS/iPadOS applications on shared scientific contracts, project formats and provenance. A web companion is optional and deferred. The UI framework remains undecided until a measured five-platform feasibility study is complete. Core languages: **Python, Rust and C++**.  
+> **Repository capability baseline:** 130 registry entries — 68 tool declarations marked implemented with source paths present, 62 planned UI/settings/security entries, and **0 scientifically validated entries** in the audited baseline. Source presence is not validation.  
 > **Canonical planning:** [Master Plan](docs/MASTER_PLAN.md) · [Repository Baseline](docs/REPOSITORY_BASELINE.md) · [Capability Status](docs/CAPABILITY_STATUS.md) · [Full Capability Audit](docs/CAPABILITY_AUDIT.md) · [Legacy Requirements Traceability](docs/REQUIREMENTS_TRACEABILITY.md) · [Plan Retirement Map](docs/PLAN_RETIREMENT.md) · [Decisions](DECISIONS.md).
-
 
 <!-- MOLECULARIS · BY ASSAYFLUX -->
 <h1 align="center">MOLECULARIS</h1>
@@ -31,11 +30,11 @@ src="https://readme-typing-svg.demolab.com?font=Cinzel+Decorative&weight=600&siz
 
 <!-- ═══════════════ REPOSITORY STATUS ═══════════════ -->
 <p align="center">
-  <a href="https://github.com/AssayFlux/Molecularis/blob/main/LICENSE">
+  <a href="https://github.com/AssayFlux/Molecularis/blob/CORE/LICENSE">
     <img src="https://img.shields.io/github/license/AssayFlux/Molecularis?style=flat-square&label=LICENSE&labelColor=302A35&color=9B6A7A">
   </a>
   <a href="https://github.com/AssayFlux/Molecularis/actions/workflows/ci.yml">
-    <img src="https://img.shields.io/github/actions/workflow/status/AssayFlux/Molecularis/ci.yml?branch=main&style=flat-square&label=CI&labelColor=263B38&color=739B83">
+    <img src="https://img.shields.io/github/actions/workflow/status/AssayFlux/Molecularis/ci.yml?branch=CORE&style=flat-square&label=CI&labelColor=263B38&color=739B83">
   </a>
   <a href="https://github.com/AssayFlux/Molecularis/stargazers">
     <img src="https://img.shields.io/github/stars/AssayFlux/Molecularis?style=flat-square&label=STARS&labelColor=45372D&color=C69B58">
@@ -49,7 +48,7 @@ src="https://readme-typing-svg.demolab.com?font=Cinzel+Decorative&weight=600&siz
   <a href="https://github.com/AssayFlux/Molecularis/pulls">
     <img src="https://img.shields.io/github/issues-pr/AssayFlux/Molecularis?style=flat-square&label=PULL%20REQUESTS&labelColor=354A48&color=78AFA5">
   </a>
-  <a href="https://github.com/AssayFlux/Molecularis/commits/main">
+  <a href="https://github.com/AssayFlux/Molecularis/commits/CORE">
     <img src="https://img.shields.io/github/last-commit/AssayFlux/Molecularis?style=flat-square&label=LAST%20COMMIT&labelColor=493B32&color=B88C72">
   </a>
   <img src="https://img.shields.io/github/languages/top/AssayFlux/Molecularis?style=flat-square&label=TOP%20LANGUAGE&labelColor=293D3D&color=78AFA5">
@@ -110,18 +109,18 @@ src="https://readme-typing-svg.demolab.com?font=Cinzel+Decorative&weight=600&siz
 
 ## RELEASE DIRECTION
 
-The previous Android v0.1.0/v0.1.1 release sequence is historical and is not the current product delivery plan. The active delivery sequence is defined in the [repository-first Master Plan](docs/MASTER_PLAN.md): exact baseline and migration audit, cross-platform framework feasibility, shared contracts/project foundation, installed desktop application, desktop scientific vertical slices, compute extensions, mobile applications, and institutional readiness. No future release is claimed complete until its implementation and evidence gates pass.
+The active product sequence is defined by the [Master Plan](docs/MASTER_PLAN.md): repository and migration baseline; five-platform UI-framework feasibility; shared contracts and project foundation; installable desktop application; scientific vertical slices; visualization and research workspace; controlled compute services; mobile applications; and institutional release readiness. These are dependency-gated phases, not calendar promises. No phase or release is complete until its exit criteria and evidence are recorded.
 
 ## ABOUT
-**Molecularis** is an open-source scientific research workbench from **AssayFlux Scientific Systems**. It combines an Android-native, offline-first application with a Python research core and selected C++ and Rust components. Sequence, structure, chemistry, kinetics and omics foundations sit behind versioned contracts and a capability registry.
+**Molecularis** is an open-source, offline-capable scientific research environment from **AssayFlux Scientific Systems**. It is being developed as one coherent product across Linux, Windows, macOS, Android and iOS/iPadOS, with desktop delivery first and mobile delivery next. The framework decision is intentionally open until a comparable feasibility slice has been evaluated on all five platform families.
 
-The project prioritises reproducibility, provenance, bounded inputs and explicit limitations. The current repository is a research-engineering prototype with selected scientific source implementations; it is not a completed cross-platform application or clinically validated platform. See the [Molecularis identity migration and compatibility contract](docs/brand-migration.md) for retained legacy identifiers and integration aliases.
+The repository is a research-engineering baseline: it contains a substantive Python scientific package, an existing Android client being treated as a migration baseline, contracts, tests, viewer assets and bounded integrations for selected external engines. It is not yet a completed cross-platform application or a scientifically validated platform. See the [Molecularis identity migration and compatibility contract](docs/brand-migration.md) for retained legacy identifiers and integration aliases.
 
 <table>
   <tr>
     <td align="center" width="33%"><img src="https://api.iconify.design/lucide/microscope.svg?color=%23800020" width="28" height="28" alt=""><br><strong>RESEARCH</strong><br>Modular scientific workflows with clearly scoped capabilities.</td>
     <td align="center" width="33%"><img src="https://api.iconify.design/lucide/fingerprint.svg?color=%23800020" width="28" height="28" alt=""><br><strong>REPRODUCIBILITY</strong><br>Inputs, parameters, versions, units and provenance are preserved.</td>
-    <td align="center" width="33%"><img src="https://api.iconify.design/lucide/shield-check.svg?color=%23800020" width="28" height="28" alt=""><br><strong>EVIDENCE</strong><br>Implementation, tests, independent validation and device verification stay separate.</td>
+    <td align="center" width="33%"><img src="https://api.iconify.design/lucide/shield-check.svg?color=%23800020" width="28" height="28" alt=""><br><strong>EVIDENCE</strong><br>Implementation, tests, independent validation and platform verification stay separate.</td>
   </tr>
 </table>
 
@@ -134,15 +133,15 @@ The project prioritises reproducibility, provenance, bounded inputs and explicit
   </tr>
   <tr>
     <td align="center"><img src="https://api.iconify.design/lucide/flask-conical.svg?color=%23800020" width="28" height="28" alt=""><br><strong>CHEMISTRY &amp; DOCKING</strong><br>Molecular graph and SMILES/MOLBLOCK utilities; optional RDKit and AutoDock Vina adapters.</td>
-    <td align="center"><img src="https://api.iconify.design/lucide/activity.svg?color=%23800020" width="28" height="28" alt=""><br><strong>MOLECULAR DYNAMICS</strong><br>Optional OpenMM runner with explicit setup and force-field limitations.</td>
+    <td align="center"><img src="https://api.iconify.design/lucide/activity.svg?color=%23800020" width="28" height="28" alt=""><br><strong>MOLECULAR DYNAMICS</strong><br>Optional OpenMM adapter with explicit setup and force-field limitations.</td>
   </tr>
   <tr>
     <td align="center"><img src="https://api.iconify.design/lucide/chart-line.svg?color=%23800020" width="28" height="28" alt=""><br><strong>ENZYME KINETICS &amp; PK/PD</strong><br>Michaelis–Menten models and exploratory pharmacokinetic/pharmacodynamic utilities.</td>
     <td align="center"><img src="https://api.iconify.design/lucide/chart-bar.svg?color=%23800020" width="28" height="28" alt=""><br><strong>OMICS &amp; PGx</strong><br>Exploratory statistics, synthetic cohort utilities and research-only pharmacogenomics parsing.</td>
   </tr>
   <tr>
-    <td align="center"><img src="https://api.iconify.design/lucide/smartphone.svg?color=%23800020" width="28" height="28" alt=""><br><strong>ANDROID WORKBENCH</strong><br>Kotlin and Jetpack Compose foundation with offline-first constraints.</td>
-    <td align="center"><img src="https://api.iconify.design/lucide/scroll-text.svg?color=%23800020" width="28" height="28" alt=""><br><strong>GOVERNANCE &amp; PROVENANCE</strong><br>Capability registry, JSON Schema contracts, source inventory and evidence controls.</td>
+    <td align="center"><img src="https://api.iconify.design/lucide/laptop.svg?color=%23800020" width="28" height="28" alt=""><br><strong>CROSS-PLATFORM APPLICATION</strong><br>Desktop-first delivery with shared domain contracts and subsequent Android and iOS/iPadOS clients.</td>
+    <td align="center"><img src="https://api.iconify.design/lucide/scroll-text.svg?color=%23800020" width="28" height="28" alt=""><br><strong>GOVERNANCE &amp; PROVENANCE</strong><br>Capability registry, versioned contracts, source inventory and evidence controls.</td>
   </tr>
 </table>
 <p align="center">
@@ -164,71 +163,81 @@ The project prioritises reproducibility, provenance, bounded inputs and explicit
 </table>
 
 ## STATUS AND PROGRESS
-| TRACK | SCOPE | CURRENT SOFTWARE POSITION | OPEN GATE |
-|:---:|---|---|---|
-| **R** | Research platform | **SOFTWARE AUDIT CLOSED** | Device, independent scientific, licensing and release evidence remain. |
-| **S** | Structure, sequence and discovery | **SOFTWARE SCOPE CLOSED** | Independent references, licensed resources/models and device evidence remain. |
-| **I** | In-silico laboratory | **SOFTWARE AUDIT CLOSED** | Scientific benchmarks, licensing, secure-node and device evidence remain. |
-| **P** | Precision Medicine (PGx First) | **SOFTWARE FOUNDATION CLOSED** | D-025 opens owner-authorized research testing within the declared institutional approval; the approval record is pending attachment/verification. Clinical deployment and clinical decision support remain gated. |
-| **G** | Governance, assurance and publication readiness | **HISTORICAL G0–G7 ENGINEERING AUDIT CLOSED** | The 18 Nov baseline commit `83df8e7` had a Python foundation failure in its exact-head run; this correction requires a fresh exact-head CI result. Overall acceptance also requires independent reviews, complete SBOM/licensing, device checks, owner policy acceptance and operating exercises. |
-| **U** | User interface and experience | **STARTED — STEP 1 BASE IMPLEMENTATION** | Owner V1 monochrome UI specification adopted (D-024); U0–U3 remain partial baseline; U4–U6 remain dependency-gated. Step 2 audit not yet run. |
+| AREA | CURRENT BASELINE | ACCEPTANCE REQUIREMENT |
+|---|---|---|
+| **Repository and migration** | Inventory and audit baseline documented; registry contains 130 entries. | Exact-SHA CI, per-capability tests/evidence, Android persisted-data and identifier inventory, dependency/licence register and migration risk register. |
+| **Platform strategy** | Linux, Windows, macOS, Android and iOS/iPadOS are targets; desktop has delivery priority. UI framework not selected. | Comparable feasibility prototypes and measured framework decision across all five platform families. |
+| **Shared foundation** | Existing schemas, Python package and Android migration baseline are present. | Versioned project/data/artifact/job/provenance contracts, cross-language conformance, persistence, migration and recovery tests. |
+| **Desktop application** | Not yet established as a complete installable product. | Tested Linux, Windows and macOS packages, offline project workflow, durable job lifecycle and one complete scientific vertical slice. |
+| **Scientific services** | 68 tool declarations are marked implemented and have source paths in the audited snapshot; evidence level is none. | Typed contracts, declared dependencies and limitations, automated tests, independent references/benchmarks and explicit platform support. |
+| **Mobile applications** | Existing Android client is a migration baseline; iOS/iPadOS application is not established. | Shared-contract clients, tested data migration/rollback, device verification, accessibility and scientific parity for shipped capabilities. |
+| **Release readiness** | No production release or scientific validation claim is made by this baseline. | SBOM/licence, security, privacy, accessibility, platform, operational and independent scientific reviews with exact-build provenance. |
 
 | ENGINEERING AREA | POSITION |
 |---|---|
-| BUILD | GitHub Actions CI is configured. Read the live badge above for the current head. |
-| TESTS | pytest and Android JVM test tasks are defined in CI. |
+| BUILD | GitHub Actions CI is configured. Read the live badge above for the current branch status. |
+| TESTS | Python and Android test suites and additional scientific smoke/reference checks are defined in CI; results must be checked on the exact commit. |
 | COVERAGE | No verified coverage percentage is published. |
-| DEPLOYMENT | No production deployment or signed public release. CI builds debug artifacts only. |
+| DEPLOYMENT | No production deployment or signed public release is claimed. |
 
 ## TECHNOLOGY STACK
 <p align="center">
-  <img src="https://skillicons.dev/icons?i=androidstudio,kotlin,gradle,python,cpp,rust,nodejs,html,css,js,bash,cmake,git,github,linux&perline=5" alt="Technology icons">
+  <img src="https://skillicons.dev/icons?i=python,cpp,rust,nodejs,html,css,js,bash,cmake,git,github,linux,windows,apple,androidstudio&perline=5" alt="Technology icons">
 </p>
 
-| LAYER | TECHNOLOGY |
+| LAYER | TECHNOLOGY / DIRECTION |
 |---|---|
-| ANDROID | Kotlin, Jetpack Compose, AndroidX, Gradle, Chaquopy |
-| PYTHON | Python 3.10+, setuptools, pytest, Ruff, mypy |
-| NATIVE | C++17, JNI/NDK, Rust |
-| OPTIONAL ENGINES | RDKit, AutoDock Vina 1.2.7, OpenMM 8.6.1 |
-| VIEWER | HTML5, CSS, JavaScript, Android WebView |
-| WORKER | Node.js 22+, dependency-free HTTP/TLS worker |
-| CONTRACTS | JSON Schema, YAML, SPDX source inventory |
+| DESKTOP | Linux, Windows and macOS installed applications — first delivery target; framework decision pending measured feasibility. |
+| MOBILE | Android and iOS/iPadOS installed applications — subsequent delivery on shared product foundations. |
+| PYTHON | Python 3.10+, scientific orchestration, research APIs, reference implementations, pytest and Ruff. |
+| NATIVE | Rust for safe parsing/process/resource controls where justified; C++17 for profiled performance-critical kernels and scientific-library integration. |
+| OPTIONAL ENGINES | RDKit, AutoDock Vina and OpenMM behind explicit, versioned adapters and declared prerequisites. |
+| VISUALIZATION | Offline-capable sequence, chemistry and structure views; evaluate viewer components independently for licence, accessibility and performance. |
+| COMPUTE | Local execution first; optional paired Molecularis Node and separately governed institutional/HPC execution. |
+| CONTRACTS & DATA | Versioned JSON Schema and language-neutral contracts, portable project format, checksums, atomic persistence and SPDX inventory. |
 
 ## SYSTEM ARCHITECTURE
-```mermaid
+\`\`\`mermaid
 flowchart TD
-    USER["RESEARCH USER"] --> ANDROID["ANDROID · KOTLIN / COMPOSE"]
-    ANDROID --> APP["APP ORCHESTRATION"]
-    APP --> PY["PYTHON SCIENTIFIC CORE"]
-    APP --> NATIVE["C++ / JNI · RUST"]
-    APP --> VIEW["OFFLINE VIEWERS"]
-    APP --> CONTRACTS["VERSIONED CONTRACTS · REGISTRY · PROVENANCE"]
-    PY --> SCI["SEQUENCE · STRUCTURE · CHEMISTRY · ENZYME KINETICS · OMICS"]
-    PY --> OPTIONAL["OPTIONAL HOST ENGINES · RDKit / Vina / OpenMM"]
-    NODE["OPTIONAL NODE 22 WORKER · DISABLED BY DEFAULT"] -.-> VINA["AUTHENTICATED DOCKING ROUTE"]
-    CI["GITHUB ACTIONS"] --> CHECKS["TESTS · VALIDATION · GOVERNANCE"]
-    CONTRACTS --> CHECKS
+    USER["RESEARCH USER"] --> DESKTOP["DESKTOP APPLICATIONS · LINUX / WINDOWS / macOS"]
+    USER --> MOBILE["MOBILE APPLICATIONS · ANDROID / iOS / iPadOS"]
+    DESKTOP --> DOMAIN["SHARED PRODUCT DOMAIN"]
+    MOBILE --> DOMAIN
+    DOMAIN --> PROJECTS["PROJECTS · DATASETS · ARTIFACTS · JOBS"]
+    DOMAIN --> SERVICES["SCIENTIFIC SERVICE LAYER"]
+    SERVICES --> PY["PYTHON SCIENTIFIC CORE"]
+    SERVICES --> NATIVE["RUST / C++ EXECUTION ADAPTERS"]
+    SERVICES --> VIEW["SEPARATE VISUALIZATION COMPONENTS"]
+    SERVICES --> COMPUTE["LOCAL COMPUTE · OPTIONAL PAIRED NODE"]
+    PROJECTS --> CONTRACTS["VERSIONED CONTRACTS · PROVENANCE · REGISTRY"]
+    CONTRACTS --> CI["TESTS · VALIDATION · GOVERNANCE"]
     classDef royal fill:#800020,color:#FFF8E7,stroke:#D4AF37,stroke-width:2px;
     classDef gold fill:#D4AF37,color:#1A1210,stroke:#800020,stroke-width:1px;
     classDef teal fill:#0B6E6E,color:#FFF8E7,stroke:#D4AF37,stroke-width:1px;
-    class ANDROID,APP,NODE royal;
-    class CONTRACTS,CHECKS,CI gold;
-    class PY,NATIVE,VIEW,SCI,OPTIONAL,VINA teal;
-```
+    class DESKTOP,MOBILE,DOMAIN royal;
+    class PROJECTS,CONTRACTS,CI gold;
+    class SERVICES,PY,NATIVE,VIEW,COMPUTE teal;
+\`\`\`
+
 ## NEXT GATES
-| TRACK | NEXT REQUIRED WORK |
-|:---:|---|
-| **P** | Patient-data research testing is owner-authorized only within the declared institutional approval under D-025; its approval record remains pending attachment/verification. Clinical PGx interpretation, diagnosis, treatment/dosing recommendations and clinical deployment remain unauthorized. |
-| **G** | Finish the exact-head G0–G7 engineering audit, then hand the sequence to U. External assurance and operational evidence remain carry-forward gates. |
-| **U** | Resume sequential implementation only after G's two-step gate is assessed. Retain partial U0–U3 as baseline, not as accepted completion. |
-| **CROSS-CUTTING** | Independent scientific benchmarks; data/model/dependency licensing and SBOM coverage; physical Android, offline, accessibility and recovery verification; real application demo. |
+| PHASE | NEXT REQUIRED WORK |
+|---|---|
+| **0 · BASELINE** | Complete exact-SHA CI and capability evidence ledger; inspect Android persisted data and identifiers; reconcile dependencies, licences, assets and migration risks. |
+| **1 · FEASIBILITY** | Build comparable project-browser/data-inspection slices for all five platform families and select the UI framework from measured evidence. |
+| **2 · SHARED FOUNDATION** | Version project, dataset, artifact, provenance, capability, engine, workflow and job contracts; implement persistence, integrity, migration and recovery. |
+| **3 · DESKTOP** | Deliver installable Linux, Windows and macOS shells, offline project management, local job lifecycle and one end-to-end scientific workflow. |
+| **4–5 · SCIENCE & WORKSPACE** | Deliver scientific vertical slices in dependency order, then visualization, linked inspection, export and accessible large-data workflows. |
+| **6–7 · COMPUTE & MOBILE** | Add controlled node/HPC execution only after security gates; then deliver Android and iOS/iPadOS clients with verified migration and parity. |
+| **8 · INSTITUTIONAL READINESS** | Complete security, privacy, accessibility, SBOM/licensing, operational recovery, platform and independent scientific review before release approval. |
 
 ## CONTRIBUTION AND LICENSING
-1. Read `NORTH_STAR.md`, `ROADMAP.md`, `DECISIONS.md` and `CONTRIBUTING.md`.
-2. Follow `docs/ENGINEERING_INTEGRATION_STANDARD.md` and the active sequential track gate.
-3. Add or update tests, schemas, provenance and licensing evidence with implementation.
-4. Report checks run, checks not run, limitations and remaining gates. Never imply scientific or device validation without evidence.
+1. Read [docs/MASTER_PLAN.md](docs/MASTER_PLAN.md), [DECISIONS.md](DECISIONS.md), CONTRIBUTING.md and the applicable engineering standards.
+2. Treat the master plan's phases as dependency gates; do not skip baseline, migration or framework evidence.
+3. Update implementation, tests, schemas, registry entries, provenance and evidence together.
+4. Record the exact base/head commits, checks run, checks not run, limitations, compatibility impact and rollback strategy.
+5. Preserve stable identifiers and user data. Do not claim scientific validation, platform support or release readiness without corresponding evidence.
+
+**Research-use boundary:** Molecularis is for scientific research and education. Diagnosis, treatment, dosing and patient-specific clinical decision support are not authorized product functions. Clinical decision support remains disabled unless separately authorized and independently validated under applicable governance.
 
 **License:** Apache License 2.0. Third-party dependencies, engines, datasets, models, fonts and visual assets may have separate terms; review upstream conditions before bundling or redistribution.
 
