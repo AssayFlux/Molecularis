@@ -1,4 +1,4 @@
-package org.assayflux.kinetics
+package org.assayflux.molecularis
 
 import android.os.Build
 import androidx.biometric.BiometricManager
@@ -8,7 +8,7 @@ import androidx.fragment.app.FragmentActivity
 
 /**
  * Device-local app unlock. This is deliberately not represented as a remote account login.
- * The OS owns biometric templates and performs the authentication; Kinetics receives only
+ * The OS owns biometric templates and performs the authentication; Molecularis receives only
  * the authenticated callback and never reads or stores biometric material.
  */
 internal object BiometricUnlock {
@@ -52,7 +52,7 @@ internal object BiometricUnlock {
             callback,
         )
         val info = BiometricPrompt.PromptInfo.Builder()
-            .setTitle("Unlock Kinetics")
+            .setTitle("Unlock Molecularis")
             .setSubtitle("Authenticate on this device to open your local research workspace")
             .apply {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {

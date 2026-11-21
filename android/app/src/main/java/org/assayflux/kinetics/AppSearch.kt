@@ -1,4 +1,4 @@
-package org.assayflux.kinetics
+package org.assayflux.molecularis
 
 /** A searchable item backed by an actual local job or repository capability. */
 internal data class SearchDocument(

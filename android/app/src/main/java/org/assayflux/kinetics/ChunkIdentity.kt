@@ -1,4 +1,4 @@
-package org.assayflux.kinetics
+package org.assayflux.molecularis
 
 /** Pure, deterministic identity binding for independently authenticated encrypted chunks. */
 internal object ChunkIdentity {
