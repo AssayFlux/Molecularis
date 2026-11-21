@@ -33,7 +33,7 @@ internal object SequenceQcRunner {
         require(fastqText.length <= MAX_INPUT_CHARS) { "FASTQ input exceeds the 1,000,000-character limit." }
         require(phredOffset == 33 || phredOffset == 64) { "Select Phred+33 or Phred+64 explicitly." }
         if (!Python.isStarted()) Python.start(AndroidPlatform(context.applicationContext))
-        val json = Python.getInstance().getModule("kinetics_probe")
+        val json = Python.getInstance().getModule("molecularis_probe")
             .callAttr("analyze_fastq", fastqText, phredOffset).toString()
         val root = JSONObject(json)
         val array = root.getJSONArray("reads")
@@ -57,7 +57,7 @@ internal object SequenceQcRunner {
             Python.start(AndroidPlatform(context.applicationContext))
         }
         val json = Python.getInstance()
-            .getModule("kinetics_probe")
+            .getModule("molecularis_probe")
             .callAttr("analyze_fasta", fastaText)
             .toString()
         val root = JSONObject(json)
