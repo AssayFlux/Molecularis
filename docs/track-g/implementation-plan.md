@@ -1,14 +1,14 @@
 # Track G — governance, assurance and publication readiness
 
-**Engineering exit: CLOSED (2026-11-17).** G0–G7 bounded research-only governance software foundation is implemented and passed exact-head CI on `main` commit `31b1618c4e843d0ec90feb2ceae0d0e4fb1615b1`; workflow [#44108451571](https://github.com/AssayFlux/Kinetics/actions/runs/44108451571) completed successfully with 9/9 jobs. The Python job reports 536 passed, 9 skipped; Ruff, mypy, governance checks and generated capability-claims reproducibility passed. The Android arm64 debug APK/AAB build, package alignment and JVM unit tests passed.
+**Engineering exit: CLOSED (2026-11-17).** G0–G7 bounded research-only governance software foundation is implemented and passed exact-head CI on `main` commit `31b1618c4e843d0ec90feb2ceae0d0e4fb1615b1`; workflow [#44108451571](https://github.com/AssayFlux/Molecularis/actions/runs/44108451571) completed successfully with 9/9 jobs. The Python job reports 536 passed, 9 skipped; Ruff, mypy, governance checks and generated capability-claims reproducibility passed. The Android arm64 debug APK/AAB build, package alignment and JVM unit tests passed.
 
 **Overall Track G acceptance: OPEN.** Independent security/privacy/scientific/legal reviews, complete resolved SBOM and licensing decisions, physical-device verification, named specialist appointments, owner policy/risk acceptance and operational exercises remain open. These are explicit carry-forward obligations, not blockers to the bounded engineering foundation closure. Track U follows G under D-023; pre-existing partial U0–U3 work remains a baseline, not accepted completion.
 
-**Scope:** research-only governance for the unreleased Kinetics platform. This plan is not a legal opinion, ethics determination, security certification, QMS certification, regulatory clearance or publication endorsement. P0 remains BLOCKED / NOT APPROVED.
+**Scope:** research-only governance for the unreleased Molecularis platform. This plan is not a legal opinion, ethics determination, security certification, QMS certification, regulatory clearance or publication endorsement. P0 remains BLOCKED / NOT APPROVED.
 
 ## 1. Purpose
 
-Track G turns Kinetics' existing governance principles into verifiable, maintained controls. It must connect project claims to evidence, make residual risks visible, and prevent software status from being confused with scientific, device, legal, privacy or regulatory acceptance.
+Track G turns Molecularis' existing governance principles into verifiable, maintained controls. It must connect project claims to evidence, make residual risks visible, and prevent software status from being confused with scientific, device, legal, privacy or regulatory acceptance.
 
 G is a cross-cutting assurance track. It does not authorize patient data, human-subject research, clinical interpretation, clinical decision support, remote sensitive-data processing or regulated deployment. P0 remains NOT APPROVED unless and until its independent prerequisites and formal owner decision are satisfied.
 
@@ -129,7 +129,7 @@ These files are implementation evidence, not evidence that external reviews or o
 ## 11. Final exact-head engineering verification and closure (2026-11-17)
 
 - Final main revision: `31b1618c4e843d0ec90feb2ceae0d0e4fb1615b1`.
-- Exact-head workflow [#44108451571](https://github.com/AssayFlux/Kinetics/actions/runs/44108451571) completed successfully: **9/9 jobs passed**.
+- Exact-head workflow [#44108451571](https://github.com/AssayFlux/Molecularis/actions/runs/44108451571) completed successfully: **9/9 jobs passed**.
 - Python foundation job: **536 passed, 9 skipped**; Ruff, mypy, governance structure/register checks and generated capability-claims reproducibility passed.
 - Android arm64 debug APK/AAB build, package alignment and JVM unit-test task passed; dependency graphs and artifact hashes were captured.
 - Other passing jobs: pinned Vina engine smoke check, private Node docking-worker security tests, RDKit descriptor sanity fixtures, RDKit ADMET utility smoke check, scientific reference comparisons, declared-source SPDX inventory and OpenMM CPU replica smoke check.

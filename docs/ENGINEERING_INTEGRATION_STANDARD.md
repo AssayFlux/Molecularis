@@ -1,4 +1,4 @@
-# Kinetics — Engineering & Integration Standard
+# Molecularis — Engineering & Integration Standard
 
 **Status:** Owner-directed engineering standard  
 **Adopted:** 2026-11-09  
@@ -8,7 +8,7 @@
 ## 1. Project profile
 
 ### Goal
-Build Kinetics as an offline-first scientific workbench for reproducible bioinformatics, structural biology, chemistry, enzyme kinetics and omics research, with auditable provenance and an optional authenticated, encrypted remote compute node. Precision-medicine work remains research-only and separately gated; clinical decision support is disabled.
+Build Molecularis as an offline-first scientific workbench for reproducible bioinformatics, structural biology, chemistry, enzyme kinetics and omics research, with auditable provenance and an optional authenticated, encrypted remote compute node. Precision-medicine work remains research-only and separately gated; clinical decision support is disabled.
 
 ### Team and experience
 - Team size: **TBD — owner has not supplied a team roster**.
@@ -25,7 +25,7 @@ Build Kinetics as an offline-first scientific workbench for reproducible bioinfo
 ### Current state (repository inspection, 2026-11-09)
 This is an **existing multi-language project**, not a greenfield scaffold:
 - Kotlin/Jetpack Compose Android application and Gradle build exist.
-- Python scientific package exists under `python/kinetics`; Android embeds Python 3.11 with pinned Biopython and NumPy. SciPy/pandas availability is target-specific and must be verified before use; do not assume they are packaged in Android.
+- Python scientific package exists under `python/molecularis`; Android embeds Python 3.11 with pinned Biopython and NumPy. SciPy/pandas availability is target-specific and must be verified before use; do not assume they are packaged in Android.
 - C++17 JNI source and CMake build exist, but the current native implementation is a smoke-test wrapper, not yet a substantive scientific core engine.
 - Rust static library and JNI linkage exist, but current Rust source is a tiny numeric smoke-test function, not yet the security subsystem.
 - SQLite persistence and JSON Schema contracts exist.

@@ -1,4 +1,4 @@
-# Kinetics security and privacy threat model
+# Molecularis security and privacy threat model
 
 **Status:** consolidated engineering threat model; not independently reviewed or certified.  
 **Scope:** Android Research Mode, local import/storage/export, SQLite and WorkManager, Python/native runtimes, WebView, data packs, build supply chain and explicitly disabled optional remote boundaries.  

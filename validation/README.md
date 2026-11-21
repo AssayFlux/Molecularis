@@ -8,7 +8,7 @@ No scientific validation records exist yet. Add versioned, reproducible records 
 The CI workflow runs `validation/kinetics_scipy_reference.py` in a separate,
 host-only environment pinned by `validation/requirements-scipy.txt`. The job
 uploads its JSON output as a workflow artifact. It compares the exploratory
-Kinetics grid estimator against `scipy.optimize.curve_fit` on deterministic
+Molecularis enzyme-kinetics estimator against `scipy.optimize.curve_fit` on deterministic
 synthetic noise-free and Gaussian-noise cases.
 
 This is a numerical implementation cross-check, not experimental truth,
@@ -34,7 +34,7 @@ Android chemistry feasibility. RDKit remains outside the Android app.
 
 `structure_biopython_reference.py` uses the pinned Biopython parser and NumPy
 geometry routines to compare a deterministic synthetic PDB fixture with the
-Kinetics PDB parser, contact calculation and superposed RMSD implementation.
+Molecularis PDB parser, contact calculation and superposed RMSD implementation.
 The CI job stores the JSON result with the SciPy and genetic-code comparison
 records. This is software concordance, not an experimental structure benchmark.
 
@@ -42,7 +42,7 @@ records. This is software concordance, not an experimental structure benchmark.
 ## Phylogenetics software comparison
 
 `phylo_biopython_reference.py` compares all pairwise patristic distances from
-Kinetics neighbour joining with Biopython's independent NJ implementation on a
+Molecularis neighbour joining with Biopython's independent NJ implementation on a
 deterministic additive four-taxon matrix. The result is part of the pinned
 host-side reference CI artifact. It is a synthetic software check, not a
 published-tree or biological-evolution validation.
