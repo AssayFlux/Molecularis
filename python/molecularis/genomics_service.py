@@ -160,13 +160,18 @@ def register_genomics_service(platform):
                     max_total_bases=min(500_000_000, context.budget.max_bytes),
                     min_contig_length=parameters.get("min_contig_length", 1))
             elif selected == "orf_scan":
-                result = scan_contig_orf_candidates(records,
+                eligible = tuple(record for record in records if set(record.sequence) <= set("ACGT"))
+                excluded = sorted(record.identifier for record in records if set(record.sequence) - set("ACGT"))
+                if not eligible:
+                    raise ValidationError("ORF candidate scanning requires at least one unambiguous A/C/G/T contig")
+                result = scan_contig_orf_candidates(eligible,
                     table_id=parameters.get("table_id", 11),
                     min_protein_length=parameters.get("min_protein_length", 30),
                     max_contigs=min(100_000, context.budget.max_candidates),
                     max_total_bases=min(100_000_000, context.budget.max_bytes),
                     max_total_orfs=parameters.get("max_total_orfs", 100_000),
-                    max_candidate_pairs_total=parameters.get("max_candidate_pairs_total", 2_000_000))
+                    max_candidate_pairs_total=parameters.get("max_candidate_pairs_total", 1_000_000))
+                result["excluded_ambiguous_contigs"] = excluded
             elif selected == "annotation_validate":
                 text = parameters.get("gff3_text")
                 if not isinstance(text, str) or len(text.encode("utf-8")) > min(16 * 1024 * 1024, context.budget.max_bytes):
