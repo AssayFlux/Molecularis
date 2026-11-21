@@ -4,355 +4,355 @@ tools:
   - id: sequence.fasta
     name: Streaming FASTA parsing and sequence statistics
     status: implemented
-    implementation: python/kinetics/sequence.py
+    implementation: python/molecularis/sequence.py
     evidence_level: none
   - id: sequence.exact_reference_search
     name: Bounded exact full-length local sequence reference triage with provenance and abstention
     status: implemented
-    implementation: python/kinetics/sequence_reference.py
+    implementation: python/molecularis/sequence_reference.py
     evidence_level: none
   - id: sequence.local_reference_pack_loader
     name: Content-addressed bounded local FASTA reference-pack ingestion
     status: implemented
-    implementation: python/kinetics/sequence_pack.py
+    implementation: python/molecularis/sequence_pack.py
     evidence_level: none
   - id: sequence.local_fasta_exact_search
     name: Verified local FASTA pack loading followed by exact-only DNA/RNA/protein triage
     status: implemented
-    implementation: python/kinetics/sequence_pack.py
+    implementation: python/molecularis/sequence_pack.py
     evidence_level: none
   - id: sequence.explicit_genetic_code_translation
     name: Explicit NCBI genetic-code translation for 24 supported DNA/RNA translation tables
     status: implemented
-    implementation: python/kinetics/genetic_code.py
+    implementation: python/molecularis/genetic_code.py
     evidence_level: none
   - id: sequence.genetic_code_candidate_inference
     name: Conservative evidence-ranked candidate NCBI genetic-code screening with abstention
     status: implemented
-    implementation: python/kinetics/genetic_code_inference.py
+    implementation: python/molecularis/genetic_code_inference.py
     evidence_level: none
   - id: genome.orf_candidate_scan
     name: Bounded six-frame complete ORF candidate enumeration
     status: implemented
-    implementation: python/kinetics/orf.py
+    implementation: python/molecularis/orf.py
     evidence_level: none
   - id: genome.prokaryotic_orf_candidate_scan
     name: Genome-wide bounded six-frame ORF candidate triage across contigs
     status: implemented
-    implementation: python/kinetics/genome_orf.py
+    implementation: python/molecularis/genome_orf.py
     evidence_level: none
   - id: sequence.local_blastp
     name: Hash-pinned bounded local BLASTP protein homology search
     status: implemented
-    implementation: python/kinetics/blastp.py
+    implementation: python/molecularis/blastp.py
     evidence_level: none
   - id: sequence.local_hmmpress
     name: Hash-pinned local hmmpress profile-pack preparation
     status: implemented
-    implementation: python/kinetics/hmmer_runner.py
+    implementation: python/molecularis/hmmer_runner.py
     evidence_level: none
   - id: sequence.local_hmmscan
     name: Pinned local HMMER profile search with bounded execution and evidence parsing
     status: implemented
-    implementation: python/kinetics/hmmer_runner.py
+    implementation: python/molecularis/hmmer_runner.py
     evidence_level: none
   - id: protein.hmmscan_domain_evidence
     name: Bounded HMMER profile-domain evidence parsing
     status: implemented
-    implementation: python/kinetics/hmmer.py
+    implementation: python/molecularis/hmmer.py
     evidence_level: none
   - id: sequence.fastq
     name: FASTQ parsing
     status: implemented
-    implementation: python/kinetics/sequence.py
+    implementation: python/molecularis/sequence.py
     evidence_level: none
   - id: sequence.global_alignment
     name: Global pairwise alignment
     status: implemented
-    implementation: python/kinetics/sequence.py
+    implementation: python/molecularis/sequence.py
     evidence_level: none
   - id: genomics.sam_vcf
     name: SAM and VCF text parsing
     status: implemented
-    implementation: python/kinetics/genomics.py
+    implementation: python/molecularis/genomics.py
     evidence_level: none
   - id: variant.reference_checked_normalization
     name: Build-pinned reference-checked small-variant normalization
     status: implemented
-    implementation: python/kinetics/variant_reference.py
+    implementation: python/molecularis/variant_reference.py
     evidence_level: none
   - id: protein.descriptors
     name: Protein composition, mass, hydropathy and estimated pI
     status: implemented
-    implementation: python/kinetics/protein.py
+    implementation: python/molecularis/protein.py
     evidence_level: none
   - id: kinetics.michaelis_menten
     name: Michaelis-Menten model and exploratory fitting
     status: implemented
-    implementation: python/kinetics/kinetics.py
+    implementation: python/molecularis/kinetics.py
     evidence_level: none
   - id: structure.pdb_geometry
     name: PDB coordinates, contacts and unaligned RMSD
     status: implemented
-    implementation: python/kinetics/structure.py
+    implementation: python/molecularis/structure.py
     evidence_level: none
   - id: chemistry.sdf_graph
     name: SDF V2000/V3000 graph parsing and exploratory graph fingerprints
     status: implemented
-    implementation: python/kinetics/chemistry.py
+    implementation: python/molecularis/chemistry.py
     evidence_level: none
   - id: phylo.newick
     name: Newick parsing and patristic distance
     status: implemented
-    implementation: python/kinetics/phylo.py
+    implementation: python/molecularis/phylo.py
     evidence_level: none
   - id: omics.normalisation
     name: CPM, CLR, fold change and correlation
     status: implemented
-    implementation: python/kinetics/omics.py
+    implementation: python/molecularis/omics.py
     evidence_level: none
   - id: microbiome.diversity
     name: Shannon and Simpson diversity
     status: implemented
-    implementation: python/kinetics/omics.py
+    implementation: python/molecularis/omics.py
     evidence_level: none
   - id: genes.ncbi_catalogue
     name: Source-attributed NCBI Gene catalogue ingestion
     status: implemented
-    implementation: python/kinetics/catalog.py
+    implementation: python/molecularis/catalog.py
     evidence_level: none
   - id: molecular.primer_screen
     name: Primer property screening
     status: implemented
-    implementation: python/kinetics/molecular.py
+    implementation: python/molecularis/molecular.py
     evidence_level: none
   - id: molecular.crispr_pam
     name: SpCas9 NGG PAM scanning
     status: implemented
-    implementation: python/kinetics/molecular.py
+    implementation: python/molecularis/molecular.py
     evidence_level: none
   - id: phylo.upgma
     name: UPGMA clustering
     status: implemented
-    implementation: python/kinetics/phylo.py
+    implementation: python/molecularis/phylo.py
     evidence_level: none
   - id: omics.logistic_growth
     name: Logistic growth model
     status: implemented
-    implementation: python/kinetics/omics.py
+    implementation: python/molecularis/omics.py
     evidence_level: none
   - id: omics.cross_correlation
     name: Cross-omics correlation matrix
     status: implemented
-    implementation: python/kinetics/omics.py
+    implementation: python/molecularis/omics.py
     evidence_level: none
   - id: genomics.variant_normalization
     name: Reference-checked left normalization for biallelic small variants
     status: implemented
-    implementation: python/kinetics/genomics.py
+    implementation: python/molecularis/genomics.py
     evidence_level: none
   - id: kinetics.bootstrap_intervals
     name: Seeded paired-bootstrap intervals for exploratory Michaelis-Menten fits
     status: implemented
-    implementation: python/kinetics/kinetics.py
+    implementation: python/molecularis/kinetics.py
     evidence_level: none
   - id: structure.sasa
     name: Approximate Shrake-Rupley solvent-accessible surface area
     status: implemented
-    implementation: python/kinetics/structure.py
+    implementation: python/molecularis/structure.py
     evidence_level: none
   - id: phylo.newick_export
     name: Deterministic Newick serialization with safe label quoting
     status: implemented
-    implementation: python/kinetics/phylo.py
+    implementation: python/molecularis/phylo.py
     evidence_level: none
   - id: omics.nb2_glm
     name: Exploratory negative-binomial count GLM with numeric covariates
     status: implemented
-    implementation: python/kinetics/omics.py
+    implementation: python/molecularis/omics.py
     evidence_level: none
   - id: genomics.bam_core
     name: Streaming BAM core-field decoder
     status: implemented
-    implementation: python/kinetics/genomics.py
+    implementation: python/molecularis/genomics.py
     evidence_level: none
   - id: pgx.star_allele_definitions
     name: Versioned PGx star-allele definition ingestion and conservative phased matching
     status: implemented
-    implementation: python/kinetics/pgx.py
+    implementation: python/molecularis/pgx.py
     evidence_level: none
   - id: phylo.jukes_cantor_nj
     name: Jukes-Cantor nucleotide distances and neighbour-joining tree construction
     status: implemented
-    implementation: python/kinetics/phylo.py
+    implementation: python/molecularis/phylo.py
     evidence_level: none
   - id: structure.interaction_candidates
     name: Distance-only hydrogen-bond, salt-bridge and disulfide candidate screening
     status: implemented
-    implementation: python/kinetics/structure.py
+    implementation: python/molecularis/structure.py
     evidence_level: none
   - id: chemistry.rdkit_adapter
     name: Optional RDKit sanitization, descriptors and Morgan fingerprints
     status: implemented
-    implementation: python/kinetics/chemistry_rdkit.py
+    implementation: python/molecularis/chemistry_rdkit.py
     evidence_level: none
   - id: genomics.htslib_bam_cram
     name: Optional pysam/HTSlib indexed BAM and CRAM reader
     status: implemented
-    implementation: python/kinetics/genomics_htslib.py
+    implementation: python/molecularis/genomics_htslib.py
     evidence_level: none
   - id: pgx.pharmvar_tsv
     name: Release-pinned PharmVar TSV haplotype definitions with exact-reference matching
     status: implemented
-    implementation: python/kinetics/pharmvar.py
+    implementation: python/molecularis/pharmvar.py
     evidence_level: none
   - id: phylo.nj_site_bootstrap
     name: Seeded nonparametric site-bootstrap support for Jukes-Cantor neighbour joining
     status: implemented
-    implementation: python/kinetics/phylo.py
+    implementation: python/molecularis/phylo.py
     evidence_level: none
 
   - id: structure.viewer_payload
     name: Bounded deterministic coordinate payload for offline structure viewers
     status: implemented
-    implementation: python/kinetics/structure_view.py
+    implementation: python/molecularis/structure_view.py
     evidence_level: none
   - id: structure.session_export
     name: Byte-bounded deterministic JSON structure session export with provenance (not rendered)
     status: implemented
-    implementation: python/kinetics/structure_view.py
+    implementation: python/molecularis/structure_view.py
     evidence_level: none
 
   - id: structure.exact_sequence_mapping
     name: Conservative exact unique protein sequence-to-structure residue mapping
     status: implemented
-    implementation: python/kinetics/sequence_structure.py
+    implementation: python/molecularis/sequence_structure.py
     evidence_level: none
   - id: structure.geometry_screen_metrics
     name: Bounded steric-overlap and coordinate geometry screening without a calibrated quality grade
     status: implemented
-    implementation: python/kinetics/structure_quality.py
+    implementation: python/molecularis/structure_quality.py
     evidence_level: none
   - id: structure.variant_coordinate_mapping
     name: Exact-match protein variant-to-structure coordinate mapping with abstention
     status: implemented
-    implementation: python/kinetics/sequence_structure.py
+    implementation: python/molecularis/sequence_structure.py
     evidence_level: none
   - id: structure.chain_interface_contacts
     name: Bounded heavy-atom inter-chain geometric contact report
     status: implemented
-    implementation: python/kinetics/sequence_structure.py
+    implementation: python/molecularis/sequence_structure.py
     evidence_level: none
   - id: structure.ligand_site_candidates
     name: Bounded ligand-proximal protein-site candidate screening
     status: implemented
-    implementation: python/kinetics/structure_pockets.py
+    implementation: python/molecularis/structure_pockets.py
     evidence_level: none
   - id: structure.apo_pocket_candidates
     name: Bounded probe-grid apo cavity candidate screening with geometric limitations
     status: implemented
-    implementation: python/kinetics/apo_pockets.py
+    implementation: python/molecularis/apo_pockets.py
     evidence_level: none
   - id: genes.catalogue_coverage_report
     name: Source-snapshot gene catalogue composition and annotation completeness report
     status: implemented
-    implementation: python/kinetics/catalog.py
+    implementation: python/molecularis/catalog.py
     evidence_level: none
 
 
   - id: structure.prediction_envelope_validation
     name: Strict provenance and confidence-envelope validation for external structure predictions
     status: implemented
-    implementation: python/kinetics/structure_prediction.py
+    implementation: python/molecularis/structure_prediction.py
     evidence_level: none
   - id: structure.experimental_ca_comparison
     name: Exact-correspondence superposed CA RMSD comparison with experimental coordinates
     status: implemented
-    implementation: python/kinetics/structure_prediction.py
+    implementation: python/molecularis/structure_prediction.py
     evidence_level: none
 
   - id: genome.contig_assembly_qc
     name: Bounded contig assembly statistics including N50/L50 and GC/ambiguity summaries
     status: implemented
-    implementation: python/kinetics/genome_qc.py
+    implementation: python/molecularis/genome_qc.py
     evidence_level: none
 
   - id: protein.fixed_width_motif_scan
     name: Bounded provenance-aware caller-supplied protein motif scanning with abstention
     status: implemented
-    implementation: python/kinetics/protein_motifs.py
+    implementation: python/molecularis/protein_motifs.py
     evidence_level: none
 
   - id: protein.design_brief_validation
     name: Typed non-generative protein-design brief validation with mandatory release gates
     status: implemented
-    implementation: python/kinetics/protein_design.py
+    implementation: python/molecularis/protein_design.py
     evidence_level: none
 
   - id: structure.alignment_coordinate_mapping
     name: Bounded semi-global sequence-to-structure alignment with ambiguity abstention
     status: implemented
-    implementation: python/kinetics/structure_alignment.py
+    implementation: python/molecularis/structure_alignment.py
     evidence_level: none
 
   - id: sequence.local_alignment_reference_search
     name: Bounded Smith-Waterman local sequence alignment against caller-supplied reference records
     status: implemented
-    implementation: python/kinetics/sequence_reference.py
+    implementation: python/molecularis/sequence_reference.py
     evidence_level: none
   - id: genome.gff3_annotation_import
     name: Bounded GFF3 v3 feature annotation import and hierarchy validation
     status: implemented
-    implementation: python/kinetics/gff3.py
+    implementation: python/molecularis/gff3.py
     evidence_level: none
 
   - id: sequence.local_fasta_alignment_search
     name: Verified local FASTA pack ingestion followed by bounded Smith-Waterman alignment
     status: implemented
-    implementation: python/kinetics/sequence_pack.py
+    implementation: python/molecularis/sequence_pack.py
     evidence_level: none
 
   - id: genome.gff3_transcript_cds_reconstruction
     name: Bounded strand-aware GFF3 CDS reconstruction and explicit-table translation
     status: implemented
-    implementation: python/kinetics/gff3_transcripts.py
+    implementation: python/molecularis/gff3_transcripts.py
     evidence_level: none
 
   - id: protein.hmmer_domain_candidate_ranking
     name: Caller-thresholded ranking and abstention for HMMER domain candidates
     status: implemented
-    implementation: python/kinetics/hmmer_rank.py
+    implementation: python/molecularis/hmmer_rank.py
     evidence_level: none
   - id: protein.hmmscan_domtblout_evidence
     name: Bounded HMMER hmmscan domain-hit evidence parsing with profile provenance
     status: implemented
-    implementation: python/kinetics/hmmer.py
+    implementation: python/molecularis/hmmer.py
     evidence_level: none
 
   - id: structure.pinned_local_prediction_process
     name: Hash-pinned local S4 prediction process protocol with output validation
     status: implemented
-    implementation: python/kinetics/s4_process.py
+    implementation: python/molecularis/s4_process.py
     evidence_level: none
   - id: genome.augustus_local_gene_candidates
     name: Hash-pinned local AUGUSTUS eukaryotic gene-candidate prediction
     status: implemented
-    implementation: python/kinetics/augustus.py
+    implementation: python/molecularis/augustus.py
     evidence_level: none
   - id: genome.prodigal_local_gene_candidates
     name: Hash-pinned local Prodigal prokaryotic gene-candidate prediction
     status: implemented
-    implementation: python/kinetics/prodigal.py
+    implementation: python/molecularis/prodigal.py
     evidence_level: none
   - id: genome.pinned_local_gff3_annotator
     name: Hash-pinned local genome annotator process with bounded GFF3 validation
     status: implemented
-    implementation: python/kinetics/genome_annotation.py
+    implementation: python/molecularis/genome_annotation.py
     evidence_level: none
   - id: structure.local_prediction_engine_adapter
     name: Dependency-injected local structure-prediction engine adapter with strict output validation
     status: implemented
-    implementation: python/kinetics/s4_engine.py
+    implementation: python/molecularis/s4_engine.py
     evidence_level: none
 
 engines: []
