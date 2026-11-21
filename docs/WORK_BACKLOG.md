@@ -57,10 +57,22 @@ Each letter requires discovery/audit, Engine, Runtime, Rulebook, schemas/contrac
 ## Active task
 A's engineering implementation is complete; independent scientific approval and freeze remain pending. B's Python v1 engineering implementation is complete. C's Python v1 engineering implementation is complete and CI-verified in run #159. D's Chemistry Python v1 engineering implementation is complete and CI-verified in run #44888785327 (core 644 passed/12 skipped; optional chemistry 652 passed/4 skipped; sequence 647 passed/9 skipped; genomics 645 passed/11 skipped). E Protein Python v1 implementation is complete and CI-verified in run #44889593877 (core 651 passed/12 skipped; optional sequence 654 passed/9 skipped; genomics 652 passed/11 skipped; chemistry 659 passed/4 skipped). Per owner direction, university scientific review and contract freezes for A–N are deferred until the entire engineering build is complete. F Genomics CI evidence was recorded in the latest status commit. G DNA/RNA engineering implementation and CI verification complete in run #44892707015 (core 679 passed/12 skipped; optional Sequence 682/9, Chemistry 687/4, Genomics 680/11). University scientific review and formal contract freeze remain deferred until A–N engineering completion. H Simulation engineering implementation and CI verification complete in run #44893264385 (core 696 passed/12 skipped; optional Chemistry 704/4, Genomics 697/11, Sequence 699/9). University scientific review and formal contract freeze remain deferred until A–N engineering completion. I — Kinetics engineering implementation and CI verification complete in run #44894304968 (core 702 passed/12 skipped; optional Chemistry 710/4, Genomics 703/11, Sequence 705/9). University scientific review and formal freeze remain deferred until A–N engineering completion. J — Omics engineering implementation and CI verification complete in run #44895300775 (core 711 passed/12 skipped; Genomics 712/11, Sequence 714/9, Chemistry 719/4). K — Phylogeny engineering implementation and CI verification complete in run #44896994652 (core 721/12 skipped; Sequence 724/9, Genomics 722/11, Chemistry 729/4). University scientific review and formal freeze remain deferred until A–N engineering completion. M — Cohorts engineering implementation and CI verification complete in run #44899270453 (core 737/12 skipped; Chemistry 745/4, Sequence 740/9, Genomics 738/11). N — Workflows native DAG orchestration engineering and CI verification complete in run #44900460557 (core 746/12 skipped; Chemistry 754/4, Genomics 747/11, Sequence 749/9). All A–N service engineering is complete. University scientific/privacy review and formal contract freeze remain deferred; proceed to platform-wide integration and acceptance.
 
-## P4 — Molecularis AI
-- [x] Initial model-agnostic AI planning contract, live capability catalog, strict workflow validation, persisted plans, approval-gated execution and A–N bootstrap (implementation added; CI verification pending).
-- [ ] Add deployment-configured provider adapter and secure secret management.
-- [ ] Implement schema-aware cross-service artifact adapters and prove real A–N workflow chains.
-- [ ] Add prompt-injection/adversarial output, cancellation, timeout and isolation tests.
-- [ ] Add evidence-grounded scientific report generation and citations.
-- [ ] Complete university scientific review; no autonomous clinical or experimental decisions.
+## P4 — Agentics Molecularis intelligence system
+The detailed scope, architecture, acceptance metrics and gates are governed by [AGENTICS_MOLECULARIS_MASTER_PLAN.md](AGENTICS_MOLECULARIS_MASTER_PLAN.md). Do not mark phase work complete without commit and CI/benchmark evidence.
+
+### Existing implementation
+- [x] Model-agnostic planner callable contract, active A–N capability catalog, strict Workflow v1 validation, persisted plan artifact with input lineage, explicit approval gate and execution through Core Rulebook runtime.
+- [x] A–N fresh-runtime bootstrap.
+- [x] CI verification of the initial AI implementation: [run #44901363429](https://github.com/AssayFlux/Molecularis/actions/runs/44901363429), commit `2b6eced852fb049a81f6b087bb94e5e946047750`.
+- [ ] Real cross-service scientific artifact handoff and provenance continuity.
+
+### Agentics phases — sequential gates
+- [ ] **P0 — Hygiene and platform safety:** reconcile docs/status; threat model; OS-level sandbox; resource/network isolation; cancellation/timeout; failed-run evidence; artifact-store backup/restore and crash/corruption tests.
+- [ ] **P1 — Sources service:** audit/reuse existing adapters; RCSB PDB, UniProt, AlphaFold DB, InterPro, PubChem and NCBI Entrez; offline cache, rate limits, retries, checksums, license ledger and ambiguity-aware resolver.
+- [ ] **P2 — Orchestrator:** deployment-configured provider adapter and secure secrets; schema-derived tools; intent/clarification; approval bound to plan/input hashes; artifact-only answer composer; 50+ grounded/adversarial evals.
+- [ ] **P3 — Predictor:** separate PredictorAdapter service; exact model/checkpoint/license review; mmCIF and confidence artifacts; predicted namespace; local MSA; verification Rulebooks; post-cutoff leakage-aware benchmark.
+- [ ] **P4 — Data/training:** versioned snapshots, checksums, license ledger, quality filters, sequence clustering, temporal/cluster splits, reproducible PyTorch harness and model registry.
+- [ ] **P5 — Optional design:** disabled by default; proposer/verifier loop, biosecurity screening, human review and institutional approval.
+- [ ] **P6 — Generalize:** service-specific Proposer → Verifier patterns, domain acceptance criteria, independent checks and end-to-end artifact lineage.
+
+**Gate rule:** implement one phase only, add tests, obtain green CI and update docs from evidence, then stop and report. University scientific review remains independent and is not replaced by software CI.

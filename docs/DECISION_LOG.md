@@ -2,12 +2,17 @@
 
 Record decisions newest-first. Do not silently rewrite historical decisions; supersede them with a new entry.
 
+## DEC-0011 — Name and govern the Agentics Molecularis intelligence system
+- Status: Authorized by the repository owner on 2026-11-21.
+- Decision: The AI intelligence/orchestration layer is officially named **Agentics Molecularis**. Molecularis remains the parent scientific computing platform. The detailed roadmap is governed by `docs/AGENTICS_MOLECULARIS_MASTER_PLAN.md`.
+- Rationale: “Agentics” communicates goal-directed agent engineering: interpreting objectives, planning bounded work, coordinating tools and services, evaluating outcomes and preserving human authorization.
+- Constraints: Agentics is not a scientific engine or source of truth. Existing AI planner, Workflow v1, Core/MSDE and A–N services must be reused. Execute the P0–P6 phases sequentially with explicit gates. Predictions remain distinct from experimental observations; reports must be artifact-grounded; no design capability before its separate safety gate.
+
 ## DEC-0010 — Defer university scientific review until A–N engineering completion
 - Status: Authorized by the repository owner on 2026-11-21.
 - Decision: Complete the A–N engineering implementation sequence first. Conduct university-level scientific review, reference comparisons, formal validation and service contract freezes after all fourteen services are engineered.
 - Rationale: Centralized university review is the owner's chosen validation process.
 - Constraints: Engineering completion must be reported separately from scientific acceptance. Preserve limitations, test evidence and provenance records; do not claim scientific validation or production readiness before the university review.
-
 
 ## DEC-0009 — Authorized Sequence implementation before Molecular scientific freeze
 - Status: Authorized by the repository owner in the 2026-11-21 project conversation.

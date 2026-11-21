@@ -68,11 +68,11 @@ Core / MSDE foundation
 </td>
 <td width="25%" align="center" valign="top">
 
-### AI
+### Agentics
 
-**Planning layer**
+**Intelligence layer**
 
-Capability-aware orchestration
+Goal-directed scientific orchestration
 
 </td>
 <td width="25%" align="center" valign="top">
@@ -206,7 +206,7 @@ DAG orchestration, registered capabilities and reproducible workflow execution.
 
 Service registration and implementation do not, by themselves, establish scientific validity. Optional engines, models, reference datasets and their licenses must be checked in the target environment.
 
-## Molecularis AI
+## Agentics Molecularis
 
 <table>
 <tr>
@@ -214,7 +214,7 @@ Service registration and implementation do not, by themselves, establish scienti
 
 ### What it does
 
-Molecularis AI is the intelligence and orchestration layer above the A–N services. It is intended to interpret a research objective, discover relevant capabilities, compose a Rulebook workflow and present evidence-backed results.
+Agentics Molecularis is the intelligence and orchestration layer above the A–N services. It is intended to interpret a research objective, discover relevant capabilities, compose a Rulebook workflow and present evidence-backed results.
 
 </td>
 <td width="50%" valign="top">
@@ -254,7 +254,7 @@ Still required for a complete AI product:
 
 No hosted model or provider credentials are bundled or assumed.
 
-Read: [AI Engine](services/ai/ENGINE.md) · [AI Rulebook](services/ai/RULEBOOK.md) · [AI Acceptance](services/ai/ACCEPTANCE.md).
+Read: [Agentics Master Plan](docs/AGENTICS_MOLECULARIS_MASTER_PLAN.md) · [Engine](services/ai/ENGINE.md) · [Rulebook](services/ai/RULEBOOK.md) · [Acceptance](services/ai/ACCEPTANCE.md).
 
 </details>
 
@@ -328,7 +328,7 @@ Lifecycle management and bounded execution in the local reference platform.
 |---|---|
 | `CORE/` | Shared Core / MSDE architecture and implementation |
 | `services/` | Domain service engines, Rulebooks, schemas and manifests |
-| `services/ai/` | AI engine specification, Rulebook and acceptance gates |
+| `services/ai/` | Agentics engine specification, Rulebook and acceptance gates |
 | `python/molecularis/` | Platform runtime, AI planning and A–N bootstrap |
 | `python/kinetics/` | Kinetics scientific implementation |
 | `api/` · `schemas/` | Versioned API and data contracts |
@@ -351,7 +351,7 @@ Lifecycle management and bounded execution in the local reference platform.
 - Content-addressed artifact storage and integrity checks.
 - SQLite WAL metadata catalog.
 - Capability registry and Rulebook DAG execution.
-- Initial AI planning and approval gate.
+- Initial Agentics planning and approval gate.
 - Automated engineering CI.
 
 </td>
@@ -378,7 +378,7 @@ Lifecycle management and bounded execution in the local reference platform.
 |---|---|
 | Scientific correctness | Requires independent domain validation. |
 | Cross-service integration | Full real scientific chains still need demonstration. |
-| AI provider | No configured hosted provider is included. |
+| Agentics provider | No configured hosted provider is included. |
 | Production deployment | Local reference runtime; not certified as distributed production infrastructure. |
 | Clinical use | No diagnostic or treatment capability is claimed. |
 | External engines | Availability, licensing and versions depend on deployment configuration. |
@@ -406,6 +406,7 @@ Use the repository's service specifications and engineering Rulebook when extend
 
 - [North Star](docs/NORTH_STAR.md)
 - [Master Development Plan](docs/MASTER_DEVELOPMENT_PLAN.md)
+- [Agentics Molecularis Master Plan](docs/AGENTICS_MOLECULARIS_MASTER_PLAN.md)
 - [Future Architecture](docs/FUTURE_ARCHITECTURE.md)
 - [MSDE Architecture](CORE/data-engine/README.md)
 

@@ -80,6 +80,12 @@ A scaffold or specification does not imply implementation or scientific validati
 Update this register only from repository evidence. Every status transition must cite a commit, test run, benchmark or scientific validation artifact. Never upgrade a service to complete based on documentation alone.
 
 
-## Molecularis AI (intelligence layer)
+## Agentics Molecularis (intelligence layer)
 
-Initial implementation added after A–N: model-agnostic planner contract, live A–N capability catalog, strict Workflow v1 parsing, plan artifact persistence with source lineage, explicit approval gate and execution through the Core Rulebook runtime. A fresh-runtime A–N bootstrap is available. Provider SDK integration, real scientific cross-service artifact handoff, adversarial prompt testing, recovery/isolation acceptance and university scientific validation remain open. This is not yet an autonomous or scientifically validated research agent.
+**Official name:** Agentics Molecularis, the goal-directed agent and orchestration system of the Molecularis scientific platform. Governing plan: [AGENTICS_MOLECULARIS_MASTER_PLAN.md](AGENTICS_MOLECULARIS_MASTER_PLAN.md).
+
+**Implemented engineering foundation:** model-agnostic planner callable contract, active A–N capability catalog, strict Workflow v1 parsing/validation, persisted plan artifact with input lineage, explicit approval gate, Core Rulebook execution path and fresh-runtime A–N bootstrap. CI evidence: [run #44901363429](https://github.com/AssayFlux/Molecularis/actions/runs/44901363429), commit `2b6eced852fb049a81f6b087bb94e5e946047750`.
+
+**Not yet accepted:** configured production LLM provider, Sources service, real cross-service scientific artifact handoff, artifact-grounded answer composer, 50+ adversarial evaluation suite, Predictor service, model benchmark, OS-level sandbox/recovery certification, training pipeline, design safety gate and service-wide Proposer → Verifier acceptance. The phase sequence P0–P6 is specified in the master plan and remains unimplemented unless backed by separate commit/CI evidence.
+
+This is an initial agent foundation, not a finished autonomous research scientist. It is not scientifically validated; university review remains separate.

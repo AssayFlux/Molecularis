@@ -68,3 +68,19 @@ Only after Phase 4, measure CPU, memory, GPU, storage, operating systems, accele
 ## Completion and freeze rule
 
 A service is complete only when Engine, Runtime, Rulebook, contracts, tests, scientific evidence, integration, operational documentation and freeze record are accepted. Generic CI success is necessary but not sufficient. Frozen changes require explicit authorization or the narrowly controlled critical-remediation process.
+
+
+## Agentics Molecularis intelligence track
+
+The A–N scientific service engineering sequence is complete. The next intelligence-layer programme is governed separately by [Agentics Molecularis — Master Architecture, Build Plan and Acceptance Standard](AGENTICS_MOLECULARIS_MASTER_PLAN.md). It reuses the existing AI planner, Workflow v1, Core/MSDE and A–N bootstrap; it does not create a parallel workflow system.
+
+The Agentics track is sequential and phase-gated:
+- **P0:** documentation/status reconciliation, threat model, OS-level sandbox, failed-run evidence, artifact backup/restore and platform safety.
+- **P1:** Sources connectors, ambiguity-aware entity resolver, offline fixtures, source provenance and license ledger.
+- **P2:** provider-neutral LLM adapter, schema-derived tool calls, approval-bound orchestration, artifact-grounded reporting and 50+ adversarial evaluations.
+- **P3:** separate Predictor service, model/license provenance, predicted artifact namespace, verification Rulebooks and post-cutoff benchmarks.
+- **P4:** versioned datasets, leakage-resistant splits, reproducible training and model registry.
+- **P5:** optional design service, disabled until biosecurity and human/institutional approval.
+- **P6:** service-specific Proposer → Verifier patterns and real cross-service evidence.
+
+No later phase begins until the prior gate passes and is reported. Engineering CI is not scientific validation; university review remains separate.
