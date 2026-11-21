@@ -64,8 +64,8 @@ END
 
     return {
         "python": sys.version,
-        "molecularis_workbench": kinetics.__version__,
-        "kinetics_package_smoke": package_record.sequence,
+        "molecularis_workbench": molecularis.__version__,
+        "molecularis_package_smoke": package_record.sequence,
         "platform": platform.platform(),
         "biopython": Bio.__version__,
         "numpy": numpy.__version__,
@@ -116,7 +116,7 @@ def export_structure_viewer_session(source_text: str, source_format: str) -> str
     return build_structure_session_export(
         source_bytes,
         result["payload"],
-        parser_version="kinetics-structure-parser-v1",
+        parser_version="molecularis-structure-parser-v1",
     )
 
 
@@ -134,7 +134,7 @@ def prepare_structure_viewer_import(source_text: str, source_format: str) -> str
     result["session_export_json"] = build_structure_session_export(
         source_bytes,
         result["payload"],
-        parser_version="kinetics-structure-parser-v1",
+        parser_version="molecularis-structure-parser-v1",
     )
     return json.dumps(result, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
 
@@ -149,7 +149,7 @@ def _analysis_provenance(source_text: str, source_format: str, tool_id: str, par
         "source_sha256": hashlib.sha256(source_text.encode("utf-8")).hexdigest(),
         "source_format": source_format,
         "tool_id": tool_id,
-        "tool_version": kinetics.__version__,
+        "tool_version": molecularis.__version__,
         "generated_at_utc": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
         "parameters": parameters,
     }
@@ -1066,7 +1066,7 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             raise ValueError("Provide fasta, manifest and optional query") from exc
         if not isinstance(fasta, str) or not isinstance(manifest, dict):
             raise ValueError("fasta must be text and manifest a JSON object")
-        with tempfile.TemporaryDirectory(prefix="kinetics-refpack-") as d:
+        with tempfile.TemporaryDirectory(prefix="molecularis-refpack-") as d:
             fp, mp = Path(d) / "ref.fasta", Path(d) / "manifest.json"
             fp.write_text(fasta, encoding="utf-8")
             mp.write_text(json.dumps(manifest), encoding="utf-8")

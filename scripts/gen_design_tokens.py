@@ -92,7 +92,7 @@ def css_source(data: dict[str, Any]) -> str:
     for family in ("light", "dark", "neon"):
         for palette in data["theme_families"][family]["themes"]:
             for prop in PROPERTIES:
-                palette_name = palette["id"].replace("_", "-")
+                palette_name = palette["id"].removeprefix("molecularis_").replace("_", "-")
                 property_name = prop.replace("_", "-")
                 css_name = f"--molecularis-{palette_name}-{property_name}"
                 lines.append(f"  {css_name}: {palette[prop]};")
