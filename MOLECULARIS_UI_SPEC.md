@@ -1,4 +1,4 @@
-# KINETICS — UI/UX master specification index
+# MOLECULARIS — UI/UX master specification index
 
 **Current visual authority:** Owner-supplied Premium Minimal Monochrome Design System — V1 (D-024, 2026-11-17).  
 **Platform:** Native Android Jetpack Compose.  
@@ -13,7 +13,7 @@ This file is an index, not a competing design specification. The 20-section owne
 - 4 dp spacing system, restrained radii, precise component heights and native mobile behavior.
 - Refined sans-serif typography, tabular statistics and system font scaling.
 - Thin line icons, subtle separators, balanced whitespace and no decorative clutter.
-- Actual KINETICS workflows only: Home, Work, Explore, Settings, real local lock and supported research operations.
+- Actual MOLECULARIS workflows only: Home, Work, Explore, Settings, real local lock and supported research operations.
 
 ## Product truth
 - Home counts and activity derive from persisted ResearchStore jobs.

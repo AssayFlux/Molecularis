@@ -1,4 +1,4 @@
-# Kinetics — Decision Log
+# Molecularis — Decision Log
 Open questions are not decisions. Record date, context, options, choice, consequences and approver. Changes to direction, scope, language, engine tier, license, data source or regulatory posture require an entry.
 
 ## Decision register
@@ -11,7 +11,7 @@ Open questions are not decisions. Record date, context, options, choice, consequ
 | D-004 | 2026-11-07 | Clinical advisory board/advisers | Approved — defer recruitment until software is more mature; P0 remains blocked pending qualified advisers | Project owner |
 | D-005 | 2026-11-07 | Gene-scope breadth | Approved strategic direction — both a comprehensive PGx gene panel and a broad cross-domain gene catalogue; exact inventories and rollout are staged by evidence | Project owner |
 | D-006 | 2026-11-07 | Target Android devices/minimum support matrix | Approved — Android 10+ (API 29), 64-bit ARM; low-end, mid-range and flagship test tiers | Project owner |
-| D-007 | 2026-11-07 | Source-master archival | Resolved operationally — reconstructed from owner's complete chat-supplied master at docs/origin/KINETICS_MASTER.md; not represented as a Git move | Owner instruction |
+| D-007 | 2026-11-07 | Source-master archival | Resolved operationally — reconstructed from owner's complete chat-supplied master at docs/origin/MOLECULARIS_MASTER.md; not represented as a Git move | Owner instruction |
 | D-008 | 2026-11-07 | Authorization to execute R1–R3 | Approved — proceed sequentially, subject to each phase's evidence, safety and exit gates; not a waiver or completion sign-off | Project owner |
 | D-009 | 2026-11-08 | Parallel Track S implementation sequencing | Approved — begin independently implementable S1 preparation while R1–R10 continue; dependent rendering and S2–S5 gates remain | Project owner |
 | D-018 | 2026-11-09 | Engineering language ownership and integration standard | Approved — owner-directed target stack and shared JSON Schema contract standard | Project owner |
@@ -22,7 +22,7 @@ Open questions are not decisions. Record date, context, options, choice, consequ
 | D-025 | 2026-11-18 | Open engineering and institutional research-testing scope | Approved — owner declares institutional ethics approval obtained and authorizes patient-data research testing within its exact scope; approval record pending attachment; clinical deployment remains separate | Project owner |
 
 ## D-000 — Direction baseline (approved)
-- Context: Owner supplied complete Kinetics master and instructed work to follow Parts 1–18 with approval gates.
+- Context: Owner supplied complete Molecularis master and instructed work to follow Parts 1–18 with approval gates.
 - Options: (a) adopt master and derive living direction files; (b) implement without controlled baseline.
 - Choice: (a), approved by the project owner in chat on 2026-11-07.
 - Consequences: R0 is current workstream; no scientific claims or clinical features without evidence/gates. Master is historical source; NORTH_STAR/ROADMAP/DECISIONS become operational source of truth after approval.
@@ -36,7 +36,7 @@ Open questions are not decisions. Record date, context, options, choice, consequ
 
 ## D-004 — Clinical adviser timing (approved)
 - Date: 2026-11-07.
-- Context: Decide when to recruit clinical advisers for Kinetics' possible future clinical/PGx work.
+- Context: Decide when to recruit clinical advisers for Molecularis' possible future clinical/PGx work.
 - Options considered: formal advisory board early; recruit one adviser first; defer advisers until software is more mature; remain research-only indefinitely.
 - Choice: Defer all clinical adviser recruitment until the software is more mature (owner selected option 3).
 - Consequences: Do not spend effort recruiting a clinical advisory board during the current R1 engineering-feasibility phase. Revisit adviser recruitment after the research platform reaches a meaningful maturity milestone (target review point: after R3), and before P0, PGx gene-set selection, patient-related workflows, clinical studies or any clinical-scope implementation. P0 remains blocked until qualified advisers and all other required legal, ethics, regulatory, QMS and evidence prerequisites are satisfied. This timing decision does not authorize patient data, clinical features or clinical claims; Research Mode remains the only public mode and Clinical Decision Support Mode remains disabled. If the project approaches a gated activity earlier than expected, pause and recruit/consult qualified advisers before proceeding.
@@ -44,7 +44,7 @@ Open questions are not decisions. Record date, context, options, choice, consequ
 
 ## D-003 — Research-paper strategy (approved)
 - Date: 2026-11-07.
-- Context: Choose a publication strategy that is credible, evidence-led and manageable across Kinetics' broad scientific scope.
+- Context: Choose a publication strategy that is credible, evidence-led and manageable across Molecularis' broad scientific scope.
 - Options considered: software/methods paper; bioinformatics application paper; broad multidisciplinary paper; multiple papers over time.
 - Choice: Multiple papers over time (owner selected option 4).
 - Consequences: The initial publication should focus on the platform/software/methods and be attempted only when R1–R3 provide sufficient reproducible implementation, validation and benchmark evidence. Later domain-specific papers may be developed separately when each domain has independently validated workflows and appropriate reference comparisons. Do not combine unsupported capabilities into broad claims or invent results. Venue selection, author order, affiliations, funding, competing interests and manuscript claims require later owner review against the venue's then-current requirements. The assistant should guide the owner through these decisions at relevant milestones; this does not replace owner approval or scientific peer review.
@@ -52,7 +52,7 @@ Open questions are not decisions. Record date, context, options, choice, consequ
 
 ## D-002 — Target jurisdictions (approved strategic scope)
 - Date: 2026-11-07.
-- Context: Establish the intended geographic ambition for Kinetics, including the possibility of future clinical functionality.
+- Context: Establish the intended geographic ambition for Molecularis, including the possibility of future clinical functionality.
 - Options considered: India-first; India + US; India + EU/UK; global research-only; global including future clinical use.
 - Choice: Global scope, including future clinical use (owner selected option 5).
 - Consequences: The long-term product ambition is international, and future clinical use may be pursued. This is not a finding of legal compliance, regulatory clearance, market authorisation or permission to process patient data in any country. Research Mode remains the only public mode; Clinical Decision Support Mode remains disabled. Before any patient-data workflow, clinical feature, clinical study or market entry, identify each relevant jurisdiction and obtain qualified local privacy, health-data, medical-device/software, research-ethics and other applicable advice/approvals. P0 and all existing clinical, ethics, security and evidence gates remain mandatory. No single global approval is presumed.
@@ -93,7 +93,7 @@ Open questions are not decisions. Record date, context, options, choice, consequ
 
 
 ## D-009 — UI/UX master specification (2026-11-08)
-- Context: Owner supplied `KINETICS_UI_SPEC.md` and instructed parallel Track U and R0–R10 work.
+- Context: Owner supplied `MOLECULARIS_UI_SPEC.md` and instructed parallel Track U and R0–R10 work.
 - Choice: Adopt the UI specification as governing UI contract and execute U0 foundations now.
 - Visual direction: NOT APPROVED. Three neutral proposals (Precision Lab, Field Notes, Dark Instrument) are studies only; owner selection is required before theme lock.
 - Brand: Owner assets only. Existing `Assets/Brand Logo.svg` is preserved but not assumed to be approved app/brand master. Placeholders are development-only and block release.
@@ -136,8 +136,8 @@ Open questions are not decisions. Record date, context, options, choice, consequ
 
 
 ## D-013 — Owner-supplied application UI reference designs (2026-11-08)
-- Context: Owner added two visual reference assets to the repository: `Assets/App UI - Dashboard Design.jpg` and `Assets/App UI - Login Page Design.jpg`. The owner states these represent the design language they like and wants the Kinetics application UI to follow that language.
-- Choice: Treat both images as first-class owner-supplied visual references for the Kinetics product UI. Apply their visual language consistently across dashboard, authentication/onboarding, navigation, cards, typography, spacing, colour, iconography and interaction patterns where the references provide evidence. Preserve the original image files unchanged. Scientific workflow clarity, accessibility, responsive behaviour, offline-first operation and existing brand-asset constraints remain mandatory.
+- Context: Owner added two visual reference assets to the repository: `Assets/App UI - Dashboard Design.jpg` and `Assets/App UI - Login Page Design.jpg`. The owner states these represent the design language they like and wants the Molecularis application UI to follow that language.
+- Choice: Treat both images as first-class owner-supplied visual references for the Molecularis product UI. Apply their visual language consistently across dashboard, authentication/onboarding, navigation, cards, typography, spacing, colour, iconography and interaction patterns where the references provide evidence. Preserve the original image files unchanged. Scientific workflow clarity, accessibility, responsive behaviour, offline-first operation and existing brand-asset constraints remain mandatory.
 - Boundary: Do not infer detailed visual properties from filenames or replace the reference designs with the existing generic theme proposals. The binary assets are present in the repository, but direct visual inspection is still required before extracting exact tokens or declaring a visual match. The final implementation must be reviewed against the images and validated with real screenshots across supported window classes.
 - Approver: Owner explicitly confirmed this preference in project conversation on 2026-11-08.
 - Evidence: The two repository assets listed above; visual comparison and screenshot evidence pending.
@@ -153,14 +153,14 @@ Open questions are not decisions. Record date, context, options, choice, consequ
 - Evidence: Owner dashboard reference image and chat instruction; login reference and screenshot comparison remain pending.
 
 
-## D-015 — Owner-approved Kinetics Light Classic visual system (2026-11-08)
+## D-015 — Owner-approved Molecularis Light Classic visual system (2026-11-08)
 - Context: Owner reviewed the six-screen visual concept (splash, login, dashboard carousel, navigation drawer, profile and appearance) and explicitly approved it with “Love it” and directed that the new design be documented and implemented carefully.
-- Choice: Adopt the visual system in `docs/ui/kinetics-visual-design-system.md` as the current product UI authority. Light Classic is the default: warm ivory/cream, deep maroon, restrained gold and peacock teal; retain a coherent Dark Classic and System appearance. Preserve the reference composition: rounded surfaces, prominent central horizontal workspace carousel with adjacent cards peeking, pagination, generous spacing and stacked real-data cards. Use culturally respectful, attributed motifs only after their dedicated evidence gates.
+- Choice: Adopt the visual system in `docs/ui/molecularis-visual-design-system.md` as the current product UI authority. Light Classic is the default: warm ivory/cream, deep maroon, restrained gold and peacock teal; retain a coherent Dark Classic and System appearance. Preserve the reference composition: rounded surfaces, prominent central horizontal workspace carousel with adjacent cards peeking, pagination, generous spacing and stacked real-data cards. Use culturally respectful, attributed motifs only after their dedicated evidence gates.
 - Typography roles: Great Vibes (limited brand-script candidate only if no existing logo wordmark), Cormorant Garamond (display headings), IBM Plex Sans (functional UI/body), IBM Plex Mono (scientific data/code); Indic-script fallback must be verified. Font binaries remain subject to exact version/licence/glyph/size/offline verification before bundling.
 - Constraints: Existing Compose architecture, capability registry, real-data-only UI, owner logo bytes, accessibility, privacy, security, offline-first policy, research-only public mode and all R/S/I/P gates remain in force. The generated showcase is concept art, not implementation or screenshot evidence.
 - Supersedes: D-009's unresolved three-proposal visual gate; D-010/D-011's dark-futuristic/Obsidian-Cyan default and neon-first direction; D-014's Light Classic navy/teal palette and Allura/Inter/JetBrains Mono typography proposal where inconsistent with D-015. D-012 responsive shell strategy and D-013 owner layout references remain active where compatible. Earlier entries remain in the log for audit history, not as current UI instructions.
 - Approver: Project owner, explicit visual approval and implementation instruction in chat on 2026-11-08.
-- Evidence: Owner-approved concept review in project conversation; canonical specification at `docs/ui/kinetics-visual-design-system.md`. Implementation, screenshots, contrast and device validation remain open.
+- Evidence: Owner-approved concept review in project conversation; canonical specification at `docs/ui/molecularis-visual-design-system.md`. Implementation, screenshots, contrast and device validation remain open.
 
 ## UI decision supersession register
 The following historical decisions are retained for auditability but are no longer active design instructions: D-009 (three-proposal visual gate), D-010 (dark-first preference), D-011 (Obsidian Cyan default), and D-014 (previous Light Classic palette/type proposal). D-015 is the current visual authority. D-012 adaptive navigation and D-013 owner layout-reference decisions remain active unless specifically contradicted by D-015.
@@ -170,7 +170,7 @@ The following historical decisions are retained for auditability but are no long
 - Context: Owner found that successful APK compilation had been mistaken for a working application: D-015 was not fully implemented, authentication/biometrics were absent, and several options were inert or informational.
 - Choice: Approved. Implement substantial vertical slices, build arm64 APK/AAB, test affected systems and regression suite, inspect/install the exact artifact where hardware permits, fix failures, and repeat. Testing is part of every cycle, not deferred to the end. Record source commit and artifact SHA-256.
 - Active design: D-015 Light Classic is the sole current UI authority, with Dark Classic and System. Earlier neon/Obsidian Cyan and pre-D-015 palette proposals are discontinued for active implementation and retained only as historical audit records.
-- Authentication boundary: No fictitious cloud/account authentication. Local app-lock must be distinguished from account identity and have secure key lifecycle/recovery. Biometric unlock uses AndroidX BiometricPrompt, runtime capability/enrollment checks, explicit opt-in, credential fallback, lockout/error handling and Keystore-backed cryptographic operations where appropriate. Kinetics never stores biometric templates or passwords.
+- Authentication boundary: No fictitious cloud/account authentication. Local app-lock must be distinguished from account identity and have secure key lifecycle/recovery. Biometric unlock uses AndroidX BiometricPrompt, runtime capability/enrollment checks, explicit opt-in, credential fallback, lockout/error handling and Keystore-backed cryptographic operations where appropriate. Molecularis never stores biometric templates or passwords.
 - Functionality: Every visible control executes a real action, navigates to an implemented screen, or is visibly disabled with an explanation. Research tools are launchable only with registry capability, input contract, dispatcher, result model/viewer and tests. No fake metrics, authentication success or scientific output.
 - Evidence: Distinguish source implementation, automated tests, reference validation, CI build, emulator verification and physical-device verification. Build success alone is not a tested app. Missing hardware tests remain blockers.
 - Consequences: ROADMAP contains the mandatory cycle. UI screen map, quality report, registry and session log must be updated with each cycle.
@@ -232,15 +232,15 @@ The following historical decisions are retained for auditability but are no long
 - Date: 2026-11-17.
 - Context: During Track U direction review, the project owner supplied the complete 20-section Premium Minimal Monochrome Design System — V1 and explicitly identified it as the required application UI prompt. This is a new, direct owner instruction for the active UI implementation.
 - Choice: Supersede D-015 only for the active UI visual language and composition where they conflict. Adopt the owner's V1 monochrome specification: 393 × 852 dp reference viewport; responsive 360 × 800, 430 × 932 and 600 dp+ layouts; 4 dp spacing rhythm; supplied typography scale; exact light palette (#FAF9F6, #FFFFFF, #F2F1ED, #171717, #686868, #A3A3A3, #E5E3DE, #ECEAE6, #292929); exact dark palette (#121212, #1B1B1B, #242424, #F5F5F5, #A5A5A5, #686868, #333333, #292929, #E8E8E8); semantic status colours only; System/Light/Dark appearance; restrained component radii; application bar, drawer, button, input, card, list, icon, dialog, bottom-sheet, bottom-navigation and avatar measurements; safe-area, interaction, accessibility and responsive rules.
-- Retained constraints: D-015 remains historical evidence and its non-conflicting requirements remain active: preserve owner-supplied artwork byte-for-byte; use native Jetpack Compose; retain real Kinetics workflows and Research Mode boundaries; do not invent accounts, jobs, metrics, results, scientific dispatchers or device support; keep typography/font licensing checks; do not enable unreviewed decorative assets. Existing scientific, privacy, security, licensing, architecture and phase gates are unchanged.
-- Consequences: docs/ui/kinetics-visual-design-system.md, docs/ui/ui-spec.md, KINETICS_UI_SPEC.md, tokens/generator, Compose primitives, screen implementations, screenshots, contrast/accessibility tests and roadmap evidence must be reconciled to V1. No claim of implementation or visual verification follows from this decision alone.
+- Retained constraints: D-015 remains historical evidence and its non-conflicting requirements remain active: preserve owner-supplied artwork byte-for-byte; use native Jetpack Compose; retain real Molecularis workflows and Research Mode boundaries; do not invent accounts, jobs, metrics, results, scientific dispatchers or device support; keep typography/font licensing checks; do not enable unreviewed decorative assets. Existing scientific, privacy, security, licensing, architecture and phase gates are unchanged.
+- Consequences: docs/ui/molecularis-visual-design-system.md, docs/ui/ui-spec.md, MOLECULARIS_UI_SPEC.md, tokens/generator, Compose primitives, screen implementations, screenshots, contrast/accessibility tests and roadmap evidence must be reconciled to V1. No claim of implementation or visual verification follows from this decision alone.
 - Approver: Project owner, explicit instruction in chat on 2026-11-17.
 
 
 ## D-025 — Owner authorization for full engineering and institutional research testing
 
 **Date:** 2026-11-18  
-**Decision:** Open blanket engineering-development blockers, including the P0 development/testing blocker, and proceed with the complete KINETICS implementation. The project owner declares that institutional ethics approval has been obtained and expressly authorizes testing with patient data within the scope of that approval.  
+**Decision:** Open blanket engineering-development blockers, including the P0 development/testing blocker, and proceed with the complete MOLECULARIS implementation. The project owner declares that institutional ethics approval has been obtained and expressly authorizes testing with patient data within the scope of that approval.  
 **Consequences:** Engineering may implement and test the full software system. Patient-data testing must remain within the exact institutional protocol, consent/waiver, approved environment and applicable law. Patient data must never be placed in source control, GitHub issues/PRs, CI, fixtures, logs or public artifacts. Clinical diagnosis, treatment/dosing recommendations, patient-facing clinical decision support and production clinical deployment are not implicitly approved by this engineering decision.  
 **Approval record:** Institution, committee, approval/reference number, date, protocol version and conditions are pending attachment. The repository records the owner's declaration and does not claim independent verification.  
 **Approver:** Project owner (explicit instruction in project conversation).
@@ -250,7 +250,7 @@ The following historical decisions are retained for auditability but are no long
 - Date: 2026-11-20.
 - Status: **Proposed — owner decision pending.**
 - Context: The project needs a controlled plan for integrating resource-intensive scientific engines and desktop compute without weakening the existing Android, scientific, privacy, security, licensing or release boundaries.
-- Proposal: Use Android as the research interface and Linux x86_64 as the first reference desktop compute host. Extend the existing bounded remote-worker approach through versioned job/capability/result/provenance contracts, explicit authenticated pairing, TLS for non-loopback connections, isolated pinned engine profiles, resource quotas, cancellation, offline package import/export and user-visible data-transfer preview. Integrate third-party projects selectively through Kinetics-owned adapters rather than embedding complete upstream applications by default.
+- Proposal: Use Android as the research interface and Linux x86_64 as the first reference desktop compute host. Extend the existing bounded remote-worker approach through versioned job/capability/result/provenance contracts, explicit authenticated pairing, TLS for non-loopback connections, isolated pinned engine profiles, resource quotas, cancellation, offline package import/export and user-visible data-transfer preview. Integrate third-party projects selectively through Molecularis-owned adapters rather than embedding complete upstream applications by default.
 - Proposed integration domains: shared scientific data foundation; desktop interoperability; structural biology and visualization; optional protein-model profiles; cheminformatics; molecular simulation; genomics and nucleic-acid design; reproducible workflow and notebook experience; cross-platform and release validation.
 - Consequences if approved: The companion planning documents under `docs/` become the working integration plan. Each engine remains a candidate until its exact upstream version, licence/model/data terms, runtime, adapter, scientific benchmark and security review are documented. The current approved track order and two-step build/audit gates remain controlling; this proposal does not reorder tracks or authorize parallel execution.
 - Boundaries: This proposal does not enable remote compute, arbitrary command execution, automatic downloads, clinical functionality, patient-data processing beyond existing approvals, third-party redistribution or any engine's scientific acceptance. Existing privacy, ethics, security, licensing, scientific validation and release gates remain mandatory.

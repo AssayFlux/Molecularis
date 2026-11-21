@@ -1,4 +1,4 @@
-# Kinetics — North Star
+# Molecularis — North Star
 
 **Status:** Owner-approved baseline  
 **Last reviewed:** 2026-11-07  
@@ -6,7 +6,7 @@
 
 ## Mission
 
-Build Kinetics as an offline-first, Android-native scientific workbench that makes validated bioinformatics, structural biology, chemistry, enzyme-kinetics, omics and (only through a separately gated path) precision-medicine research tools auditable, reproducible and useful on commodity Android devices, with an optional authenticated and encrypted Remote Compute Node for workloads that do not fit on-device.
+Build Molecularis as an offline-first, Android-native scientific workbench that makes validated bioinformatics, structural biology, chemistry, enzyme-kinetics, omics and (only through a separately gated path) precision-medicine research tools auditable, reproducible and useful on commodity Android devices, with an optional authenticated and encrypted Remote Compute Node for workloads that do not fit on-device.
 
 ## Research thesis
 
