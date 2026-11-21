@@ -108,6 +108,31 @@ Keep visualization separate from scientific computation and validation. A viewer
 
 Evaluate the existing offline viewer assets and suitable upstream components, including Mol*, through component-level compatibility, licence, performance and accessibility tests. Large structures and complex scenes require measured memory, rendering and interaction targets.
 
+### 5.5 Core-engine-first, rule-driven scientific creation
+
+**Owner direction:** Molecularis is to become an independent scientific creation platform across *all* scientific domains and projects in scope—not a collection of wrappers that depend on third-party databases or hosted services to produce answers. The upstream scientific projects named in the integration inventory are foundations from which Molecularis may learn, adapt, benchmark or selectively reuse computational engines and algorithms. They do not define Molecularis' product architecture, scientific semantics or long-term dependency model.
+
+The intended development sequence is:
+
+1. **Extract/adapt core computational capability:** inspect upstream source, methods, interfaces, build requirements and licences; identify the useful algorithms, numerical kernels, parsers, simulation engines, inference runtimes and validation methods. Reuse or adapt only where technically and legally permitted, preserving required notices and attribution. Do not copy upstream code wholesale or assume that source-code rights include model weights, parameter sets or datasets.
+2. **Build Molecularis-owned core engines:** place selected capabilities behind Molecularis-owned, versioned interfaces and portable scientific data contracts. Keep upstream implementations replaceable. Where an upstream model is learned or requires specialized parameterization, treat the model and its weights as an optional inference capability; do not misrepresent it as a hand-written rule or claim equivalent capability without independent evidence.
+3. **Build the Molecularis scientific framework:** establish common representations for scientific entities, units, coordinate systems, constraints, objectives, transformations, uncertainty, execution and provenance across every supported domain.
+4. **Build the Molecularis rule and method system:** provide authoring, versioning, composition, review and testing of domain rules, equations, physical models, chemical constraints, algorithms, boundary conditions and optimization objectives. Rules must be explicit, traceable and scoped; they must not be invented or promoted to scientific fact without domain evidence and review.
+5. **Generate scientific artifacts from requirements:** use the framework, rules and core engines to construct candidate sequences, molecular graphs, 3D structures, conformations, simulations, analyses and other outputs according to user-defined goals and constraints.
+6. **Validate independently:** evaluate generated outputs with separate validators, numerical checks, reference methods, benchmarks and—where appropriate—experimental evidence. A generator must not be its own sole validator. Passing computational constraints does not prove experimental truth, biological function or clinical validity.
+
+The product must support both **generation** and **analysis of imported material**. Reference datasets, genome assemblies, templates, model weights, force-field parameters and other data resources may still be necessary for particular methods; they are explicit, versioned, user-controlled inputs or optional resources—not a universal prerequisite or the source of Molecularis' scientific logic. A method that genuinely requires such resources must declare exactly which resources it needs and why.
+
+This direction applies to every project/domain in the Molecularis scope, including sequence and genomics, proteins, structural biology, chemistry, molecular dynamics, DNA/RNA design and thermodynamics, omics, phylogeny and future scientific domains. No individual upstream tool is to become a mandatory dependency of the whole application.
+
+**Architecture consequences:**
+- Define Molecularis-owned interfaces and canonical data contracts before expanding engine integrations.
+- Separate rule specifications, rule execution, candidate generation, optimization, validation, visualization and provenance.
+- Keep third-party engines as optional adapters or replaceable backends; prefer native Molecularis implementations when justified by capability, correctness, licensing and maintenance evidence.
+- Track upstream code, algorithms, models, weights, parameter sets and datasets as distinct dependency/licensing objects.
+- Record for every generated artifact the requirements, rulebook versions, method/engine versions, parameters, seeds, resource manifests, execution environment, validation results and limitations.
+- Never equate a generated 3D model with a physically stable or experimentally confirmed structure; report what was computed and what remains unverified.
+
 ## 6. Execution roadmap
 
 Phases are dependency gates, not calendar promises. Each phase is planned, implemented, tested and reviewed against explicit exit criteria.
@@ -169,6 +194,10 @@ Work:
 ### Phase 4 — Scientific service delivery
 
 **Objective:** turn repository capabilities into dependable, user-facing scientific workflows.
+
+**Core-engine and rule-framework requirement:** All service work in this phase must follow Section 5.5. For each domain, first identify the reusable computational kernel(s), then define the Molecularis-owned contracts and rule specifications, then implement generation/analysis workflows and independent validation. Do not make third-party database retrieval the default product behavior. Explicitly document when a specific algorithm requires a reference assembly, template, model weights, force-field parameters or other external resource.
+
+The initial engine inventory includes the named upstream projects recorded in the scientific integration register (including Biopython, Biotite, Parasail, pysam/HTSlib, Samtools, BCFtools, ESM, AlphaFold, Mol*, MolProbity, RDKit, AutoDock Vina, OpenMM, GROMACS, SciPy, NUAD, NUPACK and Galaxy). This is an inventory of candidate capabilities, not a commitment to embed every project or redistribute its assets. Galaxy is an optional external workflow interoperability target; it is not a required core scientific engine.
 
 Recommended order, subject to Phase 0 evidence and dependency readiness:
 
@@ -308,5 +337,7 @@ A feature or release is complete only when all applicable conditions are met:
 6. Select the first scientific vertical slice using implementation quality, user value, reference data and validation cost.
 7. Deliver the selected workflow end-to-end before expanding the service catalogue.
 8. Establish continuous security, accessibility, licence and scientific-evidence gates from the first release candidate.
+9. Define Molecularis-owned scientific object/constraint contracts, a rule-authoring and versioning model, candidate-generation interfaces and independent validation interfaces; apply this foundation across every scientific domain.
+10. For each upstream project, record the extractable computational capability separately from code, model-weight, parameter and dataset rights; keep adapters optional and replaceable.
 
 **Product success is a dependable, reproducible scientific research application across desktop and mobile—not a count of screens, source files or registry entries.**
