@@ -296,5 +296,5 @@ def pharmacogenomics_rulebook(
         id=PGX_RULEBOOK_ID, version="1.0.0",
         operations=(Operation(id=f"{operation}-pharmacogenomics",
                               capability_id=_CAPS[operation], inputs=inputs,
-                              output="pharmacogenomics_result"),),
+                              output="pharmacogenomics_result", parameters={}),),
     )
