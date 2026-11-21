@@ -19,6 +19,7 @@ def align_pairwise_biopython(
     gap_open_score: float = -5.0,
     gap_extend_score: float = -1.0,
     max_sequence_length: int = 100_000,
+    max_alignment_cells: int = 4_000_000,
 ) -> dict[str, object]:
     """Align two sequences with Biopython's PairwiseAligner.
 
@@ -44,6 +45,12 @@ def align_pairwise_biopython(
         or max_sequence_length < 1
     ):
         raise ValueError("max_sequence_length must be a positive integer")
+    if (
+        isinstance(max_alignment_cells, bool)
+        or not isinstance(max_alignment_cells, int)
+        or max_alignment_cells < 1
+    ):
+        raise ValueError("max_alignment_cells must be a positive integer")
     if not isinstance(sequence_a, str) or not isinstance(sequence_b, str):
         raise TypeError("sequences must be strings")
     a, b = sequence_a.upper(), sequence_b.upper()
@@ -51,6 +58,8 @@ def align_pairwise_biopython(
         raise ValueError("Both sequences must be non-empty")
     if len(a) > max_sequence_length or len(b) > max_sequence_length:
         raise ValueError("Sequence exceeds configured max_sequence_length")
+    if (len(a) + 1) * (len(b) + 1) > max_alignment_cells:
+        raise ValueError("Alignment exceeds configured max_alignment_cells")
 
     try:
         import Bio
