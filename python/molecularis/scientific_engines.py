@@ -81,7 +81,7 @@ def discover_engine(engine_id: str) -> dict[str, object]:
     executables = {
         "bcftools": ("bcftools",),
         "samtools": ("samtools",),
-        "molprobity": ("phenix.molprobity", "molprobity"),
+        "molprobity": ("clashscore", "mp_geometry", "residue-analysis", "phenix.molprobity"),
         "gromacs": ("gmx", "gmx_mpi"),
     }
     if normalized == "htslib":
