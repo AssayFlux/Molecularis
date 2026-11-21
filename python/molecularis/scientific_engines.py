@@ -24,8 +24,8 @@ class EngineSpec:
     limitations: tuple[str, ...]
 
 
-# The 18 requested engines are listed individually. HTSlib is exposed through pysam;
-# Mol* is the existing offline viewer asset, not a Python dependency.
+# All 19 named projects are listed; pysam and HTSlib are one paired stack among
+# the 18 integration targets. Mol* is an existing offline viewer asset.
 ENGINE_SPECS: tuple[EngineSpec, ...] = (
     EngineSpec("biopython", "sequence/alignment/structure", "integrated", "python>=3.10", "molecularis.alignment_biopython", ("File-level licence review and Android runtime proof remain open.",)),
     EngineSpec("biotite", "sequence/structure", "integrated", "isolated Python>=3.12 profile", "molecularis.structure_biotite", ("Text mmCIF only; BinaryCIF and assembly expansion remain open.",)),
