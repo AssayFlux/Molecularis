@@ -1,5 +1,8 @@
 id: "kinetics"
 name: "Kinetics"
+roadmap_step: "I"
+roadmap_order: 9
+depends_on: ["molecular","simulation"]
 status: "scaffold"
 completion_status: "not_implemented"
 primary_languages: ["cpp", "python", "rust"]

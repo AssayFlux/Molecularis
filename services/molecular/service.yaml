@@ -1,5 +1,8 @@
 id: "molecular"
 name: "Molecular"
+roadmap_step: "A"
+roadmap_order: 1
+depends_on: []
 status: "scaffold"
 completion_status: "not_implemented"
 primary_languages: ["cpp", "python", "rust"]

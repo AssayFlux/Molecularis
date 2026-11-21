@@ -1,5 +1,8 @@
 id: "dna-rna"
-name: "Dna Rna"
+name: "DNA/RNA"
+roadmap_step: "G"
+roadmap_order: 7
+depends_on: ["molecular","sequence","structure"]
 status: "scaffold"
 completion_status: "not_implemented"
 primary_languages: ["cpp", "python", "rust"]

@@ -1,5 +1,8 @@
 id: "simulation"
 name: "Simulation"
+roadmap_step: "H"
+roadmap_order: 8
+depends_on: ["molecular","structure","chemistry"]
 status: "scaffold"
 completion_status: "not_implemented"
 primary_languages: ["cpp", "python", "rust"]

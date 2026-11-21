@@ -1,5 +1,8 @@
 id: "phylogeny"
 name: "Phylogeny"
+roadmap_step: "K"
+roadmap_order: 11
+depends_on: ["sequence","genomics"]
 status: "scaffold"
 completion_status: "not_implemented"
 primary_languages: ["cpp", "python", "rust"]

@@ -1,5 +1,8 @@
 id: "workflows"
 name: "Workflows"
+roadmap_step: "N"
+roadmap_order: 14
+depends_on: ["molecular","sequence","structure","chemistry","protein","genomics","dna-rna","simulation","kinetics","omics","phylogeny","pharmacogenomics","cohorts"]
 status: "scaffold"
 completion_status: "not_implemented"
 primary_languages: ["cpp", "python", "rust"]

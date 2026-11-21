@@ -1,5 +1,8 @@
 id: "cohorts"
 name: "Cohorts"
+roadmap_step: "M"
+roadmap_order: 13
+depends_on: ["genomics","omics","pharmacogenomics"]
 status: "scaffold"
 completion_status: "not_implemented"
 primary_languages: ["cpp", "python", "rust"]

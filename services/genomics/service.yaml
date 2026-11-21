@@ -1,5 +1,8 @@
 id: "genomics"
 name: "Genomics"
+roadmap_step: "F"
+roadmap_order: 6
+depends_on: ["sequence"]
 status: "scaffold"
 completion_status: "not_implemented"
 primary_languages: ["cpp", "python", "rust"]

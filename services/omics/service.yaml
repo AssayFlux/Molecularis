@@ -1,5 +1,8 @@
 id: "omics"
 name: "Omics"
+roadmap_step: "J"
+roadmap_order: 10
+depends_on: ["sequence","genomics","protein","kinetics"]
 status: "scaffold"
 completion_status: "not_implemented"
 primary_languages: ["cpp", "python", "rust"]

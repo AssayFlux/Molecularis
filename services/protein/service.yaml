@@ -1,5 +1,8 @@
 id: "protein"
 name: "Protein"
+roadmap_step: "E"
+roadmap_order: 5
+depends_on: ["sequence","structure","chemistry"]
 status: "scaffold"
 completion_status: "not_implemented"
 primary_languages: ["cpp", "python", "rust"]

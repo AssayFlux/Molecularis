@@ -1,5 +1,8 @@
 id: "pharmacogenomics"
 name: "Pharmacogenomics"
+roadmap_step: "L"
+roadmap_order: 12
+depends_on: ["genomics","omics"]
 status: "scaffold"
 completion_status: "not_implemented"
 primary_languages: ["cpp", "python", "rust"]

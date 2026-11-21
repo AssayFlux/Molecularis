@@ -1,5 +1,8 @@
 id: "structure"
 name: "Structure"
+roadmap_step: "C"
+roadmap_order: 3
+depends_on: ["molecular","sequence"]
 status: "scaffold"
 completion_status: "not_implemented"
 primary_languages: ["cpp", "python", "rust"]

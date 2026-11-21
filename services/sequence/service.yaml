@@ -1,5 +1,8 @@
 id: "sequence"
 name: "Sequence"
+roadmap_step: "B"
+roadmap_order: 2
+depends_on: ["molecular"]
 status: "scaffold"
 completion_status: "not_implemented"
 primary_languages: ["cpp", "python", "rust"]
