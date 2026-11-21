@@ -1,0 +1,4 @@
+# Optional host-side sequence/alignment reference engine.
+# Keep separate from base runtime and Android packaging.
+biopython==1.88
+numpy==1.26.2
