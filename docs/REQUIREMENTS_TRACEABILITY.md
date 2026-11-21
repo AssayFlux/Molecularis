@@ -1,6 +1,6 @@
 # Molecularis — Legacy Requirements and Repository Traceability
 
-**Audit baseline:** CORE after PR #9 merge, 2026-11-21. **Purpose:** trace original owner requirements and R/S/I/P/G/U implementation records into the new desktop-first plan. This is a requirements map, not an implementation or validation claim.
+**Audit baseline:** repository source baseline CORE commit `dbda3496386edf46270d54296b2204a53d7de573`; planning updates are layered on top of PR #9. **Purpose:** trace original owner requirements and R/S/I/P/G/U implementation records into the new desktop-first plan. This is a requirements map, not an implementation or validation claim.
 
 ## 1. Source hierarchy
 
