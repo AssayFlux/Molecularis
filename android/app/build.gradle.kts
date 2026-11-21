@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "org.assayflux.kinetics"
+    namespace = "org.assayflux.molecularis"
     compileSdk = 36
     ndkVersion = "28.2.13676358"
 
