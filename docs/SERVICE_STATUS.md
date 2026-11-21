@@ -36,7 +36,7 @@ A scaffold or specification does not imply implementation or scientific validati
 | G | DNA/RNA | Canonical DNA/RNA artifacts, transcription, reverse transcription, explicit translation, oligo screening and Nussinov RNA fold; existing sequence/genetic-code primitives reused | Python v1 native operations | MSDE artifact lifecycle and eight capabilities | DRNA-001–DRNA-007 executable | Engineering implementation complete; CI run #44892707015 green; university review deferred |
 | H | Simulation | Canonical NVT/NPT protocol artifacts, energy-series analysis, hash-pinned GROMACS TPR runner integration and existing OpenMM CPU replica runner | Python v1 | MSDE lifecycle and three capabilities; OpenMM direct trusted-object API | SIM-001–SIM-007 executable | Engineering complete; CI run #44893264385 green; scientific review deferred |
 | I | Kinetics | Existing Michaelis–Menten, inhibition, fitting, bootstrap and PK/PD primitives retained; canonical reaction-network artifacts and mass-action RK4 added | Python v1 | MSDE artifact lifecycle and four capabilities | KIN-001–KIN-006 executable | Engineering complete; CI run #44894304968 green (core 702 passed/12 skipped; Chemistry 710/4; Genomics 703/11; Sequence 705/9); university review deferred |
-| J | Omics | Existing modules; audit pending | Not started | Not started | Not operational | Planned |
+| J | Omics | Existing CPM/CLR, Welch/NB2 differential expression, diversity, growth and correlation primitives retained; canonical matrix artifact and MSDE service added | Python v1 | MSDE artifact lifecycle and seven capabilities | OMI-001–OMI-009 executable | Engineering implementation authored; CI verification pending; university review deferred |
 | K | Phylogeny | Existing modules; audit pending | Not started | Not started | Not operational | Planned |
 | L | Pharmacogenomics | Existing modules; audit pending | Not started | Not started | Not operational | Planned |
 | M | Cohorts | Scaffold | Not started | Not started | Not operational | Planned |
@@ -59,9 +59,9 @@ A scaffold or specification does not imply implementation or scientific validati
 
 ## Active phase and next exact work
 
-**Active phase:** Service I — Kinetics Python v1 engineering implementation complete and CI-verified in run #44894304968 (core 702 passed/12 skipped; optional Chemistry 710/4, Genomics 703/11, Sequence 705/9). University scientific review, independent solver/reference comparisons and formal freeze deferred until A–N engineering completion per owner direction. The platform is not yet a distributed, multi-language, OS-isolated production runtime.
+**Active phase:** Service J — Omics Python v1 engineering implementation authored; CI verification pending. Existing statistical primitives are retained and integrated. University scientific review, independent reference comparisons and formal freeze deferred until A–N engineering completion per owner direction. The platform is not yet a distributed, multi-language, OS-isolated production runtime.
 
-**Next:** proceed to J — Omics. Kinetics engineering CI is green; university scientific review and formal freeze remain deferred until A–N engineering completion. University-level scientific review, cross-reference testing and formal contract freezes will be conducted after the full A–N engineering build, as directed by the owner. Platform-wide recovery, backup/restore, service discovery, language conformance and isolation gates remain open.
+**Next:** verify J — Omics CI, repair failures, then proceed to K — Phylogeny. University scientific review and formal freeze remain deferred until A–N engineering completion. University-level scientific review, cross-reference testing and formal contract freezes will be conducted after the full A–N engineering build, as directed by the owner. Platform-wide recovery, backup/restore, service discovery, language conformance and isolation gates remain open.
 
 ## Reporting rule
 

@@ -25,6 +25,7 @@ Each step includes discovery, specification, native engine, runtime, Rulebook, s
 - `api/`, `schemas/` — versioned contracts.
 - `capabilities/registry.yaml` — capability inventory; registration is not proof of validation.
 - `services/kinetics/` — canonical mass-action reaction-network artifacts, bounded RK4 integration, and retained Michaelis–Menten / exploratory PK/PD primitives.
+- `services/omics/` — canonical feature-by-sample artifacts, CPM/CLR, exploratory differential analysis, diversity and cross-omics correlation.
 - `data/`, `validation/` — reference metadata and validation assets.
 - `remote-node/` — isolated remote execution component.
 - `scripts/`, `tests/` — engineering checks and automated tests.

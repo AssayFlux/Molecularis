@@ -552,6 +552,37 @@ tools:
     implementation: python/molecularis/kinetics_service.py
     evidence_level: none
 
+  - id: omics.msde_matrix
+    name: Canonical feature-by-sample Omics matrix artifact and integrity validation
+    status: implemented
+    implementation: python/molecularis/omics_service.py
+    evidence_level: none
+  - id: omics.msde_cpm
+    name: Bounded CPM normalization for raw-count matrices
+    status: implemented
+    implementation: python/molecularis/omics_service.py
+    evidence_level: none
+  - id: omics.msde_clr
+    name: Centered-log-ratio transformation for compositional matrices
+    status: implemented
+    implementation: python/molecularis/omics_service.py
+    evidence_level: none
+  - id: omics.msde_differential
+    name: Welch and exploratory NB2 differential analysis with BH correction
+    status: implemented
+    implementation: python/molecularis/omics_service.py
+    evidence_level: none
+  - id: omics.msde_diversity
+    name: Per-sample Shannon and Gini-Simpson diversity
+    status: implemented
+    implementation: python/molecularis/omics_service.py
+    evidence_level: none
+  - id: omics.msde_cross_correlation
+    name: Sample-aligned cross-omics Pearson feature correlation
+    status: implemented
+    implementation: python/molecularis/omics_service.py
+    evidence_level: none
+
 engines: []
 data_packs: []
 domains: []

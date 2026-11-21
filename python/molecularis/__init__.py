@@ -39,6 +39,7 @@ from .molecular import primer_properties, scan_spcas9_ngg
 from .molecular_model import (
     Molecule, MolecularAtom, MolecularBond, MolecularChain, MolecularResidue,
 )
+from .omics_service import OmicsDocument, ingest_omics, load_omics, register_omics_service, omics_rulebook
 from .omics import (
     negative_binomial_differential_expression,
     clr_transform, cpm, cross_omics_correlation, logistic_growth,
@@ -74,6 +75,7 @@ from .structure import (
 )
 
 __all__ = [
+    "OmicsDocument", "ingest_omics", "load_omics", "register_omics_service", "omics_rulebook",
     "ReactionNetworkDocument", "ingest_kinetics", "load_kinetics", "register_kinetics_service", "kinetics_rulebook", "simulate_reaction_network",
     "SimulationDocument", "ingest_simulation", "load_simulation", "register_simulation_service", "simulation_rulebook", "analyze_energy_series", "run_gromacs",
     "NucleicAcidDocument", "ingest_nucleic_acid", "load_nucleic_acid", "register_dna_rna_service", "dna_rna_rulebook",

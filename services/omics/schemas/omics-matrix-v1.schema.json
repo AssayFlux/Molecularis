@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "molecularis.omics-matrix.v1",
+  "title": "Molecularis Omics Matrix v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "identifier",
+    "feature_ids",
+    "sample_ids",
+    "values",
+    "assay_type",
+    "value_unit"
+  ],
+  "properties": {
+    "schema": {
+      "const": "molecularis.omics-matrix.v1"
+    },
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "feature_ids": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100000,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 256
+      }
+    },
+    "sample_ids": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 10000,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 256
+      }
+    },
+    "values": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100000,
+      "items": {
+        "type": "array",
+        "minItems": 2,
+        "maxItems": 10000,
+        "items": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "assay_type": {
+      "enum": [
+        "raw_counts",
+        "normalized",
+        "log_expression",
+        "abundance"
+      ]
+    },
+    "value_unit": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64
+    }
+  }
+}

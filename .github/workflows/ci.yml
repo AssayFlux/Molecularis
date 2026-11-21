@@ -46,6 +46,8 @@ jobs:
         run: PYTHONPATH=python python services/dna-rna/benchmarks/dna_rna_benchmark.py --length 120
       - name: Kinetics RK4 benchmark smoke
         run: PYTHONPATH=python python services/kinetics/benchmarks/kinetics_benchmark.py --steps 10000
+      - name: Omics matrix benchmark smoke
+        run: PYTHONPATH=python python services/omics/benchmarks/omics_benchmark.py --features 1000 --samples 12
       - name: Protein sequence benchmark smoke
         run: PYTHONPATH=python python services/protein/benchmarks/protein_benchmark.py --residues 10000
       - name: Chemistry graph benchmark smoke

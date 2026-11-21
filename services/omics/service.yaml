@@ -3,18 +3,15 @@ name: "Omics"
 roadmap_step: "J"
 roadmap_order: 10
 depends_on: ["sequence","genomics","protein","kinetics"]
-status: "scaffold"
-completion_status: "not_implemented"
-primary_languages: ["cpp", "python", "rust"]
+status: "implemented"
+completion_status: "engineering_implementation_ci_pending"
+primary_languages: ["python"]
 engine: "ENGINE.md"
 runtime: "RUNTIME.md"
 rulebook: "RULEBOOK.md"
 source_roots:
-  cpp: "src/cpp"
-  python: "src/python"
-  rust: "src/rust"
+  python: "python/molecularis"
 test_root: "tests"
 schema_root: "schemas"
-data_root: "data"
 benchmark_root: "benchmarks"
 external_execution_dependencies: []
