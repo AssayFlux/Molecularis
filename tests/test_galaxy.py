@@ -108,3 +108,60 @@ def test_galaxy_upload_records_file_digest_and_dataset_id(tmp_path) -> None:
     request, _ = opener.requests[0]
     assert request.get_header("Content-type").startswith("multipart/form-data")
     assert b"reads.fastq" in request.data
+
+
+def test_galaxy_downloads_output_dataset_with_digest(tmp_path) -> None:
+    import hashlib
+
+    class RawResponse:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            return False
+
+        def read(self, size=-1):
+            payload = b"scientific-result"
+            if not hasattr(self, "sent"):
+                self.sent = True
+                return payload
+            return b""
+
+    class RawOpener:
+        def open(self, request, timeout):
+            assert request.full_url.endswith("/api/datasets/dataset-1/display")
+            assert request.get_header("X-api-key") == "key"
+            return RawResponse()
+
+    destination = tmp_path / "result.tsv"
+    client = GalaxyClient("https://galaxy.example.org", "key", opener=RawOpener())
+    result = client.download_dataset("dataset-1", destination)
+    assert destination.read_bytes() == b"scientific-result"
+    assert result["sha256"] == hashlib.sha256(b"scientific-result").hexdigest()
+    assert result["retrieval_status"] == "downloaded"
+
+
+def test_galaxy_download_refuses_overwrite_and_bounds_bytes(tmp_path) -> None:
+    destination = tmp_path / "existing.bin"
+    destination.write_bytes(b"keep")
+    client = GalaxyClient("https://galaxy.example.org", "key", opener=Opener())
+    with pytest.raises(ValueError, match="must not already exist"):
+        client.download_dataset("dataset-1", destination)
+
+    class RawResponse:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            return False
+
+        def read(self, size=-1):
+            return b"0123456789"
+
+    class RawOpener:
+        def open(self, request, timeout):
+            return RawResponse()
+
+    client = GalaxyClient("https://galaxy.example.org", "key", opener=RawOpener())
+    with pytest.raises(RuntimeError, match="exceeds max_download_bytes"):
+        client.download_dataset("dataset-1", tmp_path / "too-large.bin", max_download_bytes=5)
