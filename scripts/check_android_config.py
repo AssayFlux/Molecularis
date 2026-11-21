@@ -94,7 +94,9 @@ def validate_android_config(root: Path = ROOT) -> list[str]:
     rust_toolchain = root / "rust-toolchain.toml"
     cargo_lock = root / "android/native-rust/Cargo.lock"
     rust_channel = 'channel = "1.88.0"'
-    if not rust_toolchain.is_file() or rust_channel not in rust_toolchain.read_text(encoding="utf-8"):
+    if not rust_toolchain.is_file() or (
+        rust_channel not in rust_toolchain.read_text(encoding="utf-8")
+    ):
         errors.append("Native Rust toolchain must be pinned to 1.88.0")
     if not cargo_lock.is_file():
         errors.append("Native Rust Cargo.lock is required for --locked builds")
