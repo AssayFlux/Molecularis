@@ -6,8 +6,8 @@ from pathlib import Path
 
 import pytest
 
-from kinetics.augustus import hash_augustus_species_model, run_local_augustus
-from kinetics.sequence import SequenceRecord
+from molecularis.augustus import hash_augustus_species_model, run_local_augustus
+from molecularis.sequence import SequenceRecord
 
 
 def _fixtures(tmp_path: Path, *, end: int = 9) -> tuple[Path, Path, str, str]:
