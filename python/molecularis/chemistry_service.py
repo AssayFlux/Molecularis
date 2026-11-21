@@ -4,7 +4,7 @@ from dataclasses import dataclass
 import hashlib
 import json
 from typing import Any
-from .chemistry import graph_descriptors, parse_sdf_record, path_fingerprint, substructure_match, tanimoto
+from .chemistry import graph_descriptors, path_fingerprint, substructure_match, tanimoto
 from .platform import Budget, Capability, Operation, Rulebook
 from .platform.contracts import ResourceLimitError, ValidationError
 
