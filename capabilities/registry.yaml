@@ -546,11 +546,6 @@ tools:
     status: implemented
     implementation: python/molecularis/kinetics_service.py
     evidence_level: none
-  - id: kinetics.michaelis_menten
-    name: Classical Michaelis-Menten equation and inhibition models
-    status: implemented
-    implementation: python/molecularis/kinetics.py
-    evidence_level: none
   - id: kinetics.msde_curve_fit
     name: Exploratory bounded log-grid Michaelis-Menten fitting
     status: implemented
