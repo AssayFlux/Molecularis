@@ -9,10 +9,10 @@ from molecularis.scientific_engines import (
 )
 
 
-def test_inventory_contains_all_18_requested_engines() -> None:
+def test_inventory_contains_all_19_named_projects() -> None:
     inventory = engine_inventory()
-    assert len(inventory) == 18
-    assert len({item["engine_id"] for item in inventory}) == 18
+    assert len(inventory) == 19
+    assert len({item["engine_id"] for item in inventory}) == 19
 
 
 def test_discovery_is_explicitly_not_scientific_validation() -> None:
