@@ -1,0 +1,201 @@
+"""Molecularis-owned entry points for optional scientific engines.
+
+This module deliberately keeps native engine objects behind adapters. Availability is
+not scientific validation, and optional engines are never imported at package import
+time. Platform-specific and model-backed engines must be installed in an isolated,
+approved runtime profile.
+"""
+from __future__ import annotations
+
+import importlib.metadata
+import importlib.util
+import shutil
+from dataclasses import asdict, dataclass
+from math import isfinite
+from typing import Literal
+
+
+@dataclass(frozen=True)
+class EngineSpec:
+    engine_id: str
+    family: str
+    integration: str
+    runtime: str
+    adapter: str
+    limitations: tuple[str, ...]
+
+
+# The 18 requested engines are listed individually. HTSlib is exposed through pysam;
+# Mol* is the existing offline viewer asset, not a Python dependency.
+ENGINE_SPECS: tuple[EngineSpec, ...] = (
+    EngineSpec("biopython", "sequence/alignment/structure", "integrated", "python>=3.10", "molecularis.alignment_biopython", ("File-level licence review and Android runtime proof remain open.",)),
+    EngineSpec("biotite", "sequence/structure", "integrated", "isolated Python>=3.12 profile", "molecularis.structure_biotite", ("Text mmCIF only; BinaryCIF and assembly expansion remain open.",)),
+    EngineSpec("parasail", "alignment", "optional-adapter", "native host library / Python bindings", "align_with_parasail", ("Only global and local affine-gap alignment are exposed; SIMD build and score-width validation remain open.",)),
+    EngineSpec("pysam", "genomics", "integrated", "optional Python/native profile", "molecularis.genomics_htslib", ("Molecularis read model is not lossless for all tags and header metadata.",)),
+    EngineSpec("htslib", "genomics", "integrated-via-pysam", "native library bundled by pysam or host profile", "molecularis.genomics_htslib", ("Native binary provenance and complete format differential corpus remain open.",)),
+    EngineSpec("bcftools", "variant analysis", "runtime-discovery-only", "pinned local executable", "discover_engine", ("No Molecularis command contract yet; normalization and reference-concordance gates remain open.",)),
+    EngineSpec("samtools", "alignment processing", "runtime-discovery-only", "pinned local executable", "discover_engine", ("No Molecularis command contract yet; sort/index/flagstat semantics need explicit contracts.",)),
+    EngineSpec("esm", "protein representation", "isolated-process-contract", "model-specific isolated Python/accelerator profile", "molecularis.s4_process", ("No ESM model loader or approved weights are bundled.",)),
+    EngineSpec("alphafold", "protein structure prediction", "isolated-process-contract", "pinned local process with approved weights/databases", "molecularis.s4_process", ("No AlphaFold model/data bundle or approved deployment profile is included.",)),
+    EngineSpec("molstar", "structure visualization", "viewer-integrated", "offline Android/WebView assets", "android/app/src/main/assets/structure-viewer", ("Full data bridge, accessibility and large-structure performance remain open.",)),
+    EngineSpec("molprobity", "structure validation", "runtime-discovery-only", "approved local MolProbity/PHENIX installation", "discover_engine", ("No command contract or component-level redistribution approval.",)),
+    EngineSpec("rdkit", "cheminformatics", "integrated", "optional Python/native profile", "molecularis.chemistry_rdkit", ("Stereochemistry, salts, tautomers and broader sanitization corpus remain open.",)),
+    EngineSpec("autodock-vina", "docking", "integrated", "optional host profile", "molecularis.docking_vina", ("Prepared PDBQT inputs only; independent docking benchmarks remain open.",)),
+    EngineSpec("openmm", "molecular dynamics", "integrated", "optional host CPU profile", "molecularis.md_openmm", ("Caller-prepared systems only; force-field and preparation governance remain open.",)),
+    EngineSpec("gromacs", "molecular dynamics", "runtime-discovery-only", "pinned local executable", "discover_engine", ("No Molecularis TPR/trajectory execution contract or validated force-field profile.",)),
+    EngineSpec("scipy", "numerical science", "integrated-reference", "optional validation environment", "SciPy-backed validation modules", ("Not a universal runtime dependency; per-workflow pins and reference tests remain open.",)),
+    EngineSpec("nuad", "DNA/RNA nanotechnology", "not-yet-integrated", "specialist package/runtime", "deferred pending source and licence approval", ("No adapter is enabled until exact upstream source, licence and thermodynamic model terms are verified.",)),
+    EngineSpec("nupack", "DNA/RNA nanotechnology", "not-yet-integrated", "specialist package/runtime", "deferred pending source and licence approval", ("No adapter is enabled until exact upstream source, licence and thermodynamic model terms are verified.",)),
+    EngineSpec("galaxy", "workflow orchestration", "not-yet-integrated", "separately operated Galaxy server", "deferred pending API/security contract", ("No server deployment, API client, credential lifecycle or workflow mapping is enabled.",)),
+)
+
+
+def engine_inventory() -> list[dict[str, object]]:
+    """Return the stable, JSON-serializable inventory for all requested engines."""
+    return [asdict(spec) for spec in ENGINE_SPECS]
+
+
+def discover_engine(engine_id: str) -> dict[str, object]:
+    """Report whether an optional engine can be discovered in this process.
+
+    Discovery never imports the engine or loads model weights. It is not a health,
+    compatibility, licence, or scientific-validation check.
+    """
+    normalized = engine_id.strip().lower() if isinstance(engine_id, str) else ""
+    spec = next((item for item in ENGINE_SPECS if item.engine_id == normalized), None)
+    if spec is None:
+        raise ValueError(f"Unknown engine_id: {engine_id!r}")
+
+    python_modules = {
+        "biopython": ("Bio",),
+        "biotite": ("biotite",),
+        "parasail": ("parasail",),
+        "pysam": ("pysam",),
+        "esm": ("esm",),
+        "rdkit": ("rdkit",),
+        "autodock-vina": ("vina",),
+        "openmm": ("openmm",),
+        "scipy": ("scipy",),
+        "nuad": ("nuad",),
+        "nupack": ("nupack",),
+    }
+    executables = {
+        "bcftools": ("bcftools",),
+        "samtools": ("samtools",),
+        "molprobity": ("phenix.molprobity", "molprobity"),
+        "gromacs": ("gmx", "gmx_mpi"),
+    }
+    if normalized == "htslib":
+        found = importlib.util.find_spec("pysam") is not None
+        detail = "pysam provides the HTSlib-backed interface" if found else "pysam/HTSlib not found"
+    elif normalized == "molstar":
+        found = False
+        detail = "Viewer assets are shipped in the Android source tree; this host probe does not inspect APK assets"
+    elif normalized in python_modules:
+        found = any(importlib.util.find_spec(name) is not None for name in python_modules[normalized])
+        detail = "Python module found" if found else "Python module not found"
+    elif normalized in executables:
+        paths = [shutil.which(name) for name in executables[normalized]]
+        found = any(paths)
+        detail = next((path for path in paths if path), "Executable not found")
+    elif normalized in {"alphafold", "galaxy"}:
+        found = False
+        detail = "Requires separately configured model process or Galaxy server"
+    else:
+        found = False
+        detail = "No runtime probe is defined"
+    return {
+        "engine_id": normalized,
+        "integration": spec.integration,
+        "discovered": found,
+        "detail": detail,
+        "discovery_only": True,
+        "scientific_validation": "not_assessed",
+    }
+
+
+def align_with_parasail(
+    sequence_a: str,
+    sequence_b: str,
+    *,
+    mode: Literal["global", "local"] = "global",
+    match_score: int = 2,
+    mismatch_score: int = -1,
+    gap_open: int = 5,
+    gap_extend: int = 1,
+    alphabet: str = "ACGTN",
+    max_sequence_length: int = 100_000,
+    max_alignment_cells: int = 4_000_000,
+) -> dict[str, object]:
+    """Run Parasail traceback alignment using a Molecularis-owned result envelope.
+
+    Parasail's affine-gap API uses positive gap penalties; returned scores and
+    traceback are engine outputs. This wrapper does not enumerate tied alignments.
+    """
+    if mode not in {"global", "local"}:
+        raise ValueError("mode must be 'global' or 'local'")
+    for name, value in (("match_score", match_score), ("mismatch_score", mismatch_score),
+                        ("gap_open", gap_open), ("gap_extend", gap_extend)):
+        if isinstance(value, bool) or not isinstance(value, int):
+            raise ValueError(f"{name} must be an integer")
+    if match_score <= 0 or mismatch_score > 0 or gap_open < 0 or gap_extend < 0:
+        raise ValueError("Use positive match, non-positive mismatch, and non-negative gap penalties")
+    if not isinstance(sequence_a, str) or not isinstance(sequence_b, str):
+        raise TypeError("sequences must be strings")
+    a, b = sequence_a.upper(), sequence_b.upper()
+    if not a or not b:
+        raise ValueError("Both sequences must be non-empty")
+    if len(a) > max_sequence_length or len(b) > max_sequence_length:
+        raise ValueError("Sequence exceeds max_sequence_length")
+    if (len(a) + 1) * (len(b) + 1) > max_alignment_cells:
+        raise ValueError("Alignment exceeds max_alignment_cells")
+    if not isinstance(alphabet, str) or len(set(alphabet)) != len(alphabet) or not alphabet:
+        raise ValueError("alphabet must be non-empty text with unique symbols")
+    if set(a + b) - set(alphabet):
+        raise ValueError("Sequences contain symbols not represented in the configured alphabet")
+
+    try:
+        import parasail  # type: ignore[import-not-found]
+    except ImportError as error:
+        raise RuntimeError("Parasail Python bindings are unavailable in this runtime") from error
+
+    matrix = parasail.matrix_create(alphabet, match_score, mismatch_score)
+    function = parasail.nw_trace if mode == "global" else parasail.sw_trace
+    result = function(a, b, gap_open, gap_extend, matrix)
+    if getattr(result, "saturated", False):
+        raise OverflowError("Parasail reported score saturation; result is not accepted")
+    traceback = getattr(result, "traceback", None)
+    if traceback is None:
+        raise RuntimeError("Parasail did not return traceback data")
+    cigar_object = getattr(result, "cigar", None)
+    cigar = cigar_object.decode if cigar_object is not None else None
+    score = float(result.score)
+    if not isfinite(score):
+        raise RuntimeError("Parasail returned a non-finite alignment score")
+    return {
+        "schema_version": 1,
+        "engine": "parasail",
+        "engine_version": str(getattr(parasail, "__version__", "unknown")),
+        "algorithm": "needleman-wunsch" if mode == "global" else "smith-waterman",
+        "mode": mode,
+        "score": score,
+        "traceback": {
+            "query": str(traceback.query),
+            "reference": str(traceback.ref),
+            "comparison": str(traceback.comp),
+        },
+        "cigar": str(cigar) if cigar is not None else None,
+        "sequence_lengths": [len(a), len(b)],
+        "scoring": {
+            "match": match_score,
+            "mismatch": mismatch_score,
+            "gap_open": gap_open,
+            "gap_extend": gap_extend,
+            "gap_penalty_convention": "positive penalties passed to Parasail",
+        },
+        "limitations": [
+            "Global and local modes only; no semi-global end-gap configuration.",
+            "The first engine traceback is returned; tied optimal tracebacks are not enumerated.",
+            "No claim of parity with Molecularis or Biopython until differential fixtures pass.",
+        ],
+    }
