@@ -21,7 +21,7 @@ def test_npt_and_gromacs_contracts():
     g=doc(engine="gromacs",gromacs_tpr_path="/tmp/input.tpr",gromacs_tpr_sha256="d"*64,gromacs_executable_path="/usr/bin/gmx",gromacs_executable_sha256="e"*64)
     assert SimulationDocument.from_json(g.to_json())==g
 def test_json_duplicate_and_unknown_fields():
-    a=doc().to_dict(); raw=json.dumps(a).replace('"identifier":"md-001"','"identifier":"md-001","identifier":"other"')
+    a=doc().to_dict(); raw=json.dumps(a).replace('"identifier": "md-001"','"identifier": "md-001", "identifier": "other"')
     with pytest.raises(ValueError,match="duplicate"): SimulationDocument.from_json(raw)
     a["unexpected"]=True
     with pytest.raises(ValueError,match="fields"): SimulationDocument.from_json(json.dumps(a))
