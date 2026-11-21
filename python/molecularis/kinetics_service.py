@@ -7,7 +7,7 @@ import json
 import math
 from typing import Any
 
-from .kinetics import fit_michaelis_menten, inhibition_rate, michaelis_menten
+from .kinetics import fit_michaelis_menten, michaelis_menten
 from .platform import Artifact, Budget, Capability, ExecutionContext, MolecularisPlatform, Operation, Rulebook
 from .platform.contracts import ResourceLimitError, ValidationError
 
