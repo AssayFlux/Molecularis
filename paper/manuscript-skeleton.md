@@ -1,9 +1,9 @@
-# Kinetics platform/software-methods manuscript — working skeleton
+# Molecularis platform/software-methods manuscript — working skeleton
 
 > **Status: preparation only. Not submission-ready.** Populate results only from committed, reproducible validation outputs. Do not invent sample sizes, metrics, performance, accuracy or scientific findings.
 
 ## Working title
-Kinetics: an offline-first, provenance-aware Android workbench for reproducible computational biology research
+Molecularis: an offline-first, provenance-aware Android workbench for reproducible computational biology research
 
 ## Abstract (draft outline)
 - Background and unmet research-workflow need.

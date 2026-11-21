@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-21 — Molecularis identity migration
+
+- Replaced active product branding, Android UI labels, package/source namespaces, documentation paths, design-token identifiers, viewer APIs and Node worker configuration with Molecularis.
+- Retained compatibility identifiers only where changing them would break existing installs, persisted data, integrations or versioned scientific contracts; see [brand migration](docs/brand-migration.md).
+- Preserved enzyme-kinetics terminology as scientific domain language and historical pre-rebrand audit records as archival evidence.
+
 All notable project changes will be recorded here.
 
 ## v0.1.0 — basic working model (release target; not yet published)

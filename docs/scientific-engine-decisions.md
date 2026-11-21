@@ -7,7 +7,7 @@
 - **Biopython 1.88:** retained in the prototype for sequence parsing/alignment and Bio.PDB exploration. The custom wheel was built in historical CI, but file-level notices, runtime imports, current 16 KB native compatibility and redistribution review remain open.
 - **NumPy 1.26.2:** retained only for the prototype. Its Chaquopy arm64 wheel is old; no independent wheel SHA-256 pin or 16 KB runtime proof is yet recorded.
 - **SciPy:** not approved for Android. No compatible package has been demonstrated in the current Chaquopy Python 3.11 index. Host-only SciPy is the independent numerical reference for the kinetic validation harness, not an Android dependency.
-- **Kinetics estimators:** dependency-free log-grid least squares remains exploratory. The optional host validation harness compares it with SciPy curve_fit; it has not been run.
+- **Enzyme-kinetics estimators:** dependency-free log-grid least squares remains exploratory. The optional host validation harness compares it with SciPy curve_fit; it has not been run.
 
 ## Sequence alignment and genomics (R4)
 - **Biopython PairwiseAligner:** prototype/reference candidate only; not a high-throughput mapper.
