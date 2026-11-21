@@ -260,7 +260,7 @@ class ScientificCore:
             raise ValueError("max_candidates must be an integer between 1 and 1000")
         if not validators:
             raise ValueError("At least one independent validator is required")
-        if any(v.validator_id == generator.generator_id for v in validators):
+        if any(getattr(v, "validator_id", None) == generator.generator_id for v in validators):
             raise ValueError("A generator cannot serve as its own validator")
         if not generator.generator_id or not generator.version:
             raise ValueError("Generator identity and version are required")
@@ -297,10 +297,11 @@ class ScientificCore:
                     _canonical(dict(finding.evidence))
                     findings.append(finding)
             failed = any(not finding.passed and finding.severity in {"error", "critical"} for finding in findings)
+            validation_state = "failed" if failed else ("passed" if findings else "not_assessed")
             reports.append(ValidationReport(
                 artifact_sha256=candidate.artifact.sha256,
                 findings=tuple(findings),
-                validation_state="failed" if failed else "passed",
+                validation_state=validation_state,
                 limitations=("Passing checks only covers the listed validators and declared scope; it is not experimental confirmation.",),
             ))
 
@@ -324,7 +325,10 @@ class ScientificCore:
         }
         run_id = content_digest({"provenance": provenance, "artifacts": [c.artifact.sha256 for c in candidates]})[:24]
         state = "no_candidates" if not candidates else (
-            "validated" if all(report.passed for report in reports) else "validation_failed"
+            "validated" if all(report.passed for report in reports) else (
+                "validation_failed" if any(report.validation_state == "failed" for report in reports)
+                else "validation_incomplete"
+            )
         )
         return GenerationRun(
             run_id=run_id,
