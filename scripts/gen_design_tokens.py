@@ -96,7 +96,13 @@ def css_source(data: dict[str, Any]) -> str:
                 property_name = prop.replace("_", "-")
                 css_name = f"--molecularis-{palette_name}-{property_name}"
                 lines.append(f"  {css_name}: {palette[prop]};")
-                lines.append(f"  --kinetics-{palette_name}-{property_name}: var({css_name});")
+    aliases = [
+        f"  --kinetics-{name}: var(--molecularis-{name});"
+        for line in lines
+        if line.strip().startswith("--molecularis-")
+        for name in [line.strip().split("--molecularis-", 1)[1].split(":", 1)[0]]
+    ]
+    lines += aliases
     lines += ["}", ""]
     return "\n".join(lines)
 
