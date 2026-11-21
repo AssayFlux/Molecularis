@@ -5,7 +5,7 @@ import json
 from typing import cast
 
 import pytest
-from kinetics.pgx import VariantKey, match_phased_haplotype, parse_star_allele_definitions
+from molecularis.pgx import VariantKey, match_phased_haplotype, parse_star_allele_definitions
 
 def pack() -> str:
     value = {"schema_version":1,"genome_build":"synthetic-build-v1",
