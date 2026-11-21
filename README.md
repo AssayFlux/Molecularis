@@ -29,7 +29,7 @@ Each step includes discovery, specification, native engine, runtime, Rulebook, s
 - `services/phylogeny/` — canonical aligned nucleotide artifacts, Jukes-Cantor distance matrices, neighbor joining, UPGMA and seeded site-bootstrap split support.
 - `services/pharmacogenomics/` — provenance-pinned star-allele definition packs and conservative matching of already-phased synthetic haplotypes; no phenotype or treatment advice.
 - `services/cohorts/` — canonical synthetic non-patient cohort artifacts, longitudinal descriptive summaries, minimum-cell-suppressed stratification and pseudonymous membership overlap.
-- `services/cohorts/` — canonical synthetic non-patient cohort artifacts, longitudinal descriptive summaries, stratification with minimum-cell suppression and pseudonymous membership overlap.
+- `services/workflows/` — Molecularis-native cross-service DAG orchestration through registered capabilities and the MSDE Rulebook executor; Galaxy remains an optional connector.
 - `data/`, `validation/` — reference metadata and validation assets.
 - `remote-node/` — isolated remote execution component.
 - `scripts/`, `tests/` — engineering checks and automated tests.

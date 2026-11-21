@@ -40,7 +40,7 @@ A scaffold or specification does not imply implementation or scientific validati
 | K | Phylogeny | Existing Newick parser/serializer, patristic distances, JC69, NJ, UPGMA and seeded site-bootstrap algorithms retained and integrated | Python v1 canonical aligned-nucleotide artifact service | MSDE artifact lifecycle and five capabilities | PHY-001–PHY-007 executable | Engineering complete; CI run #44896994652 green; scientific review deferred |
 | L | Pharmacogenomics | Existing reference-checked normalization, star-allele JSON definitions and PharmVar TSV parser retained and integrated | Python v1 canonical sample/definition artifacts and deterministic phased star-allele matching | MSDE artifact lifecycle, two capabilities and bounded definition-pack ingestion | PGX-001–PGX-007 operational | Engineering complete; CI run #44898692562 green; scientific/clinical review deferred |
 | M | Cohorts | Canonical synthetic non-patient cohorts, longitudinal visits, aggregate summaries, stratification and pseudonymous overlap | Python v1 MSDE artifact lifecycle and four capabilities | COH-001–COH-008 operational | Engineering complete; CI run #44899270453 green; scientific/privacy review deferred |
-| N | Workflows | Existing workflow code; audit pending | Not started | Not started | Not operational | Planned |
+| N | Workflows | Native cross-service DAG orchestration; FASTA/FASTQ QC and Galaxy adapter retained | Canonical WorkflowDocument, MSDE artifact lifecycle and Core RulebookExecutor integration | WF-001–WF-009 operational; two registered capabilities | Engineering implementation committed; CI verification pending; independent review deferred |
 
 ## Verification evidence
 
@@ -68,9 +68,9 @@ A scaffold or specification does not imply implementation or scientific validati
 
 ## Active phase and next exact work
 
-**Active phase:** Service M — Cohorts engineering implementation and CI verification complete in run #44899270453 (core 737 passed/12 skipped; optional Chemistry 745/4, Sequence 740/9, Genomics 738/11). The service accepts synthetic non-patient cohorts only and provides aggregate descriptive summaries, stratification with small-cell suppression and pseudonymous membership overlap. Independent scientific/clinical review remains deferred until A–N engineering completion. The platform is not yet a distributed, multi-language, OS-isolated production runtime.
+**Active phase:** Service N — Workflows native DAG orchestration implementation committed; CI verification pending. The service validates canonical workflow contracts and executes registered capabilities through the existing MSDE RulebookExecutor with input/output artifact lineage. Existing Galaxy REST and FASTA/FASTQ helpers are retained as optional integrations. The platform is not yet a distributed, multi-language, OS-isolated production runtime.
 
-**Next:** proceed to N — Workflows. M supports canonical cohort artifacts, descriptive longitudinal summaries, minimum-cell-suppressed stratification and pseudonymous membership overlap. It does not perform clinical eligibility, causal or inferential analysis. University-level scientific and privacy review, independent reference comparisons and formal contract freezes will be conducted after the full A–N engineering build, as directed by the owner. Platform-wide recovery, backup/restore, service discovery, language conformance and isolation gates remain open.
+**Next:** N is the final service in the A–N engineering sequence. After its CI verification, proceed to platform-wide integration, university scientific/privacy review and acceptance gates. University-level scientific and privacy review, independent reference comparisons and formal contract freezes will be conducted after the full A–N engineering build, as directed by the owner. Platform-wide recovery, backup/restore, service discovery, language conformance and isolation gates remain open.
 
 ## Reporting rule
 

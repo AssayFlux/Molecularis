@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "molecularis.workflow.v1",
+  "title": "Molecularis Workflow v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "workflow_id",
+    "version",
+    "source",
+    "input_keys",
+    "provenance",
+    "operations"
+  ],
+  "properties": {
+    "schema": {
+      "const": "molecularis.workflow.v1"
+    },
+    "workflow_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+    },
+    "version": {
+      "type": "string"
+    },
+    "source": {
+      "type": "string",
+      "maxLength": 256
+    },
+    "input_keys": {
+      "type": "array",
+      "uniqueItems": true,
+      "maxItems": 256,
+      "items": {
+        "type": "string"
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "maxProperties": 128,
+      "additionalProperties": {
+        "type": "string",
+        "maxLength": 512
+      }
+    },
+    "operations": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100,
+      "items": {
+        "$ref": "#/$defs/operation"
+      }
+    }
+  },
+  "$defs": {
+    "operation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operation_id",
+        "capability_id",
+        "inputs",
+        "output",
+        "parameters"
+      ],
+      "properties": {
+        "operation_id": {
+          "type": "string"
+        },
+        "capability_id": {
+          "type": "string"
+        },
+        "inputs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 256,
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "output": {
+          "type": "string"
+        },
+        "parameters": {
+          "type": "object"
+        }
+      }
+    }
+  }
+}

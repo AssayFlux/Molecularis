@@ -1,12 +1,15 @@
-# Workflows Engine
+# Workflows Engine N
 
-Status: scaffold — not yet implemented or validated.
+Status: implemented v1 native orchestration slice; independent scientific validation of invoked capabilities remains owned by their services.
 
 ## Scope
-Define the scientific operations owned by this service, including supported inputs, outputs, algorithms, invariants, and explicit exclusions.
+Molecularis-native workflow contracts and orchestration over registered MSDE capabilities. A workflow is a bounded DAG of capability invocations with explicit named inputs, outputs, parameters, version and provenance. Existing FASTA/FASTQ QC helpers and Galaxy REST adapter are retained as independent utilities/connectors.
 
-## Native implementation
-Prefer Molecularis-owned algorithms and data structures. Document source literature, assumptions, numerical methods, and licensing. External tools are optional references only, not required execution engines.
+## Execution
+Declare external inputs and operations; validate identifiers, references, uniqueness, operation count, parameters and acyclicity; resolve capabilities through ServiceRegistry; convert the graph to a Core Rulebook; execute through the deterministic topological executor. MSDE records input/output artifact lineage and run evidence.
 
-## Acceptance criteria
-Specify observable behavior and measurable correctness criteria before implementation. Add tests and reference comparisons; do not claim completion without evidence.
+## Determinism and failure
+Canonical sorted-key JSON and stable topological ordering provide reproducibility. Core records failed runs and completed outputs. No implicit retries are performed because handlers may have side effects. Parallel execution, conditional branching, loops, scatter/gather and compensation transactions are not in v1.
+
+## Boundaries
+No scientific algorithm is silently delegated to Galaxy. The optional Galaxy adapter is separately operated. Workflow validation checks graph contracts and capability registration, not scientific correctness.

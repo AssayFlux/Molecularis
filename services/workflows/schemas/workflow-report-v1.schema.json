@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "molecularis.workflow-report.v1",
+  "title": "Molecularis Workflow Report v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "operation",
+    "valid",
+    "workflow_id",
+    "version",
+    "operation_count",
+    "execution_order",
+    "input_keys",
+    "workflow_sha256",
+    "limitations"
+  ],
+  "properties": {
+    "schema": {
+      "const": "molecularis.workflow-report.v1"
+    },
+    "operation": {
+      "enum": [
+        "validate",
+        "plan"
+      ]
+    },
+    "valid": {
+      "type": "boolean"
+    },
+    "workflow_id": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    },
+    "operation_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "execution_order": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "input_keys": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "workflow_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

@@ -14,6 +14,7 @@ from .admet_validation import (
 from .catalog import (
     GeneEntry, iter_ncbi_gene_info, iter_ncbi_gene_info_file, search_gene_catalog, validate_gene_catalog,
 )
+from .workflows_service import WorkflowDocument, WorkflowOperation, ingest_workflow, load_workflow, register_workflows_service, validate_workflow, execute_workflow, workflows_rulebook
 from .cohorts_service import CohortDocument, CohortMember, CohortVisit, ingest_cohort, load_cohort, register_cohorts_service, cohorts_rulebook
 from .chemistry_service import (ChemistryDocument, ingest_chemistry, load_chemistry, register_chemistry_service, chemistry_rulebook)
 from .chemistry_rdkit import analyze_molblock, analyze_smiles, morgan_tanimoto, rdkit_backend_info
@@ -81,6 +82,7 @@ from .structure import (
 )
 
 __all__ = [
+    "WorkflowDocument", "WorkflowOperation", "ingest_workflow", "load_workflow", "register_workflows_service", "validate_workflow", "execute_workflow", "workflows_rulebook",
     "CohortDocument", "CohortMember", "CohortVisit", "ingest_cohort", "load_cohort", "register_cohorts_service", "cohorts_rulebook",
     "HaplotypeCall", "PharmacogenomicsDocument", "ingest_pharmacogenomics", "ingest_pgx_definitions", "load_pharmacogenomics", "register_pharmacogenomics_service", "pharmacogenomics_rulebook",
     "PhylogenyDocument", "ingest_phylogeny", "load_phylogeny", "register_phylogeny_service", "phylogeny_rulebook",

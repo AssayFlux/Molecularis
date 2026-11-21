@@ -643,6 +643,17 @@ tools:
     implementation: python/molecularis/cohorts_service.py
     evidence_level: none
 
+  - id: workflows.native_dag
+    name: Native cross-service workflow DAG validation and deterministic planning
+    status: implemented
+    implementation: python/molecularis/workflows_service.py
+    evidence_level: none
+  - id: workflows.msde_orchestration
+    name: MSDE Rulebook execution of registered capabilities with artifact lineage
+    status: implemented
+    implementation: python/molecularis/workflows_service.py
+    evidence_level: none
+
 engines: []
 data_packs: []
 domains: []
