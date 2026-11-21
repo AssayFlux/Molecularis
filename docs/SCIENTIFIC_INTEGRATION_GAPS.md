@@ -13,7 +13,7 @@ A gap may be deferred only when the integration remains bounded, honest about it
 
 | Engine / library | Molecularis integration state | Deferred gaps |
 |---|---|---|
-| Biopython | Host reference integration being added; Android feasibility prototype exists | Exact file-level licence and wheel notices; device runtime/16 KB proof; parser differential corpus; FASTQ encoding metadata; structure identity preservation; broader alignment modes |
+| Biopython | Optional host PairwiseAligner adapter integrated; Android feasibility prototype exists | Exact file-level licence and wheel notices; device runtime/16 KB proof; parser differential corpus; FASTQ encoding metadata; structure identity preservation; broader alignment modes |
 | Parasail | Source audit complete; not yet integrated | Fresh maintenance/security review; exact licence/citation notices; checked score-width/saturation; differential corpus; host build; Android NEON/JNI/16 KB proof |
 | HTSlib / pysam | Optional host BAM/CRAM streaming and indexed-region adapter exists | Lossless record/header/tags/mate/base-modification model; reference/index provenance; decompression/time/resource limits; broader SAM/BAM/CRAM fixtures; native supply-chain and binary notices; Android feasibility |
 | Biotite | Not integrated | Python >=3.12 host profile; Rust extension packaging; lossless structure contract; dependency/licence audit; differential mmCIF/BinaryCIF fixtures |
@@ -28,7 +28,7 @@ A gap may be deferred only when the integration remains bounded, honest about it
 | GROMACS | Not integrated | Source/licence/build review; platform/runtime strategy; force-field and preparation governance; benchmark and output interoperability |
 | Samtools / BCFtools | Available through HTSlib/pysam ecosystem, not exposed as complete Molecularis services | Tool-specific command/API contracts; exact bundled notices; reference concordance and normalization fixtures; safe subprocess isolation |
 
-## Cross-cutting gaps to close after integration
+## First integration increment (2026-11-21)\n\n- Added `python/molecularis/alignment_biopython.py`, a lazy optional adapter returning Molecularis-owned primitive result data (engine/version, algorithm, mode, score, coordinates and scoring parameters).\n- Added `validation/requirements-bio.txt` pinning the isolated host reference profile to Biopython 1.88 and NumPy 1.26.2; no base dependency or Android package change.\n- Added optional adapter contract tests in `tests/test_alignment_biopython.py`. Tests have not been executed in this repository-editing session.\n- The adapter intentionally supports global/local affine-gap alignment only; it does not expose matrices, semi-global end-gap configuration, traceback rendering, CIGAR, read mapping or database indexing.\n\n## Cross-cutting gaps to close after integration
 
 1. **Canonical scientific data contracts:** stable sequence, alignment, read, variant, atom/residue, molecular graph, simulation system and result models that do not leak optional-engine objects.
 2. **Provenance:** engine and version, algorithm, parameters, source/reference build, checksums, coordinate conventions, random seeds, environment and warnings.
