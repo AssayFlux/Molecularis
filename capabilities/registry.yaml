@@ -622,6 +622,27 @@ tools:
     implementation: python/molecularis/pharmacogenomics_service.py
     evidence_level: none
 
+  - id: cohorts.msde_validate
+    name: MSDE validation of canonical synthetic non-patient cohort artifacts
+    status: implemented
+    implementation: python/molecularis/cohorts_service.py
+    evidence_level: none
+  - id: cohorts.aggregate_summary
+    name: Descriptive aggregate and longitudinal cohort summaries
+    status: implemented
+    implementation: python/molecularis/cohorts_service.py
+    evidence_level: none
+  - id: cohorts.stratification
+    name: Attribute stratification with minimum-cell suppression
+    status: implemented
+    implementation: python/molecularis/cohorts_service.py
+    evidence_level: none
+  - id: cohorts.member_overlap
+    name: Pseudonymous cohort membership overlap and Jaccard comparison
+    status: implemented
+    implementation: python/molecularis/cohorts_service.py
+    evidence_level: none
+
 engines: []
 data_packs: []
 domains: []

@@ -2,19 +2,17 @@ id: "cohorts"
 name: "Cohorts"
 roadmap_step: "M"
 roadmap_order: 13
-depends_on: ["genomics","omics","pharmacogenomics"]
-status: "scaffold"
-completion_status: "not_implemented"
-primary_languages: ["cpp", "python", "rust"]
+depends_on: ["genomics", "omics", "pharmacogenomics"]
+status: "implemented"
+completion_status: "engineering_implemented_ci_verification_pending"
+primary_languages: ["python"]
 engine: "ENGINE.md"
 runtime: "RUNTIME.md"
 rulebook: "RULEBOOK.md"
+acceptance: "ACCEPTANCE.md"
 source_roots:
-  cpp: "src/cpp"
-  python: "src/python"
-  rust: "src/rust"
+  python: "python/molecularis"
 test_root: "tests"
 schema_root: "schemas"
-data_root: "data"
 benchmark_root: "benchmarks"
 external_execution_dependencies: []

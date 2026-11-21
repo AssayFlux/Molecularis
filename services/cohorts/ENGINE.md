@@ -1,12 +1,21 @@
-# Cohorts Engine
+# Cohorts Engine M
 
-Status: scaffold — not yet implemented or validated.
+Status: implemented v1 engineering slice; independent scientific, privacy and regulatory validation remain deferred.
 
 ## Scope
-Define the scientific operations owned by this service, including supported inputs, outputs, algorithms, invariants, and explicit exclusions.
+Molecularis owns canonical cohort artifacts, longitudinal visit records, aggregate summaries, categorical stratification and pseudonymous membership overlap. Existing synthetic cohort simulation primitives in `virtual_cohort.py` remain available and are not replaced.
 
-## Native implementation
-Prefer Molecularis-owned algorithms and data structures. Document source literature, assumptions, numerical methods, and licensing. External tools are optional references only, not required execution engines.
+## Data model
+A CohortDocument contains unique pseudonymous member IDs, bounded categorical attributes, optional ordered visits and bounded numeric measurements. Inclusion is an explicit caller-provided boolean; the service does not decide eligibility. Source, release, classification and provenance are canonicalized and included in the artifact digest. V1 accepts only `synthetic_non_patient`.
 
-## Acceptance criteria
-Specify observable behavior and measurable correctness criteria before implementation. Add tests and reference comparisons; do not claim completion without evidence.
+## Operations
+- Validate canonical artifact integrity and membership counts.
+- Summarize included-member counts, categorical frequencies/missingness, visit counts and descriptive measurement summaries.
+- Stratify by one categorical attribute, suppressing groups below a caller-selected minimum cell size (2–1000; default 5).
+- Compare two cohorts by pseudonymous member-set intersection, union and Jaccard index; suppress small intersections.
+
+## Algorithms
+Categorical summaries use exact frequency counts. Numeric measurement summaries use arithmetic mean/minimum/maximum and explicit non-missing observation counts. Overlap uses set intersection/union and Jaccard = intersection/union (empty union returns 1.0). Stratification suppression is applied before group summaries are emitted. All operations are deterministic and bounded by document, field, visit and MSDE budgets.
+
+## Boundaries
+No individual-level rows or member IDs are returned in reports. Small-cell suppression is a disclosure-control heuristic, not differential privacy. Longitudinal data are descriptive only; no mixed models, hypothesis tests, survival analysis, causal inference, recruitment, consent adjudication, clinical eligibility or treatment interpretation is implemented. V1 rejects patient-classified data; callers remain responsible for ensuring the content itself contains no direct identifiers.

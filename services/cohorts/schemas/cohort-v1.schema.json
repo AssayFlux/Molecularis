@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "molecularis.cohort.v1",
+  "title": "Molecularis Cohort v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "identifier",
+    "data_classification",
+    "source",
+    "source_release",
+    "provenance",
+    "members"
+  ],
+  "properties": {
+    "schema": {
+      "const": "molecularis.cohort.v1"
+    },
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "data_classification": {
+      "const": "synthetic_non_patient"
+    },
+    "source": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "source_release": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "maxLength": 256
+      },
+      "maxProperties": 128
+    },
+    "members": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100000,
+      "items": {
+        "$ref": "#/$defs/member"
+      }
+    }
+  },
+  "$defs": {
+    "member": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "member_id",
+        "attributes",
+        "included",
+        "visits"
+      ],
+      "properties": {
+        "member_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "attributes": {
+          "type": "object",
+          "maxProperties": 128,
+          "additionalProperties": {
+            "type": "string",
+            "maxLength": 256
+          }
+        },
+        "included": {
+          "type": "boolean"
+        },
+        "visits": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/visit"
+          }
+        }
+      }
+    },
+    "visit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "visit_id",
+        "timepoint",
+        "measurements"
+      ],
+      "properties": {
+        "visit_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "timepoint": {
+          "type": "number"
+        },
+        "measurements": {
+          "type": "object",
+          "maxProperties": 128,
+          "additionalProperties": {
+            "type": [
+              "number",
+              "null"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

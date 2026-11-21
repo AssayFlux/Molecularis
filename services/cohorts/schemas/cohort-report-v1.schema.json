@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "molecularis.cohort-report.v1",
+  "title": "Molecularis Cohort Report v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "operation",
+    "cohort_ids",
+    "cohort_sha256",
+    "result",
+    "rulebook",
+    "rules_checked",
+    "limitations"
+  ],
+  "properties": {
+    "schema": {
+      "const": "molecularis.cohort-report.v1"
+    },
+    "operation": {
+      "enum": [
+        "validate",
+        "summary",
+        "stratify",
+        "overlap"
+      ]
+    },
+    "cohort_ids": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 2,
+      "items": {
+        "type": "string"
+      }
+    },
+    "cohort_sha256": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 2,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-f0-9]{64}$"
+      }
+    },
+    "result": {
+      "type": "object"
+    },
+    "rulebook": {
+      "const": "cohorts-core-v1"
+    },
+    "rules_checked": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^COH-[0-9]{3}$"
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}
