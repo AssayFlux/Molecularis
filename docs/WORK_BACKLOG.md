@@ -47,7 +47,7 @@ Execute exactly one letter at a time, following [SERVICE_ROADMAP.md](SERVICE_ROA
 - [x] G — DNA/RNA CI verification (run #44892707015: core 679 passed/12 skipped; optional Sequence 682/9, Chemistry 687/4, Genomics 680/11; registry, schemas, Ruff E9/F, compilation and benchmarks green)
 - [x] H — Simulation (canonical NVT/NPT protocol, MSDE lifecycle, energy-series analysis, hash-pinned GROMACS integration, OpenMM direct API, SIM-001–SIM-007; CI pending, scientific review deferred)
 - [x] H — Simulation CI verification (run #44893264385: core 696 passed/12 skipped; optional Chemistry 704/4, Genomics 697/11, Sequence 699/9; registry, schemas, Ruff E9/F, compilation and benchmarks green)
-- [x] I — Kinetics implementation (canonical reaction-network artifact, bounded mass-action RK4, four capabilities, KIN-001–KIN-006, schemas, tests and benchmark; CI verification pending)
+- [x] I — Kinetics implementation and CI verification (canonical reaction-network artifact, bounded mass-action RK4, four capabilities, KIN-001–KIN-006, schemas, tests and benchmark; run #44894304968 green: core 702/12 skipped, Chemistry 710/4, Genomics 703/11, Sequence 705/9)
 - [ ] J — Omics
 - [ ] K — Phylogeny
 - [ ] L — Pharmacogenomics
