@@ -75,7 +75,10 @@ def validate() -> list[str]:
             if len(requirement_ids) != len(set(requirement_ids)):
                 errors.append("Duplicate requirement_id in traceability CSV")
             if len(rows) != 8 or set(requirement_ids) != {f"G-REQ-{n:03d}" for n in range(1, 9)}:
-                errors.append("Requirements traceability must contain exactly G-REQ-001 through G-REQ-008")
+                errors.append(
+                    "Requirements traceability must contain exactly "
+                    "G-REQ-001 through G-REQ-008"
+                )
             unmapped = sorted(expected - mapped)
             if unmapped:
                 errors.append("Controls missing traceability rows: " + ", ".join(unmapped))
@@ -155,7 +158,9 @@ def validate() -> list[str]:
         if len(test_ids) != len(set(test_ids)):
             errors.append("Duplicate security verification test IDs")
         if set(test_ids) != expected_test_ids:
-            errors.append("Security verification matrix must contain SEC-001 through SEC-016 exactly")
+            errors.append(
+                "Security verification matrix must contain SEC-001 through SEC-016 exactly"
+            )
 
     data_flow_path = ROOT / "docs/track-g/data-flow-inventory.md"
     if data_flow_path.is_file():
@@ -179,7 +184,10 @@ def validate() -> list[str]:
             "G-ROLE-RELEASE",
             "G-ROLE-PUB",
         ):
-            role_rows = [line for line in roles.splitlines() if role in line and line.startswith("|")]
+            role_rows = [
+                line for line in roles.splitlines()
+                if role in line and line.startswith("|")
+            ]
             if len(role_rows) != 1:
                 errors.append(f"{role} must have exactly one accountability row")
                 continue
@@ -191,7 +199,9 @@ def validate() -> list[str]:
     if operations_path.is_file():
         operations = operations_path.read_text(encoding="utf-8")
         if "No exercise is marked complete by this template" not in operations:
-            errors.append("Operational procedure must distinguish templates from completed exercises")
+            errors.append(
+                "Operational procedure must distinguish templates from completed exercises"
+            )
         for exercise in ("OPS-TT-01", "OPS-TT-02", "OPS-TT-03", "OPS-TT-04", "OPS-TT-05"):
             exercise_rows = [
                 line for line in operations.splitlines()
