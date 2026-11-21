@@ -84,3 +84,16 @@ The Agentics track is sequential and phase-gated:
 - **P6:** service-specific Proposer → Verifier patterns and real cross-service evidence.
 
 No later phase begins until the prior gate passes and is reported. Engineering CI is not scientific validation; university review remains separate.
+
+
+## Agentics Molecularis — universal scientific construction direction (2026-11-21)
+
+This direction supersedes narrower descriptions of Agentics phases where they conflict with the current governing [Master Plan v2.0](AGENTICS_MOLECULARIS_MASTER_PLAN.md).
+
+**Permanent rule for every service A–N:** Understand → Represent → Reason → Construct → Evaluate → Verify → Learn. The principle applies equally to Molecular, Sequence, Structure, Chemistry, Protein, Genomics, DNA/RNA, Simulation, Kinetics, Omics, Phylogeny, Pharmacogenomics, Cohorts and Workflows.
+
+The shared target is a Scientific Knowledge Engine plus typed reasoning, construction, evaluation and independent verification contracts. Domain services retain their own scientific knowledge, laws, equations, constraints, algorithms, Rulebooks and evidence thresholds. This is not a mandate to rewrite existing services or create fourteen generic AI wrappers.
+
+External databases, PDB/X-ray observations, pretrained predictors and hosted models are optional evidence/method adapters. They must not define the boundary of construction or make Molecularis dependent on one data modality. Distinguish observed, established, derived, inferred, predicted, simulated, constructed, hypothesized and validated results. A mathematically valid or generated candidate is not automatically physically stable, experimentally realizable or functional.
+
+**Roadmap authority:** P0 safety/reliability → P1 universal knowledge architecture → P2 shared reasoning/construction primitives → P3 A–N domain integration → P4 Agentics orchestration → P5 optional models/training → P6 controlled discovery/design → P7 independent generalization/research evaluation. Execute one phase at a time and require its gate before proceeding. Do not treat documentation as implementation evidence.

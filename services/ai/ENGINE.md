@@ -1,89 +1,74 @@
-# Agentics Molecularis — Intelligence and Orchestration Engine
+# Agentics Molecularis — Intelligence, Reasoning and Orchestration Engine
 
-**Product:** Agentics Molecularis  
-**Parent platform:** Molecularis  
-**Status:** Initial planner and approval-gated workflow execution implemented; provider, Sources, evidence composer and end-to-end acceptance pending.
+**Status:** Initial planner and approval-gated Workflow v1 execution implemented. Universal scientific knowledge, construction and verification architecture is the governing target.
+
+Read the [Universal Scientific Reasoning & Construction Master Plan](../../docs/AGENTICS_MOLECULARIS_MASTER_PLAN.md).
 
 ## Mission
 
-Translate research objectives into inspectable Workflow v1 plans; discover registered Molecularis capabilities; coordinate approved execution; verify artifact outputs; and compose answers whose scientific claims are traceable to immutable artifacts.
+Translate research objectives into inspectable, reproducible workflows that use the shared scientific knowledge and reasoning foundation and coordinate all relevant Molecularis services A–N. The system should support the full lifecycle: understand, represent, reason, construct, evaluate, verify, classify and report.
 
-The governing design is **agents propose and coordinate; scientific engines compute; Rulebooks constrain and verify; artifacts preserve evidence; humans authorize consequential actions.**
+## Permanent principle
 
-The full architecture, phase gates and acceptance standard are in [Agentics Molecularis Master Plan](../../docs/AGENTICS_MOLECULARIS_MASTER_PLAN.md).
+**Understand → Represent → Reason → Construct → Evaluate → Verify → Learn.**
+
+This applies to every service, not only Structure/Protein and not only work based on PDB, X-ray structures or pretrained predictors. External observations and models are evidence or optional methods; they are not the boundary of what Molecularis may construct.
+
+## Authority boundaries
+
+- Agentics interprets objectives, discovers capabilities, plans, coordinates approved execution and composes evidence-grounded reports.
+- The Scientific Knowledge Engine stores typed, versioned scientific concepts, relations, equations, mechanisms, constraints, assumptions, evidence and applicability domains.
+- Domain services own scientific meaning, algorithms, construction methods, thresholds and verification Rulebooks.
+- Core/MSDE owns artifact identity, capability registry, workflow execution, budgets, provenance and lineage.
+- LLMs are optional replaceable planners/reporters, not scientific authorities or substitutes for executable reasoning.
+- Humans retain authority over consequential, clinical, experimental and institutionally governed decisions.
 
 ## Existing implementation to preserve
 
-- `python/molecularis/ai.py`: provider-neutral callable planner contract, active capability catalog, strict Workflow v1 parsing, bounded operation count, persisted workflow artifact with input parents, and explicit approval gate.
-- `python/molecularis/workflows_service.py`: WorkflowDocument, DAG validation, capability checks, ingestion and Rulebook execution.
-- `python/molecularis/bootstrap.py`: fresh-runtime A–N service registration.
-- Core/MSDE: artifact store, catalog, lineage, budgets, capability registry and run evidence.
+- `python/molecularis/ai.py`: provider-neutral callable planner, active capability catalog, strict Workflow v1 validation, bounded operations, persisted plan artifacts with input lineage and explicit approval.
+- `python/molecularis/workflows_service.py`: DAG validation, capability resolution and Core Rulebook execution.
+- `python/molecularis/bootstrap.py`: A–N registration.
+- Core/MSDE artifact store, catalog, lineage, budgets and capability registry.
 
-Do not create a parallel workflow parser or duplicate registry/executor.
+Do not create a parallel workflow parser, registry, artifact store or executor.
 
-## Target runtime components
+## Target components
 
-1. Request gateway and input validator.
-2. Intent interpreter and entity-resolution coordinator.
-3. Sources connectors and provenance/license manager.
-4. Capability discovery and JSON-Schema tool adapter.
-5. Workflow planner and strict plan validator.
-6. Human approval manager.
-7. Bounded execution orchestrator.
-8. Scientific proposer adapters, including the separate Predictor service.
-9. Domain Rulebook verifier and independent-check coordinator.
-10. Artifact evidence ledger and claim-grounded answer composer.
-11. Audit trace, evaluation harness and deployment policy.
+1. Request and input validator.
+2. Intent/task interpreter and ambiguity resolver.
+3. Scientific Knowledge Engine and versioned knowledge packages.
+4. Typed knowledge representation, units, equations and constraints.
+5. Reasoning/derivation coordinator.
+6. Construction strategy and candidate generator contracts.
+7. Evaluation, optimization and uncertainty contracts.
+8. Domain Proposer and independent Verifier adapters.
+9. Capability/schema discovery and Workflow v1 planner.
+10. Approval-gated bounded orchestrator.
+11. Immutable evidence ledger and claim-grounded answer composer.
+12. Audit, benchmark and adversarial evaluation harness.
 
-## Request lifecycle
+These are logical modules; do not split them into processes without measured justification.
 
-Receive → interpret → resolve/clarify → discover → plan → validate → explain/approve → execute → verify → compose → audit.
+## Lifecycle
 
-Each stage consumes and emits typed contracts or artifact references. A stage cannot bypass upstream authorization or downstream verification.
+Receive → interpret/clarify → represent → retrieve relevant knowledge where needed → reason/formulate → plan → validate → explain/approve → execute → evaluate → independently verify → classify epistemic status → compose artifact-grounded report → audit.
 
-## Agent topology and autonomy
+## Construction modes
 
-Begin with one orchestrator. Specialist agents are a later optimization, not a prerequisite. Any future specialist has an explicit role, tool allowlist, task contract, budget, timeout, termination condition and trace. Agents cannot authorize themselves or modify policy.
+- Reconstruction from supplied observations or constraints.
+- Generalization from established models with explicit assumptions.
+- Exploration of a bounded candidate space for unobserved possibilities.
 
-Autonomy levels:
-- L0 Explain available capabilities and evidence.
-- L1 Draft a plan; no scientific execution.
-- L2 Execute a user-approved bounded workflow.
-- L3 Run pre-authorized finite loops with stop conditions and budgets.
-- L4 Autonomous consequential actions are out of scope and disabled.
+Every task declares objectives, constraints, method, budget, stopping criteria, uncertainty and verification plan. A constructed candidate is not automatically physically stable, experimentally realizable or functional.
 
-## Provider adapter contract
+## Evidence and reporting
 
-Provider SDKs remain outside Core. A deployment adapter may use a hosted tool-calling model first and a local model later. It must return strict structured data, record provider/model/version and request metadata, enforce timeout/cost/context bounds, support cancellation where available, redact telemetry and fail closed on malformed output. Secrets are deployment-managed and never committed.
+Every claim maps to immutable artifact IDs and field paths. Record source/knowledge versions, equations, assumptions, methods, model/runtime versions, units, transformations, uncertainty and verification evidence. Report missing or conflicting evidence as unknown/ambiguous. Never invent scientific values, citations, laws or validation outcomes.
 
-A deterministic mock adapter is mandatory for CI. No provider is reported as configured until a controlled integration test passes.
+## Security and autonomy
 
-## Trust and security boundaries
-
-- Model output, fetched text, file metadata, sequences, structure annotations and tool results are untrusted data.
-- Never execute model-generated code or arbitrary shell/SQL.
-- Only active registered capabilities may be proposed; policy independently authorizes each invocation.
-- Validate every input/output against versioned schemas.
-- Planning does not execute scientific operations.
-- Execution requires explicit approval and bounded runtime policy.
-- Network is denied by default; capability-specific egress requires allowlisting and user consent where user data leaves the environment.
-- Failures, cancellations, partial outputs and retries remain explicit evidence.
-- No model-generated value is scientific evidence.
-
-## Evidence-grounded reporting
-
-The answer composer must build claim records from artifact fields. Each claim includes supporting artifact IDs and field paths, source/method/model version, units, validation status, uncertainty and limitations. Missing or conflicting evidence must be stated as unknown or ambiguous. LLM-generated text may explain artifact-backed facts but cannot create numbers, coordinates, accessions, citations or confidence values.
-
-## Scientific model boundary
-
-LLMs are planners/reporters, not structure predictors or scientific validators. Scientific predictors are separate registered service adapters. Predicted and experimental artifact namespaces are distinct. Predictor provenance includes checkpoint hash, input hash, model version, seed/parameters, confidence outputs and verification evidence.
+Fetched text, model output and scientific annotations are untrusted data. Never execute generated code or shell. Tools are active registered capabilities only. Network is denied by default. Execution requires approval bound to the exact plan and inputs. Specialist agents remain deferred until a single orchestrator is safe and evaluated. L4 consequential autonomy is disabled.
 
 ## Current limitations
 
-- No configured production LLM provider is bundled.
-- Sources and Predictor are not yet complete services.
-- No complete artifact-grounded report composer or 50-query adversarial evaluation set.
-- Real cross-service scientific artifact handoff remains to be demonstrated.
-- OS-level isolation and recovery certification remain open.
-- No multi-agent delegation, long-term memory or distributed execution is claimed.
-- Scientific, clinical, experimental and institutional decisions remain outside Agentics authority.
+No complete SKE, universal construction framework, configured production LLM provider, evidence-grounded report composer, full real cross-service scientific handoff, 50+ adversarial evaluation suite, OS-level sandbox or recovery certification is claimed. The existing AI implementation is an initial engineering foundation, not a completed autonomous discovery system.

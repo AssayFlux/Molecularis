@@ -2,6 +2,13 @@
 
 Record decisions newest-first. Do not silently rewrite historical decisions; supersede them with a new entry.
 
+## DEC-0012 — Universal Knowledge-to-Construction principle across A–N
+- Status: Authorized by the repository owner on 2026-11-21.
+- Decision: All fourteen Molecularis services follow the shared lifecycle **Understand → Represent → Reason → Construct → Evaluate → Verify → Learn**. Agentics Molecularis coordinates this approach; a shared Scientific Knowledge Engine and reasoning/construction contracts support it; each service retains domain-specific scientific knowledge, algorithms, Rulebooks and verification criteria.
+- Rationale: Molecularis must progress beyond retrieval and reproduction of known examples toward principled construction and evaluation of new candidates, including possibilities not present in current datasets.
+- Constraints: This is not limited to molecular X-ray/PDB/structure prediction. External databases, observations and pretrained models are optional evidence/methods, not architectural prerequisites. Distinguish observed, established, derived, inferred, predicted, simulated, constructed, hypothesized and validated results. Mathematical validity, physical plausibility, experimental realizability and function are separate claims. Preserve human/institutional authority and independent domain verification. Implement the v2.0 roadmap sequentially with evidence gates; do not claim planned capabilities as implemented.
+
+
 ## DEC-0011 — Name and govern the Agentics Molecularis intelligence system
 - Status: Authorized by the repository owner on 2026-11-21.
 - Decision: The AI intelligence/orchestration layer is officially named **Agentics Molecularis**. Molecularis remains the parent scientific computing platform. The detailed roadmap is governed by `docs/AGENTICS_MOLECULARIS_MASTER_PLAN.md`.

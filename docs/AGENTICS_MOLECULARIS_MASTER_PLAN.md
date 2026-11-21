@@ -1,440 +1,401 @@
-# Agentics Molecularis — Master Architecture, Build Plan and Acceptance Standard
+# Agentics Molecularis — Universal Scientific Reasoning & Construction Master Plan
 
-**Product name:** Agentics Molecularis  
+**Product:** Agentics Molecularis  
 **Parent platform:** Molecularis by AssayFlux  
-**Plan version:** 1.0  
-**Status:** Governing implementation plan; phases are sequential and gated  
+**Plan version:** 2.0 — Universal Knowledge-to-Construction Architecture  
+**Status:** Governing architecture and sequential implementation plan  
 **Branch:** CORE  
-**Prepared:** 2026-11-21
+**Prepared:** 2026-11-21  
+**Supersedes:** v1.0 where it conflicts with this plan; historical decisions remain in the decision log.
 
-## 1. Identity, purpose and product boundary
+---
 
-**Agentics** describes the engineering of goal-directed software agents: systems that interpret objectives, plan bounded actions, use tools, coordinate specialised capabilities, inspect outcomes and revise or stop according to policy. Agentics Molecularis is the agentic intelligence and orchestration system of the Molecularis scientific platform.
+## 1. Executive direction
 
-Molecularis remains the scientific computing platform and owner of scientific services, algorithms, data contracts, Rulebooks, execution and artifacts. Agentics Molecularis is not a replacement for those services and is not itself a source of scientific truth.
+Agentics Molecularis is the agentic intelligence and scientific orchestration system of Molecularis. Its purpose is not merely to search scientific databases, retrieve known structures, call pretrained predictors or automate existing tools. Its long-term purpose is to help a researcher move from a scientific objective to a reasoned, reproducible and independently evaluated construction.
 
-### Mission
+**Project-wide invariant:** every service A–N follows the same scientific approach:
 
-Translate a researcher's natural-language objective into an inspectable, policy-compliant, reproducible scientific workflow; coordinate registered Molecularis capabilities; preserve all inputs, intermediate results, failures and validation evidence; and compose a useful answer whose claims are traceable to artifacts.
+**Understand → Represent → Reason → Construct → Evaluate → Verify → Learn.**
+
+This principle is shared across all services. It is not a protein-only, molecular-X-ray-only, PDB-only or structure-prediction roadmap. Every domain keeps its own scientific semantics, engines, constraints, evidence standards and Rulebooks while participating in a shared platform.
 
 ### North Star
 
-**Agents propose and coordinate. Scientific engines compute. Rulebooks constrain and verify. Artifacts preserve evidence. Humans authorize consequential actions.**
+**Given a scientific objective, Molecularis should identify the relevant knowledge, determine the governing principles and constraints, reason about what is possible, construct candidate solutions, evaluate them through appropriate scientific methods, and distinguish established results from new hypotheses.**
 
-### Product boundary
+The platform must grow from a system that processes known inputs into a system capable of deriving and constructing new possibilities from scientific knowledge. It must not claim that every generated candidate is correct, stable, realizable or experimentally confirmed.
 
-- Molecularis owns domain science and execution semantics.
-- Agentics Molecularis owns intent interpretation, planning, capability selection, workflow composition, bounded coordination, evidence aggregation and answer composition.
-- External LLMs are replaceable reasoning providers, never scientific authorities.
-- External databases and models are accessed through explicit, versioned, licensed source/model adapters.
-- The system must work without a hosted LLM for deterministic, pre-authored workflows and local operations where supported.
-- No clinical diagnosis, treatment recommendation, experimental authorization or autonomous wet-lab action is implied.
+## 2. Permanent project-wide principles
 
-## 2. Existing foundation — reuse before extending
+1. **Knowledge before pattern imitation.** Models and datasets are useful evidence and approximations, not substitutes for domain knowledge, mathematical structure or governing principles.
+2. **First-principles where applicable.** Use equations, conservation laws, physical models, chemical rules, causal mechanisms, mathematical constraints and domain theory where appropriate. State assumptions and validity domains.
+3. **Multiple complementary methods.** Combine symbolic reasoning, graph/geometry construction, numerical methods, optimization, simulation, statistical inference and machine learning when justified. No single method is mandatory for every task.
+4. **Construct, do not only retrieve.** Retrieval supplies evidence, initial conditions, templates and comparisons. It must not define the boundary of what the platform can attempt to construct.
+5. **Generalize beyond examples.** A service must be designed to handle supported classes of problems, not merely memorized fixtures or a fixed collection of reference structures.
+6. **Independent verification.** A proposer must not be the sole judge of its own output. Verification uses domain-owned rules and independent checks appropriate to the claim.
+7. **Epistemic honesty.** Distinguish observed, established, inferred, predicted, simulated, constructed and hypothesized results.
+8. **Traceability.** Inputs, knowledge sources, assumptions, equations, software, models, parameters, seeds, intermediate artifacts and verification evidence remain traceable.
+9. **Human authority.** Consequential, clinical, experimental, safety-sensitive or institutionally governed decisions remain with qualified humans.
+10. **No fabricated science.** Missing evidence remains missing. Do not invent values, laws, citations, measurements, coordinates, confidence or validation outcomes.
+11. **Service universality.** The same lifecycle and evidence principles apply to A–N, with domain-specific implementations rather than a generic one-size-fits-all scientific validator.
+12. **Incremental engineering.** Reuse working repository foundations, implement one gated phase at a time, test engineering contracts and do not claim scientific acceptance before independent review.
 
-The repository already contains a meaningful first implementation. Do not duplicate it:
+## 3. Scientific epistemology and result classes
 
-1. `python/molecularis/ai.py` provides a model-agnostic callable planner contract, live capability catalog, strict Workflow v1 parsing, bounded operations, persisted plan artifacts, input lineage and explicit approval before execution.
-2. `python/molecularis/workflows_service.py` defines WorkflowDocument, DAG validation, capability resolution, workflow ingestion and execution through the Core Rulebook runtime.
-3. `python/molecularis/bootstrap.py` registers A–N service handlers and capabilities on a fresh platform.
-4. Core/MSDE provides content-addressed artifacts, metadata catalog, lineage, budgets, capability registry and Rulebook execution evidence.
-5. Services A–N are present as engineering implementations; real cross-service scientific artifact compatibility and scientific acceptance still require evidence.
-6. `services/ai/ENGINE.md`, `RULEBOOK.md` and `ACCEPTANCE.md` are the initial AI specification and must evolve with this plan.
+Every scientific artifact/report must declare its epistemic status. At minimum:
 
-Current implementation limits: no configured production LLM provider is bundled; no complete source-ingestion service; no Predictor service; no evidence-grounded answer composer; no 50-query adversarial evaluation suite; no demonstrated full real-science cross-service chain; and no certified OS-level sandbox or recovery envelope. Do not describe the existing callable planner as a finished autonomous agent.
-
-## 3. System architecture
-
-### 3.1 Logical components
-
-| Component | Responsibility | Authority boundary |
+| Status | Meaning | What it does not mean |
 |---|---|---|
-| Request Gateway | Accept text, files, structured inputs, user constraints and authorization context | Validates size/type; does not infer scientific truth |
-| Intent Interpreter | Extract objective, entities, task type, constraints, requested outputs and uncertainty | Produces hypotheses and candidate interpretations |
-| Entity Resolver | Resolve names/identifiers to ranked source records and accession candidates | Must preserve ambiguity; never silently select an uncertain identity |
-| Source Manager | Retrieve, cache, checksum, license-check and version external data | Every retrieval becomes a provenance-bearing artifact |
-| Capability Discovery | Read active registry and schemas; expose permitted operations | Only registered, enabled capabilities are callable |
-| Planner | Compose typed Workflow v1 DAG and explain dependencies | Proposes; cannot execute or bypass policy |
-| Plan Validator | Validate schemas, types, authorization, provenance, DAG, budgets and policy | Fail closed on unsupported or unsafe plans |
-| Approval Manager | Present plan, data egress, cost/resource estimate and consequences | Explicit human approval for execution and consequential actions |
-| Orchestrator | Schedule and invoke approved operations; track cancellation and failures | Calls only declared handlers through bounded runtime |
-| Scientific Proposers | Invoke deterministic engines or configured model adapters | Outputs remain candidates/predictions until verified |
-| Verifier | Run service Rulebooks, independent checks and acceptance criteria | Cannot be bypassed by model confidence or LLM narrative |
-| Artifact & Evidence Ledger | Store immutable inputs, outputs, runs, source records and validation evidence | Canonical artifact data is authoritative |
-| Answer Composer | Produce claims, values, tables and explanations from verified artifacts | Unsupported claims must be omitted or explicitly marked unknown |
-| Audit & Evaluation | Record decisions, traces, provider metadata, policy outcomes and eval results | Sensitive data and secrets must be redacted |
+| Observed | Directly recorded measurement or experimental observation with source and conditions | Automatically error-free or universally generalizable |
+| Established | Supported by accepted theory/evidence within a stated domain | True outside its assumptions/domain |
+| Derived | Obtained by explicit mathematical or logical derivation from stated premises | Experimentally observed |
+| Inferred | Estimated from data/model under declared assumptions | Direct measurement |
+| Predicted | Model-produced estimate with model/version/provenance | Confirmed fact |
+| Simulated | Result of a specified computational model and conditions | Guaranteed physical realization |
+| Constructed | A candidate generated under explicit representation and constraints | Stable, functional or experimentally realizable |
+| Hypothesized | A novel or insufficiently tested scientific proposition/candidate | Validated discovery |
+| Validated | Passed specified independent checks at a declared evidence level | Universally true or experimentally proven unless that is what was tested |
 
-### 3.2 Request-to-answer lifecycle
+Do not collapse these statuses into a boolean success field. Use explicit states such as accepted, rejected, indeterminate, failed, needs_human_review, and not_applicable alongside the evidence class.
 
-1. **Receive:** validate request, files, size, format, identity/authorization and declared privacy constraints.
-2. **Interpret:** extract task, entities, desired outputs, scope, assumptions and missing information.
-3. **Resolve:** query local indexes and approved Sources connectors; return ranked candidates with evidence and ambiguity.
-4. **Clarify:** ask the user when unresolved ambiguity changes scientific meaning, authorization, data identity or execution risk.
-5. **Discover:** inspect active capabilities, versions, input/output schemas, dependencies, resource needs and license/privacy constraints.
-6. **Plan:** generate a Workflow v1 DAG with explicit inputs, outputs, parameters, provenance, method choices, verification operations and resource budgets.
-7. **Validate:** validate every edge and schema, verify artifact existence/integrity, check policy and source/model licenses, check budgets and capability availability.
-8. **Explain & approve:** show the proposed workflow, alternatives, assumptions, external data transfers, expected resources and irreversible effects; obtain explicit approval.
-9. **Execute:** run approved operations using the bounded Rulebook runtime; preserve run states, intermediate artifacts, stdout/stderr summaries and failures according to policy.
-10. **Verify:** apply service-specific acceptance rules and, where required, independent methods/reference comparisons.
-11. **Compose:** answer only from artifact-backed facts; cite artifact IDs, source records, methods, versions, units, confidence and validation status.
-12. **Audit:** persist workflow, plan, approval, execution, failure, verification and report records for replay and review.
+### Construction and truth are separate gates
 
-### 3.3 Agent roles and autonomy
+For any constructed scientific candidate, report separately as applicable:
 
-Start with a single orchestrator and explicit typed stages. Do not introduce multi-agent complexity before the single-agent workflow is safe and measurable.
+1. Representationally well-formed.
+2. Mathematically consistent.
+3. Domain-rule compliant (e.g. valence, topology, sequence grammar, conservation).
+4. Physically plausible under a specified model and conditions.
+5. Computationally stable under declared simulation/optimization conditions.
+6. Experimentally realizable (requires appropriate experimental evidence).
+7. Functionally demonstrated (requires domain-appropriate functional evidence).
 
-Later, specialist agents may be isolated behind the same capability and artifact contracts:
-- **Research agent:** decomposes objective and identifies evidence needs.
-- **Source agent:** searches approved databases and returns source artifacts.
-- **Planning agent:** proposes typed workflow DAGs.
-- **Execution coordinator:** dispatches approved capabilities.
-- **Verification agent:** selects and interprets declared verification procedures; the actual validators remain deterministic/domain-owned.
-- **Reporting agent:** composes artifact-grounded results.
+Passing an earlier gate never implies passing a later one. “Novel” means not found in the searched/compared reference space under a declared protocol; it does not prove globally unprecedented discovery.
 
-Agents communicate through typed messages and artifact references, not shared mutable memory. Every delegation has a bounded task, allowed tools, resource budget, timeout, provenance and termination condition. An agent cannot grant itself permissions or approve its own high-impact action.
+## 4. Universal scientific lifecycle
 
-Autonomy levels:
-- **L0 — Explain:** answer questions about available capabilities and plans without execution.
-- **L1 — Draft:** propose a plan; no scientific operation runs.
-- **L2 — Approved execution:** execute a user-approved bounded workflow.
-- **L3 — Bounded iteration:** execute pre-authorized, finite retry/optimization loops with declared stop criteria and budgets.
-- **L4 — Autonomous consequential action:** out of scope until separate governance, safety, scientific and institutional approval. Never enable by default.
+Every A–N service implements this lifecycle, adapted to its domain:
 
-## 4. Core contracts and artifact model
+1. **Understand:** parse the objective, entities, target representation, constraints, desired outputs and uncertainty.
+2. **Represent:** convert inputs into canonical typed domain representations with units, coordinate/reference conventions and identity.
+3. **Acquire knowledge:** obtain relevant local and approved external evidence, theory, parameters, equations and reference data. Retrieval is optional when the task is self-contained.
+4. **Reason:** identify governing laws, mechanisms, dependencies, assumptions, boundary conditions and applicability domains.
+5. **Formulate:** choose a construction/analysis strategy and define objective functions, constraints, uncertainty and stop conditions.
+6. **Construct or compute:** produce candidates/results through native engines, deterministic algorithms, simulation, optimization or approved model adapters.
+7. **Evaluate:** score candidates against explicit objectives, feasibility constraints, robustness and resource limits.
+8. **Verify independently:** apply domain Rulebooks, alternative methods, invariants, reference comparisons, sensitivity analysis or experimental evidence as appropriate.
+9. **Classify:** label epistemic status, confidence/uncertainty, limitations and unresolved questions.
+10. **Preserve and report:** publish immutable artifacts, provenance, lineage, methods, units and claim-level evidence.
 
-### 4.1 Workflow contract
+Some tasks may skip a stage only with an explicit not-applicable reason. The system must not fabricate a knowledge source or simulation when none was needed or available.
 
-Reuse Workflow v1 and evolve through explicit versioning rather than creating a parallel planner format. Each operation must declare:
-- Stable operation and capability IDs plus versions.
-- Typed input artifact keys and output key.
-- Parameters validated against the capability JSON Schema.
-- Dependencies and deterministic ordering.
-- Method/model identity and configuration where applicable.
-- Resource budget and timeout.
-- Required permissions and network/data-egress policy.
-- Expected output schema/media type.
-- Verification Rulebook IDs and acceptance criteria.
-- Failure, cancellation, partial-output and retry semantics.
+## 5. Universal architecture
 
-Schema evolution must be backward-compatible where possible. Breaking changes require a new version and migration notes. The planner cannot invent capability IDs, alter schemas or bypass registry state.
+### 5.1 Layered system
 
-### 4.2 Required artifact classes
-
-| Artifact class | Minimum recorded information |
+| Layer | Responsibility |
 |---|---|
-| User input | content hash, media type, size, user-supplied status, consent/authorization metadata where applicable |
-| External source record | canonical URL, accession, provider, release/version, retrieval timestamp, checksum, license/terms, attribution and transformations |
-| Model prediction | predicted namespace ID, model/checkpoint/version, weights hash, input hash, seed, parameters, software/runtime, confidence outputs and verification status |
-| Experimental observation | separate experimental namespace, source accession, method, publication/deposition metadata, experimental conditions and source validation |
-| Workflow plan | request digest, planner/provider identity, capability versions, DAG, input parents, validation report and approval reference |
-| Execution run | run ID, plan hash, start/end, environment, resource use, operation states, logs/evidence and failures |
-| Verification result | rule ID/version, validator identity/version, inputs, thresholds, metrics, pass/fail/indeterminate state and evidence artifacts |
-| Scientific report | claim IDs, exact supporting artifact IDs/fields, units, methods, caveats and unsupported questions |
-
-Artifact IDs are immutable and content-addressed. Human-readable identifiers are aliases mapped to immutable hashes; aliases never replace hashes. Predicted and experimental namespaces must remain distinct and machine-enforced.
-
-### 4.3 Evidence-grounded answer contract
-
-Every factual claim in a final scientific answer must map to one or more artifact fields. A report claim should carry:
-- Claim ID and text.
-- Artifact ID(s) and field/path(s).
-- Source/method/model and version.
-- Units and transformation history.
-- Verification state and applicable rule IDs.
-- Confidence or uncertainty with its definition.
-- Limitations and applicability domain.
-
-If a value is absent, invalid, ambiguous or not supported, state **“I cannot determine that from the available artifacts.”** The LLM may explain supported results but must not supply missing measurements, coordinates, accessions, confidence scores or citations from memory. Never treat generated prose as an artifact.
-
-## 5. Security, privacy, safety and licensing
-
-### 5.1 Execution security
-- Use an OS-level sandbox/container for untrusted tools and model inference where feasible.
-- Enforce CPU, memory, GPU, disk, process count, file size, wall-time, concurrency and output-size limits.
-- Network is disabled by default; each capability declares exact allowed destinations/protocols and data egress.
-- Use read-only inputs and isolated writable output directories; prevent path traversal and symlink escape.
-- Never pass secrets in prompts, logs, command-line arguments or artifacts.
-- Use deployment secret managers/environment injection; never commit credentials.
-- Record sandbox profile, image digest, runtime and policy decision.
-- Terminate process trees on timeout/cancellation and preserve failure evidence.
-
-### 5.2 Untrusted data and prompt injection
-- Retrieved web pages, database annotations, PDFs, sequence headers, structure metadata, filenames and model outputs are data, never instructions.
-- Separate instructions from source payloads; quote/label source text and restrict its influence to the relevant data fields.
-- Tool selection and permissions are decided by deterministic policy, not source text or LLM requests.
-- Validate all structured outputs against strict schemas; reject unknown fields where contracts require.
-- Add indirect prompt-injection fixtures across every connector and file type.
-- Never let an external record change system rules, request secrets or authorize new tools.
-
-### 5.3 Privacy
-- Do not commit patient-identifiable, personal, controlled or private research data.
-- Define local-only versus remote-processing modes.
-- Warn and obtain consent before sending sequences, structures, compounds, cohort data or other user material to remote providers.
-- Minimize payloads and redact logs.
-- Define retention, deletion, access control and audit policies before multi-user deployment.
-- No patient-level clinical interpretation in this release plan.
-
-### 5.4 Licensing and data governance
-- Maintain a source/model/dependency license ledger.
-- Record license text/reference, version, retrieval date, permitted use, attribution, share-alike and non-commercial restrictions.
-- Block use where deployment purpose conflicts with license terms.
-- Do not infer blanket licensing from a database name; verify specific data releases, model weights, code and derived datasets separately.
-- Distinguish experimental observations from predictions and synthetic labels.
-- Preserve required attribution and share-alike obligations in downstream artifacts and reports.
-
-### 5.5 Biosecurity
-- Any sequence, structure, molecule or protocol design capability must undergo a separate risk assessment before enablement.
-- Screen against appropriately governed toxin/pathogen-virulence references and applicable institutional policies.
-- Record screen version, input/output hashes, result, rationale and human-review record.
-- Refuse harmful design intent; do not provide operational assistance for harmful biological activity.
-- Screening does not replace human institutional oversight. Design remains disabled until P5 gate approval.
-
-## 6. Model and provider strategy
-
-### 6.1 LLM provider adapter
-Define a provider-neutral adapter outside Core. It must support structured outputs/tool calls, bounded context, timeout, cancellation, retries only where safe, usage/cost accounting, model identity/version, request/response hashes and redacted telemetry. Credentials are deployment-managed. Provider responses are untrusted.
-
-Required adapter behaviours:
-- Capability schema supplied as constrained tool definitions.
-- Strict JSON/Workflow v1 output; no executable code.
-- Explicit refusal/unsupported state.
-- Deterministic mock provider for CI.
-- Optional hosted provider first; local model adapter later.
-- No provider is considered configured until a real integration test in a controlled environment passes.
-
-### 6.2 Model governance
-Record model provider, model name/version, endpoint class, weights/checkpoint hash if local, prompt/template version, decoding parameters, seed if supported, tool schema version and evaluation results. Pin or explicitly record provider model revisions. Model changes trigger regression evaluation.
-
-### 6.3 Scientific model adapters
-Scientific predictors are separate from LLMs. Predictor adapters return canonical artifacts and full model provenance. License review applies to code, weights and training data independently. Never use a model's confidence as proof of correctness.
-
-## 7. Sources service requirements (P1)
-
-Create a Sources service following existing service ownership/layout conventions after auditing current source-related code and adapters. Initial connectors:
-- RCSB PDB: Data API and structure file retrieval.
-- UniProt REST: accession, sequence and annotation retrieval.
-- AlphaFold DB: predicted structure retrieval, explicitly labelled predicted.
-- InterPro: domain/family annotation.
-- PubChem: compound identifiers and records.
-- NCBI Entrez: approved databases, with API key/rate policy where applicable.
-
-Connector contract:
-- Provider identity, endpoint allowlist, request/response schema and version.
-- Rate limiting, exponential backoff with jitter, bounded retries and respectful provider policy.
-- ETag/Last-Modified caching where supported; cache key includes accession and release.
-- Response-size/time limits and content-type validation.
-- SHA-256 checksum and canonical artifact publication.
-- Retrieval time, source release, accession, URL, license/terms and attribution.
-- Offline fixture mode; CI must not depend on live network.
-- Explicit stale-cache and partial-response semantics.
-
-Entity resolution:
-- Normalize names and identifiers without discarding original query.
-- Return ranked candidates, evidence, source and accession.
-- Expose ambiguity and conflicting records.
-- Never silently resolve ambiguous biological entities.
-- Ask the user when candidate choice changes the scientific result.
-
-P1 acceptance: recorded fixtures resolve “human hemoglobin” into distinct alpha- and beta-chain candidates with explicit accessions and evidence; retrieve one selected PDB entry as a content-addressed artifact; repeated fixture retrieval yields stable bytes/checksum; license/provenance metadata is complete; offline tests pass.
-
-## 8. Predictor service requirements (P3)
-
-Create a distinct Predictor service; do not bury structure prediction inside the LLM layer or silently label predictions as experimental.
-
-Initial interface:
-- Inputs: validated protein sequence artifact, optional ligand/chain context, model selection, parameters, resource budget and optional MSA artifact.
-- Outputs: mmCIF structure artifact plus confidence/metadata JSON, logs, model provenance and verification report.
-- Model adapters are optional and independently licensed; candidate options include Boltz-family, OpenFold-family, Protenix, Chai and existing ESM/ESMFold paths only after exact checkpoint/license review.
-- MSA: local MMseqs2 preferred; remote service is opt-in and requires explicit sequence-egress warning/consent.
-- Resource estimation and GPU/CPU capability discovery before approval.
-- Human-readable prediction alias such as MOL-P-000001 mapped to immutable SHA-256 identity; experimental IDs use a separate namespace.
-
-Required prediction provenance: model name, version, code revision, checkpoint/weights hash, input sequence hash, MSA hash/source, parameters, random seed where supported, runtime/container digest, hardware, start/end, confidence outputs (for example pLDDT/PAE when produced), warnings and verification outcomes.
-
-Verification Rulebook must include schema/geometry validation, chain/residue consistency, clashes, Ramachandran and stereochemistry checks where applicable, confidence thresholds justified by benchmark evidence, and optional independent predictor consensus (TM-score) or physics refinement. OpenMM relaxation is optional and must not be represented as independent experimental confirmation.
-
-P3 acceptance: benchmark on structures released after each predictor's documented training cutoff, with leakage-aware dataset split and reported lDDT, TM-score, RMSD where appropriate, confidence calibration and failure cases. Record dataset provenance/license and do not claim universal accuracy.
-
-## 9. Data and training pipeline (P4)
-
-No fine-tuning or training from scratch before the pretrained baseline, evaluation harness and leakage-resistant dataset pipeline exist.
-
-Pipeline:
-1. Select and document permitted datasets and releases.
-2. Download versioned snapshots with checksum and license manifest.
-3. Store raw source snapshots as immutable artifacts.
-4. Apply deterministic quality filters with rationale and threshold version.
-5. Normalize structures/sequences while preserving raw parent artifacts.
-6. Cluster sequence identity with pinned MMseqs2 settings.
-7. Create time-based splits and cluster-based splits; document intersection/holdout rules.
-8. Generate features with versioned featurizers and content hashes.
-9. Train with pinned code/dependencies, configuration, seed and hardware metadata.
-10. Evaluate on held-out data with calibration and subgroup/failure analysis.
-11. Register model artifact with training manifest, data hashes, code commit, metrics, license and limitations.
-12. Reproduce a run from its manifest within documented tolerances.
-
-Experimental and synthetic labels must be separate. AlphaFold DB predictions are synthetic/predicted labels, not experimental ground truth. Never train on model-generated outputs as though measured; guard against recursive self-training and leakage.
-
-Potential tools include PyTorch, Hugging Face datasets/hub, MLflow or W&B, DVC and MMseqs2, subject to license, privacy and reproducibility review. Tracking systems must not receive private data without explicit authorization.
-
-P4 acceptance: an end-to-end training/evaluation run is reproducible from a committed manifest with metrics inside predeclared tolerances; test split is demonstrably separated by release date and sequence clusters; license ledger is complete.
-
-## 10. Proposer → Verifier pattern across services (P5/P6)
-
-A reusable domain pattern:
-1. **Proposer:** model, heuristic or deterministic candidate generator proposes an output.
-2. **Canonicalizer:** convert output into a typed Molecularis artifact; preserve raw candidate and transformation.
-3. **Verifier:** deterministic/domain-owned Rulebook checks schema, scientific constraints, provenance, resource bounds and acceptance criteria.
-4. **Independent check:** where required, use a genuinely independent method/reference; do not treat repeated calls to the proposer as independent.
-5. **Decision:** accept, reject, indeterminate or request human review; never collapse these states into a generic success.
-6. **Evidence:** persist every candidate, verifier result, threshold, failure and approval.
-7. **Report:** expose candidate status and evidence; no unverified proposal is called a validated result.
+| Research Interface | Natural-language, structured, file and programmatic objectives; constraints and approval |
+| Agentics Orchestrator | Intent interpretation, decomposition, capability discovery, plan construction, coordination and report composition |
+| Scientific Knowledge Engine (SKE) | Typed concepts, entities, properties, relations, laws, equations, mechanisms, constraints, evidence and applicability domains |
+| Knowledge Representation & Reasoning | Graphs, symbolic expressions, dimensional analysis, causal/dependency relations, constraint systems and derivation traces |
+| Construction Engine | Domain-appropriate candidate generation, graph/geometry/topology synthesis, numerical construction, search and optimization |
+| Evaluation Engine | Objective functions, feasibility checks, uncertainty, sensitivity, robustness and candidate ranking |
+| Simulation & Computation | Numerical solvers, physical/chemical models, statistical computation and optional external scientific engines |
+| Verification Engine | Independent domain Rulebooks, invariants, alternative methods, reference tests and validation evidence |
+| Domain Services A–N | Scientific semantics, native algorithms, data contracts, domain construction and verification |
+| Core / MSDE | Capability registry, Rulebook DAG execution, budgets, immutable artifacts, catalog, provenance and lineage |
+| Evidence & Report Ledger | Claim-to-artifact mapping, status, uncertainty, reproducibility and audit history |
 
-Generalization examples:
-- Chemistry: RDKit validity, valence, stereochemistry, property bounds and domain-specific safety rules.
-- Kinetics: residual analysis, parameter identifiability, sensitivity, fit diagnostics and uncertainty.
-- Genomics: reference build, coordinate normalization, annotation release, evidence level and variant QC.
-- Omics: design validity, normalization assumptions, statistical model, multiple-testing correction and reproducibility.
-- DNA/RNA: sequence constraints, thermodynamic assumptions and independent structure/oligo checks.
-- Simulation: topology/parameter validity, energy/temperature/pressure diagnostics, convergence and stability.
-- Pharmacogenomics/cohorts: source release, privacy, phenotype evidence and non-clinical boundaries.
-
-P5 design is optional and disabled by default. It requires biosecurity screening, explicit human review and institutional approval. P6 expands proposer/verifier only service by service with domain-specific acceptance criteria.
-
-## 11. Evaluation programme
-
-### 11.1 Agentics evaluation set
-Create at least 50 version-controlled, privacy-safe queries with expected intent, candidate entities, allowed capabilities, expected workflow shape, expected artifact classes, unsupported claims and pass/fail criteria. Cover:
-- Direct factual retrieval and accession resolution.
-- Ambiguous names and competing accessions.
-- Sequence/structure workflows.
-- Multi-service composition.
-- Missing input and malformed artifact.
-- Unsupported request and insufficient evidence.
-- Requests to fabricate a number, coordinate, accession or citation.
-- Prompt injection in fetched text, file metadata, FASTA headers and source annotations.
-- Unauthorized tool/network access and secret exfiltration attempts.
-- License conflict, remote sequence-egress consent and privacy restrictions.
-- Resource exhaustion, timeout, cancellation, partial output and failed dependencies.
-- Predicted-versus-experimental confusion.
-- Model/provider outage and malformed structured output.
-
-Measure task success, entity-resolution accuracy, schema-valid plan rate, unauthorized-call rate, artifact-grounding precision/recall, unsupported-claim rate, refusal correctness, reproducibility, latency and cost. Report per-category metrics and failures. A zero-fabrication target is mandatory on the curated eval set; it is not proof of zero risk in all deployments.
-
-### 11.2 Scientific evaluation
-Use domain-specific metrics and independent references, with predeclared thresholds. For structure prediction, report lDDT/TM-score/RMSD and confidence calibration with leakage-resistant splits. Report negative results and applicability limits.
-
-### 11.3 Engineering evaluation
-CI uses deterministic local fixtures and mock providers; no live API calls or credentials. Add property/fuzz tests for parsers, schemas and source content. Add security tests for sandbox escape, path traversal, prompt injection and network policy. Add crash/fault injection and backup/restore tests.
-
-## 12. Phased delivery plan and gates
-
-Phases are sequential. Complete the phase report and stop at its gate. Do not begin the next phase in the same implementation step unless the owner explicitly authorizes it. A phase gate requires implementation, tests, green CI, documentation and evidence; a written specification alone is not completion.
-
-### P0 — Hygiene, trust baseline and platform safety
-**Scope**
-- Re-audit actual current branch state and reconcile README, SERVICE_STATUS, master plan, backlog and CI evidence.
-- Correct stale status claims; every status transition links to commit/run/benchmark/validation artifact.
-- Inventory current source adapters, model integrations, data and licenses before adding duplicate connectors.
-- Add OS-level sandbox execution option with declared CPU/memory/time/disk/process/network limits; retain trusted in-process path only for explicitly trusted handlers.
-- Record failed/intermediate execution evidence and cancellation/timeout outcomes.
-- Implement artifact-store catalog backup/restore and corruption/crash-boundary tests.
-- Define threat model, secret-handling and data-egress policy.
-- Expand Ruff and typing checks incrementally without unrelated churn.
-
-**Tests/evidence**
-- Sandbox boundary, timeout, cancellation, process-tree termination and network-deny tests.
-- Artifact-store backup/restore round trip, interrupted backup, corrupted blob/catalog and integrity audit.
-- Failure-run evidence assertions.
-- Docs/status consistency check and full CI.
-
-**Gate P0:** CI green; sandbox boundary tests pass; backup/restore and failure-evidence tests pass; status documents agree with observed evidence. No scientific acceptance implied.
-
-### P1 — Sources service
-**Scope:** build connector framework, initial six connectors, offline cache, resolver, license ledger and source artifacts as specified in section 7.
-
-**Gate P1:** human hemoglobin fixture returns distinct alpha/beta candidates with explicit ambiguity; a selected PDB fixture becomes an immutable artifact; checksum stable; metadata/license complete; offline CI green. No live network required in CI.
-
-### P2 — Agentics orchestrator
-**Scope**
-- Add provider-neutral LLM adapter outside Core, deployment-managed secrets and deterministic mock.
-- Convert active capability JSON Schemas to constrained provider tool definitions.
-- Add structured intent/entity/plan objects while preserving Workflow v1 as execution contract.
-- Implement clarification/ambiguity path, plan explanation and approval UX/API.
-- Add artifact-only Answer Composer with claim-to-artifact citations.
-- Add run/session state, cancellation, bounded iteration policy and redacted audit trace.
-- Implement >=50-query adversarial evaluation suite and metrics.
-
-**Gate P2:** all 50+ evals run in CI using mock/recorded fixtures; zero unsupported/fabricated claims in suite; prompt-injection cases cannot alter tools/policy; provider adapter integration passes controlled test; approval gate remains enforced; every reported scientific claim maps to artifact evidence.
-
-### P3 — Predictor service
-**Scope:** implement PredictorAdapter, exact model/license review, local MSA path, model provenance, predicted namespace, mmCIF/confidence artifacts and verification Rulebooks as specified in section 8.
-
-**Gate P3:** benchmark on structures released after each predictor's documented training cutoff, with leakage-aware dataset split and reported lDDT, TM-score, RMSD where appropriate, confidence calibration and failure cases. Record dataset provenance/license and do not claim universal accuracy.
-
-### P4 — Data and training pipeline
-**Scope:** versioned data snapshots, license ledger, quality filters, clustering, temporal/cluster splits, reproducible training harness, model registry and experiment manifests.
-
-**Gate P4:** a run reproduces from its manifest with metrics inside predeclared tolerances; test split is demonstrably separated by release date and sequence clusters; license ledger is complete.
-
-### P5 — Optional design service (separately authorized)
-**Scope:** design adapters, canonical candidate artifacts, proposer-verifier loop, biosecurity screening and human-review workflow. Disabled by default until approval.
-
-**Gate P5:** screening test suite passes, human review and institutional approval are recorded, model/data license checks pass, and no unsafe design is released.
-
-### P6 — Generalize across A–N
-**Scope:** add domain-specific proposer/verifier packages and integration tests one service/domain at a time. Do not change all services in a single broad rewrite.
-
-**Gate P6:** each domain has a versioned Rulebook, acceptance metrics, evidence schema, independent check where needed, regression suite and documented limitations. System-level cross-service workflows preserve provenance end to end.
-
-## 13. Phase execution protocol and reporting
-
-For each phase:
-1. Inspect actual repository implementation and history.
-2. Write a short gap analysis and exact file-level plan.
-3. Define schemas and acceptance criteria before code.
-4. Implement only the active phase.
-5. Add unit, property, integration, adversarial and regression tests appropriate to scope.
-6. Run local checks and CI; record exact commit and run URL.
-7. Update engine, runtime, Rulebook, acceptance, status, backlog and README only where evidence warrants.
-8. Report and stop at the gate.
-
-Required phase report:
-1. Files changed.
-2. Tests added and executed.
-3. CI evidence with run URL and commit.
-4. What passed, failed, skipped and was not tested.
-5. Open risks and explicit non-claims.
-6. Exact gate decision: passed, failed or blocked.
-7. Exact next phase, not started until gate passes.
-
-## 14. Non-goals and prohibited shortcuts
-
-- Do not train a protein structure model from scratch before pretrained baseline and evaluation.
-- Do not add a second workflow format alongside Workflow v1 without a decision.
-- Do not let an LLM call arbitrary shell, Python, SQL or network tools.
-- Do not infer a scientific result from plausible language or model confidence.
-- Do not silently choose among ambiguous biological entities.
-- Do not merge predicted and experimental namespaces or labels.
-- Do not use live external APIs in deterministic CI.
-- Do not ingest data/models without license and provenance review.
-- Do not enable remote MSA/provider egress without user-visible consent.
-- Do not enable design capabilities before P5 approval.
-- Do not claim a green CI run is scientific validation.
-- Do not rewrite existing services or remove assets as a side effect of AI work.
-
-## 15. Definition of complete
-
-Agentics Molecularis is ready for a research-grade controlled pilot only when P0–P4 gates pass, representative A–N workflows execute with real typed artifact handoffs, evidence-grounded reports pass adversarial evaluation, sandbox/recovery/security controls are demonstrated, and university scientific/privacy review accepts the relevant domains. P5 remains separately optional. Production or clinical readiness requires additional deployment, institutional, regulatory and domain-specific acceptance; it is not implied by this plan.
-
-## 16. References inside this repository
-
-- [Molecularis North Star](NORTH_STAR.md)
-- [Master Development Plan](MASTER_DEVELOPMENT_PLAN.md)
-- [Service Status](SERVICE_STATUS.md)
-- [Work Backlog](WORK_BACKLOG.md)
-- [Scientific Validation Standard](SCIENTIFIC_VALIDATION_STANDARD.md)
-- [Decision Log](DECISION_LOG.md)
-- [Agentics Engine](../services/ai/ENGINE.md)
-- [Agentics Rulebook](../services/ai/RULEBOOK.md)
-- [Agentics Acceptance](../services/ai/ACCEPTANCE.md)
+This is a logical architecture, not a mandate to split every component into a separate process or service. Start with modular in-process components where safe and useful; introduce distributed boundaries only when justified by measured needs.
+
+### 5.2 Agentics authority boundary
+
+Agentics interprets goals, reasons about available operations, proposes workflows, coordinates approved work and explains evidence. It is not itself the authority for scientific laws, domain thresholds, experimental truth or clinical decisions.
+
+LLMs are optional reasoning/planning/reporting components. They must not be the only mechanism that stores scientific knowledge, executes mathematical reasoning or verifies outputs. Deterministic domain engines and typed scientific artifacts remain first-class.
+
+### 5.3 Scientific Knowledge Engine (SKE)
+
+The SKE is a shared knowledge substrate, not merely a vector database or an LLM prompt corpus. It must support:
+
+- Typed scientific entities, concepts, quantities, dimensions, units and coordinate/reference systems.
+- Relations with direction, type, scope and evidence.
+- Equations and symbolic expressions with variable definitions, units, assumptions and validity domains.
+- Laws, mechanisms and empirical relationships with evidence class and known limitations.
+- Constraints, boundary conditions, conservation rules and dependency graphs.
+- Evidence records linking knowledge statements to publications, datasets, measurements, derivations or expert-curated sources.
+- Versioning, temporal validity, conflicting claims, uncertainty and provenance.
+- Domain-specific extensions without flattening distinct scientific meanings into generic text.
+
+A knowledge statement must carry, where applicable: identifier, formal statement, type, variables/entities, units, assumptions, applicability domain, evidence class, source/derivation, uncertainty, version, review state and known exceptions. Conflicting evidence must remain visible rather than silently overwritten.
+
+### 5.4 Knowledge representation and reasoning
+
+Use the representation that preserves scientific meaning:
+- Typed property/knowledge graphs for entities and relations.
+- Symbolic algebra and equation systems for derivations.
+- Dimensional analysis and unit-aware quantities.
+- Constraint satisfaction and optimization for feasibility.
+- Causal/dependency graphs where causality is justified.
+- Geometric, topological, sequence, reaction-network and matrix representations in their respective domains.
+
+Do not represent every scientific fact as untyped text or every scientific problem as a language-model completion. Preserve exact numerical precision, units and coordinate conventions. A learned correlation must not be relabelled as a physical law.
+
+### 5.5 Construction and evaluation
+
+The shared Construction Engine provides orchestration/contracts and reusable primitives; the scientific construction algorithm remains domain-owned. Supported construction modes:
+
+- **Reconstruction:** recover/assemble a representation from supplied observations or constraints.
+- **Generalization:** extend a known mechanism/model to a new supported context with explicit assumptions.
+- **Exploration:** search a defined candidate space for previously unobserved possibilities.
+
+Each construction task declares input representation, search space, constraints, objective(s), algorithm, budget, stopping criteria, candidate identity, uncertainty and verification plan. Multi-objective trade-offs must remain explicit; do not hide them in one opaque score.
+
+### 5.6 Proposer–Verifier separation
+
+A Proposer generates candidates. A Verifier independently checks them. They may share canonical inputs but must not share an unexamined assumption that makes verification circular. Verification may use different algorithms, analytical invariants, independent implementations, alternative physical models, benchmark references or experiments.
+
+The Verifier returns accepted/rejected/indeterminate/needs_human_review with metrics, thresholds, rule versions and evidence. A failed candidate remains a useful artifact with failure reason; it must not be silently discarded.
+
+## 6. Universal service architecture A–N
+
+Every service must have its own:
+- Domain ontology/knowledge package and formal concepts.
+- Canonical input/output representations and versioned schemas.
+- Governing principles, equations, mechanisms and constraints where applicable.
+- Analysis and construction algorithms.
+- Evaluation metrics and explicit objective functions.
+- Independent verification Rulebook and evidence levels.
+- Provenance, uncertainty and reproducibility contracts.
+- Tests for known cases, edge cases, out-of-distribution cases and constructed candidates.
+
+| Service | Knowledge and reasoning emphasis | Construction / discovery examples (illustrative, not current feature claims) |
+|---|---|---|
+| A — Molecular | Molecular identity, graph theory, stereochemistry, bonding, descriptors and physical chemistry | Molecular graph/representation construction, constrained molecular transformations and candidate exploration |
+| B — Sequence | Sequence alphabets, grammar, alignment, evolutionary/statistical models and sequence constraints | Sequence assembly, constrained sequence generation, motif/ORF reasoning and comparative hypotheses |
+| C — Structure | Geometry, topology, coordinate systems, stereochemistry, structural constraints and energy models | 3D geometry/structure construction, conformational exploration and structural hypothesis evaluation |
+| D — Chemistry | Chemical laws, valence, reaction mechanisms, electron/bond representations, thermodynamics and kinetics | Reaction/pathway construction, product candidates, mechanism hypotheses and chemical-space exploration |
+| E — Protein | Sequence–structure–function relationships, folding/energetics, domains, interactions and uncertainty | Protein representation/conformation/function hypotheses and design candidates under safety gates |
+| F — Genomics | Genome organization, variation, inheritance, population/statistical models and coordinate systems | Variant interpretation hypotheses, haplotype/annotation construction and genomic model exploration |
+| G — DNA/RNA | Base pairing, sequence grammar, thermodynamics, folding, kinetics and molecular interactions | Oligo/nucleic-acid construction, folding hypotheses and constrained sequence exploration |
+| H — Simulation | Governing differential equations, force fields, ensembles, boundary conditions, numerical stability and sampling | Simulation protocol/system construction, parameter exploration and model comparison |
+| I — Kinetics | Reaction networks, rate laws, ODEs, stochastic processes, identifiability and conservation | Network/mechanism construction, parameter inference and kinetic hypothesis testing |
+| J — Omics | Measurement models, normalization, statistics, latent structure, batch effects and multi-omics relations | Analysis model construction, pathway/feature hypotheses and experimental-design exploration |
+| K — Phylogeny | Evolutionary models, substitution processes, tree metrics, uncertainty and sampling assumptions | Tree/network reconstruction, model comparison and evolutionary hypothesis evaluation |
+| L — Pharmacogenomics | Allele definitions, haplotypes, variant function, evidence grading and population limits | Diplotype/phenotype hypothesis construction and evidence-aware interpretation; no autonomous prescribing |
+| M — Cohorts | Study design, causal inference, sampling, missingness, privacy and statistical uncertainty | Cohort construction, synthetic-data generation under safeguards and study-design exploration |
+| N — Workflows | Typed contracts, dependency graphs, execution semantics, provenance and resource constraints | Scientific workflow synthesis, dependency optimization and reproducible multi-domain plans |
+
+This table defines the common direction; it does not assert that the examples are implemented. Existing A–N service code remains the execution foundation and must be audited/reused, not discarded for a speculative rewrite.
+
+## 7. Knowledge and evidence acquisition
+
+External databases, papers, experimental datasets, pretrained models and reference structures are evidence sources—not the definition of the scientific universe.
+
+- Implement connectors as optional, versioned adapters with caching, rate limits, checksums and offline fixtures.
+- Preserve source accession/URL, exact release/version, retrieval date, checksum, transformations, attribution and specific license/terms.
+- Verify license and permitted use for each dataset, model code, checkpoint and derived asset; never assume a whole database has one blanket license.
+- Maintain local knowledge packs for offline and reproducible operation.
+- Capture derivations and expert-curated rules as first-class versioned knowledge artifacts.
+- Preserve conflicts, uncertainty, negative results and known limitations.
+- Use external predictors (including structure prediction) as optional candidate generators; never make any one database, modality or predictor a mandatory prerequisite for all scientific construction.
+- Avoid training data leakage: record dataset snapshots, split manifests, cutoff dates and similarity/cluster policies.
+
+## 8. Data, models and computation governance
+
+Every input/model/dataset/derived result has immutable identity and provenance. Record model/provider/version, checkpoint and weights hash, input hash, parameters, seed, runtime, precision/device, resource use and confidence outputs where relevant. Predictions and simulations must be labelled as such.
+
+Training is not an early shortcut. Establish a deterministic baseline and evaluation set first. Train/fine-tune only when a measured gap justifies it and rights, compute, privacy, leakage and reproducibility controls are in place. Synthetic data and synthetic labels must never be represented as experimental observations.
+
+Optional engines may include local numerical/scientific software or remote providers. Every adapter must declare version, license, input/output contract, resource requirements, network policy and fallback behavior. Core functionality must not silently depend on unavailable external services.
+
+## 9. Workflow, artifact and report contracts
+
+Reuse existing Workflow v1, capability registry, Rulebook runtime and MSDE. Do not build a parallel planner/executor.
+
+Every workflow operation declares capability/version, typed inputs, output schema, parameters, dependencies, method/model identity, resource budget, permissions/egress, timeout, verification Rulebooks, failure/cancellation/retry behavior and provenance.
+
+Every scientific artifact should include:
+- Immutable content identity, media/schema version and domain/service.
+- Epistemic status and validation state.
+- Parent/input artifact IDs and transformation lineage.
+- Source/knowledge references and exact versions.
+- Method, engine, model and configuration.
+- Units, coordinate/reference conventions and transformations.
+- Assumptions, applicability domain and uncertainty.
+- Verification rule IDs/versions, metrics, thresholds and evidence artifacts.
+- Reproducibility metadata and failure/partial status where applicable.
+
+Every report claim maps to artifact IDs and field paths. Narrative can explain evidence but cannot create unsupported values or references. Distinguish absent evidence from a negative result.
+
+## 10. Agentics operating lifecycle and autonomy
+
+Request → interpret → clarify → discover knowledge/capabilities → formulate → plan → validate → explain/approve → execute → evaluate → independently verify → classify → report → audit.
+
+Start with one orchestrator and typed specialist stages. Add multi-agent delegation only after the single-orchestrator path is safe, measurable and traceable. Agents communicate through typed contracts/artifact references; every delegation has allowlisted tools, task bounds, budget, timeout, provenance and termination conditions.
+
+- **L0 Explain:** explain knowledge/capabilities/evidence; no execution.
+- **L1 Draft:** produce plan/candidate strategy; no scientific operation.
+- **L2 Approved execution:** execute a user-approved bounded workflow.
+- **L3 Bounded iteration:** finite, pre-authorized optimization/search loops with stop conditions.
+- **L4 Consequential autonomy:** disabled and out of scope absent separate governance and institutional approval.
+
+Planning never implies execution. Approval binds to exact plan digest, inputs, capability versions, egress and resource envelope. Material changes invalidate approval.
+
+## 11. Safety, security, privacy and responsible construction
+
+- Model output, retrieved pages, papers, sequence headers, annotations, filenames and tool results are untrusted data, never instructions.
+- Never execute model-generated code, shell commands, SQL or arbitrary scripts.
+- Use OS-level isolation for untrusted execution; enforce CPU, memory, GPU, disk, process, network, wall-time, concurrency and output bounds.
+- Network denied by default; allowlist capability-specific egress and obtain consent before user data leaves the environment.
+- Preserve failed, cancelled, timed-out and partial outputs as explicit evidence.
+- Do not commit secrets, patient-identifiable data or private research data; minimize and redact logs.
+- Apply domain-specific safety and biosecurity policies to biological, chemical and other sensitive design capabilities. Keep high-risk design disabled until risk assessment, screening, human review and institutional authorization are recorded.
+- Clinical interpretation, prescribing, experimental authorization and wet-lab execution are not delegated to Agentics.
+- Respect all data, software, model and checkpoint licenses and use restrictions.
+
+## 12. Existing implementation — preserve and extend
+
+The repository already contains:
+- `python/molecularis/ai.py`: model-agnostic callable planner, active capability catalog, strict Workflow v1 validation, operation bounds, persisted plan artifact with input lineage and explicit approval before execution.
+- `python/molecularis/workflows_service.py`: workflow DAG validation, capability resolution and execution through Core Rulebook runtime.
+- `python/molecularis/bootstrap.py`: A–N service bootstrap.
+- Core/MSDE: content-addressed artifacts, catalog, lineage, budgets, capability registry and Rulebook execution evidence.
+- Existing service A–N implementations and service Rulebooks/specifications.
+
+Do not duplicate these systems. The current AI foundation is an initial planning/execution layer, not a finished autonomous scientific discovery system. Current limitations include provider configuration, a complete SKE, shared construction/evaluation contracts, full cross-service scientific handoff, independent proposer/verifier evidence, report composer, OS-level sandbox and recovery certification.
+
+## 13. Sequential implementation roadmap and gates
+
+Phases are sequential. Implement one phase at a time, report exact evidence, then stop. No phase is complete because its documents exist.
+
+### P0 — Repository truth, safety and platform reliability
+- Reconcile docs, actual code, branch and CI.
+- Threat model, trust boundaries, network/egress policy and privacy classification.
+- OS-level sandbox design and implementation; process-tree termination; resource limits.
+- Failed/intermediate/cancelled run evidence.
+- Artifact backup/restore, corruption and crash-boundary tests.
+- Reproducibility baseline, schema validation and documentation consistency.
+
+**Gate:** evidence-backed platform safety/recovery baseline; unresolved controls listed as blockers.
+
+### P1 — Universal scientific knowledge architecture
+- Formalize SKE concepts, typed entities/relations, quantities/units, equations/laws/mechanisms, assumptions, applicability domains and evidence records.
+- Define versioned knowledge artifact/schema contracts and provenance.
+- Define conflict, uncertainty, temporal validity and review states.
+- Define representation contracts for graph, symbolic, geometry, sequence, reaction network, matrices and workflow domains.
+- Define knowledge query/reasoning interfaces and deterministic fixture suite.
+- Map A–N knowledge package boundaries and shared concepts without erasing domain semantics.
+
+**Gate:** executable schemas and reference implementation; round-trip tests preserve types, units, assumptions, provenance and conflicts. No claim of comprehensive scientific knowledge.
+
+### P2 — Shared reasoning and construction primitives
+- Unit/dimension-aware quantities and validation.
+- Symbolic expression/equation representation and derivation traces.
+- Constraint systems, feasibility checks and optimization contracts.
+- Typed candidate, objective, uncertainty and evaluation artifacts.
+- Proposer–Verifier protocol and non-circular verification policy.
+- Reconstruction/generalization/exploration task contracts.
+- Deterministic minimal end-to-end examples from more than one distinct service domain.
+
+**Gate:** reference examples construct candidates and independently evaluate them with reproducible artifacts; explicit indeterminate/failure states tested.
+
+### P3 — Knowledge-to-Construction integration across A–N
+- Add service-specific knowledge packages and construction/evaluation interfaces one service at a time.
+- Audit and adapt existing A–N engines; no unnecessary rewrite.
+- Map each service's laws, constraints, algorithms, metrics and acceptance criteria.
+- Cross-service typed artifact handoff and provenance continuity.
+- Independent domain verification and negative/adversarial cases.
+- Preserve each service's scientific authority and versioned Rulebook.
+
+**Gate:** every service demonstrates its own scoped lifecycle; cross-domain workflows prove compatibility. Scientific acceptance remains separate until university review.
+
+### P4 — Agentics intelligence and orchestration maturity
+- Intent/entity/task contracts and clarification.
+- Provider-neutral LLM adapter (optional) and deterministic mock.
+- Capability schemas → constrained tool definitions.
+- Planner uses SKE query/reasoning interfaces and construction contracts.
+- Approval bound to exact plan/input hashes, egress and resource envelope.
+- Evidence-only report composer with claim/field citations.
+- Session/run trace, cancellation and bounded iteration.
+- At least 50 grounded/adversarial evaluation cases including injection, fabricated laws, unit errors, uncertainty, out-of-domain requests, unsafe intent and unsupported claims.
+
+**Gate:** evaluation suite passes declared thresholds; zero unsupported scientific claims in curated cases; all outputs trace to artifacts; approval/policy tests pass.
+
+### P5 — Optional specialist scientific models and training
+- Add model adapters only where benchmarked gaps justify them.
+- Structure predictors are optional tools within Structure/Protein workflows, not the system's centre.
+- Verify exact code, checkpoint, training-data and output licenses separately.
+- Dataset snapshots, checksums, quality filters, leakage-resistant temporal/cluster splits and model registry.
+- Reproducible training/evaluation harness only after baseline and license/privacy review.
+- Post-cutoff or otherwise leakage-aware benchmark; calibration and uncertainty evaluation.
+- Clearly separate predicted, simulated, constructed and observed artifacts.
+
+**Gate:** reproducible benchmark and license/privacy audit; demonstrated improvement over deterministic baseline; no unsupported accuracy claims.
+
+### P6 — Controlled discovery and design capabilities
+- Enable reconstruction/generalization/exploration by domain only after P3/P4 safety and verification readiness.
+- Domain-specific risk assessment and biosecurity/chemical safety policy where relevant.
+- Candidate generation with bounded search, explicit objectives and stopping conditions.
+- Independent verification, adversarial screening, human review and institutional approval.
+- Preserve negative results and uncertainty; no autonomous wet-lab/clinical actions.
+
+**Gate:** separate approval per capability/domain; screening and independent review evidence; disabled by default until approved.
+
+### P7 — Generalization, scaling and research evaluation
+- Extend proposer/verifier and knowledge packs to new scientific domains without breaking shared contracts.
+- Evaluate generalization beyond training/reference examples.
+- Measure compute/resource scaling, reproducibility and failure recovery.
+- Independent university review, benchmark replication and scientific contract freeze.
+- Publish a system report separating engineering, computational evidence and experimental validation.
+
+**Gate:** university/institutional acceptance and reproducibility evidence for each claimed scientific capability; remaining limitations published.
+
+## 14. Evaluation framework
+
+Evaluate at several levels, not by one aggregate score:
+
+- **Representation:** schema validity, units, identity and round-trip preservation.
+- **Reasoning:** derivation correctness, assumption visibility, dimensional consistency and applicability-domain handling.
+- **Construction:** feasibility rate, constraint violations, search coverage, novelty protocol and reproducibility.
+- **Evaluation:** objective validity, sensitivity, robustness and uncertainty calibration.
+- **Verification:** independence, false acceptance/rejection, indeterminate handling and reference agreement.
+- **Generalization:** held-out contexts, temporal/cluster separation and out-of-distribution behavior.
+- **Orchestration:** plan validity, capability correctness, approval binding, safe failure and traceability.
+- **Operations:** latency, throughput, resource bounds, recovery and deterministic replay.
+
+Metrics and thresholds are domain-owned and must be justified. A high model score cannot replace a scientific acceptance criterion.
+
+## 15. Definition of done for every service
+
+A service is not complete under this architecture until it has:
+1. A documented domain knowledge model and applicability boundaries.
+2. Canonical versioned representations, units and provenance.
+3. Reusable analysis and construction methods appropriate to its scope.
+4. Explicit objectives, constraints and evaluation metrics.
+5. A domain-owned independent verification Rulebook.
+6. Known-case, edge-case, constructed-candidate, negative and out-of-domain tests.
+7. Reproducibility and resource-bound evidence.
+8. Typed integration with Core/MSDE and other relevant services.
+9. Epistemic labels, uncertainty and claim-level evidence.
+10. Engineering CI evidence and separate scientific review/acceptance status.
+
+If a service has no meaningful construction task in a particular subdomain, it must document why and still support the lifecycle for the tasks it does own. Do not invent a generator merely to satisfy terminology.
+
+## 16. Governance, sequencing and reporting
+
+- Continue development directly on CORE using expected-head, non-force updates.
+- One phase at a time; no silent phase skipping.
+- Preserve useful existing code and public contracts; changes require migration evidence.
+- External tools/models remain optional and explicitly governed.
+- University scientific/privacy review is separate from engineering CI and is conducted after the owner-directed A–N engineering sequence.
+- Every report lists changed files, commit, CI/tests, exact pass/fail/skip/not-tested counts, gate state, limitations and next phase.
+- Never claim “discovery”, “understands physics”, “scientifically validated” or “production-ready” without a precise evidence standard and supporting results.
+
+## 17. Explicit non-claims
+
+This plan does not claim that the current repository already contains a complete SKE, universal scientific reasoning, general-purpose novel structure/code generation, a production autonomous agent, certified sandbox, complete cross-service scientific compatibility, trained foundation models or experimental validation. These are goals with phase gates, not present capabilities.
+
+**Final north star:** Molecularis should become a general scientific knowledge-to-construction platform: it uses established knowledge and governing principles to reason, build candidates, test them and responsibly explore what is not yet known—across all fourteen services.

@@ -44,6 +44,16 @@ Scientific correctness must be established through domain validation—not infer
 </tr>
 </table>
 
+## Universal scientific construction direction
+
+**One approach governs all fourteen services:** Understand → Represent → Reason → Construct → Evaluate → Verify → Learn.
+
+Agentics Molecularis is being developed to coordinate a shared Scientific Knowledge Engine, scientific reasoning and construction methods, domain-owned engines and independent verification. Molecularis is not intended to be limited to existing PDB records, X-ray structures, reference databases or pretrained predictors. Those are useful evidence sources and optional methods—not the boundary of what the system may construct.
+
+Every result must distinguish observation, established knowledge, derivation, inference, prediction, simulation, construction, hypothesis and validation. A generated candidate is not automatically physically stable, experimentally realizable or functional. Each service retains its own scientific rules and acceptance criteria.
+
+The governing architecture and phase gates are documented in [Agentics Molecularis Master Plan v2.0](docs/AGENTICS_MOLECULARIS_MASTER_PLAN.md).
+
 ## At a glance
 
 <table>

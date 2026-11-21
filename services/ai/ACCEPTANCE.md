@@ -1,110 +1,118 @@
 # Agentics Molecularis — Acceptance and Phase Gates
 
-This file is the concise acceptance checklist. The authoritative detail and scope live in [AGENTICS_MOLECULARIS_MASTER_PLAN.md](../../docs/AGENTICS_MOLECULARIS_MASTER_PLAN.md).
+The governing architecture and detailed scope are in [AGENTICS_MOLECULARIS_MASTER_PLAN.md](../../docs/AGENTICS_MOLECULARIS_MASTER_PLAN.md). This checklist is evidence-driven. A checked item requires a commit and test/CI/benchmark evidence.
 
 ## Existing implementation evidence
 
-Implemented in the repository:
-- Model-agnostic planner callable contract and live A–N capability catalog.
-- Strict Workflow v1 parsing, DAG/capability validation and operation bounds.
-- Exact external input declaration and artifact integrity checks.
-- Persisted plan artifact with source input parent lineage.
-- Explicit approval gate and execution through existing Molecularis workflow/runtime.
-- A–N fresh-runtime bootstrap.
+- [x] Model-agnostic callable planner and active A–N capability catalog.
+- [x] Strict Workflow v1 parsing/validation and bounded operation count.
+- [x] Exact declared input keys and artifact integrity checks.
+- [x] Persisted plan artifact with input parent lineage.
+- [x] Explicit approval gate and Core Rulebook execution path.
+- [x] Fresh-runtime A–N bootstrap.
+- [x] Initial implementation CI: [run #44901363429](https://github.com/AssayFlux/Molecularis/actions/runs/44901363429), commit `2b6eced852fb049a81f6b087bb94e5e946047750`.
 
-CI evidence previously recorded for the AI implementation: run [#44901363429](https://github.com/AssayFlux/Molecularis/actions/runs/44901363429), commit `2b6eced852fb049a81f6b087bb94e5e946047750`. This is engineering evidence for the then-current implementation, not evidence for the expanded roadmap or scientific acceptance.
+This evidence does not prove the new knowledge-to-construction architecture is implemented or scientifically validated.
 
-## P0 — Hygiene and platform safety
+## P0 — Repository truth, safety and reliability
 
-- [ ] Reconcile status/docs against actual branch, commits and CI.
-- [ ] Threat model and execution/network policy.
-- [ ] OS-level sandbox with CPU/memory/time/disk/process/network limits.
-- [ ] Timeout, cancellation and process-tree termination tests.
-- [ ] Failed/intermediate run evidence.
-- [ ] Artifact-store backup/restore, corruption and crash-boundary tests.
-- [ ] CI green and documentation consistent.
+- [ ] Reconcile docs, code, branch and CI.
+- [ ] Threat model, trust boundaries, privacy and egress policy.
+- [ ] OS-level sandbox, resource isolation and process-tree termination.
+- [ ] Failure, cancellation, timeout and partial-run evidence.
+- [ ] Artifact backup/restore, corruption and crash-boundary tests.
+- [ ] Reproducibility and documentation baseline.
 
-**Gate:** all P0 engineering checks pass with linked commit and CI evidence.
+**Gate:** engineering safety/recovery evidence is complete; blockers are explicit.
 
-## P1 — Sources service
+## P1 — Universal Scientific Knowledge Engine
 
-- [ ] Audit and reuse existing source adapters.
-- [ ] RCSB PDB, UniProt, AlphaFold DB, InterPro, PubChem and NCBI Entrez connectors.
-- [ ] Offline cache, rate limits, retries, bounded downloads and checksums.
-- [ ] Source/accession/release/retrieval/license/attribution metadata.
-- [ ] Ranked resolver with explicit ambiguity.
-- [ ] Recorded-fixture-only CI.
-- [ ] Human hemoglobin alpha/beta candidate fixture and stable PDB artifact hash.
+- [ ] Typed concepts/entities/relations and domain packages.
+- [ ] Quantities, dimensions, units and reference systems.
+- [ ] Equations/laws/mechanisms with variables, assumptions and applicability domains.
+- [ ] Evidence class, provenance, uncertainty, versioning and conflicting-claim representation.
+- [ ] Knowledge artifact schemas and query/reasoning interfaces.
+- [ ] A–N domain knowledge boundary map.
+- [ ] Deterministic fixtures and round-trip/type/unit/provenance tests.
 
-**Gate:** fixture resolution and retrieval are reproducible, provenance/license complete and offline CI green.
+**Gate:** executable reference implementation preserves scientific semantics and provenance. No claim of comprehensive knowledge.
 
-## P2 — Agentics orchestrator
+## P2 — Shared reasoning and construction primitives
 
-- [ ] Provider-neutral hosted LLM adapter; deployment-managed credentials.
-- [ ] Deterministic mock provider for CI.
-- [ ] Capability JSON Schema → constrained tool definitions.
-- [ ] Intent/entity/clarification contracts and Workflow v1 planning.
-- [ ] Plan explanation, approval bound to plan/input hashes and revalidation at execution.
-- [ ] Artifact-only Answer Composer with claim/field citations.
-- [ ] Session/run trace, cancellation and bounded iteration controls.
+- [ ] Symbolic expressions, derivation traces and dimensional checks.
+- [ ] Constraint/feasibility and optimization contracts.
+- [ ] Candidate, objective, uncertainty and evaluation artifacts.
+- [ ] Reconstruction/generalization/exploration task contracts.
+- [ ] Proposer–Verifier separation and non-circular verification.
+- [ ] Reproducible examples in at least two distinct service domains.
+- [ ] Explicit accepted/rejected/indeterminate/failure behavior.
+
+**Gate:** candidates are generated and independently evaluated with reproducible evidence.
+
+## P3 — A–N Knowledge-to-Construction integration
+
+- [ ] Service-specific knowledge packages and governing principles.
+- [ ] Construction/evaluation interfaces adapted to existing service engines.
+- [ ] Domain Rulebooks and independent checks.
+- [ ] Known, edge, negative, constructed and out-of-domain test cases.
+- [ ] Cross-service typed artifact handoff and provenance continuity.
+- [ ] Evidence and epistemic labels on all scientific outputs.
+
+**Gate:** each service demonstrates its own lifecycle; cross-domain workflows pass engineering and applicable scientific review gates.
+
+## P4 — Agentics orchestration maturity
+
+- [ ] Intent/entity/task and clarification contracts.
+- [ ] Optional provider-neutral LLM adapter and deterministic mock.
+- [ ] Capability-schema-derived constrained tool calls.
+- [ ] SKE-aware Workflow v1 planner and approval binding.
+- [ ] Artifact-only claim-grounded answer composer.
+- [ ] Trace, cancellation, bounded iteration and policy enforcement.
 - [ ] At least 50 grounded/adversarial evaluation cases.
-- [ ] Prompt-injection, fabrication, privacy, license and unsupported-request tests.
+- [ ] Prompt injection, fabricated laws, unit errors, uncertainty, out-of-domain and unsupported-claim tests.
 
-**Gate:** all evaluation cases pass; zero fabricated/unsupported claims in the curated suite; approval/policy tests pass; every scientific report claim resolves to artifacts.
+**Gate:** curated evaluation thresholds pass; zero unsupported scientific claims in the curated suite; every claim resolves to artifact fields.
 
-## P3 — Predictor service
+## P5 — Optional scientific models and training
 
-- [ ] PredictorAdapter and canonical mmCIF/confidence outputs.
-- [ ] Exact model code/weights/data license review.
-- [ ] Model/checkpoint/input hashes, seed, parameters and runtime provenance.
-- [ ] Predicted namespace distinct from experimental.
-- [ ] Local MMseqs2 MSA; remote MSA only opt-in with egress consent.
-- [ ] Geometry, clash, Ramachandran and confidence verification.
-- [ ] Independent consensus/physics checks where justified.
-- [ ] Post-training-cutoff benchmark with leakage-aware split and metrics.
+- [ ] Baseline demonstrates a measured need.
+- [ ] Exact data/code/checkpoint license and privacy audit.
+- [ ] Model provenance, dataset snapshot and leakage-resistant split.
+- [ ] Reproducible benchmark and calibration.
+- [ ] Optional predictor adapters remain one method among many.
+- [ ] Predictions/simulations/constructed candidates remain distinct from observations.
 
-**Gate:** reproducible benchmark and calibration report; provenance and licensing complete; prediction status always explicit.
+**Gate:** reproducible benchmark demonstrates justified improvement; no unsupported accuracy claims.
 
-## P4 — Data and training pipeline
+## P6 — Controlled discovery and design
 
-- [ ] Versioned dataset snapshots, checksums and license ledger.
-- [ ] Quality filters with documented thresholds.
-- [ ] Sequence clustering and time/cluster splits.
-- [ ] Synthetic labels kept separate from experimental.
-- [ ] Reproducible PyTorch training/evaluation harness.
-- [ ] Experiment and model registry artifacts.
-- [ ] Manifest-based reproduction test within declared tolerance.
+- [ ] Per-domain risk assessment and policy.
+- [ ] Bounded candidate generation and objective/stop conditions.
+- [ ] Independent verification and adversarial screening.
+- [ ] Human and institutional review.
+- [ ] Biosecurity/chemical safety review where relevant.
+- [ ] Disabled-by-default deployment policy and audit.
 
-**Gate:** training run reproduced from manifest; leakage checks and license/privacy audit pass.
+**Gate:** separate approval for each domain/capability; no autonomous wet-lab or clinical actions.
 
-## P5 — Optional design (disabled until approved)
+## P7 — Generalization and independent research evaluation
 
-- [ ] Separate design risk assessment and policy.
-- [ ] Design model adapters and candidate artifacts.
-- [ ] Proposer → Verifier integration.
-- [ ] Biosecurity screening, audit evidence and human-review record.
-- [ ] Institutional approval and license review.
+- [ ] Generalization beyond training/reference examples.
+- [ ] Independent university review and reference replication.
+- [ ] Reproducibility, scaling and recovery report.
+- [ ] Formal domain contract freeze and limitations register.
 
-**Gate:** screening suite passes and human/institutional approval is recorded. No design release before gate.
-
-## P6 — Generalize across A–N
-
-- [ ] Service-specific proposer/verifier packages.
-- [ ] Domain-owned Rulebook acceptance criteria and thresholds.
-- [ ] Real cross-service typed artifact handoff and provenance continuity.
-- [ ] Deterministic replay, failure propagation and recovery tests.
-- [ ] Independent reference and reproducibility evidence per applicable domain.
-
-**Gate:** each domain accepted against its own evidence standard; system integration report documents remaining limitations.
+**Gate:** acceptance only for claims supported by the stated evidence level.
 
 ## Required phase report
 
-1. Files changed.
+1. Exact files changed and commit SHA.
 2. Tests added and executed.
-3. CI URL and exact commit.
-4. Pass/fail/skip/not-tested summary.
-5. Open risks and explicit non-claims.
-6. Gate state: passed, failed or blocked.
-7. Exact next phase (not started until gate passes).
+3. CI URL and exact tested commit.
+4. Pass/fail/skip/not-tested counts.
+5. Benchmark and scientific evidence, kept separate.
+6. Open risks and explicit non-claims.
+7. Gate state: passed, failed or blocked.
+8. Exact next phase (not started until gate passes).
 
-University scientific review remains a separate acceptance activity. No engineering phase or green CI run is a substitute.
+University scientific/privacy review remains separate from engineering CI.

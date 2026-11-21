@@ -89,3 +89,14 @@ Update this register only from repository evidence. Every status transition must
 **Not yet accepted:** configured production LLM provider, Sources service, real cross-service scientific artifact handoff, artifact-grounded answer composer, 50+ adversarial evaluation suite, Predictor service, model benchmark, OS-level sandbox/recovery certification, training pipeline, design safety gate and service-wide Proposer → Verifier acceptance. The phase sequence P0–P6 is specified in the master plan and remains unimplemented unless backed by separate commit/CI evidence.
 
 This is an initial agent foundation, not a finished autonomous research scientist. It is not scientifically validated; university review remains separate.
+
+
+## Agentics Molecularis — architecture direction update
+
+Governing plan upgraded to v2.0 on 2026-11-21. The current repository evidence above remains the status baseline; this documentation update does not implement the Scientific Knowledge Engine or construction system.
+
+**Permanent target across A–N:** Understand → Represent → Reason → Construct → Evaluate → Verify → Learn. Agentics is the orchestrator; the shared Scientific Knowledge Engine provides typed, versioned knowledge/equation/evidence contracts; each service retains domain-owned scientific engines, constraints, construction methods and verification Rulebooks.
+
+The system is not restricted to PDB, X-ray structures, existing reference examples or pretrained predictors. These are optional evidence or candidate-generation methods. Novel candidates must be labelled constructed/hypothesized until appropriate independent evidence supports stronger claims.
+
+**Current status:** initial AI planner/approval-gated Workflow v1 foundation remains implemented as previously recorded. The universal knowledge substrate, shared construction/evaluation primitives, full cross-service proposer/verifier integration and related scientific acceptance are roadmap work, not current completed capabilities.

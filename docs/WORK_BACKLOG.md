@@ -76,3 +76,19 @@ The detailed scope, architecture, acceptance metrics and gates are governed by [
 - [ ] **P6 — Generalize:** service-specific Proposer → Verifier patterns, domain acceptance criteria, independent checks and end-to-end artifact lineage.
 
 **Gate rule:** implement one phase only, add tests, obtain green CI and update docs from evidence, then stop and report. University scientific review remains independent and is not replaced by software CI.
+
+
+## Agentics Molecularis — revised universal roadmap (2026-11-21)
+
+The detailed governing plan is now v2.0: [AGENTICS_MOLECULARIS_MASTER_PLAN.md](AGENTICS_MOLECULARIS_MASTER_PLAN.md). This section supersedes the earlier narrow P0–P6 ordering where inconsistent.
+
+- [ ] P0 — Repository truth, sandbox/security, failure evidence and artifact recovery.
+- [ ] P1 — Universal Scientific Knowledge Engine: typed knowledge, laws/equations, units, assumptions, evidence, uncertainty, applicability and versioning.
+- [ ] P2 — Shared reasoning/construction primitives: symbolic derivation, dimensional checks, constraints, optimization, candidate/evaluation contracts and independent Proposer–Verifier.
+- [ ] P3 — Integrate knowledge-to-construction into all A–N services, one service/domain slice at a time; preserve existing engines and domain Rulebooks.
+- [ ] P4 — Mature Agentics orchestration, optional provider adapter, approval binding, artifact-grounded reporting and 50+ adversarial evaluations.
+- [ ] P5 — Optional scientific models/training only after measured baseline gap, exact license review and leakage-resistant evaluation. Predictors are optional, never the architecture centre.
+- [ ] P6 — Controlled discovery/design with domain safety, independent verification and human/institutional gates.
+- [ ] P7 — Generalization, scaling and independent university/research evaluation.
+
+**Permanent service rule:** Understand → Represent → Reason → Construct → Evaluate → Verify → Learn applies to every service A–N. Engineering CI and scientific acceptance remain separate. No phase may be marked complete without commit and evidence.
