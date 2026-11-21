@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-message: "If you use Molecularis, please cite the repository and any separately validated capability records."
-title: "Molecularis"
-version: 0.0.0
-abstract: "Offline-first scientific workbench foundation; no validated scientific capabilities are included in this scaffold."
+message: "If you use Molecularis, cite this repository and the relevant upstream scientific methods and software."
+title: "Molecularis Engine"
+version: 0.1.0
+abstract: "A modular scientific-computing engine for computational biology, molecular science and reproducible research workflows."

@@ -1,1 +1,0 @@
-claim_id,manuscript_section,claim_text,claim_type,phase_id,implementation_commit,validation_protocol,reference_dataset,reference_version,metric,measured_value,uncertainty,artifact_path,artifact_sha256,ci_run,independent_review,status,limitations
