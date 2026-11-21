@@ -51,3 +51,12 @@ The Python runtime is a reference implementation, not yet a cross-language wire 
 - Crash safety is designed around immutable blob publication plus SQLite transactions; comprehensive power-loss and boundary-by-boundary fault-injection certification remains open. Snapshot offsets use catalog row IDs and assume the catalog is not VACUUM-rewritten during a paginated query.
 
 MSDE is not a scientific inference model. Search and ranking do not establish scientific truth. AI proposals cannot bypass deterministic contracts, resource controls or independent verification.
+
+
+## Agentics scientific knowledge and evidence integration
+
+MSDE is the shared artifact, metadata, provenance and workflow substrate used by Agentics and all A–N services. It stores immutable scientific artifacts and lineage; it does not itself determine scientific truth. Agentics' Scientific Knowledge Engine supplies typed concepts, equations, assumptions, evidence and applicability metadata, while domain services own scientific semantics and verification thresholds.
+
+Scientific artifacts passed through MSDE should preserve units/dimensions, coordinate/reference conventions, epistemic class, uncertainty, source/tool/model versions, assumptions and parent lineage. AI-generated content remains untrusted until validated by typed contracts, service Rulebooks and independent checks. Do not introduce a parallel AI artifact store or workflow executor.
+
+See [Agentics Master Plan](../../docs/AGENTICS_MOLECULARIS_MASTER_PLAN.md), [AI Constitution](../../services/ai/AI_CONSTITUTION.md) and [Scientific Foundation](../../services/ai/SCIENTIFIC_FOUNDATION.md).
