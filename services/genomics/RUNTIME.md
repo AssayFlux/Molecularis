@@ -1,5 +1,11 @@
 # Genomics Runtime
 
-Status: scaffold — not yet implemented or validated.
+Status: **implemented Python reference runtime integration; native C++/Rust and distributed execution are not implemented.**
 
-Specify runtime lifecycle, initialization, configuration, execution, resource management, cancellation, errors, reproducibility, and shutdown. Define C++/Python/Rust boundaries where needed. Runtime must not silently delegate core work to an external scientific engine.
+The service registers five deterministic MSDE capabilities: `genomics.validate.v1`, `genomics.assembly-qc.v1`, `genomics.orf-scan.v1`, `genomics.annotation-validate.v1`, and `genomics.variant-qc.v1`.
+
+Genome artifacts are immutable JSON payloads with media/schema identifiers, content digest, metadata integrity checks and parent lineage. Handlers enforce the shared execution byte/record/base budgets; individual algorithms impose additional hard limits. Results are stored by the shared Rulebook executor and linked to input artifacts.
+
+VCF QC accepts a bounded text parameter and returns aggregate counts only. It verifies VCF contig names against the genome artifact, but deliberately does not claim REF-allele/reference-build validation. GFF3 input is bounded and every feature seqid must exist in the genome artifact.
+
+BAM/CRAM and Samtools/BCFtools integrations remain optional local pysam/HTSlib adapters. CRAM requires an explicit local FASTA; network retrieval is never implicit. Host process execution is not part of the native MSDE handler path.

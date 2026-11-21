@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "molecularis.genome-operation-report.v1",
+  "title": "Molecularis Genomics Operation Report v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "operation",
+    "genome_id",
+    "genome_sha256",
+    "result",
+    "rulebook",
+    "rules_checked",
+    "limitations"
+  ],
+  "properties": {
+    "schema": {
+      "const": "molecularis.genome-operation-report.v1"
+    },
+    "operation": {
+      "enum": [
+        "validate",
+        "assembly_qc",
+        "orf_scan",
+        "annotation_validate",
+        "variant_qc"
+      ]
+    },
+    "genome_id": {
+      "type": "string"
+    },
+    "genome_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "result": {
+      "type": "object"
+    },
+    "rulebook": {
+      "const": "genomics-core-v1"
+    },
+    "rules_checked": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

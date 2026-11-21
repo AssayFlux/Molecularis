@@ -463,6 +463,32 @@ tools:
     evidence_level: none
 
 
+  - id: genomics.msde_validate
+    name: MSDE-backed canonical genome artifact validation
+    status: implemented
+    implementation: python/molecularis/genomics_service.py
+    evidence_level: none
+  - id: genomics.msde_assembly_qc
+    name: Bounded contig N50/L50 and GC/ambiguity QC
+    status: implemented
+    implementation: python/molecularis/genomics_service.py
+    evidence_level: none
+  - id: genomics.msde_orf_scan
+    name: Explicit-code six-frame ORF candidate enumeration
+    status: implemented
+    implementation: python/molecularis/genomics_service.py
+    evidence_level: none
+  - id: genomics.msde_annotation_validate
+    name: Genome-bound GFF3 hierarchy and contig validation
+    status: implemented
+    implementation: python/molecularis/genomics_service.py
+    evidence_level: none
+  - id: genomics.msde_variant_qc
+    name: Aggregate-only VCF QC bound to genome contig identifiers
+    status: implemented
+    implementation: python/molecularis/genomics_service.py
+    evidence_level: none
+
 engines: []
 data_packs: []
 domains: []
