@@ -134,7 +134,7 @@ def test_i5_synthetic_cohort_schema_accepts_only_aggregate_non_patient_output() 
     import json
     from jsonschema import Draft202012Validator
 
-    from kinetics.virtual_cohort import simulate_hardy_weinberg_cohort
+    from molecularis.virtual_cohort import simulate_hardy_weinberg_cohort
 
     root = Path(__file__).resolve().parents[1]
     schema = json.loads(
@@ -228,7 +228,7 @@ def test_i4_pkpd_result_schema_accepts_reference_models_and_rejects_clinical_fla
     import json
     from jsonschema import Draft202012Validator
 
-    from kinetics.pkpd import emax_pd, one_compartment_oral_pk
+    from molecularis.pkpd import emax_pd, one_compartment_oral_pk
 
     root = Path(__file__).resolve().parents[1]
     schema = json.loads(
@@ -254,7 +254,7 @@ def test_i5_synthetic_variant_effect_schema_rejects_patient_or_prediction_payloa
     import json
     from jsonschema import Draft202012Validator
 
-    from kinetics.virtual_cohort import simulate_synthetic_additive_variant_effects
+    from molecularis.virtual_cohort import simulate_synthetic_additive_variant_effects
 
     root = Path(__file__).resolve().parents[1]
     schema = json.loads(

@@ -141,7 +141,7 @@ def test_fastq_parser_rejects_plus_identifier_mismatch() -> None:
 
 
 def test_fastq_terminal_quality_trimming_preserves_metadata() -> None:
-    from kinetics.sequence import SequenceRecord, trim_fastq_ends
+    from molecularis.sequence import SequenceRecord, trim_fastq_ends
 
     record = parse_fasta(">r1 description\nACGTAC\n")[0]
     trimmed = trim_fastq_ends(record, "!!IIII", minimum_quality=20, minimum_length=3)
@@ -155,7 +155,7 @@ def test_fastq_terminal_quality_trimming_preserves_metadata() -> None:
 
 
 def test_fastq_terminal_trimming_rejects_invalid_quality_and_short_reads() -> None:
-    from kinetics.sequence import trim_fastq_ends
+    from molecularis.sequence import trim_fastq_ends
 
     record = parse_fasta(">r1\nACGT\n")[0]
     assert trim_fastq_ends(record, "!!!!", minimum_quality=20, minimum_length=3) is None
@@ -167,7 +167,7 @@ def test_fastq_terminal_trimming_rejects_invalid_quality_and_short_reads() -> No
 def test_fasta_iterator_streams_records_from_line_iterable() -> None:
     from io import StringIO
 
-    from kinetics.sequence import iter_fasta_records
+    from molecularis.sequence import iter_fasta_records
 
     records = iter_fasta_records(StringIO(">first description\nACG\n>second\nTTN\n"))
     first = next(records)
@@ -180,7 +180,7 @@ def test_fasta_iterator_streams_records_from_line_iterable() -> None:
 
 
 def test_michaelis_menten_bootstrap_intervals_are_seed_reproducible() -> None:
-    from kinetics.kinetics import bootstrap_michaelis_menten
+    from molecularis.kinetics import bootstrap_michaelis_menten
 
     substrates = [1.0, 2.0, 4.0, 8.0, 16.0, 32.0]
     rates = [100.0 * value / (10.0 + value) for value in substrates]
@@ -198,7 +198,7 @@ def test_michaelis_menten_bootstrap_intervals_are_seed_reproducible() -> None:
 
 
 def test_michaelis_menten_fit_exposes_residual_and_identifiability_diagnostics() -> None:
-    from kinetics.kinetics import fit_michaelis_menten
+    from molecularis.kinetics import fit_michaelis_menten
 
     substrates = [1.0, 2.0, 4.0, 8.0, 16.0, 32.0]
     rates = [100.0 * value / (10.0 + value) for value in substrates]

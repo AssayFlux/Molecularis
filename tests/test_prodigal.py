@@ -6,8 +6,8 @@ from pathlib import Path
 
 import pytest
 
-from kinetics.prodigal import run_local_prodigal
-from kinetics.sequence import SequenceRecord
+from molecularis.prodigal import run_local_prodigal
+from molecularis.sequence import SequenceRecord
 
 
 def _prodigal(tmp_path: Path, *, end: int = 9) -> tuple[Path, str]:
