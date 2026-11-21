@@ -253,15 +253,16 @@ def register_pharmacogenomics_service(platform: MolecularisPlatform) -> None:
             description=descriptions[operation],
         ))
         def handler(inputs, parameters, context, selected=operation):
-            expected_keys = {"sample"} if selected == "validate" else {"sample", "definitions"}
-            if set(inputs) != expected_keys or any(not isinstance(v, str) for v in inputs.values()):
-                raise ValidationError(f"PGx {selected} requires artifact inputs {sorted(expected_keys)}")
-            record = load_pharmacogenomics(platform, inputs["sample"], budget=context.budget)
+            values = list(inputs.values())
+            expected_count = 1 if selected == "validate" else 2
+            if len(values) != expected_count or any(not isinstance(v, str) for v in values):
+                raise ValidationError(f"PGx {selected} requires {expected_count} artifact input(s)")
+            record = load_pharmacogenomics(platform, values[0], budget=context.budget)
             if selected == "validate":
                 result = {"valid": True, "haplotype_count": len(record.calls),
                           "genome_build": record.genome_build, "data_classification": record.data_classification}
             else:
-                definitions = load_pgx_definitions(platform, inputs["definitions"], budget=context.budget)
+                definitions = load_pgx_definitions(platform, values[1], budget=context.budget)
                 if any(d.genome_build != record.genome_build for d in definitions):
                     raise ValidationError("sample and star-allele definition genome builds differ")
                 result = _match(record, definitions)
