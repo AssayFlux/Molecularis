@@ -1,6 +1,8 @@
 <!-- MOLECULARIS · BY ASSAYFLUX -->
+<h1 align="center">MOLECULARIS</h1>
+<p align="center"><strong>BY ASSAYFLUX SCIENTIFIC SYSTEMS</strong></p>
 <p align="center">
-  <img src="Assets/Molecularis%20By%20AssayFlux©.png" alt="Molecularis guilloche DNA logo" width="100%">
+  <img src="Assets/Molecularis%20Guilloche%20Logo.svg" alt="Molecularis guilloche DNA mark" width="54%">
 </p>
 
 <p align="center">
