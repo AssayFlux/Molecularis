@@ -14,10 +14,10 @@ ROOT = Path(__file__).resolve().parents[1]
 with (ROOT / "pyproject.toml").open("rb") as handle:
     python_version = str(tomli.load(handle)["project"]["version"])
 
-package_lines = (ROOT / "python/kinetics/__init__.py").read_text(encoding="utf-8").splitlines()
+package_lines = (ROOT / "python/molecularis/__init__.py").read_text(encoding="utf-8").splitlines()
 package_line = next((line for line in package_lines if line.startswith("__version__")), "")
 if '"' not in package_line:
-    raise SystemExit("python/kinetics/__init__.py does not declare __version__")
+    raise SystemExit("python/molecularis/__init__.py does not declare __version__")
 package_version = package_line.split('"')[1]
 
 android_lines = (ROOT / "android/app/build.gradle.kts").read_text(encoding="utf-8").splitlines()
@@ -31,7 +31,7 @@ android_code = int(version_code_line.split("=", 1)[1].strip())
 manifest = json.loads((ROOT / "release-baseline.json").read_text(encoding="utf-8"))
 versions = {
     "pyproject.toml": python_version,
-    "python/kinetics/__init__.py": package_version,
+    "python/molecularis/__init__.py": package_version,
     "android/app/build.gradle.kts": android_version,
     "manifest.release": str(manifest.get("release", "")),
     "manifest.android_version_name": str(manifest.get("android_version_name", "")),
