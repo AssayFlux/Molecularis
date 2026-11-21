@@ -1,7 +1,7 @@
 # Molecularis — Repository Baseline Inventory
 
 **Snapshot:** CORE at `dbda3496386edf46270d54296b2204a53d7de573`  
-**Tree:** `dbda3496386edf46270d54296b2204a53d7de573`  
+**Tree:** `0243cf8ac54def55d4bff00ed23bba2e059f916d`  
 **Date:** 2026-11-21  
 **Method:** GitHub recursive Git tree (not truncated), targeted source and documentation reads. This is a repository inventory, not an exhaustive line-by-line code audit, device test, security assessment or scientific validation.
 
