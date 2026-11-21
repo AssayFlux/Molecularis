@@ -227,7 +227,7 @@ def run_molprobity_cli(
     max_output_bytes: int = 16 * 1024**2,
 ) -> dict[str, Any]:
     """Run one installed MolProbity command-line validator on a PDB file."""
-    allowed = {"clashscore", "mp_geometry", "residue-analysis"}
+    allowed = {"clashscore", "mp_geometry", "residue-analysis", "oneline-analysis"}
     if tool not in allowed:
         raise ValueError(f"tool must be one of {sorted(allowed)}")
     if not isinstance(run_id, str) or not run_id.strip():
@@ -249,8 +249,16 @@ def run_molprobity_cli(
     output = _fresh_directory(output_directory)
     env = {"HOME": str(output), "TMPDIR": str(output), "TEMP": str(output),
            "TMP": str(output), "PATH": os.defpath, "LANG": "C", "LC_ALL": "C"}
+    if tool == "oneline-analysis":
+        input_directory = output / "input"
+        input_directory.mkdir()
+        staged_pdb = input_directory / pdb.name
+        staged_pdb.write_bytes(pdb.read_bytes())
+        command_input = str(input_directory)
+    else:
+        command_input = str(pdb)
     try:
-        completed = subprocess.run([str(executable), str(pdb)],
+        completed = subprocess.run([str(executable), command_input],
             stdin=subprocess.DEVNULL, stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT, cwd=output, env=env,
             timeout=timeout_seconds, check=False, shell=False)
