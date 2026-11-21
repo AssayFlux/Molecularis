@@ -12,3 +12,8 @@ Status: Python reference runtime integrated with MSDE.
 Documents are limited to 100,000 atoms. Pairwise contacts/interactions are limited to 5,000 atoms; SASA to 2,000 atoms and 4,096 sphere samples. RMSD requires equal atom counts and caller-matched ordering. Invalid inputs and resource overages fail closed.
 
 The v1 service is in-process Python and does not fetch network data, shell out or require external engines. C++ and Rust bindings are future work, not implemented claims.
+
+
+## Agentics scientific execution requirements
+
+Validate typed structures, coordinate frames, units, assumptions, domain bounds and resource budgets before execution. Preserve method/version, parameters, environment, seeds, source artifacts, logs and lineage. Fail explicitly on unsupported formats or missing optional engines. AI output is untrusted and cannot bypass service policy. See ../ai/AI_CONSTITUTION.md.

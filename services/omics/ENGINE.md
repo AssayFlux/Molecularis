@@ -18,3 +18,10 @@ No raw FASTQ/BAM/VCF quantification pipeline, transcript quantifier, alignment, 
 
 ## Acceptance
 Canonical round-trip/digest and duplicate-key rejection; matrix shape, identifiers, scale and finite-value checks; CPM, CLR, Welch, NB2, diversity and correlation; scale mismatch rejection; artifact integrity/budgets; full CI and benchmark smoke.
+
+
+## Shared Agentics scientific foundation
+
+Participates in **Understand → Represent → Reason → Construct → Evaluate → Verify → Learn**. Priority disciplines: Probability/statistics, multivariate analysis, experimental design, normalization, multiple-testing correction, causal inference, missing-data methods and uncertainty.
+
+Use shared statistical, uncertainty, unit, evidence and provenance contracts while retaining omics-specific data semantics and validators. See ../ai/SCIENTIFIC_FOUNDATION.md and ../ai/AI_CONSTITUTION.md.

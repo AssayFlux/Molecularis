@@ -7,3 +7,8 @@ The service registers deterministic versioned capabilities with the shared MSDE 
 Limits: SDF input 16 MiB; 100,000 explicit atoms; 200,000 bonds; fingerprint path length at most 6 with configurable feature and traversal ceilings; substructure matching has a configurable state ceiling. The shared execution context enforces the artifact byte budget.
 
 Errors are explicit validation or resource-limit failures. No network calls, implicit external process execution or automatic fallback to RDKit occur. Current handlers are trusted in-process Python; OS sandboxing, preemptive cancellation and GPU isolation remain Core-level future work.
+
+
+## Agentics scientific execution requirements
+
+Validate chemical records, valence/charge/stereochemistry conventions, units, assumptions, supported chemistry domain and resource budgets before execution. Preserve tool/method versions, parameters, source artifacts, environment and lineage. Missing optional chemistry engines must fail explicitly. AI output is untrusted input. See ../ai/AI_CONSTITUTION.md and ../ai/SCIENTIFIC_TOOL_REGISTRY.md.

@@ -27,3 +27,17 @@ All sequence artifacts validate before persistence. Every operation accepts exac
 ## Known limits
 
 The v1 runtime exposes validation, statistics, reverse complement, transcription and translation. Existing parsers, alignment, reference-pack, ORF, GFF3 and homology adapters remain available as separately tested Python APIs. They are not promoted to production capabilities until their own scientific acceptance criteria and external dependency contracts are reviewed.
+
+
+## Agentics and shared scientific foundation rules
+
+1. Apply **Understand → Represent → Reason → Construct → Evaluate → Verify → Learn** without weakening this service's domain rules.
+2. Before construction, audit objective, inputs, units, assumptions, constraints, evidence/source versions, applicability and resource/safety limits.
+3. Use governing scientific laws, equations, mechanisms and algorithms with explicit assumptions and validity domains; distinguish empirical correlations from established laws.
+4. Independently verify outputs using appropriate domain invariants, reference methods, statistical checks or experimental evidence. The proposer is never the sole verifier.
+5. Preserve evidence class, uncertainty, limitations and provenance. A candidate is not automatically stable, experimentally realizable or functional.
+6. External tools are optional registered adapters; verify exact versions, licenses, schemas, resource limits and verification strategy.
+
+Priority foundations: Discrete mathematics, string/graph algorithms, information theory, probability/statistics, genetics, evolutionary models, sequence alignment and uncertainty in annotation.
+
+See ../ai/AI_CONSTITUTION.md, ../ai/SCIENTIFIC_FOUNDATION.md and ../ai/SCIENTIFIC_TOOL_REGISTRY.md.

@@ -29,3 +29,10 @@ No inferred valence, chemical sanitization, aromaticity perception, protonation,
 ## Acceptance evidence
 
 Model tests, schema and fixture checks, artifact round-trip, provenance-preserving Rulebook execution, strict parser tests and a reproducible graph benchmark harness are required. Structural validation is not a claim of chemical validity.
+
+
+## Shared Agentics scientific foundation
+
+This service participates in **Understand → Represent → Reason → Construct → Evaluate → Verify → Learn** where supported by its declared capabilities. Priority scientific foundations: Molecular representation, graph theory, algebra/linear algebra, geometry and topology, unit/dimension analysis, physical and quantum chemistry, molecular energetics, numerical methods and uncertainty.
+
+Use shared scientific contracts for quantities/units, reference systems, evidence class, uncertainty and provenance. Keep service-specific scientific meanings, algorithms, constraints and validation logic owned here. Agentics may coordinate this engine but cannot override its domain Rulebook. See ../ai/SCIENTIFIC_FOUNDATION.md and ../ai/AI_CONSTITUTION.md.

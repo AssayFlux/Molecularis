@@ -21,3 +21,12 @@ Each service has ENGINE.md, RUNTIME.md, RULEBOOK.md, service.yaml and language-s
 
 ## Migration
 Existing Python modules and tests remain in place until service-by-service migration is implemented and verified.
+
+
+## Agentics scientific foundation
+
+Agentics Molecularis is the coordination and reasoning layer; it is not a replacement for domain engines or a scientific authority. Its shared scientific foundation comprises typed scientific contracts, versioned knowledge/evidence, units and reference systems, mathematical and statistical computation, domain simulation adapters, construction, independent verification and evaluation. Each A–N service owns its scientific semantics, laws/equations, algorithms, constraints, Rulebooks and acceptance thresholds.
+
+The universal service lifecycle is **Understand → Represent → Reason → Construct → Evaluate → Verify → Learn**. A service may participate in only the stages supported by its declared capability. Scientific outputs preserve epistemic class, uncertainty, assumptions, applicability domain and provenance across service boundaries. The AI proposer cannot certify its own result or bypass service Rulebooks, approval, resource or safety policy.
+
+The discipline map, tool catalogue and staged implementation are defined in [Scientific Foundation](services/ai/SCIENTIFIC_FOUNDATION.md), [Scientific Tool Registry](services/ai/SCIENTIFIC_TOOL_REGISTRY.md), [AI Constitution](services/ai/AI_CONSTITUTION.md) and [Agentics Master Plan](docs/AGENTICS_MOLECULARIS_MASTER_PLAN.md). These are target specifications; listing a package does not mean it is installed, integrated or scientifically accepted.

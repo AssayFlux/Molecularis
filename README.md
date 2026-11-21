@@ -406,6 +406,23 @@ python scripts/check_registry.py
 
 Use the repository's service specifications and engineering Rulebook when extending the platform.
 
+## Agentics scientific foundation
+
+Agentics Molecularis is intended to reason and construct through a shared scientific foundation—not through an LLM alone. Its scope includes mathematics, physics, chemistry, biology, statistics, computer science, engineering, materials science and experimental methodology. Shared capabilities include symbolic and numerical calculation, units and dimensional analysis, probability and statistics, uncertainty, optimization, graph/geometry computation, simulation adapters, scientific knowledge and independent verification.
+
+All A–N services follow **Understand → Represent → Reason → Construct → Evaluate → Verify → Learn**, while retaining their own scientific rules and acceptance criteria. Existing data and models are evidence sources, not the boundary of possible construction. Every result must preserve assumptions, evidence class, uncertainty, applicability and provenance. Generated candidates are not automatically stable, experimentally realizable or functional.
+
+| Foundation | Purpose |
+|---|---|
+| Mathematics and numerical methods | Derivation, calculation, solvers and error analysis |
+| Physics and chemistry | Governing laws, mechanisms, energetics and simulation |
+| Biology and domain sciences | Domain knowledge, biological constraints and interpretation |
+| Statistics and uncertainty | Evidence appraisal, inference, experimental design and calibration |
+| Computing and optimization | Algorithms, constraints, search, graph and geometric construction |
+| Verification and provenance | Independent checks, traceability, reproducibility and limitations |
+
+The candidate package/engine catalogue is not an installation list. Each integration requires a repository gap audit, version/license review, typed adapter, resource controls, provenance and independent tests. See [AI Constitution](services/ai/AI_CONSTITUTION.md), [Scientific Foundation](services/ai/SCIENTIFIC_FOUNDATION.md), [Scientific Tool Registry](services/ai/SCIENTIFIC_TOOL_REGISTRY.md) and [Implementation Roadmap](services/ai/IMPLEMENTATION_ROADMAP.md).
+
 ## Project documentation
 
 <table>
@@ -453,15 +470,3 @@ See [LICENSE](LICENSE). Third-party libraries, scientific engines, pretrained mo
   <sub>A scientific systems project by AssayFlux</sub><br>
   <sub>Every result should be traceable. Every workflow should be inspectable. Every claim should carry evidence.</sub>
 </p>
-
-
-## Agentics scientific foundation
-
-The AI scientific discipline map, candidate computational tools, mandatory implementation rules and staged adoption plan are documented here:
-
-- [AI Constitution](services/ai/AI_CONSTITUTION.md)
-- [Scientific Foundation](services/ai/SCIENTIFIC_FOUNDATION.md)
-- [Scientific Tool Registry](services/ai/SCIENTIFIC_TOOL_REGISTRY.md)
-- [Scientific Foundation Implementation Roadmap](services/ai/IMPLEMENTATION_ROADMAP.md)
-
-These specifications extend the single governing [Agentics Molecularis Master Plan](docs/AGENTICS_MOLECULARIS_MASTER_PLAN.md). Listed tools are candidates, not claims of installation or validation.

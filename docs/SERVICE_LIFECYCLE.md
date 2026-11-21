@@ -38,3 +38,10 @@ Never imply that one evidence level proves a stronger one.
 
 ## Freeze and reopening
 A frozen service changes only through explicit authorization and a recorded change request. A critical security or scientific defect may trigger expedited remediation, with complete audit trail and regression validation. A reopened service receives a new version and a new completion review.
+
+
+## Agentics scientific lifecycle integration
+
+Every service must identify which stages of **Understand → Represent → Reason → Construct → Evaluate → Verify → Learn** it supports and document its domain-specific knowledge, equations, assumptions, constraints, units, construction methods and verification thresholds. Shared scientific types and tools may be reused, but domain semantics remain service-owned.
+
+Any AI-proposed scientific operation must pass the pre-generation checks and independent post-generation checks defined in [AI Constitution](../services/ai/AI_CONSTITUTION.md). Service acceptance must record evidence class, uncertainty, applicability domain, provenance, limitations and reference-test evidence. Tool availability or successful execution alone is not scientific acceptance.

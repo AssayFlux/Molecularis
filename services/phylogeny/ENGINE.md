@@ -18,3 +18,10 @@ Existing python/molecularis/phylo.py algorithms (Newick parse/serialize, leaf ex
 Jukes–Cantor assumes equal nucleotide frequencies and equal substitution rates; it is not a general substitution model. Pairwise deletion can make pairwise estimates use different site sets. Saturation at p >= 0.75 and insufficient comparable sites fail explicitly. NJ is not inherently rooted; its emitted Newick root is computational/arbitrary. UPGMA is valid as a dated-clock-like interpretation only under ultrametric/constant-rate assumptions. Bootstrap support is conditional on successfully reconstructed replicates and is not a posterior probability.
 
 No native aligner, maximum-likelihood or Bayesian inference, codon model, recombination detection, gene-tree/species-tree reconciliation, ancestral reconstruction or calibrated divergence dating is claimed.
+
+
+## Shared Agentics scientific foundation
+
+Participates in **Understand → Represent → Reason → Construct → Evaluate → Verify → Learn**. Priority disciplines: Evolutionary biology, probability, likelihood/Bayesian inference, graph/tree algorithms, statistical models, sampling, model selection and uncertainty.
+
+Use shared probability, statistics, uncertainty, evidence and provenance contracts while retaining evolutionary model semantics and validators. See ../ai/SCIENTIFIC_FOUNDATION.md and ../ai/AI_CONSTITUTION.md.

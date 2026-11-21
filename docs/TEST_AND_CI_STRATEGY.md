@@ -22,3 +22,10 @@ Keep fixtures small, deterministic, licensed, checksummed and documented. Large 
 
 ## Release gate
 No service freeze while required CI checks fail, required scientific fixtures are missing, or known high-severity correctness defects remain unresolved.
+
+
+## Agentics scientific and model evaluation
+
+AI/scientific tests must cover pre-generation rejection, schema and unit validation, source/version/provenance integrity, independent post-generation checks, uncertainty reporting, adversarial/untrusted-content handling, resource enforcement, tool-unavailable behavior and failure/cancellation semantics. Numerical tests record tolerances, convergence, precision, random seeds and hardware sensitivity.
+
+Model changes require fixed leakage-resistant evaluation sets, baseline comparison, regression thresholds, reproducible training/inference manifests and rollback evidence. Keep deterministic fixtures in ordinary CI; heavyweight datasets, GPUs and external engines use explicit optional/institutional test profiles. Report engineering CI, model benchmark results and scientific validation separately.

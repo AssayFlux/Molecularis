@@ -16,3 +16,10 @@ ESM embeddings require operator-supplied, hash-verified local Transformers check
 
 ## Exclusions
 No native folding, de novo sequence generation, function/activity prediction, homology search, domain discovery, PTM prediction, disulfide inference, toxicity/clinical assessment or biological safety certification. ESM embeddings are representations, not calibrated functional predictions.
+
+
+## Shared Agentics scientific foundation
+
+Participates in **Understand → Represent → Reason → Construct → Evaluate → Verify → Learn**. Priority disciplines: Biochemistry, molecular biology, sequence evolution, structural biology, geometry, statistical mechanics, thermodynamics, probabilistic inference and structural uncertainty.
+
+Use shared contracts for units, evidence, uncertainty and provenance while retaining protein-specific semantics and validators. Agentics cannot replace this service's scientific engine or Rulebook. See ../ai/SCIENTIFIC_FOUNDATION.md and ../ai/AI_CONSTITUTION.md.

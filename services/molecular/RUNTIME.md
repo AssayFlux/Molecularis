@@ -20,3 +20,8 @@ Graph validation, adjacency and components are O(V+E). Artifact boundaries enfor
 ## Errors and language status
 
 Malformed values, unknown/missing/extra fields, duplicate JSON keys, non-finite constants, unsupported schema/units, wrong artifact type and digest mismatch fail closed. Python is the only implemented reference runtime. C++/Rust bindings and cross-language conformance are not claimed.
+
+
+## Agentics scientific execution requirements
+
+AI-proposed operations enter through registered, typed capabilities. Validate schemas, units/dimensions, reference conventions, assumptions, resource budgets and domain limits before execution. Preserve tool/algorithm versions, parameters, environment, seeds where relevant, source artifacts, logs and output lineage. Enforce cancellation, timeout and explicit unavailable/failure states; do not silently substitute a different method. AI output is untrusted input and cannot bypass service policy. See ../ai/AI_CONSTITUTION.md and ../ai/SCIENTIFIC_TOOL_REGISTRY.md.

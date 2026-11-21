@@ -13,3 +13,16 @@ Rulebook ID: dna-rna-core-v1; version 1.0.0; executable engineering rules, scien
 | DRNA-007 | RNA fold accepts canonical A/C/G/U, AU/GC/GU non-crossing pairs, minimum loop and hard ceiling. | Deterministic Nussinov; ambiguous and over-budget inputs reject. |
 
 Operations: validate, statistics, reverse_complement, transcribe, reverse_transcribe, translate, primer_screen, fold_rna. Each is an MSDE capability with source digest and rule IDs. Wallace Tm is heuristic; Nussinov is maximum-pair approximation, not calibrated free energy. No function, binding affinity or experimental success is inferred. Breaking contracts require new schema/capability versions; changed scientific semantics require new Rulebook version and fixtures. External adapter evidence stays separate.
+
+
+## Agentics scientific rules
+
+- Apply the universal lifecycle under DNA/RNA domain authority.
+- Pre-audit sequence validity, strand conventions, concentrations, temperature, ionic conditions, units and method applicability.
+- Record thermodynamic model assumptions and parameter versions; do not extrapolate outside validated ranges without explicit uncertainty.
+- Independently check sequence/structure constraints and relevant thermodynamic or physical claims.
+- Distinguish computationally predicted folding from measured structure or demonstrated function.
+- Preserve evidence class, uncertainty, provenance and dataset/model license terms.
+
+Priority disciplines: Molecular biology, nucleic-acid chemistry, polymer physics, thermodynamics, statistical mechanics, sequence algorithms, folding and hybridization models.
+See ../ai/AI_CONSTITUTION.md and ../ai/SCIENTIFIC_TOOL_REGISTRY.md.

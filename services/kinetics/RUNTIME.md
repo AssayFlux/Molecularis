@@ -7,3 +7,8 @@ A caller constructs an immutable `ReactionNetworkDocument`, ingests it as a cont
 Operations: `validate`, `simulate`, `michaelis_menten`, and `fit_michaelis_menten`. Network operations require one artifact; standalone curve operations accept parameters only. The simulation operation requires positive `duration` and `step_size`, an integer-multiple horizon and bounded `max_steps`. The platform budget further caps candidate steps and artifact bytes.
 
 Execution is in-process and synchronous. It is deterministic for identical inputs and Python numerical behavior, but has no preemptive cancellation or OS isolation. Production deployment requires a separately sandboxed worker and explicit CPU/memory limits. No external scientific executable is required.
+
+
+## Agentics scientific execution requirements
+
+Validate species/reaction definitions, rate-law units, parameter dimensions, initial conditions, solver choice and resource budgets before execution. Preserve solver/method versions, parameters, seeds, tolerances, environment and lineage. Make stiffness, convergence and failure states explicit. See ../ai/AI_CONSTITUTION.md.

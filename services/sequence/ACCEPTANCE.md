@@ -29,3 +29,17 @@ Status: engineering implementation complete; CI run #153 passed; independent sci
 ## Explicit exclusions
 
 This acceptance record does not certify gene prediction, function annotation, homology calibration, novelty, pathogenicity, clinical use, cross-language conformance or platform-wide production readiness.
+
+
+## Agentics scientific foundation acceptance
+
+- [ ] Service scope, assumptions, validity domain and priority disciplines are documented: Discrete mathematics, string/graph algorithms, information theory, probability/statistics, genetics, evolutionary models, sequence alignment and uncertainty in annotation.
+- [ ] Typed inputs/outputs preserve units, dimensions, coordinate/reference conventions and evidence class where applicable.
+- [ ] Pre-generation checks reject malformed, out-of-domain or unsafe requests and preserve explicit assumptions.
+- [ ] Domain-specific post-generation verification is independent of the proposing model where feasible.
+- [ ] Numerical/statistical tolerances, uncertainty, sensitivity and limitations are reported where applicable.
+- [ ] Source, algorithm, model/tool version, parameters, environment and artifact lineage are traceable.
+- [ ] Optional adapters have license/version, resource, failure and verification evidence; registry listing alone is insufficient.
+- [ ] Engineering tests and scientific acceptance evidence are reported separately.
+
+Shared policy: ../ai/AI_CONSTITUTION.md. Discipline map: ../ai/SCIENTIFIC_FOUNDATION.md.

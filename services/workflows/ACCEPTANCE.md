@@ -12,3 +12,17 @@ Engineering acceptance is distinct from scientific validation of each invoked ca
 - Registry, schemas, Ruff, compilation, tests and DAG benchmark smoke pass in CI.
 
 University review, scientific comparisons, live Galaxy tests and platform-wide recovery/isolation gates remain deferred.
+
+
+## Agentics scientific workflow acceptance
+
+- [ ] Workflow plans use versioned typed contracts and registered capability IDs.
+- [ ] Preflight validates schemas, units, artifacts, permissions, capability versions and resource bounds.
+- [ ] Approval binds exact plan/input/capability/resource digests and invalidates on material change.
+- [ ] Cross-service lineage preserves evidence class, uncertainty, assumptions and provenance.
+- [ ] Domain-owned independent verifiers determine scientific acceptance.
+- [ ] Failure, partial, cancellation, retry and replay semantics are tested.
+- [ ] Arbitrary model-generated code cannot execute directly.
+- [ ] Engineering orchestration success is distinguished from scientific acceptance.
+
+Shared requirements: ../ai/AI_CONSTITUTION.md and ../ai/SCIENTIFIC_FOUNDATION.md.

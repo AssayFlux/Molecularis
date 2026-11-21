@@ -15,3 +15,16 @@ Status: **executable engineering rules GEN-001 through GEN-007; university scien
 ## Applicability and exclusions
 
 Coordinates are 1-based inclusive in VCF/GFF3 reports; GFF3 is 1-based inclusive. ORF coordinates and strand follow the existing ORF engine contract. No rule establishes assembly completeness, biological correctness, gene function, variant effect, clinical significance or fitness for diagnosis. Caller-supplied parameters and reference builds must be explicit.
+
+
+## Agentics scientific rules
+
+- Apply the universal lifecycle within genomics domain authority.
+- Pre-audit reference assembly/version, coordinate system, sample and consent metadata, allele representation, assumptions and evidence quality.
+- Distinguish observed reads/variants, normalized calls, statistical inference, predicted effects and validated findings.
+- Independently verify reference consistency, normalization, statistical assumptions and applicable biological claims.
+- Preserve uncertainty, population/context limitations, provenance, privacy and dataset licenses.
+- Training and model updates require permission, deduplication and leakage-resistant evaluation.
+
+Priority disciplines: Genetics, population genetics, probability/statistics, discrete algorithms, experimental design, causal inference, measurement error and variant evidence.
+See ../ai/AI_CONSTITUTION.md and ../ai/SCIENTIFIC_TOOL_REGISTRY.md.

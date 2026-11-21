@@ -13,3 +13,10 @@ Existing OpenMM adapter: trusted caller-constructed OpenMM System/Topology/posit
 Protocol validation checks contract consistency, not force-field correctness or thermodynamic suitability. Energy summaries do not infer equilibration, stability, ensemble convergence or physical validity. GROMACS TPR and force-field provenance are caller-supplied; TPR is not independently decoded. OpenMM is optional and requires local MD extra.
 
 Exclusions: native force-field parameterization, ligand/protein preparation, protonation, solvent/ion placement, topology generation, minimization, enhanced sampling, free-energy calculation, alchemical transformations, reaction dynamics, GPU scheduler, distributed replicas, trajectory decoding and experimental validation.
+
+
+## Shared Agentics scientific foundation
+
+Participates in **Understand → Represent → Reason → Construct → Evaluate → Verify → Learn**. Priority disciplines: Numerical analysis, linear algebra, ODE/PDE solvers, classical/analytical mechanics, statistical mechanics, thermodynamics, stochastic processes, HPC and numerical error.
+
+Use shared quantities, units, reference systems, uncertainty and provenance contracts while retaining simulation-specific numerical methods and physical models. See ../ai/SCIENTIFIC_FOUNDATION.md and ../ai/AI_CONSTITUTION.md.

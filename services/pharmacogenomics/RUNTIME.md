@@ -22,3 +22,8 @@ Malformed input, duplicate JSON keys, invalid allele symbols, digest/metadata mi
 
 ## Security and data handling
 v1 rejects patient-classified data and is intended for synthetic non-patient engineering fixtures only. Do not place patient identifiers or protected health information in artifacts or metadata. The runtime is an in-process trusted handler and is not an OS-level sandbox.
+
+
+## Agentics scientific execution requirements
+
+Validate variant/build, allele nomenclature, diplotype/phenotype evidence, guideline version, population context, consent/privacy and intended-use boundaries before execution. Preserve source/guideline versions, software and rule versions, parameters and lineage. Consequential interpretation requires qualified human review. See ../ai/AI_CONSTITUTION.md.

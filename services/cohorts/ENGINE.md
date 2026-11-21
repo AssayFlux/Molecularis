@@ -19,3 +19,10 @@ Categorical summaries use exact frequency counts. Numeric measurement summaries 
 
 ## Boundaries
 No individual-level rows or member IDs are returned in reports. Small-cell suppression is a disclosure-control heuristic, not differential privacy. Longitudinal data are descriptive only; no mixed models, hypothesis tests, survival analysis, causal inference, recruitment, consent adjudication, clinical eligibility or treatment interpretation is implemented. V1 rejects patient-classified data; callers remain responsible for ensuring the content itself contains no direct identifiers.
+
+
+## Shared Agentics scientific foundation
+
+Participates in **Understand → Represent → Reason → Construct → Evaluate → Verify → Learn**. Priority disciplines: Epidemiology, sampling theory, biostatistics, causal inference, experimental design, missing data, privacy-preserving analysis and measurement bias.
+
+Use shared statistical, uncertainty, evidence and provenance contracts while retaining cohort-specific semantics and privacy authority. See ../ai/SCIENTIFIC_FOUNDATION.md and ../ai/AI_CONSTITUTION.md.

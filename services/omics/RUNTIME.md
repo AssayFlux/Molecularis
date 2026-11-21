@@ -13,3 +13,8 @@ Example:
         {"omics_artifact_id": artifact.artifact_id})
 
 The runtime is in-process and does not provide OS-level isolation or preemptive cancellation. Production deployment requires sandboxed workers and operational resource controls.
+
+
+## Agentics scientific execution requirements
+
+Validate assay/platform metadata, sample design, feature identifiers, normalization assumptions, units, missingness and resource budgets. Preserve dataset versions/checksums, preprocessing, software versions, parameters, seeds and lineage. Protect sensitive data and fail explicitly on incompatible batches or missing metadata. See ../ai/AI_CONSTITUTION.md.

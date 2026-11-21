@@ -84,3 +84,20 @@ A service is complete only when its Engine, Runtime, Rulebook, contracts, implem
 ## 12. System and deployment decisions
 
 Complete all services and cross-service integration, then harden and benchmark the total system. Device, accelerator, operating-system, cluster and deployment support claims must be based on measured evidence.
+
+
+## 13. Agentics and the shared scientific foundation
+
+The single governing AI architecture is [Agentics Molecularis Master Plan](docs/AGENTICS_MOLECULARIS_MASTER_PLAN.md). The [AI Constitution](services/ai/AI_CONSTITUTION.md) is mandatory for Agentics and all A–N integrations; service Rulebooks may strengthen but may not weaken it.
+
+- Apply **Understand → Represent → Reason → Construct → Evaluate → Verify → Learn** across A–N without erasing domain ownership.
+- Before scientific generation, audit objective, inputs, units/dimensions, assumptions, constraints, knowledge versions, validity domain, safety and resource feasibility.
+- After generation, require independent verification appropriate to the claim. A proposer is never its own sole verifier.
+- Keep mathematical consistency, domain validity, physical plausibility, stability, experimental realizability and demonstrated function as separate claims.
+- Use authorized, license-cleared, quality-reviewed sources. Data access is not training permission. Keep retrieval/knowledge updates separate from model-weight training.
+- Scientific tools must be registered adapters with versions, schemas, units, provenance, licenses, resource limits, failure semantics and verification methods. The tool catalogue is not an install list.
+- Audit and reuse existing Molecularis capabilities before adding dependencies or parallel stores/runtimes. Optional engines remain optional and fail explicitly when unavailable.
+- Preserve evidence class, uncertainty, assumptions, applicability, provenance and limitations through all service handoffs.
+- Engineering CI, computational reference tests and independent scientific/experimental acceptance are distinct evidence levels.
+
+Detailed requirements: [AI Constitution](services/ai/AI_CONSTITUTION.md), [Scientific Validation Standard](docs/SCIENTIFIC_VALIDATION_STANDARD.md) and [Scientific Tool Registry](services/ai/SCIENTIFIC_TOOL_REGISTRY.md).

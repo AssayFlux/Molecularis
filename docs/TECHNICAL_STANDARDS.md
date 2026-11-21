@@ -31,3 +31,10 @@ These are defaults, not mandates. Avoid implementing the same algorithm multiple
 - Use stable algorithms and test edge cases.
 - Preserve raw inputs and provenance for derived artifacts.
 - Never confuse prediction, simulation, heuristic scoring and experimental measurement.
+
+
+## Scientific computing and Agentics standards
+
+The Agentics scientific foundation is language- and provider-neutral. Shared contracts must represent quantities, dimensions, units, coordinate/reference systems, precision, uncertainty, assumptions, evidence classes, provenance and explicit error states. Use symbolic/numerical mathematics, statistical analysis, optimization, graph/geometry computation and simulation through narrow adapters with reproducible configurations.
+
+Do not add a broad scientific dependency stack to the core runtime. First audit existing packages and service code; then choose the smallest justified dependency set. Optional domain executables, GPU/HPC solvers, model checkpoints and hosted services require isolated profiles, exact version/license records, resource and egress controls, and independent verification. Any language or package choice must follow the existing language policy and measured need.

@@ -31,3 +31,10 @@ Each operation executes through a versioned Rulebook against a stored artifact a
 ## Scientific boundaries
 
 No gene/function prediction is implied by parsing, ORF enumeration, exact matches, local alignments or candidate code inference. A no-hit is not novelty evidence. Translation requires an explicit table and does not infer organism, transcript, strand, gene boundaries or reading frame. Biopython, Biotite and Parasail remain optional adapters/reference implementations, not mandatory runtime dependencies. No clinical interpretation is provided.
+
+
+## Shared Agentics scientific foundation
+
+This service participates in **Understand → Represent → Reason → Construct → Evaluate → Verify → Learn** where supported by its declared capabilities. Priority scientific foundations: Discrete mathematics, string/graph algorithms, information theory, probability/statistics, genetics, evolutionary models, sequence alignment and uncertainty in annotation.
+
+Use shared scientific contracts for quantities/units, reference systems, evidence class, uncertainty and provenance. Keep service-specific scientific meanings, algorithms, constraints and validation logic owned here. Agentics may coordinate this engine but cannot override its domain Rulebook. See ../ai/SCIENTIFIC_FOUNDATION.md and ../ai/AI_CONSTITUTION.md.

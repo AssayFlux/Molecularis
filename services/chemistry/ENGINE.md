@@ -18,3 +18,10 @@ The existing RDKit adapter remains an optional, version-reported backend for che
 
 ## Non-goals
 No implicit H, valence/aromaticity sanitization, stereochemical assignment, tautomer/protonation normalization, reactions, conformers, force fields, quantum chemistry, docking, ADMET, activity or clinical predictions.
+
+
+## Shared Agentics scientific foundation
+
+Participates in **Understand → Represent → Reason → Construct → Evaluate → Verify → Learn**. Priority disciplines: Chemical graph theory, organic/inorganic/physical chemistry, thermodynamics, kinetics, quantum chemistry, stereochemistry, reaction mechanisms and analytical uncertainty.
+
+Use shared units/dimensions, evidence, uncertainty and provenance contracts while retaining this service's chemical semantics, algorithms and validators. Agentics cannot override the chemistry Rulebook. See ../ai/SCIENTIFIC_FOUNDATION.md and ../ai/AI_CONSTITUTION.md.

@@ -13,3 +13,16 @@ Rulebook ID: simulation-core-v1; version 1.0.0. Engineering contract; independen
 | SIM-007 | Energy analysis is descriptive only and accepts finite bounded samples. | Deterministic statistics; no equilibrium or stability claim. |
 
 Capabilities: simulation.validate.v1, simulation.energy-analysis.v1 and simulation.gromacs-run.v1. Direct OpenMM adapter uses trusted object inputs and is not invoked through JSON artifact deserialization. Every report names the source protocol digest and limitations. Breaking schema or scientific semantics requires a new version and fixtures.
+
+
+## Agentics scientific rules
+
+- Apply the universal lifecycle within simulation domain authority.
+- Pre-audit governing equations, assumptions, dimensions, initial/boundary conditions, parameter ranges and solver suitability.
+- Record discretization, precision, tolerances, convergence and stability analysis; numerical convergence is not proof that the physical model is correct.
+- Independently check conservation laws, invariants, reference cases and sensitivity where applicable.
+- Distinguish simulated outcomes from observations and experimentally validated claims.
+- Preserve full configuration, seeds, environment, solver version, uncertainty and provenance.
+
+Priority disciplines: Numerical analysis, linear algebra, ODE/PDE solvers, classical/analytical mechanics, statistical mechanics, thermodynamics, stochastic processes, HPC and numerical error.
+See ../ai/AI_CONSTITUTION.md and ../ai/SCIENTIFIC_TOOL_REGISTRY.md.

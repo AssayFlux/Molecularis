@@ -15,3 +15,16 @@ Status: operational v1 graph and orchestration rules; independent service-level 
 | WF-009 | Workflow documents contain no secrets; Galaxy outputs are untrusted | Connector security tests and explicit validation boundary |
 
 No scientific result validation, implicit retries, parallel scheduling, branching, loops, clinical decisions or guarantee of external output correctness.
+
+
+## Agentics scientific workflow rules
+
+- Apply the universal lifecycle across services while preserving domain-owned Rulebooks and scientific thresholds.
+- Preflight every node: schemas, units, artifact integrity, capability version, permissions, source/evidence status and resource limits.
+- Never allow a planner to invent unregistered capabilities, change a service's scientific rules or self-approve consequential execution.
+- Verify node outputs independently according to the owning service's Rulebook; propagate failed/indeterminate states and invalidate dependent evidence after material changes.
+- Preserve cross-service provenance, assumptions, uncertainty, evidence class, tool versions and environment.
+- Use bounded retries, deterministic replay where possible, explicit cancellation and secure isolation.
+
+Priority disciplines: Computer science, graph algorithms, formal methods, constraint solving, scheduling/operations research, provenance, reproducibility, resource optimization and secure execution.
+See ../ai/AI_CONSTITUTION.md and ../ai/SCIENTIFIC_TOOL_REGISTRY.md.

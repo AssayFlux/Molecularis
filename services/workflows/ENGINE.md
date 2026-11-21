@@ -13,3 +13,10 @@ Canonical sorted-key JSON and stable topological ordering provide reproducibilit
 
 ## Boundaries
 No scientific algorithm is silently delegated to Galaxy. The optional Galaxy adapter is separately operated. Workflow validation checks graph contracts and capability registration, not scientific correctness.
+
+
+## Shared Agentics scientific foundation
+
+Participates in **Understand → Represent → Reason → Construct → Evaluate → Verify → Learn** as the orchestration service. Priority disciplines: Computer science, graph algorithms, formal methods, constraint solving, scheduling/operations research, provenance, reproducibility, resource optimization and secure execution.
+
+This service coordinates typed scientific work but does not own or redefine domain science. Use shared contracts, evidence classes, uncertainty and provenance while preserving each service's authority. See ../ai/SCIENTIFIC_FOUNDATION.md and ../ai/AI_CONSTITUTION.md.

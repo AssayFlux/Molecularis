@@ -30,3 +30,17 @@ Status: v1 engineering implementation complete; CI green; independent scientific
 This is a foundational molecular graph service, not a complete chemistry engine. It does not infer valence, aromaticity, protonation, tautomerism, stereochemistry, implicit hydrogens, force fields, conformers or energetic properties. Existing RDKit functionality remains an optional Chemistry adapter. Python is the only implemented runtime; C++/Rust bindings are future work.
 
 No clinical or experimental interpretation is implied by passing structural validation.
+
+
+## Agentics scientific foundation acceptance
+
+- [ ] Service scope, assumptions, validity domain and priority disciplines are documented: Molecular representation, graph theory, algebra/linear algebra, geometry and topology, unit/dimension analysis, physical and quantum chemistry, molecular energetics, numerical methods and uncertainty.
+- [ ] Typed inputs/outputs preserve units, dimensions, coordinate/reference conventions and evidence class where applicable.
+- [ ] Pre-generation checks reject malformed, out-of-domain or unsafe requests and preserve explicit assumptions.
+- [ ] Domain-specific post-generation verification is independent of the proposing model where feasible.
+- [ ] Numerical/statistical tolerances, uncertainty, sensitivity and limitations are reported where applicable.
+- [ ] Source, algorithm, model/tool version, parameters, environment and artifact lineage are traceable.
+- [ ] Optional adapters have license/version, resource, failure and verification evidence; registry listing alone is insufficient.
+- [ ] Engineering tests and scientific acceptance evidence are reported separately.
+
+Shared policy: ../ai/AI_CONSTITUTION.md. Discipline map: ../ai/SCIENTIFIC_FOUNDATION.md.

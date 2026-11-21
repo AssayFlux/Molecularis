@@ -100,3 +100,12 @@ Governing plan upgraded to v2.0 on 2026-11-21. The current repository evidence a
 The system is not restricted to PDB, X-ray structures, existing reference examples or pretrained predictors. These are optional evidence or candidate-generation methods. Novel candidates must be labelled constructed/hypothesized until appropriate independent evidence supports stronger claims.
 
 **Current status:** initial AI planner/approval-gated Workflow v1 foundation remains implemented as previously recorded. The universal knowledge substrate, shared construction/evaluation primitives, full cross-service proposer/verifier integration and related scientific acceptance are roadmap work, not current completed capabilities.
+
+
+## Scientific foundation documentation status (2026-11-21)
+
+**Documentation:** The shared Agentics scientific foundation has been specified and linked across the project documentation. The current documents define the discipline map, candidate scientific tool ecosystem, Constitution, adapter requirements and staged implementation sequence.
+
+**Implementation:** Documentation alignment is not implementation. No claim is made here that the Scientific Knowledge Engine, unit/type system, mathematics/statistics adapters, simulation adapters, full pre-generation auditor, independent verifier or training pipeline has been completed. Candidate tools remain unverified until the repository/dependency audit establishes exact installed versions, licenses and actual adapter status.
+
+**Next engineering gate:** Begin with SF0 repository/dependency and A–N capability audit. Record actual existing implementations, gaps, versions, licenses and tests. Then proceed through the SF1+ gates in services/ai/IMPLEMENTATION_ROADMAP.md. Keep this work aligned with the single Agentics Master Plan and approved A–N service order. University scientific review remains separate.

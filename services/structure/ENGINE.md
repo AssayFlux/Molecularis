@@ -17,3 +17,10 @@ Capabilities: validate, geometry, contacts, sasa, interactions and rmsd. RMSD co
 ## Limits
 
 PDB parsing handles fixed-column ATOM and optional HETATM records and selects blank/A alternate locations. mmCIF parsing reads atom_site loops and label/auth fallbacks; it is not a complete CIF grammar/dictionary interpreter. Current records omit occupancy, B-factor, insertion code, anisotropic displacement, assembly operators, symmetry and ensembles. Contacts/interactions are geometric candidates, not validated bonds or energies. SASA uses generic radii and finite Fibonacci sampling without adding hydrogens. No missing-atom reconstruction, loop modelling, folding, force field, docking, electron-density refinement or biological assembly inference is claimed.
+
+
+## Shared Agentics scientific foundation
+
+Participates in **Understand → Represent → Reason → Construct → Evaluate → Verify → Learn**. Priority disciplines: Linear algebra, coordinate geometry, differential geometry/topology, mechanics, crystallography, numerical optimization, structural statistics and uncertainty.
+
+Use shared contracts for units, coordinate/reference frames, evidence class, uncertainty and provenance. This service retains its structural semantics, algorithms, constraints and validators. Agentics coordinates but cannot override its Rulebook. See ../ai/SCIENTIFIC_FOUNDATION.md and ../ai/AI_CONSTITUTION.md.

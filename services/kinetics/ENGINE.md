@@ -20,3 +20,10 @@ No stiffness detection/adaptive error control, stochastic simulation, delay equa
 ## Acceptance
 
 Canonical round-trip and digest; duplicate-key rejection; invalid stoichiometry rejection; first-order analytic decay concordance; mass conservation on a closed A→B conversion; deterministic artifact lifecycle and Rulebook execution; bounded integration; existing kinetic and PK/PD regression suite.
+
+
+## Shared Agentics scientific foundation
+
+Participates in **Understand → Represent → Reason → Construct → Evaluate → Verify → Learn**. Priority disciplines: Chemical kinetics, differential equations, stochastic processes, parameter estimation, sensitivity/identifiability, optimization, probability and uncertainty quantification.
+
+Use shared units, evidence, uncertainty and provenance contracts while retaining kinetic model semantics, equations and validators. See ../ai/SCIENTIFIC_FOUNDATION.md and ../ai/AI_CONSTITUTION.md.

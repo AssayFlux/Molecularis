@@ -80,3 +80,10 @@ At the start of each letter, create or update a service progress record containi
 - Reuse shared primitives; do not duplicate domain semantics in Core.
 - Record scope/order/dependency changes in DECISION_LOG.md.
 - After N, perform system-wide integration, hardening, scale testing and release acceptance before device/deployment commitments.
+
+
+## Shared Agentics scientific foundation
+
+The scientific foundation is a shared platform prerequisite used by all services, not an additional A–N service and not a reason to create fourteen generic AI wrappers. It provides common contracts for quantities/units, scientific knowledge and evidence, provenance, mathematical/statistical computation, constraints, optimization, construction and independent verification. Each service retains its own domain rules and scientific acceptance thresholds.
+
+During each service's discovery/design packet, map its actual needs to [Scientific Foundation](../services/ai/SCIENTIFIC_FOUNDATION.md) and [Scientific Tool Registry](../services/ai/SCIENTIFIC_TOOL_REGISTRY.md). Integrate only the capabilities needed by the active service, through versioned adapters and tests. Respect the approved service order and freeze gates; no service is scientifically accepted merely because a shared tool is available.

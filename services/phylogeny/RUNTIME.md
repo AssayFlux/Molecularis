@@ -19,3 +19,8 @@ Status: implemented v1 using the shared local MSDE platform runtime.
 Canonical JSON and SHA-256 identify the input. Algorithms are deterministic for fixed inputs; bootstrap uses a caller-supplied integer seed. Invalid dimensions, alphabet, artifact metadata, saturated distances, inadequate sites and negative NJ limbs fail explicitly. Failed replicate counts are reported, never silently treated as successful.
 
 The current MSDE handlers run in-process. These limits are application-level bounds, not an OS sandbox or preemptive CPU/memory isolation.
+
+
+## Agentics scientific execution requirements
+
+Validate alignment provenance, taxon/sample identity, sequence model assumptions, substitution/rate parameters, missing data and compute budgets. Preserve software/model versions, parameters, seeds, dataset checksums and lineage. Explicitly report unsupported taxa/models and convergence failures. See ../ai/AI_CONSTITUTION.md.

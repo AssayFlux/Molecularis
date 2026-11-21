@@ -19,3 +19,16 @@ Saturated or insufficient pairwise comparisons, malformed artifacts, and invalid
 
 ## Exclusions
 No likelihood/Bayesian model selection, molecular clock dating, recombination, codon evolution, gene-tree/species-tree reconciliation, ancestral sequence reconstruction or clinical/functional interpretation.
+
+
+## Agentics scientific rules
+
+- Apply the universal lifecycle under phylogenetic domain authority.
+- Pre-audit alignment quality, taxa, sampling, model assumptions, missing data and evidence provenance.
+- Declare likelihood/Bayesian assumptions, priors, substitution/rate models and model-selection criteria.
+- Independently assess convergence, support metrics, sensitivity and alternative topologies where feasible.
+- Preserve uncertainty and avoid treating a single inferred tree as established evolutionary history.
+- Record dataset, alignment, model, software, seed and lineage versions.
+
+Priority disciplines: Evolutionary biology, probability, likelihood/Bayesian inference, graph/tree algorithms, statistical models, sampling, model selection and uncertainty.
+See ../ai/AI_CONSTITUTION.md and ../ai/SCIENTIFIC_TOOL_REGISTRY.md.

@@ -18,3 +18,16 @@ Status: engineering implementation complete. University review, cross-reference 
 - [ ] Decide whether to extend v1 coordinate metadata before contract freeze.
 
 This record certifies engineering implementation only, not independent scientific acceptance or production fitness.
+
+
+## Agentics scientific acceptance
+
+- [ ] Structural scope, coordinate conventions, units, assumptions and validity domain documented: Linear algebra, coordinate geometry, differential geometry/topology, mechanics, crystallography, numerical optimization, structural statistics and uncertainty.
+- [ ] Pre-generation validation covers structure schema, units, frames, constraints and resource limits.
+- [ ] Post-generation checks independently evaluate applicable geometry, topology, stereochemistry and physical criteria.
+- [ ] Tolerances, uncertainty, limitations and evidence class are reported.
+- [ ] Inputs, methods, versions, parameters and artifact lineage are reproducible.
+- [ ] Optional tools have exact license/version and verification evidence.
+- [ ] Engineering and scientific acceptance reported separately.
+
+Shared requirements: ../ai/AI_CONSTITUTION.md and ../ai/SCIENTIFIC_FOUNDATION.md.

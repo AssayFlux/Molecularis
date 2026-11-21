@@ -22,3 +22,16 @@ Rulebook ID: `structure-core-v1`, version 1.0.0.
 - `structure.rmsd.v1`: raw or optimally superposed RMSD for two caller-matched coordinate arrays.
 
 No operation implies chemical correctness, energetic stability, biological function or clinical interpretation. Imported coordinates preserve source assertions, not independent validation.
+
+
+## Agentics scientific rules
+
+- Apply **Understand → Represent → Reason → Construct → Evaluate → Verify → Learn** without weakening domain rules.
+- Pre-audit inputs, coordinate systems, units, assumptions, constraints, evidence versions and applicability.
+- Apply structural/mechanical/crystallographic principles only within stated assumptions and validity domains.
+- Independently verify geometry, topology, stereochemistry, clashes, physical plausibility and numerical tolerances as applicable; proposer is not sole verifier.
+- Preserve evidence class, uncertainty, limitations and provenance. A valid coordinate model is not proof of stability or function.
+- Optional tools require version/license review, typed adapters, resource limits and independent checks.
+
+Priority disciplines: Linear algebra, coordinate geometry, differential geometry/topology, mechanics, crystallography, numerical optimization, structural statistics and uncertainty.
+See ../ai/AI_CONSTITUTION.md and ../ai/SCIENTIFIC_TOOL_REGISTRY.md.

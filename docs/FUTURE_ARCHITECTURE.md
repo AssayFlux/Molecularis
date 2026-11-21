@@ -58,3 +58,10 @@ For every proposed technology or dependency, record: problem addressed, alternat
 - No unbounded agent loops or autonomous changes to scientific acceptance criteria.
 - No replacement of experimental evidence with computational confidence.
 - No distributed storage or vector database added merely for fashion.
+
+
+## Agentics scientific foundation (target, not implemented claim)
+
+The target Agentics layer coordinates a shared Scientific Knowledge Engine, typed scientific representations, unit/dimension-aware mathematics, statistics and uncertainty, optimization/constraints, graph/geometry/topology, selected physics/chemistry/biology simulation adapters, construction and independent verification. It consumes existing Core/MSDE artifact, provenance, capability and workflow contracts rather than creating parallel infrastructure.
+
+The tool ecosystem is selected by demonstrated A–N gaps, exact version/license review, resource profile and independent validation. The catalogue is not a dependency mandate. Pre-generation and post-generation checks, model/data governance and explicit evidence classes are required. See the [Agentics Master Plan](AGENTICS_MOLECULARIS_MASTER_PLAN.md), [Scientific Foundation](../services/ai/SCIENTIFIC_FOUNDATION.md) and [Implementation Roadmap](../services/ai/IMPLEMENTATION_ROADMAP.md).

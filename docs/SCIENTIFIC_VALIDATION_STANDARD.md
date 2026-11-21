@@ -24,3 +24,10 @@ Every fixture or reference dataset requires source, license/terms, version/date,
 
 ## Reporting
 Reports state exactly what was tested, what passed, what failed, what was not tested, and the evidence level achieved. Passing software tests alone does not establish biological or clinical validity.
+
+
+## Agentics generation and verification requirements
+
+Every AI-assisted scientific construction must define its objective, inputs, assumptions, constraints, units, reference frames, knowledge versions, method applicability and acceptance thresholds before generation. The pre-generation audit blocks invalid, underspecified, out-of-domain or unsafe requests or records explicit assumptions and review state.
+
+Post-generation checks must be independent of the proposing model where feasible and must be appropriate to the scientific claim. Record equations/algorithms, reference implementations or fixtures, invariants, tolerances, uncertainty, sensitivity, boundary conditions, failed checks and unresolved alternatives. Distinguish mathematical consistency, domain validity, physical plausibility, stability, experimental realizability and demonstrated function. A model confidence score or successful workflow is not scientific proof. See the [AI Constitution](../services/ai/AI_CONSTITUTION.md).

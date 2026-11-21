@@ -94,17 +94,22 @@ The detailed governing plan is now v2.0: [AGENTICS_MOLECULARIS_MASTER_PLAN.md](A
 **Permanent service rule:** Understand → Represent → Reason → Construct → Evaluate → Verify → Learn applies to every service A–N. Engineering CI and scientific acceptance remain separate. No phase may be marked complete without commit and evidence.
 
 
-## Agentics scientific foundation and tool ecosystem
+## Agentics scientific foundation — documentation and execution status
 
-- [ ] Publish and maintain the AI Constitution and enforce its rules in schemas, runtime policy and tests.
-- [ ] Audit existing scientific dependencies, tools, adapters and A–N capability coverage before adding packages.
-- [ ] Define shared scientific types: quantities, dimensions, units, coordinate/reference systems and evidence classes.
-- [ ] Build the versioned Scientific Knowledge Engine and evidence/provenance contracts.
-- [ ] Integrate symbolic/numerical mathematics, statistics, uncertainty and optimization through adapters.
-- [ ] Add graph, geometry and topology primitives required by domain construction.
-- [ ] Select physics, chemistry, biology and simulation tools based on service gaps and validated use cases.
-- [ ] Enforce pre-generation audit and independent post-generation verification for scientific outputs.
-- [ ] Build permission-aware knowledge acquisition, dataset manifests and model governance.
-- [ ] Keep optional tools isolated; document exact versions, licenses, resource requirements and limitations.
+The shared scientific foundation is documented and aligned across the Master Plan, AI Constitution, architecture, project governance and all A–N service ENGINE/RUNTIME/RULEBOOK/ACCEPTANCE specifications. Documentation completion is not implementation completion.
 
-Governing detail: [Agentics Master Plan](AGENTICS_MOLECULARIS_MASTER_PLAN.md) · [AI Constitution](../services/ai/AI_CONSTITUTION.md) · [Scientific Foundation](../services/ai/SCIENTIFIC_FOUNDATION.md) · [Tool Registry](../services/ai/SCIENTIFIC_TOOL_REGISTRY.md) · [Implementation Roadmap](../services/ai/IMPLEMENTATION_ROADMAP.md).
+- [x] Publish AI Constitution, scientific discipline map, candidate tool registry and sequential implementation roadmap.
+- [x] Align README, architecture, master engineering rules, governance, validation, dependency and test documents.
+- [x] Add shared scientific foundation requirements and service-specific discipline priorities to A–N service specifications.
+- [ ] SF0: inventory actual packages, versions, licenses, adapters and A–N capability gaps.
+- [ ] SF1: implement typed scientific quantities, dimensions, units and reference systems.
+- [ ] SF2: implement versioned knowledge/evidence/provenance contracts and Scientific Knowledge Engine substrate.
+- [ ] SF3: implement tested symbolic and numerical mathematics adapters.
+- [ ] SF4: implement statistics, uncertainty, experimental design and leakage-resistant evaluation primitives.
+- [ ] SF5: integrate selected physics/chemistry/biology tools through isolated, versioned adapters.
+- [ ] SF6: implement constraints, optimization and shared construction/evaluation primitives.
+- [ ] SF7: integrate knowledge-to-construction and independent verification into A–N using service-owned Rulebooks.
+- [ ] SF8: implement permission-aware knowledge ingestion and governed model/data lifecycle.
+- [ ] SF9: integrate the audited scientific foundation into Agentics orchestration with adversarial and out-of-domain tests.
+
+**Immediate next task:** SF0 only. Do not install the entire candidate tool catalogue or start model training before the audit and dependency/license decision. See the Agentics Master Plan and services/ai/IMPLEMENTATION_ROADMAP.md.

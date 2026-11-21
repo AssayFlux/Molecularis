@@ -22,3 +22,10 @@ The matching algorithm requires exact genome-build agreement, exact variant iden
 
 ## Acceptance
 See [ACCEPTANCE.md](ACCEPTANCE.md). CI tests cover canonicalization, duplicate-key rejection, digest integrity, definition release pinning, build mismatch, exact matching, ambiguity/no-call behavior and MSDE execution.
+
+
+## Shared Agentics scientific foundation
+
+Participates in **Understand → Represent → Reason → Construct → Evaluate → Verify → Learn**. Priority disciplines: Genetics, pharmacology, biostatistics, population variation, causal/evidence appraisal, guideline provenance, allele nomenclature and uncertainty.
+
+Use shared statistical, evidence, uncertainty and provenance contracts while retaining pharmacogenomic domain authority. No clinical interpretation is implied by AI orchestration. See ../ai/SCIENTIFIC_FOUNDATION.md and ../ai/AI_CONSTITUTION.md.

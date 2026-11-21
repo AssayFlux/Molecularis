@@ -1,5 +1,13 @@
 # Architecture and Engineering Decision Log
 
+## DEC-0013 — Shared scientific foundation and governed tool ecosystem for Agentics
+
+- **Status:** Accepted architectural direction; implementation remains gated by the Agentics roadmap.
+- **Decision:** Agentics Molecularis uses one shared scientific foundation across A–N, spanning mathematics, physics, chemistry, biology, statistics, computer science, engineering and experimental methodology. Shared capabilities include typed scientific contracts, units/dimensions, knowledge/evidence/provenance, symbolic and numerical computation, statistics/uncertainty, optimization/constraints, graph/geometry, selected simulation adapters, construction and independent verification.
+- **Tool policy:** The Scientific Tool Registry is a candidate catalogue, not an install manifest. Audit current Molecularis code and dependencies first; adopt only tools justified by a documented gap, with exact license/version review, isolated adapter, resource controls, provenance and independent tests. Optional external engines remain optional.
+- **Governance:** The Agentics Master Plan remains the sole AI architectural authority. The AI Constitution and scientific foundation specifications are subordinate. Every A–N service retains its own scientific semantics, Rulebooks and acceptance thresholds. Pre-generation audit and independent post-generation verification are mandatory.
+- **Constraints:** Do not claim listed tools are installed or scientifically validated. Do not train on data without explicit permission and leakage-resistant evaluation. Do not create parallel artifact stores, workflow runtimes or generic per-service AI wrappers. Preserve the approved service sequence and distinguish engineering completion from scientific acceptance.
+
 Record decisions newest-first. Do not silently rewrite historical decisions; supersede them with a new entry.
 
 ## DEC-0012 — Universal Knowledge-to-Construction principle across A–N

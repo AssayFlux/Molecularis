@@ -41,3 +41,10 @@ Molecularis is the scientific engine and its supporting runtime/data/rule infras
 ## Definition of trust
 
 A result is trustworthy only to the extent that its scope, inputs, methods, parameters, provenance, limitations and validation evidence are known. Molecularis must expose that evidence rather than collapse it into a single confidence label.
+
+
+## Agentics scientific foundation
+
+Agentics Molecularis coordinates a universal knowledge-to-construction lifecycle across every A–N service: **Understand → Represent → Reason → Construct → Evaluate → Verify → Learn**. It is supported by a shared scientific knowledge/evidence substrate and reusable mathematical, statistical, unit-aware, optimization, geometry and simulation capabilities. Domain services remain authoritative for their scientific meanings, equations, constraints, Rulebooks and acceptance criteria.
+
+The long-term ambition includes constructing candidates beyond known reference examples. This does not mean that generated candidates are automatically correct: mathematical validity, domain validity, physical plausibility, stability, experimental realizability and demonstrated function require distinct evidence. Pre-generation audit, independent post-generation verification, provenance and uncertainty are mandatory. See the [Agentics Master Plan](AGENTICS_MOLECULARIS_MASTER_PLAN.md) and [AI Constitution](../services/ai/AI_CONSTITUTION.md).

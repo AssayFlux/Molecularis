@@ -10,3 +10,16 @@ Status: executable native v1 baseline; scientific approval pending.
 - CHM-006 — Similarity semantics: set Tanimoto on Molecularis path-v1 features; empty/empty follows the native Tanimoto definition.
 
 Each operation returns limitations and identifies the rules checked. Rules are operational constraints, not independent proof of chemical correctness.
+
+
+## Agentics scientific rules
+
+- Apply **Understand → Represent → Reason → Construct → Evaluate → Verify → Learn** under this service's domain authority.
+- Pre-audit structures, valence, charge, stereochemistry, units, reaction conditions, evidence versions and method applicability.
+- Record chemical assumptions and validity ranges; distinguish heuristic predictions from established chemistry.
+- Independently verify chemical validity and reaction/energetic claims with suitable methods; proposer is never sole verifier.
+- Preserve uncertainty, provenance and evidence class. A valid graph does not prove reaction feasibility, stability or experimental synthesis.
+- Optional tools require exact version/license review, typed adapters, resource bounds and verification.
+
+Priority disciplines: Chemical graph theory, organic/inorganic/physical chemistry, thermodynamics, kinetics, quantum chemistry, stereochemistry, reaction mechanisms and analytical uncertainty.
+See ../ai/AI_CONSTITUTION.md and ../ai/SCIENTIFIC_TOOL_REGISTRY.md.

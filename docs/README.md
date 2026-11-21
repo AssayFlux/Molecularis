@@ -19,3 +19,16 @@ Read in this order:
 16. A_N_AUDIT.md — repository-wide A–N service inventory and gaps.
 
 Service-specific documents live under services/<service>/. Update status and backlog only from verified commits and test results.
+
+
+## Agentics Molecularis documentation
+
+The single architectural authority is [Agentics Molecularis Master Plan](AGENTICS_MOLECULARIS_MASTER_PLAN.md). Read its subordinate specifications in this order:
+1. [AI Constitution](../services/ai/AI_CONSTITUTION.md) — mandatory rules and enforcement expectations.
+2. [Engine](../services/ai/ENGINE.md) — responsibilities, boundaries and target architecture.
+3. [Scientific Foundation](../services/ai/SCIENTIFIC_FOUNDATION.md) — required scientific disciplines and A–N alignment.
+4. [Scientific Tool Registry](../services/ai/SCIENTIFIC_TOOL_REGISTRY.md) — candidate packages and adapter policy; not an installation claim.
+5. [Implementation Roadmap](../services/ai/IMPLEMENTATION_ROADMAP.md) — sequential build phases and gates.
+6. [Rulebook](../services/ai/RULEBOOK.md) — mandatory execution and scientific rules.
+7. [Acceptance](../services/ai/ACCEPTANCE.md) — evidence required to pass each phase.
+

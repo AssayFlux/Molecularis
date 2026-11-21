@@ -15,3 +15,16 @@ Status: operational v1 engineering rules; independent privacy/scientific review 
 
 ## Assumptions and exclusions
 Member identifiers are caller-generated pseudonyms. The service cannot detect identifiers or free text that disclose identity. Minimum-cell suppression is not formal anonymization or differential privacy. Inclusion flags are supplied by the caller and are not eligibility determinations. Numeric summaries are descriptive, not inferential.
+
+
+## Agentics scientific rules
+
+- Apply the universal lifecycle under cohort domain authority.
+- Pre-audit cohort criteria, sampling frame, eligibility, consent, privacy, missing data and intended use.
+- Declare estimands, confounders, statistical assumptions and missing-data methods before inference.
+- Enforce privacy-preserving aggregation, small-cell controls and access policy as applicable.
+- Distinguish descriptive association, causal inference and experimental evidence.
+- Preserve uncertainty, bias/selection limitations, source provenance and transformations.
+
+Priority disciplines: Epidemiology, sampling theory, biostatistics, causal inference, experimental design, missing data, privacy-preserving analysis and measurement bias.
+See ../ai/AI_CONSTITUTION.md and ../ai/SCIENTIFIC_TOOL_REGISTRY.md.

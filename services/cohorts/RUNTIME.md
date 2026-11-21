@@ -18,3 +18,8 @@ Input size is bounded by MSDE Budget; records are capped at 100,000 members, 1,0
 
 ## Reproducibility and shutdown
 Canonical sorted-key JSON and stable iteration order make artifacts and reports deterministic. No background workers, external executables, network access or persistent service process are required.
+
+
+## Agentics scientific execution requirements
+
+Validate cohort definitions, eligibility logic, provenance, consent/legal basis, privacy classification, missingness, statistical assumptions and resource budgets. Enforce access controls and data minimization. Preserve dataset and transformation versions, query parameters and lineage. AI cannot infer authorization from data availability. See ../ai/AI_CONSTITUTION.md.

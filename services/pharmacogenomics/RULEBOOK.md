@@ -19,3 +19,16 @@ Required variants must be a subset of observed variants; excluded variants must 
 
 ## Versioning
 Rule changes require a new Rulebook version and tests. External definition packs must be versioned independently and carry their own release and licensing metadata.
+
+
+## Agentics scientific rules
+
+- Apply the universal lifecycle under pharmacogenomics domain authority.
+- Pre-audit variant normalization, reference build, allele definitions, phenotype rules, source/guideline versions and population applicability.
+- Separate observed genotype, inferred diplotype, predicted phenotype, guideline interpretation and clinical action.
+- Resolve conflicting evidence explicitly; preserve ancestry/population limitations and uncertainty.
+- AI cannot diagnose, prescribe or autonomously recommend treatment. Consequential interpretation requires qualified human/institutional review.
+- Preserve evidence provenance, versioned rule evaluation and privacy controls.
+
+Priority disciplines: Genetics, pharmacology, biostatistics, population variation, causal/evidence appraisal, guideline provenance, allele nomenclature and uncertainty.
+See ../ai/AI_CONSTITUTION.md and ../ai/SCIENTIFIC_TOOL_REGISTRY.md.

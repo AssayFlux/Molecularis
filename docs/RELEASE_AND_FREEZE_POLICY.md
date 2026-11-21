@@ -19,3 +19,8 @@ Record service version, commit SHA, date, reviewer/authorization, protected path
 
 ## Post-freeze changes
 Require explicit authorization and a change request. Re-run all affected regression and scientific validation tests. Increment service version according to compatibility impact. Update changelog and completion record. No drive-by refactoring of frozen paths.
+
+
+## Agentics and scientific foundation release evidence
+
+A release or service freeze involving Agentics must include the exact AI Constitution and Master Plan versions, implemented capability inventory, tool/package versions and licenses, data/model manifests, scientific contracts, pre-generation and independent verification tests, adversarial/failure tests, resource/security policy, provenance/reproducibility evidence and explicit limitations. Candidate tools listed in the registry are not treated as integrated dependencies. Engineering CI, benchmark evidence and independent scientific acceptance must be reported separately.

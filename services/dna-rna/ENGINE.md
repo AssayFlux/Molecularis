@@ -9,3 +9,10 @@ Native operations: IUPAC-normalized typed DNA/RNA records; nucleotide compositio
 Artifact digest covers canonical JSON bytes; metadata is verified on load. Nussinov is O(n^3) time/O(n^2) memory, hard-limited to 300 nt. Wallace Tm is a rough heuristic only. Translation does not infer organism or gene boundaries.
 
 Non-goals: no NUPACK thermodynamic ensemble/partition function, multi-strand complex design, hybridization free energy, NUAD automated design, kinetic folding, pseudoknots, tertiary folding, modified-base model, primer-pair specificity, wet-lab protocol or biosafety certification. Future adapters must be optional, pinned and provenance-bearing; native execution never silently delegates. University scientific comparisons and acceptance deferred until A–N engineering completes.
+
+
+## Shared Agentics scientific foundation
+
+Participates in **Understand → Represent → Reason → Construct → Evaluate → Verify → Learn**. Priority disciplines: Molecular biology, nucleic-acid chemistry, polymer physics, thermodynamics, statistical mechanics, sequence algorithms, folding and hybridization models.
+
+Use shared unit, evidence, uncertainty and provenance contracts while retaining nucleic-acid-specific models and validators. See ../ai/SCIENTIFIC_FOUNDATION.md and ../ai/AI_CONSTITUTION.md.

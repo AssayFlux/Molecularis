@@ -10,3 +10,16 @@ Status: executable engineering baseline; scientific review pending.
 - PRO-006 Provenance: model weights, motif packs, profile databases, licences, versions and run provenance must be retained and independently reviewed before scientific claims.
 
 Rules are operational constraints, not evidence of experimental function, folding, safety or clinical validity.
+
+
+## Agentics scientific rules
+
+- Apply the universal lifecycle under this service's scientific authority.
+- Pre-audit sequence/structure identity, residue mapping, assumptions, conditions, evidence versions and applicability.
+- Distinguish prediction, simulation, constructed hypothesis and experimentally validated structure/function.
+- Independently verify structural geometry and applicable biochemical/physical claims; a predictor cannot verify itself.
+- Record uncertainty, alternatives, provenance, checkpoint/data licenses and limitations.
+- Optional predictors and external engines require version/license review, isolated adapters and independent benchmarks.
+
+Priority disciplines: Biochemistry, molecular biology, sequence evolution, structural biology, geometry, statistical mechanics, thermodynamics, probabilistic inference and structural uncertainty.
+See ../ai/AI_CONSTITUTION.md and ../ai/SCIENTIFIC_TOOL_REGISTRY.md.

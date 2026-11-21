@@ -24,3 +24,17 @@ Capability molecular.validate.v1 accepts a molecule artifact reference and emits
 ## Scientific distinctions
 
 No valence correctness, aromaticity, protonation, tautomerism, stereochemical truth, chemical stability or biological function is asserted. No heuristics or experimental hypotheses are encoded. These rules are executable structural constraints, not experimentally or clinically validated interpretations. A named scientific reviewer must approve the Rulebook before trusted production scientific use.
+
+
+## Agentics and shared scientific foundation rules
+
+1. Apply **Understand → Represent → Reason → Construct → Evaluate → Verify → Learn** without weakening this service's domain rules.
+2. Before construction, audit objective, inputs, units, assumptions, constraints, evidence/source versions, applicability and resource/safety limits.
+3. Use governing scientific laws, equations, mechanisms and algorithms with explicit assumptions and validity domains; distinguish empirical correlations from established laws.
+4. Independently verify outputs using appropriate domain invariants, reference methods, statistical checks or experimental evidence. The proposer is never the sole verifier.
+5. Preserve evidence class, uncertainty, limitations and provenance. A candidate is not automatically stable, experimentally realizable or functional.
+6. External tools are optional registered adapters; verify exact versions, licenses, schemas, resource limits and verification strategy.
+
+Priority foundations: Molecular representation, graph theory, algebra/linear algebra, geometry and topology, unit/dimension analysis, physical and quantum chemistry, molecular energetics, numerical methods and uncertainty.
+
+See ../ai/AI_CONSTITUTION.md, ../ai/SCIENTIFIC_FOUNDATION.md and ../ai/SCIENTIFIC_TOOL_REGISTRY.md.

@@ -22,3 +22,8 @@ Before modifying frozen files, submit a change record containing reason, evidenc
 
 ## Commit requirements
 Each commit should represent one coherent approved task, use an imperative message, and be traceable to a work item or decision. Verify commit SHA and changed paths after updating CORE.
+
+
+## Agentics scientific-document and architecture changes
+
+Changes to the Agentics Master Plan, AI Constitution, shared scientific contracts, tool governance, model/data policy or service scientific acceptance criteria are architectural or scientific changes. Record rationale, exact files, compatibility impact, evidence, dependency/license implications, tests, rollback and approval as required by this policy. Supporting AI documents must remain subordinate to the single Agentics Master Plan. Do not silently change scientific thresholds or promote a candidate tool to a required dependency.

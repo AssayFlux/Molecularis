@@ -27,3 +27,10 @@ Molecularis owns its implementation and integration. Published methods may be in
 
 ## Success
 The total system is complete only when all approved services meet their acceptance criteria, integrate through stable contracts, pass system-level scientific and engineering validation, and have a documented supported operating envelope.
+
+
+## Agentics Molecularis and scientific foundations
+
+Agentics Molecularis is the AI coordination and reasoning system for the Molecularis platform, not a replacement for scientific engines or domain review. Its shared foundation covers mathematics, physics, chemistry, biology, statistics, computational science, engineering and experimental methodology. The discipline map and candidate tools are maintained in `services/ai/SCIENTIFIC_FOUNDATION.md` and `services/ai/SCIENTIFIC_TOOL_REGISTRY.md`.
+
+All A–N services follow **Understand → Represent → Reason → Construct → Evaluate → Verify → Learn** while retaining domain-specific scientific ownership. Scientific generation requires pre-generation auditing, independent post-generation verification, evidence classification, uncertainty and provenance. Data/model ingestion and training require license, privacy, quality and leakage review. The [Agentics Master Plan](AGENTICS_MOLECULARIS_MASTER_PLAN.md) is the sole AI architectural authority; supporting specifications do not create a competing roadmap.

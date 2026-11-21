@@ -1,4 +1,6 @@
-# A–N Service Repository Audit
+# A–N Service Repository Audit — Historical Baseline
+
+> **Historical snapshot:** This audit describes source commit `24251ca6bf2daf6aef7fa815017a90fa0a38c0c9` on 2026-11-21. It is not the current service status. Later service implementation commits superseded its “scaffold/not implemented” and “do not start A” conclusions. Use [SERVICE_STATUS.md](SERVICE_STATUS.md) and the current service acceptance records for current implementation evidence. This historical audit is retained as a record of the earlier baseline, not as the authority for present status.
 
 Audit date: 2026-11-21  
 Audited branch: `CORE`  
@@ -61,9 +63,9 @@ Latest CI on the audited source commit passed: core Python job, schema validatio
 - Reclassify misplaced functions (especially primer/PAM utilities currently in `molecular.py`).
 - Add a service-local test/fixture/benchmark layout only as each service becomes active; keep the one-service-at-a-time rule.
 
-## Execution order and gate
+## Execution order and gate — historical recommendation
 
-Do not start A implementation yet. Finish the Core/MSDE platform acceptance gate first, as required by the roadmap. Once that gate is green, perform the detailed function-by-function discovery packet for A, define its native data model and acceptance tests, implement and freeze A, then proceed to B through N.
+The recommendation below applied to the historical audit source commit only. It has been superseded by subsequent service implementation work. Follow the current A–N state and next task in SERVICE_STATUS.md and WORK_BACKLOG.md; do not use this historical recommendation to infer that current service implementation has not started.
 
 ## Audit limits
 

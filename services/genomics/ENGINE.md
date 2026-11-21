@@ -18,3 +18,10 @@ Genomics owns assembly artifacts, contig-level quality summaries, explicit genet
 ## Explicit exclusions
 
 No native read aligner, variant caller, genome assembler, gene caller, phasing engine, structural-variant caller, pathogenicity predictor, contamination estimator, clinical interpretation or population inference is claimed. External executables and model/database packs are not bundled or downloaded. Optional adapters are not equivalent to native Molecularis engines.
+
+
+## Shared Agentics scientific foundation
+
+Participates in **Understand → Represent → Reason → Construct → Evaluate → Verify → Learn**. Priority disciplines: Genetics, population genetics, probability/statistics, discrete algorithms, experimental design, causal inference, measurement error and variant evidence.
+
+Use shared units, evidence, uncertainty and provenance contracts while retaining genomics-specific semantics, reference-build policy and validators. See ../ai/SCIENTIFIC_FOUNDATION.md and ../ai/AI_CONSTITUTION.md.

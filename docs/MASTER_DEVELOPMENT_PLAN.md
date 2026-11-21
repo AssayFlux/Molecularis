@@ -70,20 +70,23 @@ Only after Phase 4, measure CPU, memory, GPU, storage, operating systems, accele
 A service is complete only when Engine, Runtime, Rulebook, contracts, tests, scientific evidence, integration, operational documentation and freeze record are accepted. Generic CI success is necessary but not sufficient. Frozen changes require explicit authorization or the narrowly controlled critical-remediation process.
 
 
-## Agentics Molecularis intelligence track
+## Agentics Molecularis intelligence and scientific foundation track
 
-The A–N scientific service engineering sequence is complete. The next intelligence-layer programme is governed separately by [Agentics Molecularis — Master Architecture, Build Plan and Acceptance Standard](AGENTICS_MOLECULARIS_MASTER_PLAN.md). It reuses the existing AI planner, Workflow v1, Core/MSDE and A–N bootstrap; it does not create a parallel workflow system.
+The A–N service engineering sequence and their present evidence states are recorded in [SERVICE_STATUS.md](SERVICE_STATUS.md). Service engineering completion is not the same as independent scientific acceptance. The next intelligence-layer programme is governed by the single [Agentics Molecularis Master Plan](AGENTICS_MOLECULARIS_MASTER_PLAN.md); there is no separate competing AI roadmap.
 
-The Agentics track is sequential and phase-gated:
-- **P0:** documentation/status reconciliation, threat model, OS-level sandbox, failed-run evidence, artifact backup/restore and platform safety.
-- **P1:** Sources connectors, ambiguity-aware entity resolver, offline fixtures, source provenance and license ledger.
-- **P2:** provider-neutral LLM adapter, schema-derived tool calls, approval-bound orchestration, artifact-grounded reporting and 50+ adversarial evaluations.
-- **P3:** separate Predictor service, model/license provenance, predicted artifact namespace, verification Rulebooks and post-cutoff benchmarks.
-- **P4:** versioned datasets, leakage-resistant splits, reproducible training and model registry.
-- **P5:** optional design service, disabled until biosecurity and human/institutional approval.
-- **P6:** service-specific Proposer → Verifier patterns and real cross-service evidence.
+The existing planner, Workflow v1, Core/MSDE and A–N bootstrap are preserved. The scientific foundation documents define target capabilities and tool candidates; they do not claim that the Scientific Knowledge Engine, shared scientific solvers, full construction/verifier system or model training pipeline is implemented.
 
-No later phase begins until the prior gate passes and is reported. Engineering CI is not scientific validation; university review remains separate.
+The governing sequence is:
+- **P0 — Repository truth, safety and reliability:** reconcile current implementation, close critical safety/recovery/provenance gaps and establish enforceable controls.
+- **P1 — Universal scientific knowledge architecture:** typed knowledge, laws/equations, evidence, assumptions, applicability and provenance.
+- **P2 — Shared reasoning and construction primitives:** units/dimensional analysis, symbolic/numerical methods, statistics/uncertainty, constraints, optimization, candidate/evaluation contracts and independent verification.
+- **P3 — A–N knowledge-to-construction integration:** connect shared capabilities to domain-owned engines and Rulebooks without generic duplicate service wrappers.
+- **P4 — Agentics orchestration maturity:** provider-neutral planning, registered tools, approval binding, artifact-grounded reporting and adversarial evaluation.
+- **P5 — Optional scientific models and training:** only after measured need, permission-cleared data, leakage-resistant evaluation, reproducible manifests and rollback.
+- **P6 — Controlled discovery and design:** domain safety review, independent verification and human/institutional authorization.
+- **P7 — Generalization, scaling and research evaluation:** independent replication, reproducibility, operating-envelope and university review.
+
+No later phase begins until its predecessor's gate is evidenced. Engineering CI, model benchmarks and scientific/experimental acceptance are reported separately. The detailed scientific disciplines, tool candidates and implementation sequence are in services/ai/SCIENTIFIC_FOUNDATION.md, services/ai/SCIENTIFIC_TOOL_REGISTRY.md and services/ai/IMPLEMENTATION_ROADMAP.md.
 
 
 ## Agentics Molecularis — universal scientific construction direction (2026-11-21)

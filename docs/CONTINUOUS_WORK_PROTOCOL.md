@@ -32,3 +32,10 @@ Update SERVICE_STATUS.md, docs/WORK_BACKLOG.md, and the active service's progres
 
 ## Stop conditions
 Stop before editing if branch identity is uncertain, a concurrent CORE update is detected, a protected file would be changed without authorization, the task would require deleting unreviewed user work, or scientific acceptance criteria are unclear.
+
+
+## Agentics and scientific foundation work
+
+Before building or integrating an AI/scientific capability, inspect the current Master Plan, AI Constitution, existing Core/MSDE contracts, A–N service implementations, dependencies, licenses and tests. Distinguish planned modules from implemented ones. Reuse existing artifact/provenance, capability and workflow infrastructure; do not add parallel stores or runtimes.
+
+For each scientific capability, define its discipline, domain, assumptions, units, applicability, method, uncertainty, resource envelope, tool/data provenance, independent verification and acceptance evidence. Model output is untrusted input. Every scientific generation path needs pre-generation audit and independent post-generation verification. Update status/backlog only from verified commits and test results; engineering CI is not scientific acceptance.

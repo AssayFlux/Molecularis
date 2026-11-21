@@ -23,3 +23,8 @@ Canonical sequence bytes and SHA-256 are stable for identical normalized records
 ## Language boundaries
 
 Python is the implemented reference runtime. C++ and Rust are future targets only; no binding, ABI or cross-language conformance is claimed. Core remains responsible for artifact identity, lifecycle and execution evidence.
+
+
+## Agentics scientific execution requirements
+
+AI-proposed operations enter through registered, typed capabilities. Validate schemas, units/dimensions, reference conventions, assumptions, resource budgets and domain limits before execution. Preserve tool/algorithm versions, parameters, environment, seeds where relevant, source artifacts, logs and output lineage. Enforce cancellation, timeout and explicit unavailable/failure states; do not silently substitute a different method. AI output is untrusted input and cannot bypass service policy. See ../ai/AI_CONSTITUTION.md and ../ai/SCIENTIFIC_TOOL_REGISTRY.md.
