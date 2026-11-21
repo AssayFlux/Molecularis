@@ -92,3 +92,19 @@ The detailed governing plan is now v2.0: [AGENTICS_MOLECULARIS_MASTER_PLAN.md](A
 - [ ] P7 — Generalization, scaling and independent university/research evaluation.
 
 **Permanent service rule:** Understand → Represent → Reason → Construct → Evaluate → Verify → Learn applies to every service A–N. Engineering CI and scientific acceptance remain separate. No phase may be marked complete without commit and evidence.
+
+
+## Agentics scientific foundation and tool ecosystem
+
+- [ ] Publish and maintain the AI Constitution and enforce its rules in schemas, runtime policy and tests.
+- [ ] Audit existing scientific dependencies, tools, adapters and A–N capability coverage before adding packages.
+- [ ] Define shared scientific types: quantities, dimensions, units, coordinate/reference systems and evidence classes.
+- [ ] Build the versioned Scientific Knowledge Engine and evidence/provenance contracts.
+- [ ] Integrate symbolic/numerical mathematics, statistics, uncertainty and optimization through adapters.
+- [ ] Add graph, geometry and topology primitives required by domain construction.
+- [ ] Select physics, chemistry, biology and simulation tools based on service gaps and validated use cases.
+- [ ] Enforce pre-generation audit and independent post-generation verification for scientific outputs.
+- [ ] Build permission-aware knowledge acquisition, dataset manifests and model governance.
+- [ ] Keep optional tools isolated; document exact versions, licenses, resource requirements and limitations.
+
+Governing detail: [Agentics Master Plan](AGENTICS_MOLECULARIS_MASTER_PLAN.md) · [AI Constitution](../services/ai/AI_CONSTITUTION.md) · [Scientific Foundation](../services/ai/SCIENTIFIC_FOUNDATION.md) · [Tool Registry](../services/ai/SCIENTIFIC_TOOL_REGISTRY.md) · [Implementation Roadmap](../services/ai/IMPLEMENTATION_ROADMAP.md).

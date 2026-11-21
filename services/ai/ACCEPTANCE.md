@@ -116,3 +116,21 @@ This evidence does not prove the new knowledge-to-construction architecture is i
 8. Exact next phase (not started until gate passes).
 
 University scientific/privacy review remains separate from engineering CI.
+
+
+## Scientific foundation and tool ecosystem acceptance
+
+- [ ] Scientific discipline map reviewed and A–N coverage gaps recorded.
+- [ ] Existing package/tool inventory completed; exact versions, licenses and optional/external status verified.
+- [ ] Tool registry entries are not represented as installed or validated without evidence.
+- [ ] Typed quantities, dimensions, units and coordinate/reference conventions have positive and negative tests.
+- [ ] Knowledge/evidence artifacts preserve source, license, assumptions, applicability, uncertainty, version and provenance.
+- [ ] Symbolic and numerical computation adapters have reference, precision, convergence and failure tests.
+- [ ] Statistical methods have reference datasets, assumptions, uncertainty and leakage-resistant evaluation.
+- [ ] Every scientific construction passes a pre-generation audit and independent post-generation verification.
+- [ ] Tool adapters declare schemas, version, dependencies, resource limits, egress, failure modes and verification strategy.
+- [ ] Selected physics/chemistry/biology tools pass domain-specific boundary and reproducibility tests.
+- [ ] No optional dependency is silently required by the core runtime.
+- [ ] Model training is blocked until permission, baseline, leakage, evaluation and rollback gates pass.
+
+**Scientific foundation gate:** at least one reproducible end-to-end knowledge-to-computation-to-verification example passes in two distinct scientific domains, with provenance and limitations. This is an engineering gate; independent scientific review remains separate.

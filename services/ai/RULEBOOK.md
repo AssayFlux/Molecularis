@@ -82,3 +82,23 @@ Approval binds to the exact plan digest, input artifact IDs/hashes, capability v
 ## Domain authority
 
 Agentics may select registered verification operations, but cannot redefine scientific thresholds, applicability domains or waive a service Rulebook. Scientific acceptance criteria belong to the relevant service and require versioning, justification and tests.
+
+
+## Scientific foundation and tool governance rules
+
+| Rule | Requirement |
+|---|---|
+| AG-045 | Before scientific construction, run a pre-generation audit covering objective, inputs, units, assumptions, constraints, knowledge versions, applicability, safety and resources. |
+| AG-046 | After construction, run independent post-generation verification appropriate to the domain and claim. |
+| AG-047 | A proposer or generative model is never the sole verifier of its output. |
+| AG-048 | Scientific tools are registered adapters with typed schemas, versions, units, provenance, resource limits, failure contracts and verification methods. |
+| AG-049 | Audit existing Molecularis capabilities and dependencies before adding a new scientific tool or parallel implementation. |
+| AG-050 | Tool registry entries are candidates, not proof of installation, availability, licensing approval or scientific validation. |
+| AG-051 | Verify exact licenses, dataset/checkpoint terms, privacy and allowed uses before ingestion, redistribution or training. |
+| AG-052 | Separate knowledge-base updates, retrieval/index updates, Rulebook/algorithm changes and model-weight training. |
+| AG-053 | Model training requires a measured baseline gap, permission-cleared data, leakage-resistant evaluation, reproducible manifests and rollback. |
+| AG-054 | Optional scientific tools and external executables must fail explicitly when unavailable; never silently substitute different scientific semantics. |
+| AG-055 | Scientific claims must preserve units, uncertainty, assumptions, applicability domain and evidence class through every service handoff. |
+| AG-056 | A scientific discipline or tool is supported only after its declared scope, tests, independent checks, provenance and limitations are demonstrated. |
+
+The detailed discipline map, tool catalogue and implementation phases are in SCIENTIFIC_FOUNDATION.md, SCIENTIFIC_TOOL_REGISTRY.md and IMPLEMENTATION_ROADMAP.md. The AI_CONSTITUTION.md governs the complete set of mandatory policies.

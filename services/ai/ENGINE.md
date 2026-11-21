@@ -72,3 +72,33 @@ Fetched text, model output and scientific annotations are untrusted data. Never 
 ## Current limitations
 
 No complete SKE, universal construction framework, configured production LLM provider, evidence-grounded report composer, full real cross-service scientific handoff, 50+ adversarial evaluation suite, OS-level sandbox or recovery certification is claimed. The existing AI implementation is an initial engineering foundation, not a completed autonomous discovery system.
+
+
+## Scientific foundation and tool integration
+
+The shared AI scientific foundation spans mathematics, physics, chemistry, biology, statistics, computer science, engineering, materials science and experimental methodology. The discipline map and service-specific priorities are defined in [SCIENTIFIC_FOUNDATION.md](SCIENTIFIC_FOUNDATION.md); candidate packages and external engines are listed in [SCIENTIFIC_TOOL_REGISTRY.md](SCIENTIFIC_TOOL_REGISTRY.md).
+
+### Logical module boundaries
+
+- Scientific contracts and typed artifacts.
+- Scientific knowledge and evidence packages.
+- Units, dimensions and reference systems.
+- Symbolic and numerical mathematics.
+- Statistics, uncertainty and experimental design.
+- Physics, chemistry and biology adapters.
+- Graph, geometry, topology and optimization.
+- Simulation and construction orchestration.
+- Independent verification and evaluation.
+- Tool registry, manifests and adapter loading.
+
+These are logical boundaries, not empty directories to create in advance. Implement a module only when its contract, use case and tests are defined. Integrate with existing Core/MSDE artifact storage, provenance, capability registry and Rulebook runtime; do not create parallel stores or executors.
+
+### Scientific tool integration contract
+
+Every tool adapter declares stable capability ID, domain, exact tool/version, license and data terms, input/output schemas, units/reference conventions, dependencies, hardware/resource needs, network behavior, determinism, failure/cancellation behavior, provenance fields, verification strategy and known limitations. Optional executables and GPU/HPC engines run in appropriately isolated environments. Missing optional dependencies fail explicitly and never produce fabricated success.
+
+### Mandatory generation gates
+
+Before construction, run the pre-generation audit: objective and input validation, knowledge/version and source checks, unit/dimension validation, assumptions and boundary-condition checks, domain applicability, safety policy and resource feasibility. After construction, run independent domain verification and record evidence, uncertainty, limitations and decision state. The proposer is never the sole verifier.
+
+See [AI_CONSTITUTION.md](AI_CONSTITUTION.md), [SCIENTIFIC_FOUNDATION.md](SCIENTIFIC_FOUNDATION.md), [SCIENTIFIC_TOOL_REGISTRY.md](SCIENTIFIC_TOOL_REGISTRY.md) and [IMPLEMENTATION_ROADMAP.md](IMPLEMENTATION_ROADMAP.md).

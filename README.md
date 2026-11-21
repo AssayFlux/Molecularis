@@ -453,3 +453,15 @@ See [LICENSE](LICENSE). Third-party libraries, scientific engines, pretrained mo
   <sub>A scientific systems project by AssayFlux</sub><br>
   <sub>Every result should be traceable. Every workflow should be inspectable. Every claim should carry evidence.</sub>
 </p>
+
+
+## Agentics scientific foundation
+
+The AI scientific discipline map, candidate computational tools, mandatory implementation rules and staged adoption plan are documented here:
+
+- [AI Constitution](services/ai/AI_CONSTITUTION.md)
+- [Scientific Foundation](services/ai/SCIENTIFIC_FOUNDATION.md)
+- [Scientific Tool Registry](services/ai/SCIENTIFIC_TOOL_REGISTRY.md)
+- [Scientific Foundation Implementation Roadmap](services/ai/IMPLEMENTATION_ROADMAP.md)
+
+These specifications extend the single governing [Agentics Molecularis Master Plan](docs/AGENTICS_MOLECULARIS_MASTER_PLAN.md). Listed tools are candidates, not claims of installation or validation.
