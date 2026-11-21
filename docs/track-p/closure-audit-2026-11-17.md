@@ -1,5 +1,8 @@
 # Track P — Precision Medicine (PGx First): bounded software closure audit
 
+
+> **Historical record:** This dated audit/workplan predates the Molecularis rebrand. Former product names, source paths and repository URLs are retained where they document the state of the project at that time. Current identity and compatibility rules are in [brand-migration.md](../brand-migration.md).
+
 **Audit date:** 2026-11-17  
 **Verified baseline:** `7967ccb0288ea1d5b82af18f8ab8d886d18d4733`  
 **Exact-head workflow:** [#44078534173](https://github.com/AssayFlux/Kinetics/actions/runs/44078534173) — 9/9 jobs passed.
