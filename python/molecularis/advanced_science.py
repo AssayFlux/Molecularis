@@ -42,6 +42,7 @@ def _tree_digest(path_value: str | Path, *, max_files: int, max_bytes: int) -> d
     total = 0
     count = 0
     for current, dirs, files in os.walk(root, followlinks=False):
+        dirs.sort()
         current_path = Path(current)
         for name in sorted(dirs):
             if (current_path / name).is_symlink():
@@ -146,7 +147,7 @@ def run_alphafold3(
         raise ValueError("run_id must be non-empty text up to 200 characters")
     if jax_backend not in {"cpu", "gpu", "mps"}:
         raise ValueError("jax_backend must be cpu, gpu or mps")
-    if flash_attention_implementation not in {"xla", "triton", " cudnn"}:
+    if flash_attention_implementation not in {"xla", "triton", "cudnn"}:
         raise ValueError("Unsupported flash attention implementation")
     if isinstance(timeout_seconds, bool) or not isinstance(timeout_seconds, int) or not 1 <= timeout_seconds <= 604800:
         raise ValueError("timeout_seconds must be in [1, 604800]")
@@ -236,6 +237,8 @@ def run_molprobity_cli(
     executable, executable_hash, _ = _verified_file(
         executable_path, executable_sha256, "MolProbity executable",
         executable=True, max_bytes=512 * 1024**2)
+    if executable.name != tool:
+        raise ValueError("MolProbity executable filename must match the selected tool")
     raw = Path(pdb_path).expanduser()
     if raw.is_symlink():
         raise ValueError("PDB input must not be a symlink")
