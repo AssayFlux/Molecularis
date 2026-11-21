@@ -1,319 +1,312 @@
-# Molecularis — Repository-First Master Plan
+# Molecularis — Master Product and Engineering Plan
 
-**Status:** New canonical implementation plan, prepared from the live CORE repository snapshot  
-**Baseline commit:** `dbda3496386edf46270d54296b2204a53d7de573`  
-**Baseline tree:** `dbda3496386edf46270d54296b2204a53d7de573`  
-**Plan date:** 2026-11-21  
-**Authority:** `NORTH_STAR.md`, this plan, approved entries in `DECISIONS.md`, [legacy requirements traceability](REQUIREMENTS_TRACEABILITY.md), and the evidence ledger linked below.
+**Plan status:** Active execution blueprint  
+**Planning date:** 2026-11-21  
+**Product target:** Installed desktop applications first; installed mobile applications next  
+**Primary platforms:** Linux, Windows, macOS, Android, iOS/iPadOS  
+**Intended use:** Scientific research and education
 
-> This document replaces the competing implementation roadmaps and masterplans as the single execution authority. It is a plan, not a claim that planned applications, services, integrations, validation or platform support already exist.
+## 1. Mission and product outcome
 
-## 1. Product direction
+Molecularis is a cross-platform scientific research environment for exploring biological and molecular data, running reproducible analyses, inspecting structures, managing research projects and connecting to controlled compute resources.
 
-Molecularis is an installed, desktop-first scientific research platform.
+The first complete product is an installed desktop application for Linux, Windows and macOS. Android and iOS/iPadOS applications follow, sharing the same scientific contracts, project formats, provenance model and product experience. A web companion may be considered later for collaboration or institutional access; it is not a required runtime for core research.
 
-1. **First delivery:** installed applications for Linux, Microsoft Windows and macOS.
-2. **Next delivery:** installed Android and Apple iOS/iPadOS applications.
-3. **Later and optional:** web companion for collaboration or institutional access. It is not the first product, a required runtime, or a substitute for desktop software.
+The product must be useful offline for local projects and supported local computations. Network access, remote compute and reference-data retrieval must be explicit, visible and controllable.
 
-All clients share scientific meaning, domain logic, project/artifact formats, schemas, provenance and design language. Platform-specific code is limited to UI and OS integration where necessary. Ordinary local desktop research must work offline and must not depend on a website or hosted service.
+## 2. Product principles
 
-Preferred core languages are C++, Rust and Python. The UI framework is deliberately undecided until a measured feasibility spike covers all five target OS families. Do not select a framework from preference or marketing claims alone.
+1. Scientific correctness before feature count. Every result has a defined method, supported input, units, limitations and evidence state.
+2. One coherent product. Shared domain models and contracts; platform-specific adapters only where operating systems require them.
+3. Local-first research. Users can create, inspect, save and export local projects without depending on a hosted service.
+4. Reproducibility by default. Record inputs, parameters, software versions, data versions, execution environment and output checksums.
+5. Incremental delivery. Deliver complete, testable vertical slices; do not attempt a simultaneous rewrite of every capability.
+6. Compatibility and data safety. Preserve user projects and stable identifiers through explicit, tested migrations.
+7. Security and privacy by design. Least privilege, bounded execution, clear compute location, secure storage and explicit data transfer.
+8. Accessibility across devices. Keyboard, pointer, touch, assistive technology, scaling and reduced-motion support are product requirements.
+9. Transparent maturity. Distinguish source availability, integration, automated testing, independent validation, platform verification and release approval.
+10. Research-use boundary. Clinical diagnosis, treatment, dosing and patient-specific decision support are not authorized product functions.
 
-## 2. Rules that protect the existing repository
+## 3. Platform and technology strategy
 
-This is a gradual migration, not a greenfield rewrite.
+### 3.1 Delivery order
 
-- Preserve existing source, scientific methods, tests, schemas, capability IDs, API identifiers, database contents, user files, encryption semantics, provenance and validation records unless a reviewed migration proves they can be retired.
-- Do not remove or replace the Android application until the replacement has demonstrated feature parity for each migrated workflow, successful export/import, integrity checks, backup/restore and rollback.
-- Keep compatibility readers and adapters for old project/data versions for a declared deprecation window.
-- Never change a persisted identifier, schema ID, protocol field, database name, preference key, WorkManager tag, keystore alias, cryptographic AAD label or cache prefix without an explicit versioned migration and compatibility tests.
-- Preserve scientific terminology. For example, enzyme kinetics is a scientific domain, not obsolete branding. Rename only product identity and user-facing labels where justified; do not mass-rename scientific identifiers.
-- Keep CORE as protected integration branch. Implement on a review branch and merge through PR with exact-head CI.
-- No milestone is complete merely because documentation, a registry entry, a compiling binary or a green unit-test job exists.
+- Desktop release: Linux, Windows and macOS.
+- Mobile release: Android and iOS/iPadOS.
+- Optional extension: web collaboration or institutional access after installed products are established.
 
-## 3. Repository baseline and honest status
+All five operating-system families are architectural targets. Desktop delivery has priority, but decisions must not make mobile implementation prohibitively expensive.
 
-The baseline inventory is recorded in [REPOSITORY_BASELINE.md](REPOSITORY_BASELINE.md). At the baseline snapshot it found:
+### 3.2 Core languages
 
-- 454 tracked files and 75 directories.
-- 51 Python modules under `python/molecularis/`, with 68 test files under `tests/`.
-- 51 Kotlin source files across the repository; the Android application is the only established client implementation.
-- 22 JSON schemas under `api/`.
-- 130 tool entries in `capabilities/registry.yaml`: 68 marked `implemented`, 62 marked `planned`. All 68 currently marked implemented have `evidence_level: none`; the registry defines implemented as source code existing, not as validated.
-- A bounded Node 22 worker for optional AutoDock Vina docking.
-- Existing structure parsing/analysis modules, structure-view payload schema and an offline viewer implementation in Android/web viewer assets.
-- An OpenMM runner that accepts a caller-prepared OpenMM system/topology/positions; complete preparation and force-field pipeline remain gaps.
-- An optional host-side RDKit adapter; availability depends on an installed, approved runtime.
-- Android/Kotlin/Compose, Gradle, Python/Chaquopy and a small JNI/C++ probe.
+- Python: scientific orchestration, research APIs, reference implementations and ecosystem adapters.
+- Rust: safe parsing, validation, process supervision, resource controls and security-sensitive native services where justified.
+- C++: profiled performance-critical kernels and mature native scientific-library integration.
+- SQL and versioned schemas: persistence and language-neutral contracts.
 
-The repository does **not** yet contain a completed desktop application, an iOS/iPadOS application, a selected cross-platform UI framework, a substantive shared Rust crate, or a substantive cross-platform C++ scientific engine. The current Rust directory is a placeholder; the current C++ implementation is a small native probe. These must not be presented as finished foundations.
+The repository currently has a substantive Python scientific package. Rust and C++ foundations are not yet substantive cross-platform scientific engines. Their adoption must be driven by measured need, working implementations and benchmarks.
 
-The latest CORE CI run at the baseline was pending when this plan was prepared: [run 44854675140](https://github.com/AssayFlux/Molecularis/actions/runs/44854675140). Do not treat pending as passed. Recheck the run before using it as acceptance evidence.
+### 3.3 UI framework decision
 
-## 4. Capability status model
+Do not preselect a UI framework. Build a comparable feasibility slice and evaluate candidate approaches on Linux, Windows, macOS, Android and iOS/iPadOS.
 
-Every capability has two independent dimensions:
+Measure native filesystem integration, accessibility, keyboard and touch interaction, offline storage, large-file handling, GPU/3D rendering, mobile lifecycle, background work, packaging, signing, updates, rollback, automated testing, language interoperability, performance, contributor skills and licensing.
 
-**Implementation state**
-- `not_started`: no Molecularis implementation.
-- `prototype`: limited proof of concept.
-- `partial`: useful code exists, but workflow or critical requirements are incomplete.
-- `integrated`: end-to-end product workflow exists behind a supported interface.
-- `deprecated`: retained only for migration/history.
+Record the measurements, trade-offs, prototype evidence and final architecture decision before committing the product shell to a framework.
 
-**Evidence state**
-- `E0 planned`
-- `E1 source and method reviewed`
-- `E2 contract and adapter implemented`
-- `E3 automated tests pass`
-- `E4 independent reference/benchmark and target-platform validation pass`
-- `E5 independent domain review and release approval`
+## 4. Repository capability baseline
 
-A capability is not scientifically validated because it is marked implemented. Each capability record must include intended use, supported inputs, outputs, units/conventions, limitations, engine/version, dependencies, provenance, security boundary, test references, evidence state, supported platforms and owner/reviewer decision.
+The current capability registry contains 130 entries:
 
-The capability registry must be reconciled with source and test evidence. Its present 68/62 counts are a starting inventory, not a release score.
+| Registry group | Count | Current recorded state |
+|---|---:|---|
+| Scientific and technical tools | 68 | Marked implemented |
+| UI screens | 26 | Planned |
+| UI settings | 22 | Planned |
+| Security features | 14 | Planned |
+| **Total** | **130** | **68 marked implemented; 62 planned** |
+
+All 68 tool entries marked implemented have declared source paths present in the audited repository snapshot. Their evidence level is currently `none`; this does not establish that each capability is integrated, independently validated, available on every platform or ready for release.
+
+The repository contains a Kotlin/Jetpack Compose Android client, a Python scientific package, API schemas, tests, offline structure-viewer assets, a bounded Vina worker and an OpenMM adapter for caller-prepared systems. The current repository does not establish a completed desktop client, an iOS/iPadOS application, a selected five-platform UI framework or a universal compute supervisor.
+
+The scientific package spans sequence and genome workflows, protein analysis, kinetics, structure parsing and geometry, chemistry, phylogeny, omics, microbiome, PGx research and molecular workflows. Optional tools and runtimes must be detected and declared rather than assumed to be installed.
+
+This baseline is an inventory for planning. Each capability must be checked against its actual contract, runtime dependencies, tests and validation evidence before it is exposed as a supported product feature.
 
 ## 5. Target architecture
 
-### 5.1 Installed clients
-- Desktop client: Linux, Windows and macOS first.
-- Mobile clients: Android and iOS/iPadOS next.
-- Optional web companion only after installed-client foundations.
+### 5.1 Product layers
 
-### 5.2 Shared domain and scientific core
-- Platform-neutral project, dataset, artifact, workflow, job, provenance and settings models.
-- Stable, versioned, language-neutral contracts.
-- Python for scientific orchestration, adapters and reference implementations.
-- Rust for safe parsing, process supervision, resource controls and security-sensitive services where justified.
-- C++ for measured performance-critical kernels and mature native scientific integrations.
-- Do not add languages or duplicate algorithms without a concrete technical reason.
+1. Platform applications: desktop and mobile shells, navigation, accessibility, OS integration and platform lifecycle.
+2. Shared product domain: projects, datasets, artifacts, workflows, jobs, settings, permissions and user-facing capability metadata.
+3. Scientific service layer: typed inputs and outputs, validation, method selection, provenance and capability-specific orchestration.
+4. Execution adapters: Python, Rust, C++ and approved external scientific engines behind stable interfaces.
+5. Data and project layer: portable project format, versioned schemas, content checksums, atomic persistence, import/export and migration.
+6. Compute layer: local execution first, optional paired Molecularis Node, and separately governed institutional or hosted execution.
+7. Evidence and governance layer: tests, reference datasets, benchmarks, security controls, licences, validation records and release decisions.
 
-### 5.3 Execution topology
-- Local execution on the user's computer is preferred when feasible.
-- Molecularis Node is an optional, explicitly paired local compute connector.
-- Hosted workers and institutional/HPC schedulers are optional extensions.
-- The UI is not a security boundary. Engines and imported workflows are untrusted; use capability allowlists, least privilege, bounded resources, cancellation, audit logs and isolated processes.
-- No arbitrary shell or unrestricted code execution in a privileged API or worker process.
+### 5.2 Project and data model
 
-### 5.4 Data and visualization
-- Portable, versioned project and artifact formats with checksums and atomic writes.
-- Canonical sequence, structure, molecule, coordinate, unit and provenance semantics.
-- Existing viewer assets are retained and evaluated; Mol* is a candidate integration, not assumed to be present.
-- Keep the viewer separate from scientific validators and compute engines.
+Define versioned, platform-neutral contracts for projects, datasets, scientific objects, artifacts, workflows, jobs, engine manifests and provenance.
 
-## 6. Delivery phases
+The project system must support create, open, save, autosave where safe, import, export, integrity verification, backup, restore and recovery from interrupted writes. It must use explicit schema versions, checksums and atomic updates.
 
-Phases are dependency gates, not calendar promises. Re-estimate after each gate using actual staffing, hardware, upstream compatibility and evidence requirements.
+Scientific data models must make sequence alphabets, residue and atom identifiers, coordinate frames, units, missing values, reference builds and dataset provenance explicit. Do not rely on display labels or implicit conventions as data contracts.
 
-### Phase 0 — Exact baseline and migration ledger
-**Goal:** establish what really exists and what can safely be reused.
+### 5.3 Job and compute model
+
+Every job has a declared capability, validated inputs, execution profile, resource limits, cancellation semantics, progress/log stream, durable state and provenance record.
+
+Local execution is preferred when supported. A remote node is optional and must be paired, authenticated, revocable and limited to explicitly enabled capabilities. Hosted and HPC execution require separate deployment, identity, data-transfer and governance controls.
+
+No privileged API or worker may provide unrestricted shell execution or arbitrary executable selection. Treat imported workflows, data packs and engine outputs as untrusted.
+
+### 5.4 Visualization
+
+Keep visualization separate from scientific computation and validation. A viewer renders supplied data; it does not certify structural quality, binding, function or biological significance.
+
+Evaluate the existing offline viewer assets and suitable upstream components, including Mol*, through component-level compatibility, licence, performance and accessibility tests. Large structures and complex scenes require measured memory, rendering and interaction targets.
+
+## 6. Execution roadmap
+
+Phases are dependency gates, not calendar promises. Each phase is planned, implemented, tested and reviewed against explicit exit criteria.
+
+### Phase 0 — Repository and operational baseline
+
+**Objective:** establish a trustworthy implementation and migration ledger.
 
 Work:
-- Run exact-commit CI and record all jobs, results and failures.
-- Complete source inventory across Android/Kotlin, Python, Rust, C++, Node, web assets, schemas, tests and build systems.
-- Reconcile every capability registry entry to an existing source file, tests and actual runtime availability.
-- Identify duplicate, stale, missing and conflicting documentation.
-- Inventory persisted Android data and identifiers, package IDs, storage formats, crypto, background jobs and export paths.
-- Create upstream source/version/licence/SBOM register.
-- Classify each asset as retain, extract, adapt, replace, defer or retire.
+- Run the full CI and test matrix on exact commit SHAs; record failures and environment constraints.
+- Inspect all 130 registry entries and reconcile identifiers, source paths, imports, optional dependencies, tests and actual runtime behaviour.
+- Add explicit per-capability test references and evidence records.
+- Inventory Android persistence and operating-system integration: databases, schemas, preference keys, file locations, WorkManager identifiers, keystore aliases, encryption contracts, caches, backups, exports and project identifiers.
+- Create representative data fixtures and migration/rollback test plans.
+- Record upstream dependencies, exact versions, licences, notices, model/data terms and software bill of materials.
+- Classify each repository component for reuse, extraction, adaptation, replacement or deferral.
 
-Exit: reviewed baseline, capability ledger, data migration ledger, risk register, exact-head CI evidence and owner-approved framework evaluation criteria.
+**Exit criteria:** reviewed source inventory, capability evidence ledger, Android data/identifier inventory, dependency-rights register, exact-SHA CI report and migration risk register.
 
-### Phase 1 — Cross-platform framework feasibility
-**Goal:** choose the UI/application technology from evidence, not assumption.
+### Phase 1 — Five-platform application feasibility
 
-Build the same small vertical slice on Linux, Windows, macOS, Android and iOS/iPadOS. Compare credible candidates (including native and cross-platform options) against:
-- native filesystem and OS integration;
-- accessibility, keyboard, pointer, touch and screen-reader support;
-- offline project storage and large-file handling;
-- GPU/3D rendering and scientific visualization;
-- background execution and mobile lifecycle;
-- packaging, signing, notarization, updates and rollback;
-- crash reporting, test automation and reproducible CI;
-- C++/Rust/Python interoperability;
-- performance, memory, contributor skill and licence obligations.
+**Objective:** select the application framework through measured evidence.
 
-Exit: measured comparison, working prototype evidence on each OS family, risks and owner-recorded architecture decision. No framework is preselected by this plan.
+Work:
+- Build the same small project-browser and data-inspection prototype for Linux, Windows, macOS, Android and iOS/iPadOS.
+- Evaluate credible native and cross-platform candidates against the criteria in Section 3.3.
+- Exercise filesystem access, offline persistence, accessibility, keyboard/pointer/touch input, graphics, background lifecycle, packaging and update flows.
+- Verify integration options for Python, Rust and C++ without creating duplicated business logic.
+
+**Exit criteria:** reproducible prototypes, comparison report, identified risks, contributor/toolchain plan and an approved architecture decision.
 
 ### Phase 2 — Shared contracts and project foundation
-**Goal:** make platform-independent data and workflow semantics before migrating screens.
+
+**Objective:** create the data and execution foundations used by every client.
 
 Work:
-- Define project, dataset, artifact, provenance, job, capability and engine manifests.
-- Version schemas and implement compatibility tests.
-- Define canonical sequence, macromolecular structure, small molecule, coordinate frame, units and identifier models.
-- Add project create/open/save/export/import with checksums, atomic writes and migration support.
-- Define a stable boundary for Python, Rust and C++ components.
-- Preserve legacy Android readers and data access.
+- Define and version project, dataset, artifact, provenance, capability, engine, workflow and job contracts.
+- Define stable cross-language interfaces and compatibility rules.
+- Implement project create/open/save/import/export and integrity verification.
+- Add atomic writes, backup/restore, interrupted-write recovery and schema migration fixtures.
+- Establish canonical sequence, molecule, structure, coordinate and unit conventions.
+- Add contract tests that run across supported language boundaries.
 
-Exit: cross-language contract tests, project round-trip, version migration fixtures, corruption recovery and reproducible provenance.
+**Exit criteria:** round-trip project tests, migration compatibility tests, corruption/recovery tests, deterministic provenance and shared contract conformance.
 
 ### Phase 3 — Desktop application foundation
-**Goal:** first real Molecularis installed application.
+
+**Objective:** deliver the first installable Molecularis desktop application.
 
 Work:
-- Build desktop shell for Linux, Windows and macOS using the framework selected in Phase 1.
-- Implement workspace, projects, settings, file import/export, offline state and accessibility foundations.
-- Add local job supervision with logs, cancellation, resource limits and durable state.
-- Connect one existing scientific workflow end-to-end, beginning with a bounded sequence workflow and/or structure inspection selected by the Phase 0 audit.
-- Provide install, upgrade, uninstall and rollback paths.
+- Build the desktop shell for Linux, Windows and macOS using the selected framework.
+- Implement workspace navigation, project management, settings, file import/export and offline state.
+- Implement job lifecycle, local process supervision, logs, cancellation, resource limits and recovery.
+- Establish update, signing, packaging, uninstall and rollback procedures.
+- Integrate one complete scientific vertical slice selected from repository evidence and user value.
 
-Exit: signed/reproducible installable packages and documented runtime tests on all three desktop OSes; offline project workflow and one end-to-end scientific vertical slice.
+**Exit criteria:** installable desktop packages, tested on all three desktop operating systems; offline project workflow; durable job lifecycle; accessible core navigation; and one end-to-end scientific workflow with reproducible outputs.
 
-### Phase 4 — Desktop visualization and scientific vertical slices
-**Goal:** turn existing scientific code into coherent, user-facing services.
+### Phase 4 — Scientific service delivery
 
-Priority order, adjusted only by dependency evidence:
-1. Sequence and genomics foundation: FASTA/FASTQ, QC, translation, ORFs, alignment, annotation and reference-pack workflows.
-2. Structure data and 3D inspection: PDB/mmCIF parsing, atom/residue identity, coordinate conventions, viewer payload, selection, representations, large-structure performance and offline viewer integration.
-3. Structure analysis: alignment, pockets and quality observations with clearly stated method limits.
-4. Chemistry: molecule import, sanitization, stereochemistry, descriptors and graph operations through a pinned RDKit profile.
-5. Docking: complete input preparation, bounded Vina execution, result inspection, provenance and reference validation.
-6. Molecular dynamics: trusted system preparation, topology/force-field provenance, OpenMM setup, simulation, analysis and reproducibility.
-7. Protein modelling: optional ESM/AlphaFold isolated profiles, weights/data rights, hardware requirements, benchmarks and uncertainty handling.
-8. Advanced genomics/omics/PGx: research-only evidence, curated references and independent review; no clinical interpretations.
-9. DNA/RNA nanostructure design and specialist workflows after exact source and thermodynamic dependency review.
+**Objective:** turn repository capabilities into dependable, user-facing scientific workflows.
 
-Exit for each service: an end-to-end UI-to-result workflow, explicit supported inputs/outputs, method and dependency versions, provenance, limitations, tests, reference validation and platform support statement.
+Recommended order, subject to Phase 0 evidence and dependency readiness:
 
-### Phase 5 — Compute services
-**Goal:** safely extend compute beyond the local desktop.
+1. Sequence and genome foundation: FASTA/FASTQ, sequence QC, translation, ORF candidate analysis, local alignment, annotation and reference-pack handling.
+2. Kinetics and quantitative research: Michaelis–Menten fitting, transformations, uncertainty summaries, diagnostics and independently checked reference cases.
+3. Structure data and inspection: PDB/mmCIF ingestion, identity and coordinate handling, deterministic viewer payloads, selection, representations and large-structure performance.
+4. Structure analysis: sequence/structure mapping, geometry, interfaces, pockets and quality observations with method-specific limitations.
+5. Chemistry: SDF ingestion, graph validation, stereochemistry and pinned RDKit profiles.
+6. Docking: complete ligand/receptor preparation, bounded Vina execution, result inspection, provenance and redocking/decoy reference evaluation.
+7. Molecular dynamics: trusted system preparation, topology and force-field provenance, OpenMM setup, simulation and analysis.
+8. Phylogeny and omics: input validation, statistical assumptions, reference fixtures, uncertainty and calibrated interpretation.
+9. PGx research workflows: source-pinned definitions, conservative matching, abstention and strict research-only presentation.
+10. Advanced research workflows: protein modelling, multi-omics, microbiome, molecular design and specialist domains after data rights, dependency, compute, uncertainty and safety review.
 
-Work:
-- Evolve the existing Vina-only Node worker into a versioned capability-bounded Molecularis Node only after threat model and pairing design.
-- Add durable jobs, authentication, host identity, revocation, quotas, cancellation, recovery, logs and artifact transfer.
-- Add isolated engine profiles one by one; never expose generic shell or user-selected executables.
-- Add hosted workers and institutional/HPC connectors only where a validated workload requires them.
+Each service is delivered as a vertical slice: import → validation → configuration → execution → result inspection → export → provenance. A source module or registry entry alone is not a user-facing service.
 
-Exit: independent security review, threat-model closure, deployment/recovery exercises, resource exhaustion tests and job/provenance conformance.
+**Exit criteria for each service:** typed contracts, declared units and conventions, pinned method/dependency versions, automated tests, independent reference or benchmark evidence, limitations, provenance, security review and explicit platform support.
 
-### Phase 6 — Mobile applications
-**Goal:** deliver Android and iOS/iPadOS using the same scientific semantics and project formats.
+### Phase 5 — Visualization and research workspace
+
+**Objective:** provide coherent ways to inspect, compare and communicate results.
 
 Work:
-- Preserve Android compatibility while replacing its UI/platform architecture incrementally.
-- Implement iOS/iPadOS application and platform adapters.
-- Port capabilities by vertical slice, not screen-by-screen copying.
-- Validate storage permissions, background lifecycle, battery, offline use, touch accessibility, graphics and secure storage.
-- Migrate local user data with export/import, checksums, backup/restore and rollback.
+- Integrate supported sequence, alignment, phylogenetic, kinetics, chemistry and structure views.
+- Implement synchronized selection and linked views only where stable identifiers support them.
+- Provide result tables, plots, filters, annotations and exportable figures.
+- Preserve source data and analysis provenance when users annotate or transform results.
+- Add accessibility, large-data performance and deterministic session export tests.
 
-Exit: install/upgrade tests on supported physical devices, data migration and recovery evidence, accessibility, offline and scientific parity evidence.
+**Exit criteria:** reproducible visualization sessions, supported-format coverage, accessibility checks and performance evidence on target hardware.
 
-### Phase 7 — Workflow, notebooks and federation
-**Goal:** make workflows reproducible and composable.
+### Phase 6 — Compute services and extensibility
 
-Work:
-- Versioned workflow manifests, dependency graphs and deterministic execution semantics.
-- Notebook/repl UX only with a threat-modelled isolated kernel.
-- Galaxy API/federation only when the operational cost and user need are justified.
-- Exportable run bundles and complete provenance.
-
-Exit: reproducible workflow round-trips, isolation/security review, auditability and reference tests.
-
-### Phase 8 — Institutional and release readiness
-**Goal:** support governed institutional deployments.
+**Objective:** expand execution safely beyond the local machine.
 
 Work:
-- Full SBOM and third-party rights clearance.
-- Security/privacy/accessibility reviews.
-- Backup/restore, disaster recovery, incident response and update rollback drills.
-- Performance, compatibility and reliability targets based on measured workloads.
-- Independent scientific review and owner acceptance.
+- Define a versioned Molecularis Node protocol and explicit capability allowlist.
+- Add secure pairing, identity, revocation, authentication, authorization, quotas, cancellation and audit logs.
+- Add isolated engine profiles one at a time with pinned environments and verified data/model rights.
+- Add institutional/HPC adapters only for workloads with demonstrated requirements.
+- Define artifact transfer, interrupted-job recovery and compute-location disclosure.
 
-Exit: all required evidence attached to a versioned release record. No clinical or regulated-use claim is implied.
+**Exit criteria:** threat model and security review, resource-exhaustion tests, recovery exercises, job conformance, provenance completeness and operational documentation.
 
-## 7. External projects and integration policy
+### Phase 7 — Mobile applications
 
-The candidate ecosystem is documented in [THIRD_PARTY_INTEGRATION_REGISTER.md](THIRD_PARTY_INTEGRATION_REGISTER.md). Candidates include Biotite, Mol*, MolProbity, RDKit, OpenMM, ESM, AlphaFold, Genome-Wide Workbench, Open Chemistry, ChemGraph, NUAD, Galaxy and SciREPL.
+**Objective:** deliver Android and iOS/iPadOS clients on shared product foundations.
 
-For every upstream component, record exact repository, release/commit, files/modules used, licence and notices, transitive dependencies, model/data terms, supported OS/ABI, security posture, Molecularis adapter, tests, benchmark, upgrade policy and removal path. Code, weights, datasets, databases and assets have separate rights. Never import an entire upstream platform without a component-level justification.
+Work:
+- Implement the mobile shells and platform adapters using the shared domain contracts.
+- Port complete workflows based on user value and mobile hardware constraints.
+- Preserve Android project access and existing user data throughout migration.
+- Implement explicit migration, export/import, integrity verification, backup/restore and rollback.
+- Test permissions, secure storage, background lifecycle, offline operation, battery, graphics, touch and accessibility.
+- Establish iOS/iPadOS signing, packaging, update and recovery procedures.
 
-## 8. Migration and compatibility gates
+**Exit criteria:** install/upgrade tests on supported devices, successful data migration and rollback, offline workflows, accessibility checks and scientific parity evidence for each shipped capability.
 
-For each legacy Android capability:
-1. inventory behaviour, source, tests, data stores and stable identifiers;
-2. extract platform-neutral logic where possible;
-3. define the replacement contract and data format;
-4. implement the new client path alongside the old path;
-5. compare outputs and migrate representative data;
-6. test export/import, checksum, backup/restore, rollback and failure recovery;
-7. obtain owner acceptance before removing the legacy path.
+### Phase 8 — Institutional readiness and release operations
 
-Never silently upload user files. Never delete old user data during migration. Keep a documented rollback window.
+**Objective:** make releases supportable, auditable and maintainable.
 
-## 9. Scientific integrity, safety and intended use
+Work:
+- Complete SBOM, licence and third-party notice review.
+- Complete privacy, security, accessibility and threat-model reviews.
+- Establish supported OS versions, hardware profiles, performance budgets and compatibility policy.
+- Test backup/restore, disaster recovery, update rollback and incident response.
+- Establish release signing, reproducible builds, release notes and evidence retention.
+- Obtain independent scientific review for capabilities making scientific claims.
 
-Molecularis remains research-use only. No clinical diagnosis, treatment, dosing or patient-specific decision support is authorized by this plan. Clinical/regulated use requires separate owner authorization, qualified independent review, applicable ethics/legal/regulatory approvals and validated evidence.
+**Exit criteria:** versioned release record with approved scope, exact build provenance, passing required CI, platform evidence, security/licence review, scientific evidence and documented known limitations.
 
-Every scientific result must expose inputs, units/conventions, method and version, dependencies/model/data versions, provenance, limitations, uncertainty semantics, validation state and supported runtime. A viewer is not a validator; a parser is not a predictor; an execution envelope is not a working scientific engine; a simulation adapter is not system preparation; docking scores are not experimental binding free energies.
+## 7. Scientific capability and evidence policy
 
-## 10. Project control and reporting
+Every capability record must include:
+- stable capability ID and intended research use;
+- input/output schema, units, coordinate or reference conventions;
+- algorithm/method, implementation and dependency versions;
+- required optional tools, data packs, models and hardware;
+- provenance and deterministic/reproducibility expectations;
+- known limitations, uncertainty and abstention behaviour;
+- automated test references and independent reference/benchmark evidence;
+- supported operating systems and execution profiles;
+- security classification, data rights and reviewer/owner decision.
 
-- CORE: protected integration branch.
-- Alpha: development branch; keep it aligned through reviewed PRs, not force resets.
-- Use short-lived feature branches for substantial migrations.
-- Each PR states baseline SHA, scope, compatibility impact, tests, evidence, risks and rollback.
-- Update the capability registry and migration ledger with code changes.
-- Report status using separate fields: planned, source-present, integrated, tested, reference-validated, platform-verified, independently reviewed, release-approved.
-- No percentage-complete claims without a defined denominator and auditable evidence.
+Use separate implementation and evidence states:
 
-## 11. Definition of done
+**Implementation:** not started → prototype → partial → integrated → deprecated.
 
-A deliverable is complete only when:
-- implementation and documentation are merged;
-- exact-head CI passes;
-- contracts and migrations are backward-compatible or versioned;
-- security and licence review are complete where applicable;
-- scientific reference/benchmark evidence is attached where applicable;
-- target-platform install/runtime/accessibility/offline evidence is attached;
-- limitations and known failures are documented;
-- rollback and data recovery are demonstrated;
-- owner acceptance is recorded.
+**Evidence:** E0 planned → E1 source/method reviewed → E2 contract/adapter verified → E3 automated tests pass → E4 independent reference and target-platform validation pass → E5 independent domain review and release approval.
 
-## 12. Reconciliation with the original Molecularis/Kinetics scope
+A capability may not be described as scientifically validated, production-ready or platform-supported without the corresponding evidence. Registry status must be updated from actual results, not from roadmap intent.
 
-This plan was cross-checked against the original 18-part owner specification, the R0–R10 foundation/science plans, S1–S10 discovery roadmap, I-track engine evaluations, P0–P7 PGx governance pathway, G0–G7 assurance work and U0–U6 interface/viewer programme. The detailed requirement-to-source mapping and retained open gates are in [REQUIREMENTS_TRACEABILITY.md](REQUIREMENTS_TRACEABILITY.md). The original Android-first deployment sequence is superseded, not the scientific scope, offline-first principle, provenance model, engine-tier thinking, governance, research-only boundary or owner UI design contract.
+## 8. Security, privacy, licensing and safety
 
-### 12.1 Scientific service portfolio and delivery order
+- Research-use only. No diagnosis, treatment, dosing or patient-specific decision support.
+- Clinical Decision Support remains disabled unless separately authorized and independently validated under applicable governance.
+- Do not place patient-derived or confidential research data in public repositories, fixtures, CI logs or public artifacts.
+- Encrypt sensitive local data where appropriate and document key handling, recovery and data-loss implications.
+- Make all network transfers, remote execution and reference-data retrieval visible and user-controlled.
+- Apply least privilege, process isolation, bounded inputs, bounded memory/CPU/time, safe archive handling and dependency pinning.
+- Review code, models, datasets, fonts, icons, viewer assets and documentation for their individual licence and redistribution terms.
+- Preserve uncertainty and abstention; never convert a screening result into an unsupported biological conclusion.
 
-The long-term portfolio includes sequence bioinformatics; genomics and transcriptomics; proteomics and protein discovery; structural biology and 3D visualization; chemoinformatics; enzyme kinetics; phylogenetics/evolution; systems biology; multi-omics; microbiology/metagenomics; immunoinformatics; biostatistics; PGx research; in-silico discovery; molecular biology/CRISPR/primer tools; PK/PD; and workflow/provenance infrastructure. Registry presence does not mean each service is a deliverable. Each is independently gated by data, engine, licence, contracts, tests, validation and platform support.
+## 9. Delivery governance
 
-Initial delivery candidates should be selected after Phase 0 by a weighted readiness review: existing working source, smallest missing dependency chain, scientific reference availability, local/offline feasibility, user value, cross-platform feasibility, safety/licence risk and time to a complete end-to-end workflow. Do not pre-commit to a broad catalogue. Enzyme kinetics remains a candidate flagship from the original specification; sequence QC/import is another candidate because there is an existing Android path and Python tests. Choose one or at most two vertical slices based on exact-head evidence and independent reference quality.
+- Alpha is the development branch; CORE is the integration branch.
+- Work on short-lived branches and merge through reviewed pull requests.
+- Each pull request records scope, baseline SHA, compatibility impact, tests, evidence, risks and rollback strategy.
+- Do not force-reset shared branches or silently rewrite persisted identifiers and public contracts.
+- Update implementation, tests, schemas, registry entries and evidence records together.
+- Keep platform support and scientific validation as explicit per-capability states.
+- Plan milestones from dependency evidence and demonstrated capacity, not optimistic calendar dates.
 
-### 12.2 3D structure service — explicit staged scope
+## 10. Definition of done
 
-3D structure work is a first-class scientific service, not just a viewer screen. Its staged scope is:
-1. **Data foundation:** PDB and mmCIF ingestion, stable atom/residue/chain identity, alternate locations, insertion codes, assemblies, coordinate units/frames, model numbering, missing atoms/residues and validation diagnostics.
-2. **Preparation pipeline:** explicit, provenance-recorded choices for biological assembly, protonation, hydrogens, alternate conformers, waters, ions/metals, cofactors, ligands and missing atoms/residues. No silent repair or inferred chemistry.
-3. **Viewer:** offline-capable 3D rendering, representations, chain/residue/atom selection, sequence-to-structure mapping, camera/view state, annotations, export and accessibility; evaluate Mol* selectively against the existing viewer assets and target framework.
-4. **Analysis:** contacts, distances, RMSD/superposition, SASA, secondary structure, hydrogen-bond/salt-bridge/disulfide candidates, interfaces, pockets, residue environments and variant mapping, each with method definitions and limitations.
-5. **Quality and prediction:** geometry/validation metrics and predicted-model confidence kept distinct from experimental resolution/R-free; prediction engines and weights are separate optional profiles, never bundled by assumption.
-6. **Evidence:** fixed public reference structures, independent implementations, mmCIF edge cases, large-file and GPU/CPU benchmarks, visual correctness, accessibility and platform/device tests.
+A feature or release is complete only when all applicable conditions are met:
 
-Current structure.py, structure_alignment.py, structure_pockets.py, structure_quality.py, structure_view.py, sequence_structure.py, Android StructureViewer.kt, viewer assets and API schema are foundations. They do not establish the full service above. Mol* is a candidate integration, not an existing dependency or guaranteed choice.
+1. User-visible workflow and documented contract are implemented.
+2. Exact-head CI and required automated tests pass.
+3. Inputs, outputs, units, dependencies and limitations are explicit.
+4. Data migration and backward compatibility are tested where applicable.
+5. Security, privacy and licensing requirements are reviewed.
+6. Scientific reference/benchmark validation is complete where scientific claims are made.
+7. Supported-platform installation and runtime evidence is recorded.
+8. Accessibility, performance and offline behaviour meet declared requirements.
+9. Provenance, export, recovery and rollback work as specified.
+10. Known issues and residual risks are documented and accepted by the responsible reviewer.
 
-### 12.3 Engine tiers and compute placement
+## 11. Immediate execution priorities
 
-Retain the original Tier A/B/C concept but make it hardware-profile-specific: **A** local lightweight capabilities suitable for ordinary supported hardware; **B** optional local engines/data packs that pass measured resource and ABI tests; **C** optional paired node, workstation, GPU or institutional/HPC execution. A capability may have different placement by OS/device. Record CPU, RAM, disk, GPU, runtime, licence, network, timeout, cancellation and output-size requirements in engine manifests. Never equate Tier C with cloud upload by default; user consent and data locality are explicit.
+1. Complete the exact-commit repository and capability evidence ledger.
+2. Complete the Android persisted-data and identifier inventory before any migration work.
+3. Run the five-platform framework feasibility spike and record the decision.
+4. Define shared project, artifact, provenance and job contracts.
+5. Build the desktop project shell and local job lifecycle.
+6. Select the first scientific vertical slice using implementation quality, user value, reference data and validation cost.
+7. Deliver the selected workflow end-to-end before expanding the service catalogue.
+8. Establish continuous security, accessibility, licence and scientific-evidence gates from the first release candidate.
 
-### 12.4 Cross-cutting requirements retained from the earlier tracks
-
-- Registry remains Tool → Engine → Data pack → Domain, with method/version, source/licence, runtime, tier, status, platform, evidence and validation path. Do not mark a tool validated from source presence or a smoke test.
-- Data packs are versioned, checksum-verified, licence-reviewed, source-attributed and explicitly delivered (bundled, optional local download or remote-only). No runtime executable-code downloads.
-- Result provenance includes immutable input/output digests, reference/model/data release, parameters, units, seeds, warnings, environment, compute placement and limitations.
-- Scientific validation includes synthetic truth fixtures, independent references, calibration/uncertainty, negative cases, benchmark/performance, domain review and reproducibility. Prediction, docking, MD and clinical-adjacent services each need independent validation.
-- PGx remains a staged research-only pathway with indeterminate/abstention states, ancestry coverage disclosure and separate source/guideline versions. No clinical interpretation or recommendations.
-- Security/privacy, accessibility, data migration, source/model/data rights and governance are continuous gates, not a final paperwork phase.
-- Research-paper and publication work follows validated, reproducible results; it does not drive or overstate product capability.
-
-## 13. Canonical supporting records
-
-- [Repository baseline](REPOSITORY_BASELINE.md)
-- [Capability and migration status](CAPABILITY_STATUS.md)
-- [Plan retirement and historical-document map](PLAN_RETIREMENT.md)
-- [North Star](../NORTH_STAR.md)
-- [Decision log](../DECISIONS.md)
-- [Validation framework](../validation/README.md)
-- [Security threat model](security-threat-model.md)
-- [Third-party integration register](THIRD_PARTY_INTEGRATION_REGISTER.md)
+**Product success is a dependable, reproducible scientific research application across desktop and mobile—not a count of screens, source files or registry entries.**
