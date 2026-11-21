@@ -76,8 +76,8 @@ These states are independent. Never infer one from another. Update status only w
 
 ## Coordinated integration increment (2026-11-21)
 
-- Added `python/molecularis/scientific_engines.py` with a stable inventory for all 18 requested tools, lazy runtime discovery (without importing model weights), and a Molecularis-owned Parasail global/local affine-gap traceback adapter.
-- Added `tests/test_scientific_engines.py` for the 18-engine inventory, discovery semantics, input ceilings and optional Parasail contract. These tests have not been executed in this repository-editing session.
+- Added `python/molecularis/scientific_engines.py` with a stable inventory for all 19 named projects (18 integration targets when pysam/HTSlib are counted as one paired stack), lazy runtime discovery (without importing model weights), and a Molecularis-owned Parasail global/local affine-gap traceback adapter.
+- Added `tests/test_scientific_engines.py` for the 19-project inventory, discovery semantics, input ceilings and optional Parasail contract. These tests have not been executed in this repository-editing session.
 - Source-level inspection in this pass covered Parasail's `src/sw.c` and `src/nw.c`; HTSlib's `sam.c`; Samtools' `bam_sort.c`; BCFtools' `mpileup.c`; AlphaFold's `run_alphafold.py`; RDKit's `SmilesParse.cpp`; OpenMM's `simulation.py`; GROMACS' `md.cpp`; SciPy's `stats/_stats_py.py`; and Galaxy's workflow API implementation. Existing audits cover Biopython, Biotite, pysam/HTSlib, RDKit, Vina, and OpenMM.
 - ESM's expected `esm/pretrained.py` path and the guessed NUAD/NUPACK source paths did not resolve in the upstream repositories queried; MolProbity's canonical source/API was not established. These are explicitly not marked as integrated.
 - The registry distinguishes integrated adapters, process-contract integrations, viewer assets, runtime discovery, and not-yet-integrated tools. A discovered executable or importable package is not evidence of a working workflow.
