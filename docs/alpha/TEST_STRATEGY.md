@@ -6,14 +6,15 @@
 3. Contract tests across Python, Rust, C++ and TypeScript.
 4. API and database integration tests.
 5. Worker isolation, quotas, cancellation, retry and artifact-integrity tests.
-6. Browser end-to-end tests for responsive layouts and critical workflows.
-7. Device/browser tests across phone, tablet, laptop and desktop classes.
-8. Scientific reference tests and benchmark suites.
-9. Security tests: authorization, path traversal, archive bombs, SSRF, injection, deserialization, secret leakage and sandbox escape attempts.
-10. Backup/restore, upgrade, migration and rollback exercises.
+6. Desktop application end-to-end tests on Linux, Windows and macOS, including install/upgrade/uninstall and offline workflows.
+7. Mobile application tests on Android and iOS/iPadOS, including lifecycle, permissions, storage and offline behaviour.
+8. Optional web companion tests only after that product is approved.
+9. Scientific reference tests and benchmark suites.
+10. Security tests: authorization, path traversal, archive bombs, SSRF, injection, deserialization, secret leakage and sandbox escape attempts.
+11. Backup/restore, upgrade, migration and rollback exercises.
 
 ## Cross-device matrix
-Test touch and pointer input, keyboard navigation, screen readers, reduced motion, zoom/reflow, offline transitions, reconnect/sync, large files, upload interruption, session expiry and long-running job visibility.
+Test desktop keyboard/pointer/window management and native filesystem behaviour on Linux, Windows and macOS; test touch, rotation, screen readers, lifecycle and permission flows on Android and iOS/iPadOS. Across all targets test reduced motion, zoom/reflow, offline transitions, reconnect/sync where enabled, large files, interruption recovery and long-running job visibility.
 
 ## Scientific test requirements
 For each engine record reference dataset and rights, reference tool/version, expected result, tolerance, numerical precision, random seed, hardware/runtime profile and known limitations. Avoid tests that only assert a non-empty output.
