@@ -1,4 +1,4 @@
-# Kinetics — Integration Milestones
+# Molecularis — Integration Milestones
 
 **Status:** Proposed milestone framework; dates and staffing are not committed.  
 **Date:** 2026-11-20

@@ -1,4 +1,4 @@
-# Kinetics — Desktop Compute Architecture
+# Molecularis — Desktop Compute Architecture
 
 **Status:** Proposed architecture; not an implementation or security approval.  
 **Date:** 2026-11-20
@@ -12,7 +12,7 @@ Android is the research control surface. Desktop compute is an optional, user-co
 1. **Android job client:** constructs validated job envelopes, displays capability availability, previews data transfer, submits/cancels jobs and verifies returned artifacts.
 2. **Pairing and identity:** explicit user pairing, host identity, revocation and key rotation. Do not rely on a shared static token as the final identity design.
 3. **Desktop worker:** receives only declared capability jobs; validates schema and policy; queues jobs; starts a pinned engine profile; streams structured status; returns bounded outputs.
-4. **Engine adapter:** translates Kinetics job contracts into one engine’s API/CLI and normalizes output.
+4. **Engine adapter:** translates Molecularis job contracts into one engine’s API/CLI and normalizes output.
 5. **Environment manager:** selects an installed, pinned runtime profile. It must not silently install software or download weights.
 6. **Artifact store:** content-addressed inputs/outputs, hash verification, retention controls and explicit cleanup.
 7. **Audit/provenance:** records user, host, engine version, profile digest, parameters, input/output hashes, timestamps and terminal state.
@@ -60,7 +60,7 @@ Provide offline package export/import as an early interoperability path. A packa
 - `desktop/worker/` — worker service and packaging
 - `desktop/profiles/` — profile definitions and lock files
 - `desktop/engine-manifests/` — capability and runtime manifests
-- `python/kinetics/adapters/` — Python-side engine adapters
+- `python/molecularis/adapters/` — Python-side engine adapters
 - `api/` — versioned job, result, capability and provenance schemas
 - `tests/integration/desktop/` — worker/client contract and lifecycle tests
 - `docs/security/` — threat model, pairing, data-transfer and retention design

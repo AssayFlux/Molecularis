@@ -1,4 +1,4 @@
-# Kinetics — Scientific Rulebook Plan
+# Molecularis — Scientific Rulebook Plan
 
 **Status:** Design plan; rules and thresholds require domain review and evidence.  
 **Date:** 2026-11-20

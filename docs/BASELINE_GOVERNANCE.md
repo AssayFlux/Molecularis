@@ -1,7 +1,7 @@
 # Baseline and branch governance
 
 **Policy version:** 2.0  
-**Applies to:** all Kinetics source, build, scientific data, documentation and release artifacts.
+**Applies to:** all Molecularis source, build, scientific data, documentation and release artifacts.
 
 ## 1. Release states
 
