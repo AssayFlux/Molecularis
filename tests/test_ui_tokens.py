@@ -119,3 +119,15 @@ def test_semantic_decision_colours_remain_status_only_and_accessible() -> None:
     assert "statusColors.warning" in ui
     assert "statusColors.error" in ui
     assert "statusColors.information" in ui
+
+
+def test_active_android_product_identity_uses_molecularis() -> None:
+    ui = (ROOT / "android/app/src/main/java/org/assayflux/molecularis/MolecularisUi.kt").read_text()
+    onboarding = (
+        ROOT / "android/app/src/main/java/org/assayflux/molecularis/MolecularisOnboardingScreen.kt"
+    ).read_text()
+    assert 'Text("MOLECULARIS"' in ui
+    assert 'SettingGroup("ABOUT MOLECULARIS"' in ui
+    assert 'Text("MOLECULARIS"' in onboarding
+    assert 'Text("KINETICS"' not in ui
+    assert 'Text("KINETICS"' not in onboarding
