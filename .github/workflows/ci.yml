@@ -1,7 +1,7 @@
 name: Molecularis validation and Android build
 on:
   push:
-    branches: [main, v0.1.1]
+    branches: [main, v0.1.1, CORE, Alpha]
   pull_request:
     branches: [main, v0.1.1]
   workflow_dispatch:
