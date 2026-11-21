@@ -47,6 +47,7 @@ A scaffold or specification does not imply implementation or scientific validati
 - Previous baseline [run #132](https://github.com/AssayFlux/Molecularis/actions/runs/44880497095): 568 passed, 12 skipped.
 - [Run #133](https://github.com/AssayFlux/Molecularis/actions/runs/44880802259): optional dependency profiles passed; the core job exposed a malformed legacy JSON schema that was subsequently repaired.
 - [Run #150](https://github.com/AssayFlux/Molecularis/actions/runs/44883890013), commit `7e0785a`: 608 passed, 12 skipped; core, capability registry, 28 JSON Schemas, Ruff E9/F, compilation, 1k/10k graph benchmark smoke and all sequence/genomics/chemistry optional profiles passed.
+- [Run #153](https://github.com/AssayFlux/Molecularis/actions/runs/44884757468), commit `f940fe4`: core 624 passed/12 skipped; optional sequence 627 passed/9 skipped, genomics 625 passed/11 skipped, chemistry 632 passed/4 skipped. Registry, 31 JSON Schemas, Ruff E9/F, compilation, molecular benchmark smoke and 1,000-record/1,000,000-base sequence streaming benchmark all passed.
 - Ruff remains limited to E9/F; this is not full style conformance.
 
 ## Active phase and next exact work

@@ -1,6 +1,6 @@
 # Sequence v1 Acceptance Record
 
-Status: engineering implementation complete; CI and independent scientific review pending.
+Status: engineering implementation complete; CI run #153 passed; independent scientific review and formal freeze pending.
 
 ## Implemented engineering gates
 
@@ -13,6 +13,7 @@ Status: engineering implementation complete; CI and independent scientific revie
 - [x] Unit and integration tests added for normalization, alphabets, duplicate JSON keys, artifact integrity, budgets and Rulebook operations.
 - [x] Synthetic fixtures explicitly labeled; no biological reference claim.
 - [x] CI coverage added for sequence service tests and streaming benchmark smoke.
+- [x] CI run #153 passed: core 624 passed/12 skipped; sequence profile 627 passed/9 skipped. Registry, 31 schemas, Ruff E9/F, compilation and benchmark smoke passed.
 
 ## Required before scientific acceptance and freeze
 

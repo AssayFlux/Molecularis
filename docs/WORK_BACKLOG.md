@@ -65,4 +65,4 @@ Each letter requires discovery/audit, Engine, Runtime, Rulebook, schemas/contrac
 
 ## Active task
 
-A's engineering implementation is complete; independent scientific approval and freeze remain pending. B's Python v1 engineering implementation is complete pending its CI run and independent scientific review. DEC-0009 records the owner's explicit authorization to begin B before A's scientific freeze. Do not begin C until B is independently reviewed and frozen; retain A's outstanding review gate.
+A's engineering implementation is complete; independent scientific approval and freeze remain pending. B's Python v1 engineering implementation is complete and CI-verified in run #153 (core 624 passed/12 skipped; sequence profile 627 passed/9 skipped). Independent scientific review and formal freeze remain pending. DEC-0009 records the owner's explicit authorization to begin B before A's scientific freeze. Do not begin C until B is independently reviewed and frozen; retain A's outstanding review gate.
