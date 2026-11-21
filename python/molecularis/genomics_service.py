@@ -37,7 +37,7 @@ class GenomeDocument:
     def __post_init__(self):
         if not isinstance(self.identifier, str) or not self.identifier.strip() or len(self.identifier) > 256 or any(ord(c) < 32 for c in self.identifier):
             raise ValueError("identifier must be bounded non-empty text")
-        if not isinstance(self.description, str) or len(self.description) > 2048 or any(ord(c) < 32 and c not in "\\t\\n\\r" for c in self.description):
+        if not isinstance(self.description, str) or len(self.description) > 2048 or any(ord(c) < 32 and c not in "\t\n\r" for c in self.description):
             raise ValueError("description must be bounded text")
         if self.alphabet != "DNA_IUPAC":
             raise ValueError("v1 genome artifacts require DNA_IUPAC alphabet")
