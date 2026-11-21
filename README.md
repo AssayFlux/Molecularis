@@ -57,17 +57,17 @@ src="https://readme-typing-svg.demolab.com?font=Cinzel+Decorative&weight=600&siz
 <!-- ═══════════════ CORE TECHNOLOGY ═══════════════ -->
 <p align="center">
   <img src="https://img.shields.io/badge/Python-3.10%2B-416B83?style=flat-square&logo=python&logoColor=white">
-  <img src="https://img.shields.io/badge/Kotlin-Android-7657A6?style=flat-square&logo=kotlin&logoColor=white">
+  <img src="https://img.shields.io/badge/Legacy_Kotlin-Android_migration-7657A6?style=flat-square&logo=kotlin&logoColor=white">
   <img src="https://img.shields.io/badge/C%2B%2B-17-557A95?style=flat-square&logo=cplusplus&logoColor=white">
   <img src="https://img.shields.io/badge/Rust-Native-B47752?style=flat-square&logo=rust&logoColor=white">
-  <img src="https://img.shields.io/badge/JavaScript-Web-C39B43?style=flat-square&logo=javascript&logoColor=white">
+  <img src="https://img.shields.io/badge/JavaScript-UI_candidate-C39B43?style=flat-square&logo=javascript&logoColor=white">
   <img src="https://img.shields.io/badge/Node.js-22-548B65?style=flat-square&logo=nodedotjs&logoColor=white">
   <img src="https://img.shields.io/badge/SQLite-Database-587D9C?style=flat-square&logo=sqlite&logoColor=white">
 </p>
 
-<!-- ═══════════════ ANDROID & BUILD ECOSYSTEM ═══════════════ -->
+<!-- ═══════════════ LEGACY ANDROID MIGRATION BASELINE ═══════════════ -->
 <p align="center">
-  <img src="https://img.shields.io/badge/Android-Native-578A69?style=flat-square&logo=android&logoColor=white">
+  <img src="https://img.shields.io/badge/Android-Legacy_migration-578A69?style=flat-square&logo=android&logoColor=white">
   <img src="https://img.shields.io/badge/Jetpack_Compose-UI-6E75A6?style=flat-square&logo=jetpackcompose&logoColor=white">
   <img src="https://img.shields.io/badge/Gradle-Build-477C75?style=flat-square&logo=gradle&logoColor=white">
   <img src="https://img.shields.io/badge/Android_NDK-C%2B%2B-658B6C?style=flat-square&logo=android&logoColor=white">
