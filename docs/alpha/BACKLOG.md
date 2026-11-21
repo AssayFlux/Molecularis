@@ -10,12 +10,14 @@ This is a prioritized backlog, not a claim that tasks are underway or complete. 
 - A5 Create Android-to-all-device migration ledger.
 - A6 Threat-model API, worker, local node, artifacts and notebook execution.
 
-## EPIC B — Cross-device client
-- B1 Choose/reuse web client framework after source audit.
-- B2 Implement responsive application shell and navigation.
-- B3 Define accessible design tokens and component library.
-- B4 Implement PWA manifest, service worker and offline shell.
-- B5 Build browser/device automation and WCAG 2.2 AA checks.
+## EPIC B — Desktop-first cross-platform application
+- B1 Inventory candidate UI frameworks and run a measured vertical slice on Linux, Windows, macOS, Android and iOS/iPadOS.
+- B2 Record native integration, accessibility, graphics/3D, offline storage, filesystem, packaging/signing, update, mobile lifecycle and license results.
+- B3 Implement desktop application shell and shared design system for Linux/Windows/macOS.
+- B4 Implement local projects, settings, offline workflow and local job supervision.
+- B5 Add reproducible packaging, signing, install/upgrade/uninstall, update and rollback.
+- B6 Add Android and iOS/iPadOS application adapters and lifecycle parity.
+- B7 Consider a web companion only after installed application milestones and owner approval.
 
 ## EPIC C — Control plane
 - C1 Identity, sessions, project membership and RBAC.
