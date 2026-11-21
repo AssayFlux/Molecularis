@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from kinetics.structure import Atom
+from molecularis.structure import Atom
 from kinetics import ligand_site_candidates
 
 

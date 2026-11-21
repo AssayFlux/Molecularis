@@ -3,14 +3,14 @@ package org.assayflux.designsystem
 
 import androidx.compose.ui.graphics.Color
 
-data class KineticsStatusColors(
+data class MolecularisStatusColors(
     val success: Color,
     val warning: Color,
     val error: Color,
     val information: Color
 )
 
-data class KineticsPalette(
+data class MolecularisPalette(
     val background: Color,
     val surface: Color,
     val surfaceAlt: Color,
@@ -22,25 +22,25 @@ data class KineticsPalette(
     val outline: Color
 )
 
-object KineticsTokens {
+object MolecularisTokens {
     val spacingDp = listOf(4, 8, 12, 16, 20, 24, 32, 40)
     val radiiDp = listOf(8, 10, 12, 16, 20)
     const val minTouchTargetDp = 48
     const val targetGapDp = 8
     const val maxReadableContentDp = 840
-    val StatusLight = KineticsStatusColors(
+    val StatusLight = MolecularisStatusColors(
         success = Color(0xFF4F7458),
         warning = Color(0xFF8A6428),
         error = Color(0xFFA64B4B),
         information = Color(0xFF526F8B)
     )
-    val StatusDark = KineticsStatusColors(
+    val StatusDark = MolecularisStatusColors(
         success = Color(0xFFA3C9AA),
         warning = Color(0xFFE1BE77),
         error = Color(0xFFE6A0A0),
         information = Color(0xFFA5C3DE)
     )
-    val KineticsLightClassic = KineticsPalette(
+    val MolecularisLightClassic = MolecularisPalette(
         background = Color(0xFFFAF9F6),
         surface = Color(0xFFFFFFFF),
         surfaceAlt = Color(0xFFF2F1ED),
@@ -51,7 +51,7 @@ object KineticsTokens {
         tertiary = Color(0xFF686868),
         outline = Color(0xFFE5E3DE)
     )
-    val PorcelainBlue = KineticsPalette(
+    val PorcelainBlue = MolecularisPalette(
         background = Color(0xFFF7FAFF),
         surface = Color(0xFFFFFFFF),
         surfaceAlt = Color(0xFFEAF1FA),
@@ -62,7 +62,7 @@ object KineticsTokens {
         tertiary = Color(0xFFA9C2DE),
         outline = Color(0xFFCBD7E5)
     )
-    val IvorySage = KineticsPalette(
+    val IvorySage = MolecularisPalette(
         background = Color(0xFFFAFBF7),
         surface = Color(0xFFFFFFFF),
         surfaceAlt = Color(0xFFEEF2E8),
@@ -73,7 +73,7 @@ object KineticsTokens {
         tertiary = Color(0xFFC0D0B8),
         outline = Color(0xFFD5DED1)
     )
-    val CloudLilac = KineticsPalette(
+    val CloudLilac = MolecularisPalette(
         background = Color(0xFFFBFAFF),
         surface = Color(0xFFFFFFFF),
         surfaceAlt = Color(0xFFF0EDFA),
@@ -84,7 +84,7 @@ object KineticsTokens {
         tertiary = Color(0xFFD1C8E8),
         outline = Color(0xFFDDD8EA)
     )
-    val SandstoneCopper = KineticsPalette(
+    val SandstoneCopper = MolecularisPalette(
         background = Color(0xFFFCF9F5),
         surface = Color(0xFFFFFFFF),
         surfaceAlt = Color(0xFFF4ECE3),
@@ -95,7 +95,7 @@ object KineticsTokens {
         tertiary = Color(0xFFE2C4A9),
         outline = Color(0xFFE4D8CC)
     )
-    val KineticsDarkClassic = KineticsPalette(
+    val MolecularisDarkClassic = MolecularisPalette(
         background = Color(0xFF121212),
         surface = Color(0xFF1B1B1B),
         surfaceAlt = Color(0xFF242424),
@@ -106,7 +106,7 @@ object KineticsTokens {
         tertiary = Color(0xFFA5A5A5),
         outline = Color(0xFF333333)
     )
-    val ObsidianCyan = KineticsPalette(
+    val ObsidianCyan = MolecularisPalette(
         background = Color(0xFF070B12),
         surface = Color(0xFF0E1521),
         surfaceAlt = Color(0xFF151F2E),
@@ -117,7 +117,7 @@ object KineticsTokens {
         tertiary = Color(0xFF8DE9D2),
         outline = Color(0xFF2A3B50)
     )
-    val MidnightViolet = KineticsPalette(
+    val MidnightViolet = MolecularisPalette(
         background = Color(0xFF0B0915),
         surface = Color(0xFF151124),
         surfaceAlt = Color(0xFF201A34),
@@ -128,7 +128,7 @@ object KineticsTokens {
         tertiary = Color(0xFFE0A6FF),
         outline = Color(0xFF3A3152)
     )
-    val GraphiteIce = KineticsPalette(
+    val GraphiteIce = MolecularisPalette(
         background = Color(0xFF0B0F12),
         surface = Color(0xFF141A1F),
         surfaceAlt = Color(0xFF202A31),
@@ -139,7 +139,7 @@ object KineticsTokens {
         tertiary = Color(0xFFC4EAF7),
         outline = Color(0xFF34434C)
     )
-    val DeepOcean = KineticsPalette(
+    val DeepOcean = MolecularisPalette(
         background = Color(0xFF06131A),
         surface = Color(0xFF0B202A),
         surfaceAlt = Color(0xFF12303D),
@@ -150,7 +150,7 @@ object KineticsTokens {
         tertiary = Color(0xFF8AE7D8),
         outline = Color(0xFF24505A)
     )
-    val CarbonAmber = KineticsPalette(
+    val CarbonAmber = MolecularisPalette(
         background = Color(0xFF100D0A),
         surface = Color(0xFF1B1712),
         surfaceAlt = Color(0xFF292219),
@@ -161,7 +161,7 @@ object KineticsTokens {
         tertiary = Color(0xFFF4D18A),
         outline = Color(0xFF4A3928)
     )
-    val Cyberpunk = KineticsPalette(
+    val Cyberpunk = MolecularisPalette(
         background = Color(0xFF080611),
         surface = Color(0xFF110D20),
         surfaceAlt = Color(0xFF1C1530),
@@ -172,7 +172,7 @@ object KineticsTokens {
         tertiary = Color(0xFFB7FF3C),
         outline = Color(0xFF44305E)
     )
-    val ToxicLime = KineticsPalette(
+    val ToxicLime = MolecularisPalette(
         background = Color(0xFF080D0A),
         surface = Color(0xFF111B14),
         surfaceAlt = Color(0xFF1B2B20),
@@ -183,7 +183,7 @@ object KineticsTokens {
         tertiary = Color(0xFFE4FF72),
         outline = Color(0xFF38513A)
     )
-    val Ultraviolet = KineticsPalette(
+    val Ultraviolet = MolecularisPalette(
         background = Color(0xFF0A0714),
         surface = Color(0xFF171027),
         surfaceAlt = Color(0xFF24183A),
@@ -194,7 +194,7 @@ object KineticsTokens {
         tertiary = Color(0xFFF472B6),
         outline = Color(0xFF4B3568)
     )
-    val Plasma = KineticsPalette(
+    val Plasma = MolecularisPalette(
         background = Color(0xFF100907),
         surface = Color(0xFF1D120D),
         surfaceAlt = Color(0xFF2B1B12),

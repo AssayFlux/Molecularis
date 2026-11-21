@@ -6,8 +6,8 @@ from pathlib import Path
 
 import pytest
 
-from kinetics.genome_annotation import run_pinned_local_gff3_annotator
-from kinetics.sequence import SequenceRecord
+from molecularis.genome_annotation import run_pinned_local_gff3_annotator
+from molecularis.sequence import SequenceRecord
 
 
 def _annotator(tmp_path: Path, *, end: int = 9) -> tuple[Path, str]:

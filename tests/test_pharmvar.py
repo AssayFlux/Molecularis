@@ -5,7 +5,7 @@ from typing import cast
 
 import pytest
 
-from kinetics.pharmvar import match_pharmvar_haplotype, parse_pharmvar_tsv
+from molecularis.pharmvar import match_pharmvar_haplotype, parse_pharmvar_tsv
 
 TSV = (
     "Haplotype Identifier\tGene Symbol\tdbSNP rsID\tReference Sequence\t"
@@ -120,7 +120,7 @@ def test_pharmvar_parser_rejects_non_text_input():
 
 @pytest.mark.parametrize(("start", "stop"), [(True, 1), (1, False)])
 def test_pharmvar_variant_rejects_boolean_coordinates(start, stop):
-    from kinetics.pharmvar import PharmVarVariant
+    from molecularis.pharmvar import PharmVarVariant
 
     with pytest.raises(ValueError, match="coordinates must be integers"):
         PharmVarVariant(

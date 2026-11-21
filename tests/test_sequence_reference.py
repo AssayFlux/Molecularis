@@ -4,8 +4,8 @@ import hashlib
 
 import pytest
 
-from kinetics.sequence import SequenceRecord
-from kinetics.sequence_reference import ReferencePack, exact_reference_search
+from molecularis.sequence import SequenceRecord
+from molecularis.sequence_reference import ReferencePack, exact_reference_search
 
 
 def pack() -> ReferencePack:
@@ -74,8 +74,8 @@ def test_protein_exact_match_uses_protein_alphabet() -> None:
 
 
 def test_exact_reference_search_bounds_query_and_validates_integer_limits() -> None:
-    from kinetics.sequence_reference import ReferencePack, exact_reference_search
-    from kinetics.sequence import SequenceRecord
+    from molecularis.sequence_reference import ReferencePack, exact_reference_search
+    from molecularis.sequence import SequenceRecord
 
     pack = ReferencePack(
         name="fixture", version="1", license="CC0-1.0",
@@ -102,7 +102,7 @@ def test_exact_reference_search_bounds_query_and_validates_integer_limits() -> N
 
 
 def test_fasta_reference_search_verifies_raw_bytes_and_emits_exact_hits() -> None:
-    from kinetics.sequence_reference import exact_reference_search_fasta
+    from molecularis.sequence_reference import exact_reference_search_fasta
 
     payload = b">ref-1 sample\nACGT\n>ref-2\nTTTT\n"
     reference_pack = ReferencePack(
@@ -118,7 +118,7 @@ def test_fasta_reference_search_verifies_raw_bytes_and_emits_exact_hits() -> Non
 
 
 def test_fasta_reference_search_rejects_hash_mismatch_and_byte_budget() -> None:
-    from kinetics.sequence_reference import exact_reference_search_fasta
+    from molecularis.sequence_reference import exact_reference_search_fasta
 
     payload = b">ref-1\nACGT\n"
     reference_pack = ReferencePack(
@@ -142,7 +142,7 @@ def test_fasta_reference_search_rejects_hash_mismatch_and_byte_budget() -> None:
 
 
 def test_bounded_local_alignment_reports_partial_match_coordinates_and_provenance() -> None:
-    from kinetics.sequence_reference import local_alignment_reference_search
+    from molecularis.sequence_reference import local_alignment_reference_search
 
     result = local_alignment_reference_search(
         "ACGT", [SequenceRecord("ref", "TTACGTAA")],
@@ -159,7 +159,7 @@ def test_bounded_local_alignment_reports_partial_match_coordinates_and_provenanc
 
 
 def test_bounded_local_alignment_abstains_and_enforces_cell_budgets() -> None:
-    from kinetics.sequence_reference import local_alignment_reference_search
+    from molecularis.sequence_reference import local_alignment_reference_search
 
     no_hit = local_alignment_reference_search(
         "AAAA", [SequenceRecord("ref", "TTTT")],

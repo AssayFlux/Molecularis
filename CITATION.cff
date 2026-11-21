@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-message: "If you use Kinetics, please cite the repository and any separately validated capability records."
-title: "Kinetics"
+message: "If you use Molecularis, please cite the repository and any separately validated capability records."
+title: "Molecularis"
 version: 0.0.0
 abstract: "Offline-first scientific workbench foundation; no validated scientific capabilities are included in this scaffold."

@@ -4,7 +4,7 @@ import math
 
 import pytest
 
-from kinetics.omics import (
+from molecularis.omics import (
     clr_transform, cpm, cross_omics_correlation, logistic_growth,
     log2_fold_change, pearson, shannon_diversity, simpson_diversity,
 )
@@ -50,7 +50,7 @@ def test_omics_rejects_zero_library_and_constant_correlation() -> None:
 
 
 def test_negative_binomial_glm_accepts_raw_counts_and_covariates() -> None:
-    from kinetics.omics import negative_binomial_differential_expression
+    from molecularis.omics import negative_binomial_differential_expression
 
     result = negative_binomial_differential_expression(
         [
@@ -68,7 +68,7 @@ def test_negative_binomial_glm_accepts_raw_counts_and_covariates() -> None:
 
 
 def test_negative_binomial_glm_rejects_fractional_and_confounded_designs() -> None:
-    from kinetics.omics import negative_binomial_differential_expression
+    from molecularis.omics import negative_binomial_differential_expression
 
     with pytest.raises(ValueError, match="integer"):
         negative_binomial_differential_expression([[1, 2, 3, 4.5]], [0, 0, 1, 1])
@@ -82,7 +82,7 @@ def test_negative_binomial_glm_rejects_fractional_and_confounded_designs() -> No
 
 
 def test_negative_binomial_glm_marks_all_zero_features_non_estimable() -> None:
-    from kinetics.omics import negative_binomial_differential_expression
+    from molecularis.omics import negative_binomial_differential_expression
 
     result = negative_binomial_differential_expression(
         [[0, 0, 0, 0, 0, 0], [10, 12, 11, 20, 22, 21]],

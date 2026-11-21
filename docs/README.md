@@ -1,6 +1,6 @@
 # Documentation guide
 
-This is the navigation index for the Kinetics repository. Use the living decision and roadmap files as the authority; session notes and archived instructions are historical evidence, not competing plans.
+This is the navigation index for the Molecularis repository. Use the living decision and roadmap files as the authority; session notes and archived instructions are historical evidence, not competing plans.
 
 ## 1. Project direction and decisions
 
@@ -9,7 +9,7 @@ This is the navigation index for the Kinetics repository. Use the living decisio
 | Product purpose and scope | [North Star](../NORTH_STAR.md) |
 | Master plan and track order | [Roadmap](../ROADMAP.md) |
 | Approved decisions and supersessions | [Decision log](../DECISIONS.md) |
-| Original owner-supplied master (read-only history) | [Archived master](origin/KINETICS_MASTER.md) |
+| Original owner-supplied master (read-only history) | [Archived master](origin/MOLECULARIS_MASTER.md) |
 | Session-by-session engineering record | [Session log](../SESSION_LOG.md) |
 
 ## 2. Architecture and engineering
@@ -32,8 +32,8 @@ This is the navigation index for the Kinetics repository. Use the living decisio
 | I — In-silico laboratory | [Software implementation/integration audit (closed)](track-i-audit-2026-11-11.md), [Research boundaries](track-i/research-boundaries.md), [engine and data-source evaluation](track-i/engine-evaluation.md) |
 | P — Precision medicine preparation | [P0 evidence packet](track-p/p0-evidence-packet.md), [P0 control drafts](track-p/p0-controls-draft.md), [implementation plan](track-p/implementation-plan.md), [Public-data-only boundary](track-p/public-data-only-preparation.md), [public dataset catalog](track-p/public-dataset-catalog.md) |
 | G — Governance and assurance | [Track G implementation plan](track-g/implementation-plan.md), [2026-11-12 implementation audit](track-g/audit-report-2026-11-12.md), [control/evidence register](track-g/control-evidence-register.md), [roles and cadence](track-g/roles-and-review-cadence.md), [requirements traceability](track-g/requirements-traceability.csv), [dependency decisions](track-g/dependency-decision-register.csv), [security verification matrix](track-g/security-verification-matrix.md), [data-flow inventory](track-g/data-flow-inventory.md), [capability claims matrix](track-g/capability-claims-matrix.csv), [publication integrity](track-g/publication-integrity.md), [operational controls](track-g/operational-controls.md), [CAPA register](track-g/capa-register.csv) |
-| U — User interface | [Track U implementation plan](track-u/implementation-plan.md), [UI/UX specification](android-ui-ux-spec.md), [owner V1 UI specification](ui/ui-spec.md), [design system](ui/kinetics-visual-design-system.md), [device matrix](ui/device-matrix.md), [screen map](ui/screen-map.md), [quality report](ui/quality-report.md) |
-| UI / design system | [UI/UX specification](android-ui-ux-spec.md), [UI document set](ui/ui-spec.md), [root UI spec](../KINETICS_UI_SPEC.md) |
+| U — User interface | [Track U implementation plan](track-u/implementation-plan.md), [UI/UX specification](android-ui-ux-spec.md), [owner V1 UI specification](ui/ui-spec.md), [design system](ui/molecularis-visual-design-system.md), [device matrix](ui/device-matrix.md), [screen map](ui/screen-map.md), [quality report](ui/quality-report.md) |
+| UI / design system | [UI/UX specification](android-ui-ux-spec.md), [UI document set](ui/ui-spec.md), [root UI spec](../MOLECULARIS_UI_SPEC.md) |
 
 ## 4. Validation, security and release
 
@@ -58,7 +58,7 @@ This is the navigation index for the Kinetics repository. Use the living decisio
 
 - Current sequential order is **R → S → I → P → G → U** under D-023; D-019 is retained as the historical five-track decision it was when approved.
 - [Historical parallel-track protocol](parallel-track-execution.md) is **superseded by D-019** and must not be followed.
-- [Original master](origin/KINETICS_MASTER.md) is preserved as read-only historical source.
+- [Original master](origin/MOLECULARIS_MASTER.md) is preserved as read-only historical source.
 - [Change history](../CHANGELOG.md) records user-visible project changes.
 - [Paper skeleton](../paper/manuscript-skeleton.md) is a planning artifact, not a claim of publication readiness.
 

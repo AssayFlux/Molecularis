@@ -4,12 +4,12 @@ import hashlib
 
 import pytest
 
-from kinetics.structure import Atom
-from kinetics.structure_prediction import (
+from molecularis.structure import Atom
+from molecularis.structure_prediction import (
     compare_predicted_to_experimental_ca,
     validate_prediction_envelope,
 )
-from kinetics.structure_view import prepare_viewer_payload
+from molecularis.structure_view import prepare_viewer_payload
 
 
 def _atom(serial: int, residue: str, number: int, x: float) -> Atom:

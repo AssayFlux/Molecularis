@@ -9,16 +9,16 @@ CHAQUOPY_VERSION="17.2.0"
 CHAQUOPY_COMMIT="1f63c93d8beaf7062fbe51888ab9235475df3bb8"
 BIOPYTHON_VERSION="1.88"
 BIOPYTHON_COMMIT="d7e4b8b19399668b09442a5b35765d9186b5f665"
-BIOPYTHON_DIR="${BIOPYTHON_DIR:-$HOME/.cache/kinetics/biopython-$BIOPYTHON_VERSION}"
+BIOPYTHON_DIR="${BIOPYTHON_DIR:-$HOME/.cache/molecularis/biopython-$BIOPYTHON_VERSION}"
 GRADLE_VERSION="8.13"
 GRADLE_SHA256="20f1b1176237254a6fc204d8434196fa11a4cfb387567519c61556e8710aed78"
-GRADLE_CACHE_DIR="${GRADLE_CACHE_DIR:-$HOME/.cache/kinetics/gradle-$GRADLE_VERSION}"
+GRADLE_CACHE_DIR="${GRADLE_CACHE_DIR:-$HOME/.cache/molecularis/gradle-$GRADLE_VERSION}"
 PYTHON_HOST_VERSION="3.11.18"
 PYTHON_TARGET="3.11.17-0"
 NUMPY_WHEEL="numpy-1.26.2-0-cp311-cp311-android_21_arm64_v8a.whl"
 NDK_VERSION="28.2.13676358"
 BUILD_TOOLS_VERSION="36.0.0"
-CHAQUOPY_DIR="${CHAQUOPY_DIR:-$HOME/.cache/kinetics/chaquopy-$CHAQUOPY_VERSION}"
+CHAQUOPY_DIR="${CHAQUOPY_DIR:-$HOME/.cache/molecularis/chaquopy-$CHAQUOPY_VERSION}"
 
 fail() { echo "ERROR: $*" >&2; exit 1; }
 need() { command -v "$1" >/dev/null 2>&1 || fail "Missing command: $1"; }
@@ -123,13 +123,13 @@ if old in source:
 wrapper = builder.with_name("compiler-wrapper.py")
 wrapper_source = wrapper.read_text()
 safe_old = 'valid_dirs = [abspath(f"{dirname(sys.argv[0])}/../..")]'
-safe_new = 'valid_dirs = [abspath(f"{dirname(sys.argv[0])}/../.."), abspath(os.environ["KINETICS_LOCAL_BUILD_ROOT"])]'
+safe_new = 'valid_dirs = [abspath(f"{dirname(sys.argv[0])}/../.."), abspath(os.environ["MOLECULARIS_LOCAL_BUILD_ROOT"])]'
 if safe_old in wrapper_source:
     wrapper.write_text(wrapper_source.replace(safe_old, safe_new, 1))
 elif safe_new not in wrapper_source:
     raise SystemExit("Chaquopy compiler-wrapper patch anchor changed; inspect upstream before proceeding")
 PY
-export KINETICS_LOCAL_BUILD_ROOT="$ROOT_DIR"
+export MOLECULARIS_LOCAL_BUILD_ROOT="$ROOT_DIR"
 cd "$CHAQUOPY_DIR"
 bash target/download-target.sh "maven/com/chaquo/python/target/$PYTHON_TARGET"
 python -m pip install -r server/pypi/requirements.txt

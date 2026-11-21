@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from kinetics.md_openmm import _derive_openmm_seed, run_openmm_dynamics
+from molecularis.md_openmm import _derive_openmm_seed, run_openmm_dynamics
 
 
 def _arguments() -> dict[str, object]:

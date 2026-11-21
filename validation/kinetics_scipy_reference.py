@@ -23,7 +23,7 @@ except ImportError as error:
         "Install a reviewed SciPy/NumPy host validation environment before running this check"
     ) from error
 
-from kinetics.kinetics import fit_michaelis_menten
+from molecularis.kinetics import fit_michaelis_menten
 
 
 def model(substrate, vmax, km):

@@ -1,6 +1,6 @@
 # Contributing
 
-Kinetics is governed by NORTH_STAR.md, ROADMAP.md and DECISIONS.md. Read those files and the current phase plan before proposing work.
+Molecularis is governed by NORTH_STAR.md, ROADMAP.md and DECISIONS.md. Read those files and the current phase plan before proposing work.
 
 ## Rules
 - Follow [the Engineering & Integration Standard](docs/ENGINEERING_INTEGRATION_STANDARD.md) before every substantial change: identify components, call direction, transport, versioned contract, boundary risks and matching implementation/tests.

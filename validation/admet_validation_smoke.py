@@ -6,7 +6,7 @@ from pathlib import Path
 
 from jsonschema import Draft202012Validator
 
-from kinetics.admet_validation import (
+from molecularis.admet_validation import (
     binary_admet_metrics,
     scaffold_group_split,
     tanimoto_applicability_domain,

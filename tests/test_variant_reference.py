@@ -5,7 +5,7 @@ from hashlib import sha256
 
 import pytest
 
-from kinetics.variant_reference import ReferenceSequence, normalize_against_reference
+from molecularis.variant_reference import ReferenceSequence, normalize_against_reference
 
 
 def _reference() -> ReferenceSequence:

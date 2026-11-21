@@ -46,7 +46,7 @@ def validate_android_config(root: Path = ROOT) -> list[str]:
         errors.append(f"Android Gradle config could not be read: {exc}")
         gradle = ""
     required_gradle = {
-        'srcDir("../../python")': "Chaquopy must package the repository's kinetics Python modules",
+        'srcDir("../../python")': "Chaquopy must package the repository's Molecularis Python modules",
         'minSdk = 29': "Android minimum SDK must remain API 29",
         'targetSdk = 36': "Android target SDK must remain explicitly pinned to API 36",
         'ndkVersion = "28.2.13676358"': "Android NDK version must match the local build script",
@@ -102,8 +102,8 @@ def validate_android_config(root: Path = ROOT) -> list[str]:
         errors.append("Android cleartext traffic must remain disabled")
     if "android.permission.INTERNET" not in manifest_text:
         errors.append("Android manifest must declare INTERNET for explicit public-reference retrieval")
-    client_path = root / "android/app/src/main/java/org/assayflux/kinetics/PublicDatabaseClient.kt"
-    card_path = root / "android/app/src/main/java/org/assayflux/kinetics/PublicDatabaseCard.kt"
+    client_path = root / "android/app/src/main/java/org/assayflux/molecularis/PublicDatabaseClient.kt"
+    card_path = root / "android/app/src/main/java/org/assayflux/molecularis/PublicDatabaseCard.kt"
     try:
         client_source = client_path.read_text(encoding="utf-8")
         card_source = card_path.read_text(encoding="utf-8")
@@ -130,17 +130,17 @@ def validate_android_config(root: Path = ROOT) -> list[str]:
     if "Imported patient data is never uploaded" not in card_source:
         errors.append("Public database UI must disclose that imported patient data is never uploaded")
 
-    package_init = root / "python/kinetics/__init__.py"
-    runtime_probe = root / "android/app/src/main/python/kinetics_probe.py"
+    package_init = root / "python/molecularis/__init__.py"
+    runtime_probe = root / "android/app/src/main/python/molecularis_probe.py"
     if not package_init.is_file():
-        errors.append("Repository kinetics Python package is missing")
+        errors.append("Repository Molecularis Python package is missing")
     try:
         probe_source = runtime_probe.read_text(encoding="utf-8")
     except OSError as exc:
         errors.append(f"Embedded Python runtime probe could not be read: {exc}")
         probe_source = ""
-    if "import kinetics" not in probe_source:
-        errors.append("Embedded Python runtime probe must import the packaged kinetics module")
+    if "import molecularis" not in probe_source:
+        errors.append("Embedded Python runtime probe must import the packaged Molecularis module")
 
     try:
         cmake = cmake_path.read_text(encoding="utf-8")

@@ -14,5 +14,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "KineticsFeasibility"
+rootProject.name = "Molecularis"
 include(":app", ":designsystem")

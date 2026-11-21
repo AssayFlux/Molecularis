@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from kinetics.workflows import analyze_fasta_text
+from molecularis.workflows import analyze_fasta_text
 
 
 def test_fasta_workflow_reports_multiple_records_and_ambiguous_symbols() -> None:
@@ -56,7 +56,7 @@ def test_fasta_workflow_rejects_non_text_input() -> None:
 
 
 def test_fastq_workflow_reports_quality_with_explicit_phred_offset() -> None:
-    from kinetics.workflows import analyze_fastq_text
+    from molecularis.workflows import analyze_fastq_text
     text = "@r1 sample\nACGT\n+\nIIII\n@r2\nGG\n+\n!!\n"
     result = analyze_fastq_text(text, phred_offset=33)
     assert result["record_count"] == 2
@@ -70,13 +70,13 @@ def test_fastq_workflow_reports_quality_with_explicit_phred_offset() -> None:
 
 
 def test_fastq_workflow_requires_explicit_phred_offset() -> None:
-    from kinetics.workflows import analyze_fastq_text
+    from molecularis.workflows import analyze_fastq_text
     with pytest.raises(ValueError, match="explicit Phred offset"):
         analyze_fastq_text("@r\nA\n+\n!\n", phred_offset=0)
 
 
 def test_fastq_workflow_rejects_invalid_quality_length_and_limits() -> None:
-    from kinetics.workflows import analyze_fastq_text
+    from molecularis.workflows import analyze_fastq_text
     with pytest.raises(ValueError, match="length mismatch"):
         analyze_fastq_text("@r\nAC\n+\n!\n", phred_offset=33)
     with pytest.raises(ValueError, match="record limit"):

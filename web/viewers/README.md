@@ -10,7 +10,7 @@ Load `structure-viewer.html` from an app-owned asset origin, then pass a
 validated payload to:
 
 ```js
-window.KineticsStructureViewer.load(payload);
+window.MolecularisStructureViewer.load(payload);
 ```
 
 The viewer independently validates the schema subset, finite coordinates,
@@ -27,7 +27,7 @@ access, remote resource, telemetry, or network fallback. The embedding
 application remains responsible for validating the canonical Python payload,
 using a hardened local asset origin, and recording preparation provenance.
 
-The viewer is an original Kinetics implementation with no third-party runtime
+The viewer is an original Molecularis implementation with no third-party runtime
 dependency. Validate on supported WebView versions and physical devices before
 claiming release readiness. Canvas performance at the maximum atom limit is
 not yet benchmarked.

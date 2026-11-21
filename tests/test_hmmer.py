@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from kinetics.hmmer import parse_hmmscan_domtblout
+from molecularis.hmmer import parse_hmmscan_domtblout
 
 
 PACK = {

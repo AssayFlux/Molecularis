@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 from jsonschema import Draft202012Validator
 
-from kinetics.admet_validation import binary_admet_metrics
+from molecularis.admet_validation import binary_admet_metrics
 
 
 def test_binary_admet_metrics_are_correct_for_perfect_and_tied_scores() -> None:
@@ -45,7 +45,7 @@ def test_admet_metrics_result_matches_strict_schema() -> None:
 
 def test_scaffold_split_is_deterministic_and_has_no_scaffold_overlap() -> None:
     pytest.importorskip("rdkit")
-    from kinetics.admet_validation import scaffold_group_split
+    from molecularis.admet_validation import scaffold_group_split
 
     smiles = [
         "c1ccccc1", "Cc1ccccc1", "CCc1ccccc1",
@@ -74,7 +74,7 @@ def test_scaffold_split_is_deterministic_and_has_no_scaffold_overlap() -> None:
 
 def test_tanimoto_applicability_domain_identifies_exact_and_distant_queries() -> None:
     pytest.importorskip("rdkit")
-    from kinetics.admet_validation import tanimoto_applicability_domain
+    from molecularis.admet_validation import tanimoto_applicability_domain
 
     result = tanimoto_applicability_domain(
         ["CCO", "c1ccccc1"],

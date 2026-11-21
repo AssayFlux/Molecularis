@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from kinetics.chemistry import (
+from molecularis.chemistry import (
     graph_descriptors, parse_sdf_record, path_fingerprint, substructure_match, tanimoto,
 )
 
@@ -54,7 +54,7 @@ def test_tanimoto_handles_empty_and_disjoint_fingerprints() -> None:
 
 
 def test_sdf_iterator_reads_multiple_records_and_skips_empty_blocks() -> None:
-    from kinetics.chemistry import iter_sdf_records
+    from molecularis.chemistry import iter_sdf_records
 
     counts = f"{1:3d}{0:3d}  0  0  0  0            999 V2000"
     atom = f"{0.0:10.4f}{0.0:10.4f}{0.0:10.4f} {'C':>3s}"
@@ -91,7 +91,7 @@ def test_sdf_v3000_parses_basic_atom_and_bond_graph() -> None:
 
 def test_rdkit_backend_uses_sanitized_molecules_and_morgan_fingerprints() -> None:
     pytest.importorskip("rdkit")
-    from kinetics.chemistry_rdkit import analyze_smiles, morgan_tanimoto
+    from molecularis.chemistry_rdkit import analyze_smiles, morgan_tanimoto
 
     ethanol = analyze_smiles("CCO")
     from hashlib import sha256
@@ -112,7 +112,7 @@ def test_rdkit_backend_uses_sanitized_molecules_and_morgan_fingerprints() -> Non
 
 def test_rdkit_backend_rejects_invalid_molecules() -> None:
     pytest.importorskip("rdkit")
-    from kinetics.chemistry_rdkit import analyze_smiles
+    from molecularis.chemistry_rdkit import analyze_smiles
 
     with pytest.raises(ValueError):
         analyze_smiles("not a valid smiles string")
@@ -138,7 +138,7 @@ def test_rdkit_reference_sanity_fixture_script() -> None:
 
 
 def test_sdf_stream_parses_incrementally_and_enforces_record_budgets() -> None:
-    from kinetics.chemistry import iter_sdf_stream
+    from molecularis.chemistry import iter_sdf_stream
 
     counts = f"{1:3d}{0:3d}  0  0  0  0            999 V2000"
     atom_line = f"{0.0:10.4f}{0.0:10.4f}{0.0:10.4f} {'C':>3s}"
@@ -166,7 +166,7 @@ def test_sdf_stream_parses_incrementally_and_enforces_record_budgets() -> None:
     ],
 )
 def test_sdf_stream_rejects_non_integer_budgets(kwargs: dict[str, object]) -> None:
-    from kinetics.chemistry import iter_sdf_stream
+    from molecularis.chemistry import iter_sdf_stream
 
     with pytest.raises(ValueError, match="positive integer"):
         list(iter_sdf_stream(iter([]), **kwargs))
@@ -174,7 +174,7 @@ def test_sdf_stream_rejects_non_integer_budgets(kwargs: dict[str, object]) -> No
 
 def test_rdkit_descriptor_schema_reports_chemistry_assumptions_and_extended_descriptors() -> None:
     pytest.importorskip("rdkit")
-    from kinetics.chemistry_rdkit import analyze_smiles
+    from molecularis.chemistry_rdkit import analyze_smiles
 
     ethanol = analyze_smiles("CCO")
     assert ethanol["descriptor_schema_version"] == 2
@@ -199,7 +199,7 @@ def test_rdkit_descriptor_schema_reports_chemistry_assumptions_and_extended_desc
 
 def test_rdkit_inputs_are_bounded_by_utf8_bytes_and_reject_nul_or_invalid_unicode() -> None:
     pytest.importorskip("rdkit")
-    from kinetics.chemistry_rdkit import analyze_smiles
+    from molecularis.chemistry_rdkit import analyze_smiles
 
     with pytest.raises(ValueError, match="UTF-8 limit"):
         analyze_smiles("é" * 600_000)
@@ -211,7 +211,7 @@ def test_rdkit_inputs_are_bounded_by_utf8_bytes_and_reject_nul_or_invalid_unicod
 
 def test_rdkit_morgan_similarity_rejects_invalid_parameters_and_oversize_input() -> None:
     pytest.importorskip("rdkit")
-    from kinetics.chemistry_rdkit import morgan_tanimoto
+    from molecularis.chemistry_rdkit import morgan_tanimoto
 
     with pytest.raises(ValueError, match="integer"):
         morgan_tanimoto("CCO", "CCO", radius=True)
@@ -224,7 +224,7 @@ def test_rdkit_morgan_similarity_rejects_invalid_parameters_and_oversize_input()
 def test_bounded_sdf_graph_analysis_reports_provenance_and_explicit_atom_limitations() -> None:
     from hashlib import sha256
 
-    from kinetics.chemistry import analyze_sdf_graph
+    from molecularis.chemistry import analyze_sdf_graph
 
     counts = f"{2:3d}{1:3d}  0  0  0  0            999 V2000"
     atom_a = f"{0.0:10.4f}{0.0:10.4f}{0.0:10.4f} {'C':>3s}"
@@ -242,7 +242,7 @@ def test_bounded_sdf_graph_analysis_reports_provenance_and_explicit_atom_limitat
 
 
 def test_bounded_sdf_graph_analysis_rejects_nul_oversize_invalid_unicode_and_multiple_records() -> None:
-    from kinetics.chemistry import analyze_sdf_graph
+    from molecularis.chemistry import analyze_sdf_graph
 
     counts = f"{1:3d}{0:3d}  0  0  0  0            999 V2000"
     atom = f"{0.0:10.4f}{0.0:10.4f}{0.0:10.4f} {'C':>3s}"

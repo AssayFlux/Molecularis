@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from kinetics.hmmer_runner import (
+from molecularis.hmmer_runner import (
     hash_pressed_profile_pack,
     press_local_hmm_profile,
     run_local_hmmscan,

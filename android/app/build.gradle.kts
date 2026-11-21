@@ -6,12 +6,12 @@ plugins {
 }
 
 android {
-    namespace = "org.assayflux.kinetics"
+    namespace = "org.assayflux.molecularis"
     compileSdk = 36
     ndkVersion = "28.2.13676358"
 
     defaultConfig {
-        applicationId = "org.assayflux.kinetics"
+        applicationId = "org.assayflux.kinetics" // Stable install identity retained for in-place upgrades.
         minSdk = 29
         targetSdk = 36
         versionCode = 1

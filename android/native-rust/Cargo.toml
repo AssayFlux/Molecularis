@@ -1,9 +1,9 @@
 [package]
-name = "kinetics-rust"
+name = "molecularis-rust"
 version = "0.1.0"
 edition = "2021"
 publish = false
 
 [lib]
-name = "kinetics_rust"
+name = "molecularis_rust"
 crate-type = ["staticlib"]

@@ -1,12 +1,12 @@
-# Kinetics private research compute worker
+# Molecularis private research compute worker
 
 This is a dependency-free Node 22 HTTP/TLS front end for the pinned Python AutoDock Vina 1.2.7 runner. It is not a public API and it does not expose molecular-dynamics execution.
 
 ## Default safety posture
 
 - Binds to `127.0.0.1:8765`.
-- Docking is **disabled** unless `KINETICS_NODE_ALLOW_DOCKING=true`.
-- Enabled mode requires a random `KINETICS_NODE_AUTH_TOKEN` of at least 32 characters.
+- Docking is **disabled** unless `MOLECULARIS_NODE_ALLOW_DOCKING=true`.
+- Enabled mode requires a random `MOLECULARIS_NODE_AUTH_TOKEN` of at least 32 characters.
 - Non-loopback binding is refused unless both TLS certificate and private-key paths are configured.
 - One job at a time; request body limited to 20 MiB; job timeout 15 minutes; result stdout capped at 32 MiB.
 - No CORS, cookies, job persistence, arbitrary paths, shell command, or caller-selected executable.
@@ -22,14 +22,14 @@ From the repository root, install the project and pinned docking extra in a dedi
 python -m pip install -e '.[dev,docking]'
 cd remote-node
 npm test
-KINETICS_NODE_AUTH_TOKEN="$(python -c 'import secrets; print(secrets.token_urlsafe(48))')" \
-KINETICS_NODE_ALLOW_DOCKING=false \
+MOLECULARIS_NODE_AUTH_TOKEN="$(python -c 'import secrets; print(secrets.token_urlsafe(48))')" \
+MOLECULARIS_NODE_ALLOW_DOCKING=false \
 node server.mjs
 ```
 
-The default service remains disabled. To enable research docking, explicitly set `KINETICS_NODE_ALLOW_DOCKING=true` and provide the token through the host's secret manager, not a committed file or shell history. Keep the worker loopback-only unless there is a managed TLS certificate, network firewall, access control, monitoring and security review.
+The default service remains disabled. To enable research docking, explicitly set `MOLECULARIS_NODE_ALLOW_DOCKING=true` and provide the token through the host's secret manager, not a committed file or shell history. Keep the worker loopback-only unless there is a managed TLS certificate, network firewall, access control, monitoring and security review.
 
-For remote binding, set `KINETICS_NODE_HOST`, `KINETICS_NODE_TLS_CERT` and `KINETICS_NODE_TLS_KEY`. TLS certificate/key files must be readable by the service account. Never expose a plain-HTTP non-loopback listener.
+For remote binding, set `MOLECULARIS_NODE_HOST`, `MOLECULARIS_NODE_TLS_CERT` and `MOLECULARIS_NODE_TLS_KEY`. TLS certificate/key files must be readable by the service account. Never expose a plain-HTTP non-loopback listener.
 
 ## Endpoints
 

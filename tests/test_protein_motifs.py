@@ -5,7 +5,7 @@ import json
 
 import pytest
 
-from kinetics.protein_motifs import MotifPack, scan_protein_motif_pack
+from molecularis.protein_motifs import MotifPack, scan_protein_motif_pack
 
 
 def make_pack(document: object | None = None) -> tuple[bytes, MotifPack]:

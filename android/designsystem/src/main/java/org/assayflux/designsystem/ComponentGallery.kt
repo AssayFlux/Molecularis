@@ -22,10 +22,10 @@ import androidx.compose.ui.unit.dp
 
 /** Development-only live gallery for the owner V1 semantic system and reusable controls. */
 @Composable
-fun KineticsComponentGallery() {
+fun MolecularisComponentGallery() {
     val palettes = listOf(
-        "Light" to (KineticsTokens.KineticsLightClassic to false),
-        "Dark" to (KineticsTokens.KineticsDarkClassic to true),
+        "Light" to (MolecularisTokens.MolecularisLightClassic to false),
+        "Dark" to (MolecularisTokens.MolecularisDarkClassic to true),
     )
     LazyColumn(
         modifier = Modifier.fillMaxWidth(),
@@ -64,7 +64,7 @@ fun KineticsComponentGallery() {
                     outline = palette.outline,
                 )
             }
-            MaterialTheme(colorScheme = scheme, typography = KineticsTypography) {
+            MaterialTheme(colorScheme = scheme, typography = MolecularisTypography) {
                 var field by remember(name) { mutableStateOf("") }
                 var pressed by remember(name) { mutableStateOf(false) }
                 var chipSelected by remember(name) { mutableStateOf(false) }
@@ -88,46 +88,46 @@ fun KineticsComponentGallery() {
                             Text("Secondary", Modifier.padding(12.dp), color = palette.text)
                         }
                     }
-                    KineticsPrimaryButton(
+                    MolecularisPrimaryButton(
                         label = if (pressed) "Action acknowledged" else "Primary action",
                         onClick = { pressed = !pressed },
                         modifier = Modifier.fillMaxWidth(),
                     )
-                    KineticsSecondaryButton(
+                    MolecularisSecondaryButton(
                         label = "Secondary action",
                         onClick = { field = "Secondary action selected" },
                         modifier = Modifier.fillMaxWidth(),
                     )
-                    KineticsField(
+                    MolecularisField(
                         value = field,
                         onValueChange = { field = it },
                         label = "Example input",
                         supportingText = "52 dp target · 10 dp radius",
                     )
-                    KineticsStatus(label = "Research Mode · local")
-                    KineticsDivider()
-                    KineticsListRow(
+                    MolecularisStatus(label = "Research Mode · local")
+                    MolecularisDivider()
+                    MolecularisListRow(
                         title = "Reusable list row",
                         supportingText = "56 dp minimum · optional leading and trailing slots",
-                        trailing = { KineticsStatus("Local") },
+                        trailing = { MolecularisStatus("Local") },
                         onClick = { pressed = !pressed },
                     )
-                    KineticsChip("Selected state", chipSelected, { chipSelected = !chipSelected })
-                    KineticsSecondaryButton("Preview confirmation dialog", { showDialog = true }, Modifier.fillMaxWidth())
-                    KineticsSecondaryButton("Preview bottom sheet", { showSheet = true }, Modifier.fillMaxWidth())
+                    MolecularisChip("Selected state", chipSelected, { chipSelected = !chipSelected })
+                    MolecularisSecondaryButton("Preview confirmation dialog", { showDialog = true }, Modifier.fillMaxWidth())
+                    MolecularisSecondaryButton("Preview bottom sheet", { showSheet = true }, Modifier.fillMaxWidth())
                 }
-                if (showDialog) KineticsConfirmationDialog(
+                if (showDialog) MolecularisConfirmationDialog(
                     title = "Component preview",
                     message = "This is a reusable confirmation pattern. No data is changed by this gallery.",
                     confirmLabel = "Got it", dismissLabel = "Close",
                     onConfirm = { showDialog = false }, onDismiss = { showDialog = false },
                 )
-                if (showSheet) KineticsBottomSheet(onDismissRequest = { showSheet = false }) {
+                if (showSheet) MolecularisBottomSheet(onDismissRequest = { showSheet = false }) {
                     Text("Contextual actions", style = MaterialTheme.typography.titleLarge)
                     Text("A restrained 20 dp top-corner sheet with 20 dp content padding.",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant)
-                    KineticsPrimaryButton("Close sheet", { showSheet = false }, Modifier.fillMaxWidth())
+                    MolecularisPrimaryButton("Close sheet", { showSheet = false }, Modifier.fillMaxWidth())
                 }
             }
         }

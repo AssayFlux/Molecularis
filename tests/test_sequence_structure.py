@@ -2,10 +2,10 @@ from __future__ import annotations
 
 import pytest
 
-from kinetics.sequence_structure import (
+from molecularis.sequence_structure import (
     chain_interface_contacts, map_exact_chain_sequence, map_variant_to_structure,
 )
-from kinetics.structure import Atom
+from molecularis.structure import Atom
 
 
 def atom(serial: int, residue: str, number: int, chain: str = "A") -> Atom:

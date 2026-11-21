@@ -5,7 +5,7 @@ import struct
 
 import pytest
 
-from kinetics.genomics import fastq_quality_summary, parse_sam, parse_vcf
+from molecularis.genomics import fastq_quality_summary, parse_sam, parse_vcf
 
 
 def test_sam_parses_valid_record_and_optional_tag() -> None:
@@ -63,7 +63,7 @@ def test_fastq_quality_summary_requires_explicit_supported_offset() -> None:
 
 
 def test_vcf_small_variant_normalization_checks_reference_and_left_aligns() -> None:
-    from kinetics.genomics import normalize_small_variant
+    from molecularis.genomics import normalize_small_variant
 
     # An A insertion in an A repeat is represented at the left-most valid anchor.
     result = normalize_small_variant("chr1", 4, "A", "AA", "CAAAA")
@@ -72,7 +72,7 @@ def test_vcf_small_variant_normalization_checks_reference_and_left_aligns() -> N
 
 
 def test_variant_normalization_minimizes_substitution_and_rejects_bad_reference() -> None:
-    from kinetics.genomics import normalize_small_variant
+    from molecularis.genomics import normalize_small_variant
 
     result = normalize_small_variant("chr2", 10, "AC", "AT", "N" * 9 + "AC")
     assert (result["pos"], result["ref"], result["alt"]) == (11, "C", "T")
@@ -84,7 +84,7 @@ def test_variant_normalization_minimizes_substitution_and_rejects_bad_reference(
 def test_variant_normalization_rejects_non_literal_or_ambiguous_alleles(
     ref: str, alt: str,
 ) -> None:
-    from kinetics.genomics import normalize_small_variant
+    from molecularis.genomics import normalize_small_variant
 
     with pytest.raises(ValueError):
         normalize_small_variant("chr1", 1, ref, alt, "ACGT")
@@ -103,7 +103,7 @@ def test_bam_binary_record_core_fields_decode_from_gzip_stream() -> None:
     import io
     import struct
 
-    from kinetics.genomics import iter_bam_records
+    from molecularis.genomics import iter_bam_records
 
     header = b"BAM\x01" + struct.pack("<i", 0) + struct.pack("<i", 1)
     header += struct.pack("<i", 5) + b"chr1\x00" + struct.pack("<i", 1000)
@@ -126,7 +126,7 @@ def test_bam_binary_record_core_fields_decode_from_gzip_stream() -> None:
 
 def test_optional_htslib_adapter_reads_bam_and_requires_local_reference_for_cram(tmp_path: Path) -> None:
     pysam = pytest.importorskip("pysam")
-    from kinetics.genomics_htslib import iter_alignment_records
+    from molecularis.genomics_htslib import iter_alignment_records
 
     bam_path = tmp_path / "fixture.bam"
     header = {"HD": {"VN": "1.6"}, "SQ": [{"SN": "chr1", "LN": 1000}]}
@@ -181,7 +181,7 @@ def test_bam_parser_rejects_truncated_and_out_of_bounds_streams(
     import gzip
     import io
 
-    from kinetics.genomics import iter_bam_records
+    from molecularis.genomics import iter_bam_records
 
     with pytest.raises(ValueError, match=message):
         list(iter_bam_records(io.BytesIO(gzip.compress(payload))))
@@ -191,7 +191,7 @@ def test_bam_parser_enforces_record_and_total_base_limits() -> None:
     import gzip
     import io
 
-    from kinetics.genomics import iter_bam_records
+    from molecularis.genomics import iter_bam_records
 
     header = b"BAM\x01" + struct.pack("<i", 0) + struct.pack("<i", 1)
     header += struct.pack("<i", 5) + b"chr1\x00" + struct.pack("<i", 1000)
@@ -227,7 +227,7 @@ def test_bam_parser_rejects_invalid_resource_limits(kwargs: dict[str, object]) -
     import gzip
     import io
 
-    from kinetics.genomics import iter_bam_records
+    from molecularis.genomics import iter_bam_records
 
     with pytest.raises(ValueError, match="positive integer"):
         list(iter_bam_records(io.BytesIO(gzip.compress(b"NOPE")), **kwargs))
@@ -237,7 +237,7 @@ def test_bam_parser_bounds_aggregate_header_and_reference_dictionary() -> None:
     import gzip
     import io
 
-    from kinetics.genomics import iter_bam_records
+    from molecularis.genomics import iter_bam_records
 
     payload = (
         b"BAM\x01" + struct.pack("<i", 0) + struct.pack("<i", 1)
@@ -251,7 +251,7 @@ def test_bam_parser_rejects_invalid_header_budget() -> None:
     import gzip
     import io
 
-    from kinetics.genomics import iter_bam_records
+    from molecularis.genomics import iter_bam_records
 
     with pytest.raises(ValueError, match="max_header_bytes"):
         list(iter_bam_records(io.BytesIO(gzip.compress(b"NOPE")), max_header_bytes=0))
@@ -259,7 +259,7 @@ def test_bam_parser_rejects_invalid_header_budget() -> None:
 
 
 def test_vcf_aggregate_qc_never_returns_sample_names_or_genotypes() -> None:
-    from kinetics.genomics import summarize_vcf_qc
+    from molecularis.genomics import summarize_vcf_qc
 
     text = (
         "##fileformat=VCFv4.3\n"
@@ -280,7 +280,7 @@ def test_vcf_aggregate_qc_never_returns_sample_names_or_genotypes() -> None:
 
 
 def test_vcf_aggregate_qc_enforces_resource_bounds_and_requires_records() -> None:
-    from kinetics.genomics import summarize_vcf_qc
+    from molecularis.genomics import summarize_vcf_qc
 
     with pytest.raises(ValueError, match="5 MiB"):
         summarize_vcf_qc("x" * (5 * 1024 * 1024 + 1))

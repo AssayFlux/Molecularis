@@ -1,4 +1,4 @@
-name: Kinetics validation and Android build
+name: Molecularis validation and Android build
 on:
   push:
     branches: [main, v0.1.1]
@@ -8,7 +8,7 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: kinetics-validation-${{ github.ref }}
+  group: molecularis-validation-${{ github.ref }}
   cancel-in-progress: false
 jobs:
   python-foundations:
@@ -25,7 +25,7 @@ jobs:
         run: python -m pip install -r requirements-dev.txt
       - name: Validate pre-commit configuration
         run: pre-commit validate-config
-      - name: Install Kinetics research package
+      - name: Install Molecularis research package
         run: python -m pip install -e .
       # The legacy tree has import-order and formatter debt (66 import fixes and
       # 75 formatting changes were previously applied only in the runner). Do not
@@ -34,7 +34,7 @@ jobs:
       - name: Check Python lint without modifying source
         run: ruff check --ignore I scripts tests
       - name: Mypy production code
-        run: mypy scripts python/kinetics
+        run: mypy scripts python/molecularis
       - name: Registry validation
         run: python scripts/check_registry.py
       - name: Verify Track U completion audit is present
@@ -48,7 +48,7 @@ jobs:
       - name: Verify generated design tokens are reproducible
         run: |
           python scripts/gen_design_tokens.py
-          git diff --exit-code -- android/designsystem/src/main/java/org/assayflux/designsystem/GeneratedTokens.kt web/viewers/src/styles/kinetics-tokens.css
+          git diff --exit-code -- android/designsystem/src/main/java/org/assayflux/designsystem/GeneratedTokens.kt web/viewers/src/styles/molecularis-tokens.css
           python scripts/gen_component_catalogue.py
           git diff --exit-code -- docs/ui/component-catalogue.md
       - name: Android offline/build-first configuration guardrails
@@ -130,7 +130,7 @@ jobs:
       - name: Upload chemistry reference record
         uses: actions/upload-artifact@v4
         with:
-          name: kinetics-rdkit-reference-${{ github.sha }}
+          name: molecularis-rdkit-reference-${{ github.sha }}
           path: chemistry-reference-result.json
           if-no-files-found: error
           retention-days: 90
@@ -152,7 +152,7 @@ jobs:
       - name: Upload direct-dependency inventory
         uses: actions/upload-artifact@v4
         with:
-          name: kinetics-source-sbom-${{ github.sha }}
+          name: molecularis-source-sbom-${{ github.sha }}
           path: source-dependencies.spdx.json
           if-no-files-found: error
           retention-days: 90
@@ -195,7 +195,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: |
-            ~/.cache/kinetics
+            ~/.cache/molecularis
             android/app/libs/python-wheels
             ~/.cargo/registry
             ~/.cargo/git
@@ -218,16 +218,16 @@ jobs:
       - name: Run Android JVM unit-test task
         working-directory: android
         run: >-
-          "$HOME/.cache/kinetics/gradle-8.13/gradle-8.13/bin/gradle" --no-daemon --stacktrace :app:testDebugUnitTest
+          "$HOME/.cache/molecularis/gradle-8.13/gradle-8.13/bin/gradle" --no-daemon --stacktrace :app:testDebugUnitTest
       - name: Capture resolved dependency graphs and artifact hashes
         working-directory: android
         run: |
-          "$HOME/.cache/kinetics/gradle-8.13/gradle-8.13/bin/gradle" --no-daemon :app:dependencies --configuration debugRuntimeClasspath > ../gradle-debug-runtime-dependencies.txt
-          "$HOME/.cache/kinetics/gradle-8.13/gradle-8.13/bin/gradle" --no-daemon :app:buildEnvironment > ../gradle-build-environment.txt
+          "$HOME/.cache/molecularis/gradle-8.13/gradle-8.13/bin/gradle" --no-daemon :app:dependencies --configuration debugRuntimeClasspath > ../gradle-debug-runtime-dependencies.txt
+          "$HOME/.cache/molecularis/gradle-8.13/gradle-8.13/bin/gradle" --no-daemon :app:buildEnvironment > ../gradle-build-environment.txt
           cargo tree --locked --all-features --manifest-path native-rust/Cargo.toml > ../cargo-dependency-tree.txt
           cargo metadata --locked --format-version 1 --manifest-path native-rust/Cargo.toml > ../cargo-metadata.json
           sha256sum native-rust/Cargo.lock > ../cargo-lock-sha256.txt
-          { find app/libs/python-wheels -type f -name '*.whl' -print0; find "$HOME/.cache/kinetics/chaquopy-17.2.0/server/pypi/dist/numpy" -type f -name '*.whl' -print0; } | sort -z | xargs -0 -r sha256sum > ../android-python-wheel-sha256.txt
+          { find app/libs/python-wheels -type f -name '*.whl' -print0; find "$HOME/.cache/molecularis/chaquopy-17.2.0/server/pypi/dist/numpy" -type f -name '*.whl' -print0; } | sort -z | xargs -0 -r sha256sum > ../android-python-wheel-sha256.txt
           find "$HOME/.gradle/caches/modules-2/files-2.1" -type f \( -name '*.jar' -o -name '*.aar' -o -name '*.pom' -o -name '*.module' \) -print0 | sort -z | xargs -0 -r sha256sum > ../gradle-resolved-artifact-sha256.txt
       - name: Verify APK/AAB artifacts and record hashes
         run: python scripts/check_android_artifacts.py
@@ -235,7 +235,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: kinetics-android-arm64-debug-${{ github.sha }}
+          name: molecularis-android-arm64-debug-${{ github.sha }}
           path: |
             android/app/build/outputs/apk/debug/app-debug.apk
             android/app/build/outputs/bundle/debug/app-debug.aab
@@ -271,7 +271,7 @@ jobs:
       - name: Upload engine smoke record
         uses: actions/upload-artifact@v4
         with:
-          name: kinetics-vina-engine-smoke-${{ github.sha }}
+          name: molecularis-vina-engine-smoke-${{ github.sha }}
           path: vina-engine-smoke-result.json
           if-no-files-found: error
           retention-days: 90
@@ -297,7 +297,7 @@ jobs:
       - name: Upload OpenMM engine smoke record
         uses: actions/upload-artifact@v4
         with:
-          name: kinetics-openmm-engine-smoke-${{ github.sha }}
+          name: molecularis-openmm-engine-smoke-${{ github.sha }}
           path: openmm-engine-smoke-result.json
           if-no-files-found: error
           retention-days: 90
@@ -339,7 +339,7 @@ jobs:
       - name: Upload ADMET utility smoke record
         uses: actions/upload-artifact@v4
         with:
-          name: kinetics-admet-validation-smoke-${{ github.sha }}
+          name: molecularis-admet-validation-smoke-${{ github.sha }}
           path: admet-validation-smoke-result.json
           if-no-files-found: error
           retention-days: 90

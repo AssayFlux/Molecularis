@@ -4,7 +4,7 @@ import math
 
 import pytest
 
-from kinetics.pkpd import emax_pd, one_compartment_oral_pk
+from molecularis.pkpd import emax_pd, one_compartment_oral_pk
 
 
 def test_one_compartment_oral_pk_matches_closed_form_and_provenance() -> None:

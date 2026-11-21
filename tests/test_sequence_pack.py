@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from kinetics.sequence_pack import (
+from molecularis.sequence_pack import (
     load_local_fasta_reference_pack,
     search_local_fasta_reference,
     _sha256_stream,
@@ -146,7 +146,7 @@ def test_local_pack_hashing_is_bounded_by_max_pack_bytes() -> None:
 
 
 def test_verified_local_pack_supports_bounded_similarity_alignment(tmp_path) -> None:
-    from kinetics.sequence_pack import search_local_fasta_alignment
+    from molecularis.sequence_pack import search_local_fasta_alignment
 
     fasta = b">reference-fragment\nTTACGTAA\n"
     fasta_path, manifest_path = write_pack(tmp_path, fasta)

@@ -8,7 +8,7 @@ from pathlib import Path
 
 from jsonschema import Draft202012Validator  # type: ignore[import-untyped]
 
-from kinetics.docking_vina import run_vina_docking
+from molecularis.docking_vina import run_vina_docking
 
 
 ROOT = Path(__file__).resolve().parents[1]

@@ -6,7 +6,7 @@
 
 The intended canonical asset root is `assets/`, with owner-approved brand inputs under `assets/brand/` and design previews under `assets/design-previews/`. This layout is a target contract, not a completed migration. The current repository still contains the legacy root-level `Assets/` directory; it has **not** been consolidated into the lowercase canonical layout.
 
-Do not move, rename, redraw, recolour or derive owner artwork without explicit authorization. Preserve existing binary Git blobs byte-for-byte. In particular, the organization logo is not automatically the Kinetics Android launcher icon.
+Do not move, rename, redraw, recolour or derive owner artwork without explicit authorization. Preserve existing binary Git blobs byte-for-byte. In particular, the organization logo is not automatically the Molecularis Android launcher icon.
 
 ## Required owner inputs
 

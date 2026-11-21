@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from kinetics.phylo import leaf_names, parse_newick, upgma
+from molecularis.phylo import leaf_names, parse_newick, upgma
 
 
 def test_newick_supports_quoted_labels_with_delimiters_and_escaped_quotes() -> None:
@@ -22,7 +22,7 @@ def test_upgma_rejects_non_finite_distance_values() -> None:
 
 
 def test_neighbor_joining_recovers_additive_three_taxon_distances() -> None:
-    from kinetics.phylo import neighbor_joining, patristic_distance
+    from molecularis.phylo import neighbor_joining, patristic_distance
 
     tree = neighbor_joining(
         [[0.0, 2.0, 4.0], [2.0, 0.0, 4.0], [4.0, 4.0, 0.0]],
@@ -34,7 +34,7 @@ def test_neighbor_joining_recovers_additive_three_taxon_distances() -> None:
 
 
 def test_neighbor_joining_rejects_negative_inferred_limb() -> None:
-    from kinetics.phylo import neighbor_joining
+    from molecularis.phylo import neighbor_joining
 
     with pytest.raises(ValueError, match="negative branch"):
         neighbor_joining(
@@ -45,7 +45,7 @@ def test_neighbor_joining_rejects_negative_inferred_limb() -> None:
 
 
 def test_newick_serializer_round_trips_quoted_labels_and_branch_lengths() -> None:
-    from kinetics.phylo import parse_newick, patristic_distance, to_newick
+    from molecularis.phylo import parse_newick, patristic_distance, to_newick
 
     original = parse_newick("((A:0.1,'B B':0.2)clade:0.3,C:0);")
     serialized = to_newick(original)
@@ -58,7 +58,7 @@ def test_newick_serializer_round_trips_quoted_labels_and_branch_lengths() -> Non
 
 
 def test_jukes_cantor_distance_and_model_based_alignment_tree() -> None:
-    from kinetics.phylo import jukes_cantor_distance, neighbor_joining_from_alignment
+    from molecularis.phylo import jukes_cantor_distance, neighbor_joining_from_alignment
 
     result = jukes_cantor_distance("A" * 40, "A" * 39 + "G", minimum_sites=30)
     assert result["distance"] > 0
@@ -72,7 +72,7 @@ def test_jukes_cantor_distance_and_model_based_alignment_tree() -> None:
 
 
 def test_jukes_cantor_rejects_saturation_and_insufficient_sites() -> None:
-    from kinetics.phylo import jukes_cantor_distance
+    from molecularis.phylo import jukes_cantor_distance
 
     with pytest.raises(ValueError, match="saturated"):
         jukes_cantor_distance("A" * 20, "C" * 20, minimum_sites=20)
@@ -81,7 +81,7 @@ def test_jukes_cantor_rejects_saturation_and_insufficient_sites() -> None:
 
 
 def test_site_bootstrap_neighbor_joining_is_seeded_and_reports_failures() -> None:
-    from kinetics.phylo import bootstrap_neighbor_joining_from_alignment
+    from molecularis.phylo import bootstrap_neighbor_joining_from_alignment
 
     alignment = {
         "A": "A" * 40 + "C" * 10,
@@ -102,7 +102,7 @@ def test_site_bootstrap_neighbor_joining_is_seeded_and_reports_failures() -> Non
 
 
 def test_site_bootstrap_rejects_invalid_alignment_and_limits() -> None:
-    from kinetics.phylo import bootstrap_neighbor_joining_from_alignment
+    from molecularis.phylo import bootstrap_neighbor_joining_from_alignment
 
     with pytest.raises(ValueError, match="four unique"):
         bootstrap_neighbor_joining_from_alignment({"A": "AAAA", "B": "AAAT", "C": "AATT"})
@@ -115,14 +115,14 @@ def test_site_bootstrap_rejects_invalid_alignment_and_limits() -> None:
 
 
 def test_neighbor_joining_two_taxa_preserves_exact_pair_distance() -> None:
-    from kinetics.phylo import neighbor_joining, patristic_distance
+    from molecularis.phylo import neighbor_joining, patristic_distance
 
     tree = neighbor_joining([[0.0, 7.25], [7.25, 0.0]], ["left", "right"])
     assert patristic_distance(tree, "left", "right") == pytest.approx(7.25)
 
 
 def test_neighbor_joining_rejects_asymmetric_and_nonzero_diagonal_matrices() -> None:
-    from kinetics.phylo import neighbor_joining
+    from molecularis.phylo import neighbor_joining
 
     with pytest.raises(ValueError, match="symmetric"):
         neighbor_joining([[0.0, 1.0], [2.0, 0.0]], ["A", "B"])
@@ -131,7 +131,7 @@ def test_neighbor_joining_rejects_asymmetric_and_nonzero_diagonal_matrices() -> 
 
 
 def test_neighbor_joining_tie_resolution_is_deterministic() -> None:
-    from kinetics.phylo import neighbor_joining, to_newick
+    from molecularis.phylo import neighbor_joining, to_newick
 
     matrix = [
         [0.0, 2.0, 2.0, 2.0],

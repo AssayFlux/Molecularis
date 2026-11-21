@@ -2,12 +2,12 @@ from __future__ import annotations
 
 import pytest
 
-from kinetics.structure import Atom
-from kinetics.structure_alignment import map_chain_sequence_by_alignment
+from molecularis.structure import Atom
+from molecularis.structure_alignment import map_chain_sequence_by_alignment
 
 
 def make_atoms(sequence: str, start: int = 10) -> list[Atom]:
-    from kinetics.sequence_structure import THREE_TO_ONE
+    from molecularis.sequence_structure import THREE_TO_ONE
     reverse = {value: key for key, value in THREE_TO_ONE.items()}
     return [
         Atom(i + 1, "CA", reverse[residue], "A", start + i, float(i), 0.0, 0.0, "C")

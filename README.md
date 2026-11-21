@@ -1,6 +1,6 @@
-<!-- KINETICS · BY ASSAYFLUX -->
+<!-- MOLECULARIS · BY ASSAYFLUX -->
 <p align="center">
-  <img src="Assets/Kinetics%20By%20AssayFlux©.png" alt="Kinetics guilloche DNA logo" width="100%">
+  <img src="Assets/Molecularis%20By%20AssayFlux©.png" alt="Molecularis guilloche DNA logo" width="100%">
 </p>
 
 <p align="center">
@@ -10,41 +10,41 @@
 <p align="center">
   <img
 src="https://readme-typing-svg.demolab.com?font=Cinzel+Decorative&weight=600&size=28&pause=1500&color=D4AF37&center=true&vCenter=true&width=850&lines=OFFLINE+FIRST+SCIENTIFIC+RESEARCH;REPRODUCIBLE+WORKFLOWS;TRACEABLE+EVIDENCE;ANDROID;PYTHON;KOTLIN;GRADLE;C%2B%2B;RUST;NODE.JS;HTML;CSS;JAVASCRIPT;BASH;LINUX+NATIVE+COMPUTING;FOR+RESEARCH+ONLY;VALIDATION+BEFORE+CLAIMS+IS+THE+KEY"
-    alt="Kinetics tagline"
+    alt="Molecularis tagline"
   />
 </p>
 <p align="center">
   <img
 src="https://readme-typing-svg.demolab.com?font=Cinzel+Decorative&weight=600&size=28&pause=1800&color=D4AF37&center=true&vCenter=true&width=950&lines=INVITING+RESEARCHERS%2C+SCIENTISTS+AND+INSTITUTIONS;LET+US+ADVANCE+SCIENTIFIC+DISCOVERY+TOGETHER;BUILT+FOR+RIGOROUS+RESEARCH+AND+REPRODUCIBLE+WORKFLOWS;COLLABORATION+BEGINS+WITH+QUESTIONS+AND+GROWS+THROUGH+EVIDENCE;AUTHORED+BY+MD+SAFARUJJAMAN+%7C+ASSAYFLUX+SCIENTIFIC+SYSTEMS"
-    alt="Kinetics research collaboration invitation — Author Md Safarujjaman"
+    alt="scientific research collaboration invitation — Author Md Safarujjaman"
   />
 </p>
 
 
 <!-- ═══════════════ REPOSITORY STATUS ═══════════════ -->
 <p align="center">
-  <a href="https://github.com/AssayFlux/Kinetics/blob/main/LICENSE">
-    <img src="https://img.shields.io/github/license/AssayFlux/Kinetics?style=flat-square&label=LICENSE&labelColor=302A35&color=9B6A7A">
+  <a href="https://github.com/AssayFlux/Molecularis/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/AssayFlux/Molecularis?style=flat-square&label=LICENSE&labelColor=302A35&color=9B6A7A">
   </a>
-  <a href="https://github.com/AssayFlux/Kinetics/actions/workflows/ci.yml">
-    <img src="https://img.shields.io/github/actions/workflow/status/AssayFlux/Kinetics/ci.yml?branch=main&style=flat-square&label=CI&labelColor=263B38&color=739B83">
+  <a href="https://github.com/AssayFlux/Molecularis/actions/workflows/ci.yml">
+    <img src="https://img.shields.io/github/actions/workflow/status/AssayFlux/Molecularis/ci.yml?branch=main&style=flat-square&label=CI&labelColor=263B38&color=739B83">
   </a>
-  <a href="https://github.com/AssayFlux/Kinetics/stargazers">
-    <img src="https://img.shields.io/github/stars/AssayFlux/Kinetics?style=flat-square&label=STARS&labelColor=45372D&color=C69B58">
+  <a href="https://github.com/AssayFlux/Molecularis/stargazers">
+    <img src="https://img.shields.io/github/stars/AssayFlux/Molecularis?style=flat-square&label=STARS&labelColor=45372D&color=C69B58">
   </a>
-  <a href="https://github.com/AssayFlux/Kinetics/forks">
-    <img src="https://img.shields.io/github/forks/AssayFlux/Kinetics?style=flat-square&label=FORKS&labelColor=263C50&color=7399B5">
+  <a href="https://github.com/AssayFlux/Molecularis/forks">
+    <img src="https://img.shields.io/github/forks/AssayFlux/Molecularis?style=flat-square&label=FORKS&labelColor=263C50&color=7399B5">
   </a>
-  <a href="https://github.com/AssayFlux/Kinetics/issues">
-    <img src="https://img.shields.io/github/issues/AssayFlux/Kinetics?style=flat-square&label=ISSUES&labelColor=49344B&color=A98AB8">
+  <a href="https://github.com/AssayFlux/Molecularis/issues">
+    <img src="https://img.shields.io/github/issues/AssayFlux/Molecularis?style=flat-square&label=ISSUES&labelColor=49344B&color=A98AB8">
   </a>
-  <a href="https://github.com/AssayFlux/Kinetics/pulls">
-    <img src="https://img.shields.io/github/issues-pr/AssayFlux/Kinetics?style=flat-square&label=PULL%20REQUESTS&labelColor=354A48&color=78AFA5">
+  <a href="https://github.com/AssayFlux/Molecularis/pulls">
+    <img src="https://img.shields.io/github/issues-pr/AssayFlux/Molecularis?style=flat-square&label=PULL%20REQUESTS&labelColor=354A48&color=78AFA5">
   </a>
-  <a href="https://github.com/AssayFlux/Kinetics/commits/main">
-    <img src="https://img.shields.io/github/last-commit/AssayFlux/Kinetics?style=flat-square&label=LAST%20COMMIT&labelColor=493B32&color=B88C72">
+  <a href="https://github.com/AssayFlux/Molecularis/commits/main">
+    <img src="https://img.shields.io/github/last-commit/AssayFlux/Molecularis?style=flat-square&label=LAST%20COMMIT&labelColor=493B32&color=B88C72">
   </a>
-  <img src="https://img.shields.io/github/languages/top/AssayFlux/Kinetics?style=flat-square&label=TOP%20LANGUAGE&labelColor=293D3D&color=78AFA5">
+  <img src="https://img.shields.io/github/languages/top/AssayFlux/Molecularis?style=flat-square&label=TOP%20LANGUAGE&labelColor=293D3D&color=78AFA5">
 </p>
 
 <!-- ═══════════════ CORE TECHNOLOGY ═══════════════ -->
@@ -76,7 +76,7 @@ src="https://readme-typing-svg.demolab.com?font=Cinzel+Decorative&weight=600&siz
   <img src="https://img.shields.io/badge/Chemistry-RDKit-527C85?style=flat-square">
   <img src="https://img.shields.io/badge/Molecular_Docking-AutoDock_Vina-92704D?style=flat-square">
   <img src="https://img.shields.io/badge/Molecular_Dynamics-OpenMM-716B9A?style=flat-square">
-  <img src="https://img.shields.io/badge/Kinetics-Research-956D7D?style=flat-square">
+  <img src="https://img.shields.io/badge/Molecularis-Research-956D7D?style=flat-square">
 </p>
 
 <!-- ═══════════════ QUALITY & REPRODUCIBILITY ═══════════════ -->
@@ -109,9 +109,9 @@ src="https://readme-typing-svg.demolab.com?font=Cinzel+Decorative&weight=600&siz
 See the [v0.1.0 and v0.1.1 release plan](docs/release-plan-v0.1.0-v0.1.1.md).
 
 ## ABOUT
-**Kinetics** is an open-source scientific research workbench from **AssayFlux Scientific Systems**. It combines an Android-native, offline-first application with a Python research core and selected C++ and Rust components. Sequence, structure, chemistry, kinetics and omics foundations sit behind versioned contracts and a capability registry.
+**Molecularis** is an open-source scientific research workbench from **AssayFlux Scientific Systems**. It combines an Android-native, offline-first application with a Python research core and selected C++ and Rust components. Sequence, structure, chemistry, kinetics and omics foundations sit behind versioned contracts and a capability registry.
 
-The project prioritises reproducibility, provenance, bounded inputs and explicit limitations. It is a research-engineering prototype, not a clinically validated platform.
+The project prioritises reproducibility, provenance, bounded inputs and explicit limitations. It is a research-engineering prototype, not a clinically validated platform. See the [Molecularis identity migration and compatibility contract](docs/brand-migration.md) for retained legacy identifiers and integration aliases.
 
 <table>
   <tr>
@@ -149,11 +149,11 @@ The project prioritises reproducibility, provenance, bounded inputs and explicit
 <table>
   <tr>
     <td align="center" width="50%">
-      <img src="Assets/App%20UI%20-%20Dashboard%20Design.jpg" alt="Kinetics dashboard layout design reference" width="55%">
+      <img src="Assets/App%20UI%20-%20Dashboard%20Design.jpg" alt="Molecularis dashboard layout design reference" width="55%">
       <br><sub><strong>DASHBOARD · DESIGN REFERENCE</strong></sub>
     </td>
     <td align="center" width="50%">
-      <img src="Assets/App%20UI%20-%20Login%20Page%20Design.jpg" alt="Kinetics login page layout design reference" width="55%">
+      <img src="Assets/App%20UI%20-%20Login%20Page%20Design.jpg" alt="Molecularis login page layout design reference" width="55%">
       <br><sub><strong>LOGIN · DESIGN REFERENCE</strong></sub>
     </td>
   </tr>
@@ -254,28 +254,28 @@ flowchart TD
   <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans&weight=600&size=19&pause=1100&color=D4AF37&center=true&vCenter=true&width=1000&height=45&lines=কাইনেটিক্সে+স্বাগতম;কাইনেটিক্সলৈ+স্বাগতম;किनेटिक्स+में+आपका+स्वागत+है;किनेटिक्समध्ये+आपले+स्वागत+आहे;किनेटिक्समा+स्वागत+छ;કિનેટિક્સમાં+આપનું+સ્વાગત+છે;ਕਾਇਨੇਟਿਕਸ+ਵਿੱਚ+ਤੁਹਾਡਾ+ਸੁਆਗਤ+ਹੈ;କିନେଟିକ୍ସକୁ+ସ୍ୱାଗତ;கினெட்டிக்ஸுக்கு+உங்களை+வரவேற்கிறோம்;కైనెటిక్స్‌కు+స్వాగతం" alt="Welcome — 1">
 </p>
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans&weight=600&size=19&pause=1100&color=42A5A5&center=true&vCenter=true&width=1000&height=45&lines=ಕೈನೆಟಿಕ್ಸ್‌ಗೆ+ಸ್ವಾಗತ;കൈനറ്റിക്സിലേക്ക്+സ്വാഗതം;کائنیٹکس+میں+خوش+آمدید;ڪائنيٽڪس+۾+ڀليڪار;ꯀꯤꯅꯦꯇꯤꯛꯁꯇ+ꯌꯥꯏꯐꯕꯥ;ᱠᱤᱱᱮᱴᱤᱠᱥ+ᱨᱮ+ᱥᱟᱹᱜᱩᱱ;Welcome+to+Kinetics;Bienvenue+chez+Kinetics;Bienvenidos+a+Kinetics;Bem-vindos+à+Kinetics" alt="Welcome — 2">
+  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans&weight=600&size=19&pause=1100&color=42A5A5&center=true&vCenter=true&width=1000&height=45&lines=ಕೈನೆಟಿಕ್ಸ್‌ಗೆ+ಸ್ವಾಗತ;കൈനറ്റിക്സിലേക്ക്+സ്വാഗതം;کائنیٹکس+میں+خوش+آمدید;ڪائنيٽڪس+۾+ڀليڪار;ꯀꯤꯅꯦꯇꯤꯛꯁꯇ+ꯌꯥꯏꯐꯕꯥ;ᱠᱤᱱᱮᱴᱤᱠᱥ+ᱨᱮ+ᱥᱟᱹᱜᱩᱱ;Welcome+to+Molecularis;Bienvenue+chez+Molecularis;Bienvenidos+a+Molecularis;Bem-vindos+à+Molecularis" alt="Welcome — 2">
 </p>
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans&weight=600&size=19&pause=1100&color=CE93D8&center=true&vCenter=true&width=1000&height=45&lines=Willkommen+bei+Kinetics;Benvenuti+in+Kinetics;Welkom+bij+Kinetics;Добро+пожаловать+в+Kinetics;Ласкаво+просимо+до+Kinetics;Καλώς+ήρθατε+στο+Kinetics;مرحباً+بكم+في+كينيتكس;به+کینتیکس+خوش+آمدید;ברוכים+הבאים+ל־Kinetics;Kinetics'e+hoş+geldiniz" alt="Welcome — 3">
+  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans&weight=600&size=19&pause=1100&color=CE93D8&center=true&vCenter=true&width=1000&height=45&lines=Willkommen+bei+Molecularis;Benvenuti+in+Molecularis;Welkom+bij+Molecularis;Добро+пожаловать+в+Molecularis;Ласкаво+просимо+до+Molecularis;Καλώς+ήρθατε+στο+Molecularis;مرحباً+بكم+في+كينيتكس;به+کینتیکس+خوش+آمدید;ברוכים+הבאים+ל־Molecularis;Molecularis'e+hoş+geldiniz" alt="Welcome — 3">
 </p>
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans&weight=600&size=19&pause=1100&color=D98245&center=true&vCenter=true&width=1000&height=45&lines=欢迎来到+Kinetics;歡迎來到+Kinetics;Kineticsへようこそ;Kinetics에+오신+것을+환영합니다;ยินดีต้อนรับสู่+Kinetics;Chào+mừng+đến+với+Kinetics;Selamat+datang+di+Kinetics;Selamat+datang+ke+Kinetics;Maligayang+pagdating+sa+Kinetics;Karibu+Kinetics" alt="Welcome — 4">
+  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans&weight=600&size=19&pause=1100&color=D98245&center=true&vCenter=true&width=1000&height=45&lines=欢迎来到+Molecularis;歡迎來到+Molecularis;Molecularisへようこそ;Molecularis에+오신+것을+환영합니다;ยินดีต้อนรับสู่+Molecularis;Chào+mừng+đến+với+Molecularis;Selamat+datang+di+Molecularis;Selamat+datang+ke+Molecularis;Maligayang+pagdating+sa+Molecularis;Karibu+Molecularis" alt="Welcome — 4">
 </p>
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans&weight=600&size=19&pause=1100&color=5B8FA8&center=true&vCenter=true&width=1000&height=45&lines=ወደ+Kinetics+እንኳን+በደህና+መጡ;Ẹ+káàbọ̀+sí+Kinetics;Siyakwamukela+ku-Kinetics;Welkom+by+Kinetics;Witamy+w+Kinetics;Välkommen+till+Kinetics;Velkommen+til+Kinetics;Tervetuloa+Kineticsiin;Tervetuloa+Kineticsiin;Καλώς+ορίσατε+στο+Kinetics" alt="Welcome — 5">
+  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans&weight=600&size=19&pause=1100&color=5B8FA8&center=true&vCenter=true&width=1000&height=45&lines=ወደ+Molecularis+እንኳን+በደህና+መጡ;Ẹ+káàbọ̀+sí+Molecularis;Siyakwamukela+ku-Molecularis;Welkom+by+Molecularis;Witamy+w+Molecularis;Välkommen+till+Molecularis;Velkommen+til+Molecularis;Tervetuloa+Molecularisiin;Tervetuloa+Molecularisiin;Καλώς+ορίσατε+στο+Molecularis" alt="Welcome — 5">
 </p>
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans&weight=600&size=19&pause=1100&color=A66C91&center=true&vCenter=true&width=1000&height=45&lines=Fáilte+go+Kinetics;Croeso+i+Kinetics;Fàilte+gu+Kinetics;Benvinguts+a+Kinetics;Benvido+a+Kinetics;Ongi+etorri+Kinetics-era;Kinetics-era+ongi+etorri;Tervetuloa+Kineticsiin;Vitajte+v+Kinetics;Vítejte+v+Kinetics" alt="Welcome — 6">
+  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans&weight=600&size=19&pause=1100&color=A66C91&center=true&vCenter=true&width=1000&height=45&lines=Fáilte+go+Molecularis;Croeso+i+Molecularis;Fàilte+gu+Molecularis;Benvinguts+a+Molecularis;Benvido+a+Molecularis;Ongi+etorri+Molecularis-era;Molecularis-era+ongi+etorri;Tervetuloa+Molecularisiin;Vitajte+v+Molecularis;Vítejte+v+Molecularis" alt="Welcome — 6">
 </p>
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans&weight=600&size=19&pause=1100&color=729B62&center=true&vCenter=true&width=1000&height=45&lines=Üdvözöljük+a+Kineticsben;Üdvözlünk+a+Kineticsben;Dobrodošli+u+Kinetics;Dobrodošli+v+Kinetics;Добре+дошли+в+Kinetics;Bine+ați+venit+la+Kinetics;Bun+venit+la+Kinetics;Καλώς+ήρθατε+στο+Kinetics;Tere+tulemast+Kineticsisse;Sveiki+atvykę+į+Kinetics" alt="Welcome — 7">
+  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans&weight=600&size=19&pause=1100&color=729B62&center=true&vCenter=true&width=1000&height=45&lines=Üdvözöljük+a+Molecularisben;Üdvözlünk+a+Molecularisben;Dobrodošli+u+Molecularis;Dobrodošli+v+Molecularis;Добре+дошли+в+Molecularis;Bine+ați+venit+la+Molecularis;Bun+venit+la+Molecularis;Καλώς+ήρθατε+στο+Molecularis;Tere+tulemast+Molecularisisse;Sveiki+atvykę+į+Molecularis" alt="Welcome — 7">
 </p>
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans&weight=600&size=19&pause=1100&color=B58B45&center=true&vCenter=true&width=1000&height=45&lines=Laipni+lūdzam+Kinetics;Добро+пожаловать+в+Kinetics;Καλώς+ήρθατε+στο+Kinetics;Benvenguts+a+Kinetics;Benvenuto+a+Kinetics;Tervetuloa+Kineticsiin;Velkomin+til+Kinetics;Velkommen+til+Kinetics;Hoş+geldiniz+Kinetics'e;Kinetics'e+hoş+geldiniz" alt="Welcome — 8">
+  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans&weight=600&size=19&pause=1100&color=B58B45&center=true&vCenter=true&width=1000&height=45&lines=Laipni+lūdzam+Molecularis;Добро+пожаловать+в+Molecularis;Καλώς+ήρθατε+στο+Molecularis;Benvenguts+a+Molecularis;Benvenuto+a+Molecularis;Tervetuloa+Molecularisiin;Velkomin+til+Molecularis;Velkommen+til+Molecularis;Hoş+geldiniz+Molecularis'e;Molecularis'e+hoş+geldiniz" alt="Welcome — 8">
 </p>
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans&weight=600&size=19&pause=1100&color=6877B5&center=true&vCenter=true&width=1000&height=45&lines=Kinetics'e+hoş+geldiniz;Vítejte+v+Kinetics;Witamy+w+Kinetics;Welkom+bij+Kinetics;Welcome+to+Kinetics;Bienvenue+à+Kinetics;Benvenuti+a+Kinetics;Добро+пожаловать+в+Kinetics;欢迎来到+Kinetics;Kineticsへようこそ" alt="Welcome — 9">
+  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans&weight=600&size=19&pause=1100&color=6877B5&center=true&vCenter=true&width=1000&height=45&lines=Molecularis'e+hoş+geldiniz;Vítejte+v+Molecularis;Witamy+w+Molecularis;Welkom+bij+Molecularis;Welcome+to+Molecularis;Bienvenue+à+Molecularis;Benvenuti+a+Molecularis;Добро+пожаловать+в+Molecularis;欢迎来到+Molecularis;Molecularisへようこそ" alt="Welcome — 9">
 </p>
 
 
@@ -322,7 +322,7 @@ flowchart TD
 
 
 <p align="center">
-  <img src="Assets/Section%20Breaker%20With%20Author%20Details.jpg" alt="Kinetics by AssayFlux title strip" width="100%">
+  <img src="Assets/Section%20Breaker%20With%20Author%20Details.jpg" alt="Molecularis by AssayFlux title strip" width="100%">
 </p>
 
 <p align="center">

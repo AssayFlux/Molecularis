@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from kinetics.blastp import hash_blast_protein_database, run_local_blastp
+from molecularis.blastp import hash_blast_protein_database, run_local_blastp
 
 
 def _artifacts(tmp_path: Path) -> tuple[Path, Path, dict[str, str]]:

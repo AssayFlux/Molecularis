@@ -1,4 +1,4 @@
-# Kinetics — Session Log
+# Molecularis — Session Log
 
 ## 2026-11-07 — Session 2: Align direction system with complete master
 **Phase:** Track R / R0 Foundations  
@@ -2950,3 +2950,10 @@ Continue U0 token/component integration into actual screens, run exact-branch CI
 - CI run 2985 (44229328602) on commit 3dfc8b903f6928b65e673b2bb9a7ffb0586ff335 successfully built arm64 debug APK and AAB and passed package/native 16 KiB alignment verification.
 - The same run's Android JVM test stage exposed a test-fixture compile error in ResearchStoreMigrationTest.kt: a Long literal was passed where the current completeImport contract expects an Int. Corrected the fixture from 1L to 1 at commit 2334b0703553e833adbf6a8de44c28826aebf05a.
 - The generated APK/AAB from 3dfc is not treated as a release candidate because the JVM test stage failed and later source changes are present on main. Exact-current-main build plus JVM tests and artifact hash verification remain required.
+
+
+## 2026-11-21 — Molecularis identity migration
+
+- Rebranded product metadata, Android source namespace, Kotlin UI/design-system identifiers, Python package namespace, Node worker package/configuration, generated CSS tokens, viewer global API, documentation and active asset paths to Molecularis.
+- Kept the Android applicationId and versioned scientific schema identifiers stable for compatibility; added Python, Node, viewer and CSS aliases for existing integrations.
+- Retained enzyme-kinetics terminology and the scientific Michaelis–Menten implementation as domain concepts. The historical owner-supplied master and prior session entries remain archival evidence.

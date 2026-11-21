@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from kinetics.virtual_cohort import simulate_hardy_weinberg_cohort
+from molecularis.virtual_cohort import simulate_hardy_weinberg_cohort
 
 
 def test_synthetic_cohort_is_reproducible_aggregate_and_conserves_counts() -> None:
@@ -47,7 +47,7 @@ def test_synthetic_cohort_caps_total_genotype_draws() -> None:
 
 
 def test_synthetic_additive_effects_are_reproducible_and_aggregate_only() -> None:
-    from kinetics.virtual_cohort import simulate_synthetic_additive_variant_effects
+    from molecularis.virtual_cohort import simulate_synthetic_additive_variant_effects
 
     first = simulate_synthetic_additive_variant_effects(
         {"rsSyntheticEffect": 0.5},
@@ -75,7 +75,7 @@ def test_synthetic_additive_effects_are_reproducible_and_aggregate_only() -> Non
 
 
 def test_synthetic_additive_effects_reject_invalid_inputs() -> None:
-    from kinetics.virtual_cohort import simulate_synthetic_additive_variant_effects
+    from molecularis.virtual_cohort import simulate_synthetic_additive_variant_effects
 
     with pytest.raises(ValueError, match="same 1 to 100 loci"):
         simulate_synthetic_additive_variant_effects(

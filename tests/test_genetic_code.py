@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from kinetics.genetic_code import GENETIC_CODES, translate_coding_sequence
+from molecularis.genetic_code import GENETIC_CODES, translate_coding_sequence
 
 
 def test_standard_table_translation_and_cds_validation() -> None:

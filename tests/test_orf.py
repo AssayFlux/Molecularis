@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from kinetics.orf import find_orf_candidates
+from molecularis.orf import find_orf_candidates
 
 
 def test_orf_scan_finds_forward_complete_cds_with_explicit_coordinates() -> None:
@@ -61,7 +61,7 @@ def test_orf_scan_rejects_non_integer_or_boolean_table_ids(table_id: object) -> 
 
 def test_orf_scan_enforces_total_candidate_pair_work_ceiling(monkeypatch: pytest.MonkeyPatch) -> None:
     # Lower the module ceiling so the boundary is exercised without a million translations.
-    import kinetics.orf as orf_module
+    import molecularis.orf as orf_module
 
     monkeypatch.setattr(orf_module, "MAX_CANDIDATE_ORF_PAIRS", 1)
     with pytest.raises(ValueError, match="candidate work exceeds"):

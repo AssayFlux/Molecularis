@@ -35,7 +35,7 @@ def test_domain_grouping_is_stable_and_readable() -> None:
                     "id": "sequence.fasta",
                     "name": "FASTA parser",
                     "status": "implemented",
-                    "implementation": "python/kinetics/sequence.py",
+                    "implementation": "python/molecularis/sequence.py",
                     "evidence_level": "none",
                 }
             ]

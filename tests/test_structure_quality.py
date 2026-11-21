@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import pytest
 
-from kinetics.structure import Atom
-from kinetics.structure_quality import structure_geometry_metrics
+from molecularis.structure import Atom
+from molecularis.structure_quality import structure_geometry_metrics
 
 
 def atom(serial: int, chain: str, residue_number: int, x: float, element: str = "C") -> Atom:
@@ -62,7 +62,7 @@ def test_geometry_metrics_keep_only_configured_top_clash_records() -> None:
 
 
 def test_backbone_torsions_report_angles_without_quality_grade() -> None:
-    from kinetics.structure_quality import backbone_torsion_angles
+    from molecularis.structure_quality import backbone_torsion_angles
 
     residues = [
         ("N", "ALA", 1, 0.0, 0.0, 0.0),
@@ -90,7 +90,7 @@ def test_backbone_torsions_report_angles_without_quality_grade() -> None:
 
 
 def test_backbone_torsions_abstain_on_missing_atoms_and_bound_input() -> None:
-    from kinetics.structure_quality import backbone_torsion_angles
+    from molecularis.structure_quality import backbone_torsion_angles
 
     atoms = [Atom(1, "CA", "ALA", "A", 1, 0.0, 0.0, 0.0, "C")]
     result = backbone_torsion_angles(atoms)
@@ -110,7 +110,7 @@ def test_geometry_metrics_reject_conflicting_residue_names_at_one_position() -> 
 
 
 def test_backbone_torsions_reject_ambiguous_residue_numbering() -> None:
-    from kinetics.structure_quality import backbone_torsion_angles
+    from molecularis.structure_quality import backbone_torsion_angles
 
     atoms = [
         Atom(1, "N", "ALA", "A", 7, 0.0, 0.0, 0.0, "N"),
@@ -122,7 +122,7 @@ def test_backbone_torsions_reject_ambiguous_residue_numbering() -> None:
 
 def test_backbone_torsion_matches_known_right_handed_quarter_turn() -> None:
     """A hand-constructed C-N-CA-C plane rotation has a +90 degree phi."""
-    from kinetics.structure_quality import backbone_torsion_angles
+    from molecularis.structure_quality import backbone_torsion_angles
 
     atoms = [
         Atom(1, "C", "ALA", "A", 1, 0.0, 1.0, 0.0, "C"),
@@ -139,7 +139,7 @@ def test_backbone_torsion_matches_known_right_handed_quarter_turn() -> None:
 
 
 def test_backbone_torsions_report_degenerate_dihedral_as_unavailable() -> None:
-    from kinetics.structure_quality import backbone_torsion_angles
+    from molecularis.structure_quality import backbone_torsion_angles
 
     atoms = [
         Atom(1, "C", "ALA", "A", 1, -1.0, 0.0, 0.0, "C"),
