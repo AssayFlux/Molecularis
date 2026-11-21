@@ -1,7 +1,7 @@
 # Service and Platform Status Register
 
 Last verified: 2026-11-21  
-Current implementation commit: [93a7b10c5e29aa544f7b81b9f9ce0137676fbf95](https://github.com/AssayFlux/Molecularis/commit/b7d077e07c95cf94fab1c862b025651e179077a9).
+Current implementation commit: [d1b75c9cce9dc7776fa4b1e8c2fc2eda2244e3da](https://github.com/AssayFlux/Molecularis/commit/d1b75c9cce9dc7776fa4b1e8c2fc2eda2244e3da).
 
 A scaffold or specification does not imply implementation or scientific validation.
 
@@ -53,6 +53,7 @@ A scaffold or specification does not imply implementation or scientific validati
 - [Run #158](https://github.com/AssayFlux/Molecularis/actions/runs/44886827271), commit `221f444`: core 636 passed/12 skipped; optional sequence 639 passed/9 skipped, genomics 637 passed/11 skipped, chemistry 644 passed/4 skipped. Capability registry, 34 JSON Schemas, Ruff E9/F, compilation and Molecular/Molecularis Sequence/Structure benchmark smoke passed.
 - [Run #159](https://github.com/AssayFlux/Molecularis/actions/runs/44886943910), commit `47e4a62`: cumulative Structure baseline, all four jobs green.
 - [Run #162](https://github.com/AssayFlux/Molecularis/actions/runs/44888785327), commit `93a7b10`: Chemistry D verified; core 644 passed/12 skipped; optional Chemistry 652 passed/4 skipped, Sequence 647 passed/9 skipped, Genomics 645 passed/11 skipped. Registry valid, 37 JSON Schemas, Ruff E9/F, compile and all benchmark smoke steps passed.
+- [Run #E](https://github.com/AssayFlux/Molecularis/actions/runs/44889593877), commit `d1b75c9`: Protein E verified; core 651 passed/12 skipped; optional Sequence 654 passed/9 skipped, Genomics 652 passed/11 skipped, Chemistry 659 passed/4 skipped. Registry valid, 40 JSON Schemas, Ruff E9/F, compile and Protein 10k-residue benchmark smoke passed.
 
 ## Active phase and next exact work
 
