@@ -11,6 +11,7 @@ import json
 import os
 import re
 import time
+import tempfile
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -106,13 +107,18 @@ class GalaxyClient:
                 "name": result.get("name", name.strip())}
 
     def upload_file(self, history_id: str, file_path: str | Path, *,
-                    file_type: str = "auto", max_file_bytes: int = 2 * 1024**3) -> dict[str, Any]:
+                    file_type: str = "auto", max_file_bytes: int = 128 * 1024**2) -> dict[str, Any]:
         history = self._identifier(history_id, "history_id")
         if not isinstance(file_type, str) or not re.fullmatch(r"[A-Za-z0-9_.+-]{1,40}", file_type):
             raise ValueError("file_type must be a safe Galaxy datatype name")
-        path = Path(file_path).expanduser().resolve(strict=True)
-        if not path.is_file() or path.is_symlink():
+        unresolved_path = Path(file_path).expanduser()
+        if unresolved_path.is_symlink():
             raise ValueError("upload input must be a regular non-symlink file")
+        path = unresolved_path.resolve(strict=True)
+        if not path.is_file():
+            raise ValueError("upload input must be a regular non-symlink file")
+        if isinstance(max_file_bytes, bool) or not isinstance(max_file_bytes, int) or not 1 <= max_file_bytes <= 128 * 1024**2:
+            raise ValueError("max_file_bytes must be in [1, 128 MiB]")
         size = path.stat().st_size
         if size <= 0 or size > max_file_bytes:
             raise ValueError("upload file size is outside configured bounds")
@@ -176,6 +182,63 @@ class GalaxyClient:
                 "outputs": result.get("outputs", {}),
                 "output_datasets": result.get("output_datasets", []),
                 "provenance": {"server": self._base, "retrieved_via": "Galaxy REST API"}}
+
+
+    def download_dataset(self, dataset_id: str, destination: str | Path, *,
+                         max_download_bytes: int = 512 * 1024**2) -> dict[str, Any]:
+        """Download one Galaxy dataset to a new file and return its digest."""
+        dataset = self._identifier(dataset_id, "dataset_id")
+        if isinstance(max_download_bytes, bool) or not isinstance(max_download_bytes, int) or not 1 <= max_download_bytes <= 2 * 1024**3:
+            raise ValueError("max_download_bytes must be in [1, 2 GiB]")
+        unresolved = Path(destination).expanduser()
+        if unresolved.exists() or unresolved.is_symlink():
+            raise ValueError("download destination must not already exist or be a symlink")
+        parent = unresolved.parent.resolve(strict=True)
+        if not parent.is_dir():
+            raise ValueError("download destination parent must be a directory")
+        target = parent / unresolved.name
+        if target.name in {"", ".", ".."}:
+            raise ValueError("download destination must name a file")
+        url = self._base + f"/api/datasets/{urllib.parse.quote(dataset, safe='')}/display"
+        request = urllib.request.Request(url, headers={"x-api-key": self._key,
+                                    "Accept": "application/octet-stream"}, method="GET")
+        digest = hashlib.sha256()
+        size = 0
+        temp_name = None
+        try:
+            response = self._opener.open(request, timeout=self._timeout)
+            with response:
+                fd, temp_name = tempfile.mkstemp(prefix=".molecularis-galaxy-", dir=parent)
+                with os.fdopen(fd, "wb") as stream:
+                    while True:
+                        chunk = response.read(1024 * 1024)
+                        if not chunk:
+                            break
+                        size += len(chunk)
+                        if size > max_download_bytes:
+                            raise RuntimeError("Galaxy dataset exceeds max_download_bytes")
+                        digest.update(chunk)
+                        stream.write(chunk)
+                    stream.flush()
+                    os.fsync(stream.fileno())
+            if size == 0:
+                raise RuntimeError("Galaxy returned an empty dataset")
+            os.link(temp_name, target)
+            os.unlink(temp_name)
+            temp_name = None
+        except urllib.error.HTTPError as exc:
+            detail = exc.read(4096).decode("utf-8", "replace")
+            raise RuntimeError(f"Galaxy dataset download returned HTTP {exc.code}: {detail[:1000]}") from None
+        except (urllib.error.URLError, TimeoutError, OSError) as exc:
+            raise RuntimeError(f"Galaxy dataset download failed: {type(exc).__name__}") from None
+        finally:
+            if temp_name is not None:
+                try:
+                    os.unlink(temp_name)
+                except OSError:
+                    pass
+        return {"dataset_id": dataset, "path": str(target), "size_bytes": size,
+                "sha256": digest.hexdigest(), "retrieval_status": "downloaded"}
 
     def wait_for_invocation(self, workflow_id: str, invocation_id: str, *,
                             timeout_seconds: float = 3600, poll_seconds: float = 5) -> dict[str, Any]:
