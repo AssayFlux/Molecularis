@@ -10,8 +10,8 @@ def runtime_report():
 
     import Bio
     import numpy
-    import kinetics
-    from kinetics import normalize_small_variant, parse_fasta
+    import molecularis
+    from molecularis import normalize_small_variant, parse_fasta
     from Bio import SeqIO
     from Bio.Align import PairwiseAligner
     from Bio.PDB import PDBParser
@@ -21,7 +21,7 @@ def runtime_report():
     except ModuleNotFoundError:
         scipy = None
 
-    fasta = StringIO(">kinetics-r1-smoke\nACGTACGT\n")
+    fasta = StringIO(">molecularis-r1-smoke\nACGTACGT\n")
     record = next(SeqIO.parse(fasta, "fasta"))
     assert str(record.seq) == "ACGTACGT"
     package_record = parse_fasta(">workbench-smoke\nACGT\n")[0]
@@ -38,7 +38,7 @@ ATOM      3  C   GLY A   1      13.200  13.000  10.000  1.00 20.00           C
 TER
 END
 """
-    structure = PDBParser(QUIET=True).get_structure("kinetics-r1", StringIO(pdb))
+    structure = PDBParser(QUIET=True).get_structure("molecularis-r1", StringIO(pdb))
     residues = list(structure.get_residues())
     assert len(residues) == 1 and residues[0].resname == "GLY"
 
@@ -143,7 +143,7 @@ def _analysis_provenance(source_text: str, source_format: str, tool_id: str, par
     import hashlib
     from datetime import datetime, timezone
 
-    import kinetics
+    import molecularis
 
     return {
         "source_sha256": hashlib.sha256(source_text.encode("utf-8")).hexdigest(),
@@ -178,7 +178,7 @@ def analyze_ligand_site(
     """Run the bounded S3 explicit-ligand geometric site candidate screen."""
     import json
 
-    from kinetics import ligand_site_candidates
+    from molecularis import ligand_site_candidates
 
     atoms = _parse_structure_atoms(source_text, source_format)
     result = ligand_site_candidates(
@@ -206,7 +206,7 @@ def analyze_apo_pockets(source_text: str, source_format: str) -> str:
     """Run the bounded S3 apo probe-grid concavity candidate screen."""
     import json
 
-    from kinetics import apo_pocket_candidates
+    from molecularis import apo_pocket_candidates
 
     atoms = _parse_structure_atoms(source_text, source_format)
     result = apo_pocket_candidates(atoms)
@@ -230,7 +230,7 @@ def infer_genetic_code_from_fasta(fasta_text: str, complete_cds: bool = False) -
     """Run S8 candidate-table screening on bounded caller-supplied FASTA records."""
     import json
 
-    from kinetics import infer_genetic_code_candidates
+    from molecularis import infer_genetic_code_candidates
     from molecularis.sequence import iter_fasta_records
 
     if not isinstance(fasta_text, str) or len(fasta_text) > 1_000_000:

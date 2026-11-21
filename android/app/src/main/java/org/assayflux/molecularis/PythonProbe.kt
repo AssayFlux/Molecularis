@@ -9,7 +9,7 @@ object PythonProbe {
             Python.start(AndroidPlatform(context))
         }
         return Python.getInstance()
-            .getModule("kinetics_probe")
+            .getModule("molecularis_probe")
             .callAttr("runtime_report")
             .toString()
     }

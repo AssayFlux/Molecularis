@@ -7,7 +7,7 @@ class NativeProbe {
 
     companion object {
         init {
-            System.loadLibrary("kinetics_native")
+            System.loadLibrary("molecularis_native")
         }
     }
 }
