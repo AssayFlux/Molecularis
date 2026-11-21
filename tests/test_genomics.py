@@ -47,7 +47,10 @@ def test_vcf_parses_header_and_sample_columns() -> None:
         "#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\nchr1\t0\t.\tA\tG\t.\tPASS\t.\n",
         "#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\nchr1\t1\t.\tA\tG\tNaN\tPASS\t.\n",
         "#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\nchr1\t1\t.\tA\tG\t.\tPASS\t.\textra\n",
-        "#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tS1\nchr1\t1\t.\tA\tG\t.\tPASS\t.\tGT\n",
+        (
+            "#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tS1\n"
+            "chr1\t1\t.\tA\tG\t.\tPASS\t.\tGT\n"
+        ),
     ],
 )
 def test_vcf_rejects_invalid_position_quality_and_column_counts(text: str) -> None:
@@ -124,7 +127,7 @@ def test_bam_binary_record_core_fields_decode_from_gzip_stream() -> None:
 
 
 
-def test_optional_htslib_adapter_reads_bam_and_requires_local_reference_for_cram(tmp_path: Path) -> None:
+def test_optional_htslib_adapter_requires_local_reference_for_cram(tmp_path: Path) -> None:
     pysam = pytest.importorskip("pysam")
     from molecularis.genomics_htslib import iter_alignment_records
 
