@@ -1,0 +1,15 @@
+id: "ai"
+name: "Molecularis AI"
+roadmap_step: "AI"
+roadmap_order: 15
+depends_on: ["molecular","sequence","structure","chemistry","protein","genomics","dna-rna","simulation","kinetics","omics","phylogeny","pharmacogenomics","cohorts","workflows"]
+status: "initial_implementation"
+completion_status: "model_adapter_and_guarded_workflow_planning_implemented"
+primary_languages: ["python"]
+engine: "ENGINE.md"
+rulebook: "RULEBOOK.md"
+acceptance: "ACCEPTANCE.md"
+source_roots:
+  python: "python/molecularis"
+test_root: "tests"
+external_execution_dependencies: ["deployment-configured-model-adapter"]

@@ -78,3 +78,8 @@ A scaffold or specification does not imply implementation or scientific validati
 ## Reporting rule
 
 Update this register only from repository evidence. Every status transition must cite a commit, test run, benchmark or scientific validation artifact. Never upgrade a service to complete based on documentation alone.
+
+
+## Molecularis AI (intelligence layer)
+
+Initial implementation added after A–N: model-agnostic planner contract, live A–N capability catalog, strict Workflow v1 parsing, plan artifact persistence with source lineage, explicit approval gate and execution through the Core Rulebook runtime. A fresh-runtime A–N bootstrap is available. Provider SDK integration, real scientific cross-service artifact handoff, adversarial prompt testing, recovery/isolation acceptance and university scientific validation remain open. This is not yet an autonomous or scientifically validated research agent.

@@ -8,6 +8,10 @@ Its purpose is to turn scientific methods into explicit, testable capabilities a
 
 Build a trustworthy scientific system in which every result can be traced to its inputs, method, build, parameters, reference data and validation evidence. Accuracy, uncertainty, approximation and incompleteness must be explicit. See [docs/NORTH_STAR.md](docs/NORTH_STAR.md).
 
+## Intelligence layer
+
+`Molecularis AI` (`python/molecularis/ai.py`) is the model-assisted intelligence layer above A–N. It exposes the live capability catalog, accepts structured Workflow v1 proposals from a deployment-configured model adapter, validates and stores plans with input lineage, and requires explicit approval before execution through the native Rulebook runtime. The A–N bootstrap is `create_full_platform()`. No model provider or credentials are bundled; provider integration and real cross-service artifact compatibility remain acceptance work. See [Molecularis AI](services/ai/ENGINE.md).
+
 ## Development sequence: one service at a time
 
 After the shared Core/MSDE foundation passes its platform gate, services are built in this strict order:
