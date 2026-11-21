@@ -197,7 +197,7 @@ The repository is a research-engineering baseline: it contains a substantive Pyt
 | CONTRACTS & DATA | Versioned JSON Schema and language-neutral contracts, portable project format, checksums, atomic persistence and SPDX inventory. |
 
 ## SYSTEM ARCHITECTURE
-\`\`\`mermaid
+```mermaid
 flowchart TD
     USER["RESEARCH USER"] --> DESKTOP["DESKTOP APPLICATIONS · LINUX / WINDOWS / macOS"]
     USER --> MOBILE["MOBILE APPLICATIONS · ANDROID / iOS / iPadOS"]
@@ -217,7 +217,7 @@ flowchart TD
     class DESKTOP,MOBILE,DOMAIN royal;
     class PROJECTS,CONTRACTS,CI gold;
     class SERVICES,PY,NATIVE,VIEW,COMPUTE teal;
-\`\`\`
+```
 
 ## NEXT GATES
 | PHASE | NEXT REQUIRED WORK |
