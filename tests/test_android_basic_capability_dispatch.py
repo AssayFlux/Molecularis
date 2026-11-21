@@ -571,7 +571,11 @@ def test_mobile_pgx_incomplete_phase_returns_no_call():
         "schema_version": 1,
         "source": {"name": "Synthetic", "release": "1", "url": "https://example.org",
                    "license": "CC0-1.0", "sha256": "0" * 64},
-        "genome_build": "GRCh-test", "definitions": [{"gene": "GENE", "star_allele": "*1", "id": "synthetic-1", "required_variants": [], "excluded_variants": []}],
+        "genome_build": "GRCh-test",
+        "definitions": [{
+            "gene": "GENE", "star_allele": "*1", "id": "synthetic-1",
+            "required_variants": [], "excluded_variants": [],
+        }],
     }
     result = _run_probe("pgx.star_allele_definitions", json.dumps({
         "definitions_json": json.dumps(document), "source_release": "1",
