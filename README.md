@@ -1,216 +1,391 @@
-<!-- MOLECULARIS · BY ASSAYFLUX -->
+<!-- Molecularis | AssayFlux -->
 
 <p align="center">
-  <img src="Assets/Molecularis%20By%20AssayFlux%C2%A9.png" alt="Molecularis by AssayFlux — scientific systems" width="100%">
+  <img src="Assets/Molecularis%20Guilloche%20Logo.svg" alt="Molecularis — AssayFlux" width="360">
 </p>
 
 <p align="center">
-  <img src="Assets/DNA%20Rainbow%20Helix.gif" alt="Animated molecular DNA helix" width="52%">
+  <strong>MOLECULAR SCIENCE · COMPUTATIONAL SYSTEMS · REPRODUCIBLE RESEARCH</strong>
 </p>
 
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Cinzel+Decorative&weight=600&size=27&pause=1500&color=D4AF37&center=true&vCenter=true&width=950&lines=MOLECULAR+SCIENCE+WITHOUT+SILOS;ONE+NATIVE+SCIENTIFIC+SYSTEM;RULEBOOK-DRIVEN+RESEARCH+WORKFLOWS;TRACEABLE+ARTIFACTS;REPRODUCIBLE+COMPUTATION;EVIDENCE+BEFORE+CLAIMS" alt="Molecularis scientific mission">
-</p>
-
-<p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Cinzel+Decorative&weight=600&size=20&pause=1700&color=42A5A5&center=true&vCenter=true&width=1000&lines=FROM+MOLECULAR+QUESTIONS+TO+COMPUTATIONAL+EVIDENCE;FOURTEEN+CONNECTED+SCIENTIFIC+DOMAINS;AI+PLANS.+NATIVE+ENGINES+EXECUTE.;EVERY+RESULT+SHOULD+CARRY+ITS+PROVENANCE;BUILT+FOR+RESEARCHERS%2C+SCIENTISTS+AND+INSTITUTIONS" alt="Molecularis research invitation">
-</p>
-
-<p align="center">
-  <a href="https://github.com/AssayFlux/Molecularis/blob/CORE/LICENSE"><img src="https://img.shields.io/github/license/AssayFlux/Molecularis?style=flat-square&label=LICENSE&labelColor=302A35&color=9B6A7A" alt="License"></a>
-  <a href="https://github.com/AssayFlux/Molecularis/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/AssayFlux/Molecularis/ci.yml?branch=CORE&style=flat-square&label=CI&labelColor=263B38&color=739B83" alt="CI"></a>
-  <a href="https://github.com/AssayFlux/Molecularis/stargazers"><img src="https://img.shields.io/github/stars/AssayFlux/Molecularis?style=flat-square&label=STARS&labelColor=45372D&color=C69B58" alt="Stars"></a>
-  <a href="https://github.com/AssayFlux/Molecularis/forks"><img src="https://img.shields.io/github/forks/AssayFlux/Molecularis?style=flat-square&label=FORKS&labelColor=263C50&color=7399B5" alt="Forks"></a>
-  <a href="https://github.com/AssayFlux/Molecularis/issues"><img src="https://img.shields.io/github/issues/AssayFlux/Molecularis?style=flat-square&label=ISSUES&labelColor=49344B&color=A98AB8" alt="Issues"></a>
-  <a href="https://github.com/AssayFlux/Molecularis/pulls"><img src="https://img.shields.io/github/issues-pr/AssayFlux/Molecularis?style=flat-square&label=PULL%20REQUESTS&labelColor=354A48&color=78AFA5" alt="Pull requests"></a>
-  <a href="https://github.com/AssayFlux/Molecularis/commits/CORE"><img src="https://img.shields.io/github/last-commit/AssayFlux/Molecularis/CORE?style=flat-square&label=LAST%20COMMIT&labelColor=493B32&color=B88C72" alt="Last commit"></a>
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/ASSAYFLUX-Scientific_Systems-800020?style=flat-square" alt="AssayFlux Scientific Systems">
-  <img src="https://img.shields.io/badge/ARCHITECTURE-Molecularis_Native-78649A?style=flat-square" alt="Molecularis native architecture">
-  <img src="https://img.shields.io/badge/DOMAINS-A%E2%80%93N-527C72?style=flat-square" alt="Fourteen domains">
-  <img src="https://img.shields.io/badge/AI-Planning_Layer-657B9B?style=flat-square" alt="AI planning layer">
-  <img src="https://img.shields.io/badge/INTENDED_USE-Research_Only-8B7058?style=flat-square" alt="Research only">
+  <a href="https://github.com/AssayFlux/Molecularis/actions"><img src="https://img.shields.io/github/actions/workflow/status/AssayFlux/Molecularis/ci.yml?branch=CORE&style=flat-square&label=CI" alt="CI"></a>
+  <a href="https://github.com/AssayFlux/Molecularis/blob/CORE/LICENSE"><img src="https://img.shields.io/github/license/AssayFlux/Molecularis?style=flat-square" alt="License"></a>
+  <a href="https://github.com/AssayFlux/Molecularis/commits/CORE"><img src="https://img.shields.io/github/last-commit/AssayFlux/Molecularis/CORE?style=flat-square" alt="Last commit"></a>
+  <a href="https://github.com/AssayFlux/Molecularis/issues"><img src="https://img.shields.io/github/issues/AssayFlux/Molecularis?style=flat-square" alt="Issues"></a>
 </p>
 
 ---
 
-## THE IDEA
+## Molecularis
 
-**Molecularis** is a Molecularis-native scientific computing system designed to connect molecular science, sequence analysis, structural biology, chemistry, protein science, genomics, DNA/RNA, simulation, kinetics, omics, phylogenetics, pharmacogenomics, cohorts and reproducible workflows.
+**Molecularis** is a native scientific computing platform by **AssayFlux**, designed to bring molecular and life-science computation into one coherent, extensible system.
 
-The central idea is simple: scientific capabilities should not remain isolated tools. They should become explicit, versioned, testable services that can exchange typed artifacts, follow machine-readable Rulebooks and preserve the evidence behind every result.
-
-Molecularis is being engineered as a coherent research system—not as a collection of unrelated wrappers.
+Its architecture connects domain-specific services through shared data contracts, a capability registry, a Rulebook-driven workflow runtime and traceable scientific artifacts. An AI planning layer is being developed to translate research requests into validated workflows that use these services.
 
 <table>
-  <tr>
-    <td align="center" width="33%">
-      <img src="https://api.iconify.design/lucide/network.svg?color=%23800020" width="30" height="30" alt=""><br>
-      <strong>CONNECTED SCIENCE</strong><br>
-      <sub>Domain services with shared contracts and explicit capability boundaries.</sub>
-    </td>
-    <td align="center" width="33%">
-      <img src="https://api.iconify.design/lucide/fingerprint.svg?color=%23800020" width="30" height="30" alt=""><br>
-      <strong>REPRODUCIBILITY</strong><br>
-      <sub>Immutable artifacts, lineage, parameters and execution records.</sub>
-    </td>
-    <td align="center" width="33%">
-      <img src="https://api.iconify.design/lucide/shield-check.svg?color=%23800020" width="30" height="30" alt=""><br>
-      <strong>SCIENTIFIC INTEGRITY</strong><br>
-      <sub>Validation evidence and limitations remain visible—not implied.</sub>
-    </td>
-  </tr>
+<tr>
+<td width="50%" valign="top">
+
+### The mission
+
+Build a unified environment where researchers can compose scientific operations across domains without losing the context, provenance or reproducibility of their work.
+
+</td>
+<td width="50%" valign="top">
+
+### The principle
+
+**Engines compute. Rulebooks govern. Artifacts preserve evidence. AI coordinates.**
+
+Scientific correctness must be established through domain validation—not inferred from successful software execution.
+
+</td>
+</tr>
 </table>
 
-## THE NORTH STAR
+## At a glance
 
-> Every scientific result should be traceable to its inputs, method, parameters, software version, reference data and validation evidence.
+<table>
+<tr>
+<td width="25%" align="center" valign="top">
 
-Molecularis aims to make complex research workflows inspectable and reproducible. It distinguishes implementation from validation, prediction from measurement, and successful execution from scientific correctness.
+### 14
 
-Read the [North Star](docs/NORTH_STAR.md) and [Scientific Validation Standard](docs/SCIENTIFIC_VALIDATION_STANDARD.md).
+**Scientific services**
 
-## MOLECULARIS AI — THE INTELLIGENCE LAYER
+A–N domain architecture
 
-<p align="center">
-  <img src="Assets/Laboratory.gif" alt="Animated scientific laboratory" width="100%">
-</p>
+</td>
+<td width="25%" align="center" valign="top">
 
-Molecularis AI is designed to translate a research request into a validated execution plan over the native A–N service catalog.
+### 1
 
-**Intended operating loop**
+**Shared platform**
 
-1. **Understand** — receive the research objective, constraints and supplied input artifacts.
-2. **Discover** — inspect the capabilities registered by Molecularis services.
-3. **Plan** — propose a versioned Workflow document using available capabilities.
-4. **Validate** — check the plan against workflow contracts, registered operations, resource limits and artifact references.
-5. **Approve** — require explicit human approval before execution.
-6. **Execute** — delegate computation to Molecularis services and the native Rulebook runtime.
-7. **Inspect** — collect run evidence, output artifacts, lineage and execution status.
-8. **Report** — present results with methods, provenance, limitations and unresolved questions.
+Core / MSDE foundation
 
-The AI layer coordinates scientific engines; it is not a replacement for them. Model-generated content is treated as untrusted structured input, not executable code.
+</td>
+<td width="25%" align="center" valign="top">
 
-**Current implementation:** a model-agnostic planning and approval framework exists in `python/molecularis/ai.py`; `create_full_platform()` bootstraps the A–N service catalog. A provider adapter, configured model credentials, robust real-world cross-service artifact compatibility and independent AI safety evaluation remain open acceptance work. No hosted model is bundled or silently assumed.
+### AI
 
-Read [Molecularis AI — Engine](services/ai/ENGINE.md), [Rulebook](services/ai/RULEBOOK.md) and [Acceptance criteria](services/ai/ACCEPTANCE.md).
+**Planning layer**
 
-## SCIENTIFIC SERVICE SYSTEM · A–N
+Capability-aware orchestration
 
-| ID | SERVICE | SCIENTIFIC SCOPE |
-|:---:|---|---|
-| **A** | Molecular | Molecular entities, representations, descriptors and molecular operations. |
-| **B** | Sequence | Biological sequence parsing, transformations, alignment and analysis. |
-| **C** | Structure | Molecular structure representation, parsing and structural analysis. |
-| **D** | Chemistry | Chemical representations, molecular graphs and chemistry operations. |
-| **E** | Protein | Protein sequence and protein-science analysis foundations. |
-| **F** | Genomics | Read/alignment and variant-oriented genomics workflows. |
-| **G** | DNA/RNA | Nucleic-acid design, analysis and domain-specific rule packages. |
-| **H** | Simulation | Molecular simulation execution and simulation-oriented workflows. |
-| **I** | Kinetics | Reaction networks, kinetic models and numerical integration. |
-| **J** | Omics | Feature matrices, normalisation and exploratory multi-omics analysis. |
-| **K** | Phylogeny | Sequence-derived distance, tree construction and bootstrap support. |
-| **L** | Pharmacogenomics | Provenance-pinned allele resources and conservative genotype matching foundations. |
-| **M** | Cohorts | Synthetic cohort operations, descriptive summaries and privacy-aware aggregation foundations. |
-| **N** | Workflows | DAG orchestration, registered capabilities and reproducible workflow execution. |
+</td>
+<td width="25%" align="center" valign="top">
 
-Service presence or registration is not proof of scientific validation. Optional external engines, models, reference datasets and their licenses must be evaluated in the deployment environment.
+### Rulebooks
 
-See the [A–N Service Roadmap](docs/SERVICE_ROADMAP.md) and [Service Status](docs/SERVICE_STATUS.md).
+**Execution model**
 
-## PLATFORM FOUNDATION
+Declared, validated workflows
 
-| FOUNDATION | RESPONSIBILITY |
+</td>
+</tr>
+</table>
+
+## Scientific service cards
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+### A · Molecular
+
+Molecular entities, representations, descriptors and molecular operations.
+
+</td>
+<td width="50%" valign="top">
+
+### B · Sequence
+
+Biological sequence parsing, transformation, alignment and analysis.
+
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+
+### C · Structure
+
+Molecular structure representation, parsing and structural analysis.
+
+</td>
+<td width="50%" valign="top">
+
+### D · Chemistry
+
+Chemical representations, molecular graphs and chemistry operations.
+
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+
+### E · Protein
+
+Protein sequence and protein-science analysis foundations.
+
+</td>
+<td width="50%" valign="top">
+
+### F · Genomics
+
+Read/alignment processing and variant-oriented genomics workflows.
+
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+
+### G · DNA/RNA
+
+Nucleic-acid design, analysis and domain-specific rule packages.
+
+</td>
+<td width="50%" valign="top">
+
+### H · Simulation
+
+Molecular simulation execution and simulation-oriented workflows.
+
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+
+### I · Kinetics
+
+Reaction networks, kinetic models and numerical integration.
+
+</td>
+<td width="50%" valign="top">
+
+### J · Omics
+
+Feature matrices, normalisation and exploratory multi-omics analysis.
+
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+
+### K · Phylogeny
+
+Sequence-derived distance, tree construction and bootstrap support.
+
+</td>
+<td width="50%" valign="top">
+
+### L · Pharmacogenomics
+
+Allele-resource foundations and conservative genotype matching.
+
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+
+### M · Cohorts
+
+Synthetic cohort operations, descriptive summaries and privacy-aware aggregation foundations.
+
+</td>
+<td width="50%" valign="top">
+
+### N · Workflows
+
+DAG orchestration, registered capabilities and reproducible workflow execution.
+
+</td>
+</tr>
+</table>
+
+Service registration and implementation do not, by themselves, establish scientific validity. Optional engines, models, reference datasets and their licenses must be checked in the target environment.
+
+## Molecularis AI
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+### What it does
+
+Molecularis AI is the intelligence and orchestration layer above the A–N services. It is intended to interpret a research objective, discover relevant capabilities, compose a Rulebook workflow and present evidence-backed results.
+
+</td>
+<td width="50%" valign="top">
+
+### What it does not do
+
+It does not replace scientific engines, execute arbitrary model-generated code or silently treat predictions as facts. Workflow execution is approval-gated; scientific interpretation remains subject to domain review.
+
+</td>
+</tr>
+</table>
+
+### Research-to-workflow lifecycle
+
+| Stage | Responsibility |
+|:---:|---|
+| **01 · Understand** | Parse the research objective, constraints and supplied artifacts. |
+| **02 · Discover** | Inspect the registered A–N capabilities. |
+| **03 · Plan** | Generate a versioned workflow using declared operations. |
+| **04 · Validate** | Check contracts, dependencies, artifact references and resource bounds. |
+| **05 · Approve** | Require explicit human approval before execution. |
+| **06 · Execute** | Delegate operations to service handlers through the Rulebook runtime. |
+| **07 · Inspect** | Collect run state, output artifacts and provenance. |
+| **08 · Report** | Present results, methods, limitations and unresolved questions. |
+
+<details>
+<summary><strong>AI implementation status and technical notes</strong></summary>
+
+The model-agnostic planning and approval-gated execution framework is implemented in `python/molecularis/ai.py`. The A–N platform bootstrap is implemented in `python/molecularis/bootstrap.py`.
+
+Still required for a complete AI product:
+
+- A configured model-provider adapter and deployment credentials.
+- Demonstrated artifact compatibility across real scientific service chains.
+- Adversarial, prompt-injection and failure-mode testing.
+- Evidence-rich report generation and independent AI safety evaluation.
+
+No hosted model or provider credentials are bundled or assumed.
+
+Read: [AI Engine](services/ai/ENGINE.md) · [AI Rulebook](services/ai/RULEBOOK.md) · [AI Acceptance](services/ai/ACCEPTANCE.md).
+
+</details>
+
+## Platform architecture cards
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+### Core / MSDE
+
+Shared scientific data contracts, immutable artifact handling, metadata catalog and provenance foundations.
+
+</td>
+<td width="50%" valign="top">
+
+### Capability Registry
+
+Versioned discovery of service operations, schemas and capability metadata.
+
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+
+### Rulebook Runtime
+
+Workflow validation, dependency ordering, execution policy and resource bounds.
+
+</td>
+<td width="50%" valign="top">
+
+### Artifact Store
+
+Content-addressed data, integrity checks and parent/lineage relationships.
+
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+
+### Workflow Engine
+
+Operation dispatch, DAG execution and success/failure recording.
+
+</td>
+<td width="50%" valign="top">
+
+### Service Runtime
+
+Lifecycle management and bounded execution in the local reference platform.
+
+</td>
+</tr>
+</table>
+
+### Platform responsibility map
+
+| Layer | Input | Responsibility | Output |
+|---|---|---|---|
+| AI planner | Research request | Capability selection and workflow proposal | Workflow plan |
+| Validator | Workflow plan | Schema, capability and policy checks | Validated plan |
+| Rulebook runtime | Approved plan | Dependency-aware execution | Run record |
+| Domain services | Typed inputs | Scientific computation | Service results |
+| Artifact store | Results and metadata | Integrity, storage and lineage | Traceable artifacts |
+| Reporting | Run evidence | Summarise results and limitations | Research report |
+
+## Repository structure
+
+| Location | Responsibility |
 |---|---|
-| **Core / MSDE** | Shared scientific data contracts, immutable artifacts, metadata catalog and provenance. |
-| **Capability Registry** | Discoverable, versioned operations exposed by domain services. |
-| **Rulebook Runtime** | Validated workflow DAGs, execution policy, resource bounds and run evidence. |
-| **Artifact Store** | Content-addressed data, integrity checks and parent/lineage relationships. |
-| **Workflow Engine** | Dependency ordering, operation dispatch and success/failure recording. |
-| **Service Runtime** | Lifecycle and bounded execution for the local reference platform. |
-| **Molecularis AI** | Research-request planning, capability selection and approval-gated orchestration. |
+| `CORE/` | Shared Core / MSDE architecture and implementation |
+| `services/` | Domain service engines, Rulebooks, schemas and manifests |
+| `services/ai/` | AI engine specification, Rulebook and acceptance gates |
+| `python/molecularis/` | Platform runtime, AI planning and A–N bootstrap |
+| `python/kinetics/` | Kinetics scientific implementation |
+| `api/` · `schemas/` | Versioned API and data contracts |
+| `capabilities/` | Capability inventory and registration metadata |
+| `data/` · `validation/` | Reference metadata and validation assets |
+| `remote-node/` | Remote execution component |
+| `scripts/` · `tests/` | Engineering checks, fixtures and automated tests |
+| `Assets/` | Project identity and visual assets |
 
-### SYSTEM ARCHITECTURE
+## Engineering status
 
-```mermaid
-flowchart TB
-    USER["RESEARCHER / SCIENTIST"] --> AI["MOLECULARIS AI"]
-    AI --> PLAN["PLAN · CAPABILITY DISCOVERY · VALIDATION"]
-    PLAN --> APPROVAL["HUMAN APPROVAL GATE"]
-    APPROVAL --> RULEBOOK["NATIVE RULEBOOK / WORKFLOW RUNTIME"]
+<table>
+<tr>
+<td width="50%" valign="top">
 
-    subgraph SERVICES["MOLECULARIS SCIENTIFIC SERVICES · A–N"]
-      A["A · MOLECULAR"]
-      B["B · SEQUENCE"]
-      C["C · STRUCTURE"]
-      D["D · CHEMISTRY"]
-      E["E · PROTEIN"]
-      F["F · GENOMICS"]
-      G["G · DNA/RNA"]
-      H["H · SIMULATION"]
-      I["I · KINETICS"]
-      J["J · OMICS"]
-      K["K · PHYLOGENY"]
-      L["L · PHARMACOGENOMICS"]
-      M["M · COHORTS"]
-      N["N · WORKFLOWS"]
-    end
+### Implemented foundations
 
-    RULEBOOK --> SERVICES
-    SERVICES --> ARTIFACTS["IMMUTABLE ARTIFACTS · SCHEMAS · LINEAGE"]
-    ARTIFACTS --> REPORT["RESULTS · PROVENANCE · LIMITATIONS"]
-    REPORT --> USER
-    CORE["CORE / MSDE · REGISTRY · CATALOG"] --- RULEBOOK
-    CORE --- ARTIFACTS
-    CI["ENGINEERING CI · TESTS · SCHEMA CHECKS"] -.-> CORE
-    classDef identity fill:#800020,color:#FFF8E7,stroke:#D4AF37,stroke-width:2px;
-    classDef platform fill:#D4AF37,color:#1A1210,stroke:#800020,stroke-width:1px;
-    classDef service fill:#0B6E6E,color:#FFF8E7,stroke:#D4AF37,stroke-width:1px;
-    class USER,AI,APPROVAL identity;
-    class PLAN,RULEBOOK,CORE,ARTIFACTS,REPORT,CI platform;
-    class A,B,C,D,E,F,G,H,I,J,K,L,M,N service;
-```
+- A–N service packages and registration path.
+- Core / MSDE local reference runtime.
+- Content-addressed artifact storage and integrity checks.
+- SQLite WAL metadata catalog.
+- Capability registry and Rulebook DAG execution.
+- Initial AI planning and approval gate.
+- Automated engineering CI.
 
-## REPOSITORY MAP
+</td>
+<td width="50%" valign="top">
 
-| PATH | PURPOSE |
+### Remaining acceptance work
+
+- Real end-to-end scientific workflows across service boundaries.
+- Typed artifact handoff and cross-service compatibility evidence.
+- Configured AI provider and robust model integration.
+- Runtime isolation, distributed execution and recovery hardening.
+- Independent scientific validation at the university.
+- Domain-specific benchmarking and reference-data verification.
+
+</td>
+</tr>
+</table>
+
+**Latest observed CI:** [GitHub Actions run #44901363429](https://github.com/AssayFlux/Molecularis/actions/runs/44901363429) completed successfully on commit `2b6eced852fb049a81f6b087bb94e5e946047750`. This is engineering evidence, not independent scientific validation.
+
+### Explicit non-claims
+
+| Area | Current position |
 |---|---|
-| `CORE/` | Shared Core/MSDE architecture and implementation. |
-| `services/<service>/` | Domain-owned engine, runtime, Rulebook, schemas and service metadata. |
-| `services/ai/` | AI engine specification, orchestration Rulebook and acceptance gates. |
-| `python/molecularis/platform/` | Local reference runtime, artifact store, catalog, registry and workflow executor. |
-| `python/molecularis/ai.py` | Model-agnostic AI planning and approval-gated execution interface. |
-| `python/molecularis/bootstrap.py` | Full A–N platform construction and service registration. |
-| `python/kinetics/` | Retained scientific implementation pending ongoing audit and migration. |
-| `api/` · `schemas/` | Versioned API and data contracts. |
-| `capabilities/` | Capability inventory and registration metadata. |
-| `data/` · `validation/` | Reference metadata and validation assets. |
-| `remote-node/` | Remote execution component and its boundary. |
-| `scripts/` · `tests/` | Engineering checks, fixtures and automated tests. |
-| `Assets/` | Molecularis and AssayFlux identity and visual assets. |
+| Scientific correctness | Requires independent domain validation. |
+| Cross-service integration | Full real scientific chains still need demonstration. |
+| AI provider | No configured hosted provider is included. |
+| Production deployment | Local reference runtime; not certified as distributed production infrastructure. |
+| Clinical use | No diagnostic or treatment capability is claimed. |
+| External engines | Availability, licensing and versions depend on deployment configuration. |
 
-## CURRENT ENGINEERING POSITION
+## Getting started
 
-The repository contains the A–N service foundations and a local Core/MSDE reference implementation. The platform includes content-addressed SHA-256 artifact storage, a SQLite WAL catalog, lineage, bounded streaming, integrity auditing, metadata lookup, capability registration and Rulebook DAG execution.
-
-A full-platform bootstrap now registers the fourteen service packages. The initial Molecularis AI planning layer is implemented and requires approval before workflow execution.
-
-**Latest observed engineering CI:** [run #44901363429](https://github.com/AssayFlux/Molecularis/actions/runs/44901363429) completed successfully on commit `2b6eced852fb049a81f6b087bb94e5e946047750`. The prior fully reported baseline recorded Core 746 passed / 12 skipped; Chemistry 754 / 4; Sequence 749 / 9; Genomics 747 / 11. See the linked run for the exact-head result and job details.
-
-### WHAT IS NOT YET CLAIMED
-
-- No independent university-level scientific validation has been completed or asserted here.
-- Real end-to-end scientific chains across all services still require compatibility and integration evidence.
-- The AI framework does not include a configured LLM provider, API key or hosted inference deployment.
-- The local reference runtime is not a distributed production platform; OS-level sandboxing, robust recovery certification and multi-process execution remain open.
-- Optional scientific engines and models must be separately installed, configured, licensed and validated.
-- No clinical validation, diagnostic capability or treatment recommendation is claimed.
-
-## DEVELOPMENT
-
-**Requirements:** Python 3.10 or newer.
+**Requirements:** Python 3.10+
 
 ```bash
 python -m pip install -r requirements-dev.txt
@@ -219,55 +394,51 @@ pytest
 python scripts/check_registry.py
 ```
 
-For the full engineering process, use the repository's governing documents rather than bypassing service gates.
+Use the repository's service specifications and engineering Rulebook when extending the platform.
 
-## GOVERNANCE, ROADMAP AND ENGINEERING RULES
+## Project documentation
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+**Direction and architecture**
 
 - [North Star](docs/NORTH_STAR.md)
 - [Master Development Plan](docs/MASTER_DEVELOPMENT_PLAN.md)
+- [Future Architecture](docs/FUTURE_ARCHITECTURE.md)
+- [MSDE Architecture](CORE/data-engine/README.md)
+
+</td>
+<td width="50%" valign="top">
+
+**Execution and governance**
+
 - [A–N Service Roadmap](docs/SERVICE_ROADMAP.md)
 - [Master Engineering Rulebook](MASTER_ENGINEERING_RULEBOOK.md)
-- [Future Architecture](docs/FUTURE_ARCHITECTURE.md)
 - [Service Status](docs/SERVICE_STATUS.md)
 - [Work Backlog](docs/WORK_BACKLOG.md)
 - [Continuous Work Protocol](docs/CONTINUOUS_WORK_PROTOCOL.md)
 - [Scientific Validation Standard](docs/SCIENTIFIC_VALIDATION_STANDARD.md)
-- [MSDE Architecture](CORE/data-engine/README.md)
-- [Security Policy](SECURITY.md)
 
-## RESEARCH COLLABORATION
+</td>
+</tr>
+</table>
 
-Molecularis is intended to grow through collaboration among researchers, computational scientists, software engineers and academic institutions. Contributions should strengthen the scientific method, contracts, provenance, testing, documentation or validation evidence—not merely increase the number of features.
+## Research collaboration
 
-When contributing:
+Molecularis is intended for collaborative development by researchers, computational scientists, software engineers and academic institutions.
 
-1. Read the North Star, roadmap, engineering rulebook and active service specification.
-2. Preserve service boundaries and versioned artifact contracts.
-3. Include tests, schemas, provenance and resource constraints with implementation.
-4. Record optional dependencies, data/model sources and their licenses.
-5. State exactly what was tested, what was not tested and what remains uncertain.
-6. Never describe software tests as proof of scientific correctness.
+Contributions should preserve service boundaries, versioned contracts, provenance and reproducibility. Implementations should include tests, schemas, resource constraints, dependency/license notes and a clear account of what has—and has not—been validated.
 
-## LICENSE AND ATTRIBUTION
+## License
 
-Molecularis is distributed under the repository's [LICENSE](LICENSE). Third-party libraries, scientific engines, datasets, pretrained models, fonts and visual assets may carry separate licenses and terms. Review upstream conditions before redistribution or bundling.
+See [LICENSE](LICENSE). Third-party libraries, scientific engines, pretrained models, datasets and reference resources may carry separate licenses and terms.
+
+---
 
 <p align="center">
-  <img src="Assets/Organization%20Logo%201%E2%AD%901.gif" alt="AssayFlux Scientific Systems identity" width="100%">
-</p>
-
-<p align="center">
-  <img src="Assets/Goal.png" alt="Molecularis scientific exploration and discovery" width="100%">
-</p>
-
-<p align="center">
-  <img src="https://readme-typing-svg.demolab.com/?font=Cinzel+Decorative&weight=600&size=22&pause=1800&color=D4AF37&center=true&vCenter=true&width=1000&height=55&lines=LET+EVERY+MOLECULE+CARRY+A+QUESTION;LET+EVERY+WORKFLOW+CARRY+ITS+PROVENANCE;LET+EVERY+CONCLUSION+CARRY+ITS+EVIDENCE;MOLECULARIS+BY+ASSAYFLUX" alt="Molecularis closing statement">
-</p>
-
-<p align="center">
-  <img src="Assets/Author's%20Signature.svg" alt="Author signature" width="35%">
-</p>
-
-<p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:1F2A6B,50:800020,100:D4AF37&height=100&section=footer" alt="" width="100%">
+  <strong>MOLECULARIS</strong><br>
+  <sub>A scientific systems project by AssayFlux</sub><br>
+  <sub>Every result should be traceable. Every workflow should be inspectable. Every claim should carry evidence.</sub>
 </p>
