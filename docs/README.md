@@ -16,5 +16,6 @@ Read in this order:
 13. DECISION_LOG.md — accepted decisions.
 14. SERVICE_STATUS.md — verified current state.
 15. WORK_BACKLOG.md — ordered next tasks.
+16. A_N_AUDIT.md — repository-wide A–N service inventory and gaps.
 
 Service-specific documents live under services/<service>/. Update status and backlog only from verified commits and test results.
