@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import pytest
 
-from kinetics.hmmer import parse_hmmscan_domtblout
-from kinetics.hmmer_rank import rank_hmmer_domain_candidates
+from molecularis.hmmer import parse_hmmscan_domtblout
+from molecularis.hmmer_rank import rank_hmmer_domain_candidates
 
 
 ROW = (

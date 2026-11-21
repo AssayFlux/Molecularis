@@ -4,7 +4,7 @@ from collections.abc import Callable
 
 import pytest
 
-from kinetics.kinetics import eadie_hofstee, hanes_woolf, lineweaver_burk
+from molecularis.kinetics import eadie_hofstee, hanes_woolf, lineweaver_burk
 
 
 def test_kinetic_linearized_views_return_explicit_axes_and_warnings() -> None:

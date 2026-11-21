@@ -5,7 +5,7 @@ from pathlib import Path
 
 from jsonschema import Draft202012Validator
 
-from kinetics.hmmer import parse_hmmscan_domtblout
+from molecularis.hmmer import parse_hmmscan_domtblout
 PACK = {
     "name": "synthetic-profile-pack",
     "version": "1",

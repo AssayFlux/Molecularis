@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import pytest
 
-from kinetics.gff3 import parse_gff3
-from kinetics.gff3_transcripts import reconstruct_gff3_cds
+from molecularis.gff3 import parse_gff3
+from molecularis.gff3_transcripts import reconstruct_gff3_cds
 
 
 def test_plus_strand_multiexon_cds_reconstruction_and_translation() -> None:
