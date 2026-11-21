@@ -50,6 +50,10 @@ from .phylo import Node, bootstrap_neighbor_joining_from_alignment, leaf_names, 
 from .phylogeny_service import PhylogenyDocument, ingest_phylogeny, load_phylogeny, register_phylogeny_service, phylogeny_rulebook
 from .pharmvar import (PharmVarAlleleDefinition, PharmVarMatch, PharmVarVariant, match_pharmvar_haplotype, parse_pharmvar_tsv)
 from .pgx import AlleleMatch, StarAlleleDefinition, VariantKey, match_phased_haplotype, parse_star_allele_definitions
+from .pharmacogenomics_service import (
+    HaplotypeCall, PharmacogenomicsDocument, ingest_pharmacogenomics, ingest_pgx_definitions,
+    load_pharmacogenomics, pharmacogenomics_rulebook, register_pharmacogenomics_service,
+)
 from .docking_vina import run_vina_docking
 from .md_openmm import run_openmm_dynamics
 from .pkpd import emax_pd, one_compartment_oral_pk
@@ -76,7 +80,7 @@ from .structure import (
 )
 
 __all__ = [
-    "PhylogenyDocument", "ingest_phylogeny", "load_phylogeny", "register_phylogeny_service", "phylogeny_rulebook",
+    "HaplotypeCall", "PharmacogenomicsDocument", "ingest_pharmacogenomics", "ingest_pgx_definitions", "load_pharmacogenomics", "register_pharmacogenomics_service", "pharmacogenomics_rulebook",\n    "PhylogenyDocument", "ingest_phylogeny", "load_phylogeny", "register_phylogeny_service", "phylogeny_rulebook",
     "OmicsDocument", "ingest_omics", "load_omics", "register_omics_service", "omics_rulebook",
     "ReactionNetworkDocument", "ingest_kinetics", "load_kinetics", "register_kinetics_service", "kinetics_rulebook", "simulate_reaction_network",
     "SimulationDocument", "ingest_simulation", "load_simulation", "register_simulation_service", "simulation_rulebook", "analyze_energy_series", "run_gromacs",

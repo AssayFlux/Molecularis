@@ -50,7 +50,7 @@ jobs:
         run: PYTHONPATH=python python services/omics/benchmarks/omics_benchmark.py --features 1000 --samples 12
       - name: Phylogeny tree benchmark smoke
         run: PYTHONPATH=python python services/phylogeny/benchmarks/phylogeny_benchmark.py --taxa 20 --sites 1000
-      - name: Protein sequence benchmark smoke
+      - name: Pharmacogenomics matching benchmark smoke\n        run: PYTHONPATH=python python services/pharmacogenomics/benchmarks/pharmacogenomics_benchmark.py --calls 100\n      - name: Protein sequence benchmark smoke
         run: PYTHONPATH=python python services/protein/benchmarks/protein_benchmark.py --residues 10000
       - name: Chemistry graph benchmark smoke
         run: PYTHONPATH=python python services/chemistry/benchmarks/chemistry_benchmark.py --atoms 1000

@@ -3,16 +3,15 @@ name: "Pharmacogenomics"
 roadmap_step: "L"
 roadmap_order: 12
 depends_on: ["genomics","omics"]
-status: "scaffold"
-completion_status: "not_implemented"
-primary_languages: ["cpp", "python", "rust"]
+status: "implemented"
+completion_status: "engineering_implemented"
+primary_languages: ["python"]
 engine: "ENGINE.md"
 runtime: "RUNTIME.md"
 rulebook: "RULEBOOK.md"
+acceptance: "ACCEPTANCE.md"
 source_roots:
-  cpp: "src/cpp"
-  python: "src/python"
-  rust: "src/rust"
+  python: "python/molecularis"
 test_root: "tests"
 schema_root: "schemas"
 data_root: "data"

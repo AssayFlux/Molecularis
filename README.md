@@ -26,7 +26,7 @@ Each step includes discovery, specification, native engine, runtime, Rulebook, s
 - `capabilities/registry.yaml` — capability inventory; registration is not proof of validation.
 - `services/kinetics/` — canonical mass-action reaction-network artifacts, bounded RK4 integration, and retained Michaelis–Menten / exploratory PK/PD primitives.
 - `services/omics/` — canonical feature-by-sample artifacts, CPM/CLR, exploratory differential analysis, diversity and cross-omics correlation.
-- `services/phylogeny/` — canonical aligned nucleotide artifacts, Jukes-Cantor distance matrices, neighbor joining, UPGMA and seeded site-bootstrap split support.
+- `services/phylogeny/` — canonical aligned nucleotide artifacts, Jukes-Cantor distance matrices, neighbor joining, UPGMA and seeded site-bootstrap split support.\n- `services/pharmacogenomics/` — provenance-pinned star-allele definition packs and conservative matching of already-phased synthetic haplotypes; no phenotype or treatment advice.
 - `data/`, `validation/` — reference metadata and validation assets.
 - `remote-node/` — isolated remote execution component.
 - `scripts/`, `tests/` — engineering checks and automated tests.

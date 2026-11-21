@@ -619,3 +619,14 @@ claims: []
 clinical_gate:
   enabled: false
   part12_evidence: []
+
+  - id: pharmacogenomics.msde_validate
+    name: MSDE validation of synthetic non-patient phased pharmacogenomics artifacts
+    status: implemented
+    implementation: python/molecularis/pharmacogenomics_service.py
+    evidence_level: none
+  - id: pharmacogenomics.msde_star_allele_match
+    name: Release-pinned conservative matching of already-phased haplotypes to supplied star-allele definitions
+    status: implemented
+    implementation: python/molecularis/pharmacogenomics_service.py
+    evidence_level: none

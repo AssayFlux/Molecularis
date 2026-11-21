@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "molecularis.pharmacogenomics-report.v1",
+  "title": "Molecularis Pharmacogenomics Research Report v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "operation", "sample_id", "sample_sha256", "result", "rulebook", "rules_checked", "limitations"],
+  "properties": {
+    "schema": {"const": "molecularis.pharmacogenomics-report.v1"},
+    "operation": {"enum": ["validate", "match"]},
+    "sample_id": {"type": "string", "minLength": 1},
+    "sample_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "result": {"type": "object"},
+    "rulebook": {"const": "pharmacogenomics-core-v1"},
+    "rules_checked": {"type": "array", "items": {"type": "string", "pattern": "^PGX-[0-9]{3}$"}},
+    "limitations": {"type": "array", "minItems": 1, "items": {"type": "string"}}
+  }
+}
