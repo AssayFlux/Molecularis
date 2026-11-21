@@ -3,17 +3,25 @@ name: "Sequence"
 roadmap_step: "B"
 roadmap_order: 2
 depends_on: ["molecular"]
-status: "scaffold"
-completion_status: "not_implemented"
-primary_languages: ["cpp", "python", "rust"]
+status: "implementation_complete"
+completion_status: "implementation_complete_pending_independent_scientific_review_and_freeze"
+primary_languages: ["python"]
+planned_languages: ["cpp", "rust"]
 engine: "ENGINE.md"
 runtime: "RUNTIME.md"
 rulebook: "RULEBOOK.md"
+capabilities: "capabilities.json"
 source_roots:
-  cpp: "src/cpp"
-  python: "src/python"
-  rust: "src/rust"
-test_root: "tests"
+  python: "python/molecularis"
+test_roots:
+  - "tests/test_sequence_service.py"
+  - "tests/test_sequence_pack.py"
+  - "tests/test_sequence_reference.py"
+  - "tests/test_fastq_streaming.py"
+  - "tests/test_fasta_workflow.py"
+  - "tests/test_gff3.py"
+  - "tests/test_gff3_transcripts.py"
+  - "tests/test_alignment_biopython.py"
 schema_root: "schemas"
 data_root: "data"
 benchmark_root: "benchmarks"

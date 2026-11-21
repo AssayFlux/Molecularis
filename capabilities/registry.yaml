@@ -355,6 +355,32 @@ tools:
     implementation: python/molecularis/s4_engine.py
     evidence_level: none
 
+  - id: sequence.msde_validate
+    name: MSDE-backed typed sequence artifact validation
+    status: implemented
+    implementation: python/molecularis/sequence_service.py
+    evidence_level: none
+  - id: sequence.msde_statistics
+    name: MSDE-backed deterministic sequence composition statistics
+    status: implemented
+    implementation: python/molecularis/sequence_service.py
+    evidence_level: none
+  - id: sequence.msde_reverse_complement
+    name: MSDE-backed IUPAC DNA reverse complement
+    status: implemented
+    implementation: python/molecularis/sequence_service.py
+    evidence_level: none
+  - id: sequence.msde_transcription
+    name: MSDE-backed DNA-to-RNA transcription
+    status: implemented
+    implementation: python/molecularis/sequence_service.py
+    evidence_level: none
+  - id: sequence.msde_translation
+    name: MSDE-backed explicit-table DNA/RNA translation
+    status: implemented
+    implementation: python/molecularis/sequence_service.py
+    evidence_level: none
+
 engines: []
 data_packs: []
 domains: []

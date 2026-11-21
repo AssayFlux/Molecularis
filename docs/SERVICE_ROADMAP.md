@@ -5,7 +5,7 @@ Status: Approved execution order; service implementation has not started merely 
 
 ## Operating model
 
-The roadmap contains fourteen independently completed service steps. Work proceeds strictly in order, one active service at a time. A later service may be researched, but its implementation does not begin until the previous service is accepted and frozen. Shared Core/MSDE work is allowed only when it unblocks the active step or closes a platform prerequisite.
+The roadmap contains fourteen independently completed service steps. Work proceeds strictly in order, one active service at a time. A later service may be researched, but its implementation does not begin until the previous service is accepted and frozen, unless the repository owner records an explicit sequencing exception in DECISION_LOG.md. Shared Core/MSDE work is allowed only when it unblocks the active step or closes a platform prerequisite.
 
 **Platform gate before A:** establish the minimal Core service contract, MSDE artifact/provenance substrate, versioned schemas, capability registration, runtime lifecycle, resource budgets, and cross-language contract tests. The MSDE architecture is specified; its implementation is not yet complete. Do not start A until the platform gate is demonstrated by executable tests.
 

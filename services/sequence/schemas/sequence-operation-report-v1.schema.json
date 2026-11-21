@@ -1,0 +1,18 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://molecularis.assayflux.org/schemas/sequence-operation-report-v1.schema.json",
+  "title":"Molecularis Sequence operation report v1",
+  "type":"object",
+  "additionalProperties":false,
+  "required":["schema","operation","sequence_id","sequence_sha256","result","rulebook","rules_checked","limitations"],
+  "properties":{
+    "schema":{"const":"molecularis.sequence-operation-report.v1"},
+    "operation":{"enum":["validate","statistics","reverse_complement","transcribe","translate"]},
+    "sequence_id":{"type":"string","minLength":1},
+    "sequence_sha256":{"type":"string","pattern":"^[a-f0-9]{64}$"},
+    "result":{"type":"object"},
+    "rulebook":{"const":"sequence-core-v1"},
+    "rules_checked":{"type":"array","minItems":5,"uniqueItems":true,"items":{"type":"string","pattern":"^SEQ-[0-9]{3}$"}},
+    "limitations":{"type":"array","items":{"type":"string"}}
+  }
+}

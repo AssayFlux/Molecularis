@@ -2,6 +2,12 @@
 
 Record decisions newest-first. Do not silently rewrite historical decisions; supersede them with a new entry.
 
+## DEC-0009 — Authorized Sequence implementation before Molecular scientific freeze
+- Status: Authorized by the repository owner in the 2026-11-21 project conversation.
+- Decision: Begin B (Sequence) engineering while A (Molecular) remains implementation-complete but awaits independent scientific review and formal v1 freeze.
+- Rationale: The owner explicitly directed work to proceed to Step B. This is a scoped sequencing exception, not retrospective acceptance of A.
+- Constraints: A remains scientifically unaccepted; B must not claim A acceptance or platform acceptance. B must undergo its own independent scientific review and contract freeze before C. Preserve A's outstanding review as an explicit gate.
+
 ## DEC-0008 — Molecularis-native Scientific Data Engine
 - Status: Accepted
 - Decision: Establish MSDE as a shared Core subsystem for artifact identity/storage, native indexes, bounded query execution, provenance/evidence and Rulebook workflow support.

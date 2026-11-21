@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "capabilities": [
+    {"id":"sequence.validate.v1","version":"1.0.0","service":"sequence","operation":"validate","input_schema":"molecularis.sequence-artifact-reference.v1","output_schema":"molecularis.sequence-operation-report.v1","deterministic":true,"description":"Validate a stored DNA, RNA or protein sequence artifact."},
+    {"id":"sequence.analyze.v1","version":"1.0.0","service":"sequence","operation":"statistics","input_schema":"molecularis.sequence-artifact-reference.v1","output_schema":"molecularis.sequence-operation-report.v1","deterministic":true,"description":"Calculate deterministic sequence composition statistics."},
+    {"id":"sequence.reverse-complement.v1","version":"1.0.0","service":"sequence","operation":"reverse_complement","input_schema":"molecularis.sequence-artifact-reference.v1","output_schema":"molecularis.sequence-operation-report.v1","deterministic":true,"description":"Generate an IUPAC DNA reverse complement."},
+    {"id":"sequence.transcribe.v1","version":"1.0.0","service":"sequence","operation":"transcribe","input_schema":"molecularis.sequence-artifact-reference.v1","output_schema":"molecularis.sequence-operation-report.v1","deterministic":true,"description":"Transcribe DNA to RNA."},
+    {"id":"sequence.translate.v1","version":"1.0.0","service":"sequence","operation":"translate","input_schema":"molecularis.sequence-artifact-reference.v1","output_schema":"molecularis.sequence-operation-report.v1","deterministic":true,"description":"Translate canonical DNA/RNA with an explicit NCBI genetic-code table."}
+  ]
+}

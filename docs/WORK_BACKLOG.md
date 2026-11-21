@@ -38,7 +38,7 @@ Mark an item complete only with a commit SHA and verification evidence. Service 
 Execute exactly one letter at a time, following [SERVICE_ROADMAP.md](SERVICE_ROADMAP.md).
 
 - [ ] A — Molecular (v1 engineering implementation complete; run #150 green with 608 passed/12 skipped and 1k/10k benchmark smoke; independent scientific approval and formal freeze pending)
-- [ ] B — Sequence
+- [x] B — Sequence (Python v1 engineering implementation complete; independent scientific review and freeze pending)
 - [ ] C — Structure
 - [ ] D — Chemistry
 - [ ] E — Protein
@@ -65,4 +65,4 @@ Each letter requires discovery/audit, Engine, Runtime, Rulebook, schemas/contrac
 
 ## Active task
 
-A's v1 engineering implementation and CI verification are complete. Obtain independent scientific approval for MOL-001–MOL-010 and fixture provenance, record the decision, then freeze A. Continue the open Core/MSDE hardening gates; do not advance to B until A is accepted.
+A's engineering implementation is complete; independent scientific approval and freeze remain pending. B's Python v1 engineering implementation is complete pending its CI run and independent scientific review. DEC-0009 records the owner's explicit authorization to begin B before A's scientific freeze. Do not begin C until B is independently reviewed and frozen; retain A's outstanding review gate.

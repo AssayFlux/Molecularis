@@ -52,6 +52,9 @@ from .virtual_cohort import (
     simulate_hardy_weinberg_cohort,
     simulate_synthetic_additive_variant_effects,
 )
+from .sequence_service import (
+    SequenceDocument, ingest_sequence, load_sequence, register_sequence_service, sequence_rulebook,
+)
 from .sequence import (
     SequenceRecord, iter_fasta_records, kmer_counts, needleman_wunsch, parse_fasta, parse_fastq,
     reverse_complement, sequence_statistics, transcribe, trim_fastq_ends,
@@ -76,5 +79,6 @@ __all__ = [
     "search_gene_catalog", "validate_gene_catalog", "welch_differential_expression",
     "ReferenceSequence", "normalize_against_reference",
     "Molecule", "MolecularAtom", "MolecularBond", "MolecularChain", "MolecularResidue",
+    "SequenceDocument", "ingest_sequence", "load_sequence", "register_sequence_service", "sequence_rulebook",
     "ingest_molecule", "load_molecule", "molecular_validation_rulebook", "register_molecular_service",
 ]

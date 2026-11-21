@@ -1,0 +1,9 @@
+{
+  "schema_version":1,
+  "records":[
+    {"schema":"molecularis.sequence-record.v1","identifier":"synthetic-dna-001","description":"Synthetic non-biological test sequence","sequence_type":"DNA","sequence":"ATGGCTTAA"},
+    {"schema":"molecularis.sequence-record.v1","identifier":"synthetic-rna-001","description":"Synthetic non-biological test sequence","sequence_type":"RNA","sequence":"AUGGCUUAA"},
+    {"schema":"molecularis.sequence-record.v1","identifier":"synthetic-protein-001","description":"Synthetic test peptide","sequence_type":"protein","sequence":"MA"}
+  ],
+  "provenance":{"kind":"synthetic_fixture","biological_reference_claim":false}
+}
