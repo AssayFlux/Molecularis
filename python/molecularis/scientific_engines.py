@@ -45,7 +45,7 @@ ENGINE_SPECS: tuple[EngineSpec, ...] = (
     EngineSpec("scipy", "numerical science", "integrated-reference", "optional validation environment", "SciPy-backed validation modules", ("Not a universal runtime dependency; per-workflow pins and reference tests remain open.",)),
     EngineSpec("nuad", "DNA/RNA nanotechnology", "not-yet-integrated", "specialist package/runtime", "deferred pending source and licence approval", ("No adapter is enabled until exact upstream source, licence and thermodynamic model terms are verified.",)),
     EngineSpec("nupack", "DNA/RNA nanotechnology", "not-yet-integrated", "specialist package/runtime", "deferred pending source and licence approval", ("No adapter is enabled until exact upstream source, licence and thermodynamic model terms are verified.",)),
-    EngineSpec("galaxy", "workflow orchestration", "not-yet-integrated", "separately operated Galaxy server", "deferred pending API/security contract", ("No server deployment, API client, credential lifecycle or workflow mapping is enabled.",)),
+    EngineSpec("galaxy", "workflow orchestration", "integrated-client", "separately operated HTTPS Galaxy server; injected API key", "molecularis.galaxy.GalaxyClient", ("Creates histories, uploads hashed inputs, invokes caller-selected workflows, polls execution and retrieves invocation output references; workflow mapping, output dataset download/validation and server-specific conformance remain open.",)),
 )
 
 
