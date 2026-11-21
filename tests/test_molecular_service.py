@@ -38,6 +38,11 @@ def test_molecule_artifact_round_trip_and_metadata(tmp_path) -> None:
     restored = load_molecule(platform, artifact.artifact_id)
     assert restored == molecule
     assert artifact.schema_id == MOLECULE_SCHEMA_ID
+    root = Path(__file__).resolve().parents[1]
+    reference_schema = json.loads(
+        (root / "services/molecular/schemas/molecule-artifact-reference-v1.schema.json").read_text()
+    )
+    validate(instance=artifact.artifact_id, schema=reference_schema)
     assert artifact.metadata["formula"] == "H2O"
     assert artifact.metadata["atom_count"] == 3
     platform.close()

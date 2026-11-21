@@ -61,8 +61,20 @@ def load_molecule(
         raise ResourceLimitError("molecule artifact exceeds byte budget")
     payload = b"".join(platform.store.read(artifact_id, budget=budget))
     molecule = Molecule.from_json(payload)
-    if molecule.sha256 != artifact.metadata.get("molecule_sha256") or molecule.sha256 != artifact.digest:
-        raise ValidationError("molecule canonical content digest does not match artifact metadata/store digest")
+    expected_metadata = {
+        "molecule_id": molecule.molecule_id,
+        "molecule_sha256": molecule.sha256,
+        "formula": molecule.formula,
+        "atom_count": molecule.atom_count,
+        "bond_count": molecule.bond_count,
+        "net_formal_charge": molecule.net_formal_charge,
+        "coordinate_unit": molecule.coordinate_unit,
+        "coordinate_system": molecule.coordinate_system,
+    }
+    if molecule.sha256 != artifact.digest or any(
+        artifact.metadata.get(key) != value for key, value in expected_metadata.items()
+    ):
+        raise ValidationError("molecule content or metadata does not match the verified artifact")
     return molecule
 
 
