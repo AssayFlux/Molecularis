@@ -17,7 +17,7 @@ A scaffold or specification does not imply implementation or scientific validati
 | Rulebook evidence | Improved baseline | Success/failure records; input artifact lineage is attached to operation outputs |
 | JSON contracts | Validated baseline | Repository-wide JSON Schema validation passed in run #135 |
 | Scientific optional CI | Green baseline | Run #135: chemistry, sequence and genomics optional profiles passed |
-| Native C++ / Rust interoperability | Not implemented | Language-neutral schemas exist; bindings and conformance tests remain required |
+| Language strategy | Python-first | Existing Python implementation is the supported reference; no speculative language ports are required |
 | Recovery certification | Partial | Atomic blob publication and integrity audit; crash-boundary fault injection and backup/restore remain open |
 | Execution isolation | Partial | In-process trusted handlers; no OS-level sandbox or preemptive CPU/memory/GPU isolation |
 | Distributed services | Not implemented | No distributed storage, replication or cross-process service-discovery protocol |
@@ -73,7 +73,7 @@ A scaffold or specification does not imply implementation or scientific validati
 
 **Active phase:** Service N — Workflows engineering implementation and CI verification complete in run #44900460557 (core 746 passed/12 skipped; optional Chemistry 754/4, Genomics 747/11, Sequence 749/9 with 4 existing warnings). Native workflow DAGs validate registered capabilities and execute through MSDE RulebookExecutor with artifact lineage. Galaxy REST and FASTA/FASTQ helpers remain optional integrations. The platform is not yet a distributed, multi-language, OS-isolated production runtime.
 
-**Next:** A–N service engineering is complete. Proceed to platform-wide integration, recovery/security/language-conformance work and university scientific/privacy review and acceptance gates. Service CI does not certify scientific correctness. University-level scientific and privacy review, independent reference comparisons and formal contract freezes will be conducted after the full A–N engineering build, as directed by the owner. Platform-wide recovery, backup/restore, service discovery, language conformance and isolation gates remain open.
+**Next:** A–N service engineering is complete. Proceed through Agentics P0: repository/dependency audit, representative cross-service typed artifact handoff, provenance continuity, failure/recovery evidence, threat model, data-egress controls and OS-level isolation. No speculative C++/Rust ports are in scope. Service CI does not certify scientific correctness. University-level scientific and privacy review, independent reference comparisons and formal contract freezes will be conducted after the full A–N engineering build, as directed by the owner. Platform-wide recovery, backup/restore, service discovery, language conformance and isolation gates remain open.
 
 ## Reporting rule
 
@@ -108,4 +108,4 @@ The system is not restricted to PDB, X-ray structures, existing reference exampl
 
 **Implementation:** Documentation alignment is not implementation. No claim is made here that the Scientific Knowledge Engine, unit/type system, mathematics/statistics adapters, simulation adapters, full pre-generation auditor, independent verifier or training pipeline has been completed. Candidate tools remain unverified until the repository/dependency audit establishes exact installed versions, licenses and actual adapter status.
 
-**Next engineering gate:** Begin with SF0 repository/dependency and A–N capability audit. Record actual existing implementations, gaps, versions, licenses and tests. Then proceed through the SF1+ gates in services/ai/IMPLEMENTATION_ROADMAP.md. Keep this work aligned with the single Agentics Master Plan and approved A–N service order. University scientific review remains separate.
+**Next engineering gate:** Agentics P0 is the active gate. SF0 repository/dependency and A–N capability audit is its first task. Record actual implementations, gaps, versions, licenses and tests; then close platform safety, integration and recovery blockers before entering P1/SF1. The SF1+ work in services/ai/IMPLEMENTATION_ROADMAP.md is subordinate to the v2.1 Master Plan. Keep this work aligned with the single Agentics Master Plan and approved A–N service order. University scientific review remains separate.

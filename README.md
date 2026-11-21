@@ -52,7 +52,7 @@ Agentics Molecularis is being developed to coordinate a shared Scientific Knowle
 
 Every result must distinguish observation, established knowledge, derivation, inference, prediction, simulation, construction, hypothesis and validation. A generated candidate is not automatically physically stable, experimentally realizable or functional. Each service retains its own scientific rules and acceptance criteria.
 
-The governing architecture and phase gates are documented in [Agentics Molecularis Master Plan v2.0](docs/AGENTICS_MOLECULARIS_MASTER_PLAN.md).
+The governing architecture and phase gates are documented in [Agentics Molecularis Master Plan v2.1](docs/AGENTICS_MOLECULARIS_MASTER_PLAN.md).
 
 ## At a glance
 
@@ -356,7 +356,7 @@ Lifecycle management and bounded execution in the local reference platform.
 
 ### Implemented foundations
 
-- A–N service packages and registration path.
+- A–N service engineering implementations and registration path (A–N engineering complete; system/scientific acceptance remains separate).
 - Core / MSDE local reference runtime.
 - Content-addressed artifact storage and integrity checks.
 - SQLite WAL metadata catalog.
@@ -369,16 +369,18 @@ Lifecycle management and bounded execution in the local reference platform.
 
 ### Remaining acceptance work
 
-- Real end-to-end scientific workflows across service boundaries.
+- Verified end-to-end scientific artifact handoff and provenance continuity across service boundaries.
 - Typed artifact handoff and cross-service compatibility evidence.
 - Configured AI provider and robust model integration.
-- Runtime isolation, distributed execution and recovery hardening.
+- Runtime isolation, failure recovery, backup/restore and platform-wide hardening.
 - Independent scientific validation at the university.
 - Domain-specific benchmarking and reference-data verification.
 
 </td>
 </tr>
 </table>
+
+**Current engineering position:** A–N service engineering is recorded complete. Platform-wide integration, recovery/security acceptance and independent university scientific/privacy review remain open. Agentics currently has its initial planner and approval-gated workflow foundation; the shared Scientific Knowledge Engine and general construction/verifier system are roadmap work, not implemented capabilities.
 
 **Latest observed CI:** [GitHub Actions run #44901363429](https://github.com/AssayFlux/Molecularis/actions/runs/44901363429) completed successfully on commit `2b6eced852fb049a81f6b087bb94e5e946047750`. This is engineering evidence, not independent scientific validation.
 
@@ -448,6 +450,12 @@ The candidate package/engine catalogue is not an installation list. Each integra
 - [Work Backlog](docs/WORK_BACKLOG.md)
 - [Continuous Work Protocol](docs/CONTINUOUS_WORK_PROTOCOL.md)
 - [Scientific Validation Standard](docs/SCIENTIFIC_VALIDATION_STANDARD.md)
+- [Security Policy](SECURITY.md)
+- [AI Constitution](services/ai/AI_CONSTITUTION.md)
+- [Agentics Engine](services/ai/ENGINE.md)
+- [Agentics Rulebook](services/ai/RULEBOOK.md)
+- [Agentics Acceptance](services/ai/ACCEPTANCE.md)
+- [Scientific Tool Registry](services/ai/SCIENTIFIC_TOOL_REGISTRY.md)
 
 </td>
 </tr>

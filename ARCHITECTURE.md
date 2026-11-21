@@ -17,7 +17,7 @@ Services may depend on approved Core/MSDE contracts. Core/MSDE must not depend o
 Canonical artifacts and manifests are authoritative; indexes are derived and rebuildable. Query completeness and approximation are explicit. MSDE organizes evidence and runs generic data operations; scientific services and Rulebooks own domain semantics and acceptance criteria. No index or AI planner can certify scientific truth.
 
 ## Service layout
-Each service has ENGINE.md, RUNTIME.md, RULEBOOK.md, service.yaml and language-specific source roots under src/{cpp,python,rust}. Tests, schemas, data and benchmarks are service-owned.
+Each service has ENGINE.md, RUNTIME.md, RULEBOOK.md, service.yaml and Python implementation modules under the current Molecularis source package. Tests, schemas, data and benchmarks are service-owned. Do not create speculative language-specific source roots; an additional language requires an approved, measured architecture decision.
 
 ## Migration
 Existing Python modules and tests remain in place until service-by-service migration is implemented and verified.

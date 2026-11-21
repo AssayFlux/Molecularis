@@ -165,3 +165,18 @@ Contracts must be domain-extensible and must not erase domain-specific semantics
 ## 6. Required phase report
 
 Every phase report must list exact files, implementation status, dependencies and licenses reviewed, tests and exact results, CI commit/run, benchmark evidence, scientific limitations, unresolved risks and gate state. A planned adapter is not an integrated adapter; an integrated adapter is not a validated scientific method.
+
+
+## Alignment with the governing P0–P7 plan
+
+This document is a subordinate implementation breakdown, not a second roadmap. The [Agentics Molecularis Master Plan](../../docs/AGENTICS_MOLECULARIS_MASTER_PLAN.md) v2.1 controls phase order and acceptance.
+
+- **SF0** is the first repository/dependency audit task inside governing **P0**; P0 also includes cross-service integration, threat modelling, isolation, failure handling and artifact recovery.
+- **SF1–SF2** implement the core of governing **P1** (typed scientific contracts and the Scientific Knowledge Engine).
+- **SF3–SF5** provide mathematical, statistical and domain-computation foundations that support governing **P1/P2**.
+- **SF6** maps to governing **P2** (shared construction, constraints, optimization and evaluation).
+- **SF7** maps to governing **P3** (A–N integration).
+- **SF8** maps to governing **P5** (permission-aware data/model governance).
+- **SF9** maps to governing **P4** (Agentics orchestration); it must not jump ahead of P0–P3.
+
+The implementation baseline is Python. Do not create speculative C++, Rust or other-language packages. Candidate scientific tools remain optional until the audit proves a need and license/version/security/verification requirements are satisfied.

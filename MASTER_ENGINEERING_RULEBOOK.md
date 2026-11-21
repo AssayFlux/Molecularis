@@ -55,12 +55,10 @@ All ingestion, queries, generation, simulation and workflow execution must decla
 
 ## 8. Language and interfaces
 
-- Primary languages: C++, Python and Rust.
-- Python: orchestration, research-facing APIs and scientific interfaces.
-- C++: performance-sensitive numerical/geometry kernels when benchmarks justify it.
-- Rust: memory-safe systems, concurrency, parsers and resource management when justified.
-- Other languages require written technical justification.
-- Use versioned language-neutral schemas/contracts; specify units, coordinate frames, precision, nullability, errors and determinism.
+- Python is the current implementation language and supported reference for Core/MSDE, services and Agentics.
+- Do not create speculative C++, Rust or other-language source trees, placeholders, bindings or duplicate implementations.
+- An additional language requires a concrete measured need, an explicit architecture decision, benchmark evidence, maintenance/security/licensing review and a defined interoperability boundary.
+- Use versioned schemas/contracts; specify units, coordinate frames, precision, nullability, errors and determinism.
 - Avoid duplicate algorithms without a measured reason. Preserve compatibility or document a versioned migration.
 
 ## 9. AI and automation

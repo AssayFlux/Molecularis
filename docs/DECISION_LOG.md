@@ -1,5 +1,21 @@
 # Architecture and Engineering Decision Log
 
+## DEC-0014 — Python-first implementation; no speculative language ports
+
+- **Status:** Accepted by the repository owner’s explicit direction on 2026-11-21.
+- **Decision:** Python is the current implementation language and supported reference for Core/MSDE, all A–N services and Agentics. Do not create C++, Rust or other-language source roots, placeholders, bindings or duplicate algorithms as speculative scaffolding.
+- **Rationale:** Keep engineering focused on completing and validating the existing Molecularis-native system rather than carrying forward unused language placeholders.
+- **Exception:** An additional language may be proposed only for a concrete, measured capability/performance requirement, with an explicit architecture decision, benchmark evidence, maintenance/security/licensing review and a defined interoperability boundary.
+- **Supersession:** This decision supersedes the language targets and source-root assumptions in DEC-0003 and DEC-0007. Those entries remain as historical decisions.
+
+## DEC-0015 — Agentics Master Plan v2.1 is the sole roadmap authority
+
+- **Status:** Accepted documentation authority, 2026-11-21.
+- **Decision:** `docs/AGENTICS_MOLECULARIS_MASTER_PLAN.md` v2.1 is the sole Agentics architecture and phase authority. The AI Constitution, Engine, Rulebook, Acceptance and Scientific Foundation Implementation Roadmap are subordinate specifications. Remove duplicate or obsolete phase sequences from the backlog and other planning documents.
+- **Rationale:** Keep one consistent scientific knowledge-to-construction architecture and a single P0–P7 execution sequence.
+- **Constraint:** A document update does not implement a capability or pass an engineering/scientific acceptance gate.
+
+
 ## DEC-0013 — Shared scientific foundation and governed tool ecosystem for Agentics
 
 - **Status:** Accepted architectural direction; implementation remains gated by the Agentics roadmap.

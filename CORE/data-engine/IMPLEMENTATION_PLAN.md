@@ -51,7 +51,6 @@ Deferred until deterministic planner and evidence gates are stable. AI proposals
 
 ## Platform lifecycle and service discovery
 - [x] Local reference service lifecycle and JSON capability-manifest loader.
-- [ ] Stable service discovery across processes and language-neutral request/response implementation.
-- [ ] C++ and Rust contract interoperability tests.
+- [ ] Add cross-process service discovery only if a concrete deployment requirement is approved; the current supported reference remains the local Python runtime.
 
-Only mark the full platform gate passed when all mandatory Phase 1 exits in the Master Development Plan have evidence.
+Python is the current implementation baseline. Do not add speculative language bindings or source roots. Only mark the full platform gate passed when all mandatory Phase 1 exits in the Master Development Plan have evidence.

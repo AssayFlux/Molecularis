@@ -1,6 +1,6 @@
 # Molecularis Master Development Plan
 
-Version: 2.0. Status: governing, living plan; material changes require a decision-log entry.
+Version: 2.1. Status: governing, living plan; material changes require a decision-log entry.
 
 ## Mission and delivery strategy
 
@@ -23,7 +23,6 @@ Exit: repository inventory, baseline and migration risks are documented.
 - Exact-key and ordered/range indexes first; other index families justified by workloads and benchmarks.
 - Query execution with snapshot, budgets, pagination and explicit completeness/approximation.
 - Evidence ledger and generic Rulebook DAG execution gates.
-- C++/Python/Rust contract interoperability and reference service.
 - Security/threat model, schema evolution and failure-recovery tests.
 
 Exit: an executable reference service can discover, ingest, query, transform, validate and publish immutable artifacts with provenance under declared budgets. Architecture documents alone do not satisfy this gate.
@@ -35,6 +34,10 @@ Follow [SERVICE_ROADMAP.md](SERVICE_ROADMAP.md) without parallel implementation:
 A Molecular → B Sequence → C Structure → D Chemistry → E Protein → F Genomics → G DNA/RNA → H Simulation → I Kinetics → J Omics → K Phylogeny → L Pharmacogenomics → M Cohorts → N Workflows.
 
 Each service must pass every mandatory service acceptance gate and be frozen before the next step starts. A step may reuse existing implementation after audit and migration; it does not require needless rewrites.
+
+## Verified repository state (2026-11-21)
+
+The A–N service engineering sequence is recorded complete in [SERVICE_STATUS.md](SERVICE_STATUS.md), with per-service implementation and CI evidence. This does **not** mean the original shared Core/MSDE platform gate has passed: recovery/backup, isolation, cross-service artifact/provenance continuity, service discovery and system-level acceptance remain open. This is the repository's actual state, not a retroactive claim that Phase 1 passed before Phase 2. No additional A–N service implementation should be started; proceed with platform-wide P0 work and the Agentics Master Plan gates. University scientific/privacy review and formal service freezes remain separate acceptance activities.
 
 ## Phase 3 — Cross-service integration
 
@@ -91,7 +94,7 @@ No later phase begins until its predecessor's gate is evidenced. Engineering CI,
 
 ## Agentics Molecularis — universal scientific construction direction (2026-11-21)
 
-This direction supersedes narrower descriptions of Agentics phases where they conflict with the current governing [Master Plan v2.0](AGENTICS_MOLECULARIS_MASTER_PLAN.md).
+This direction supersedes narrower descriptions of Agentics phases where they conflict with the current governing [Master Plan v2.1](AGENTICS_MOLECULARIS_MASTER_PLAN.md).
 
 **Permanent rule for every service A–N:** Understand → Represent → Reason → Construct → Evaluate → Verify → Learn. The principle applies equally to Molecular, Sequence, Structure, Chemistry, Protein, Genomics, DNA/RNA, Simulation, Kinetics, Omics, Phylogeny, Pharmacogenomics, Cohorts and Workflows.
 

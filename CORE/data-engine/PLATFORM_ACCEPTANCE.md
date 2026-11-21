@@ -26,7 +26,7 @@ Status: local reference implementation v0.2; full production platform acceptance
 - Distributed or remote object storage, replication and consensus.
 - Process sandboxing, OS-level CPU/memory isolation, forced cancellation of arbitrary Python handlers.
 - Full crash fault-injection at every filesystem instruction or formal power-loss certification.
-- Cross-language C++/Rust bindings and executable cross-process service discovery.
+- Cross-process service discovery and remote execution are not implemented; they are not prerequisites for the current local Python reference scope.
 - Scientific domain validation; this platform is domain-neutral infrastructure.
 
 ## Operational constraints
@@ -48,6 +48,6 @@ The platform is accepted for the next service only after:
 2. JSON schemas validate.
 3. Artifact integrity, pagination, lineage and success/failure evidence tests pass.
 4. Recovery, backup/restore, security and resource-isolation risks have an explicit reviewed disposition.
-5. Cross-language contracts and service integration requirements are either implemented or explicitly removed from the required initial platform scope by a recorded decision.
+5. The supported Python reference scope and any required service-integration boundaries are explicitly documented. Additional-language bindings are not required; they need a separate approved decision based on measured need.
 
-This record is an implementation scope declaration, not a claim of distributed readiness or scientific validation.
+Python is the current supported implementation baseline; no C++/Rust bindings or language ports are required by this acceptance record. This record is an implementation scope declaration, not a claim of distributed readiness or scientific validation.

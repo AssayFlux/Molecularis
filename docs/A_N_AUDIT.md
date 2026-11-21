@@ -2,6 +2,8 @@
 
 > **Historical snapshot:** This audit describes source commit `24251ca6bf2daf6aef7fa815017a90fa0a38c0c9` on 2026-11-21. It is not the current service status. Later service implementation commits superseded its “scaffold/not implemented” and “do not start A” conclusions. Use [SERVICE_STATUS.md](SERVICE_STATUS.md) and the current service acceptance records for current implementation evidence. This historical audit is retained as a record of the earlier baseline, not as the authority for present status.
 
+> **Superseded planning note:** The old source-root and C++/Rust interoperability recommendations below are historical observations from this snapshot, not current requirements. DEC-0014 establishes Python as the current implementation baseline and rejects speculative language ports. The later A–N service specifications and [SERVICE_STATUS.md](SERVICE_STATUS.md) are authoritative for current work.
+
 Audit date: 2026-11-21  
 Audited branch: `CORE`  
 Audited source commit: `24251ca6bf2daf6aef7fa815017a90fa0a38c0c9`
