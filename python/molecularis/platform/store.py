@@ -6,7 +6,8 @@ content. Orphans are safe to collect after an explicit audit.
 """
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
+from contextlib import contextmanager
+from dataclasses import dataclass
 from pathlib import Path
 from typing import BinaryIO, Iterable, Iterator, Any
 import hashlib
@@ -61,8 +62,17 @@ class ArtifactStore:
         conn.execute(f"PRAGMA busy_timeout={int(self._busy_timeout_ms)}")
         return conn
 
+    @contextmanager
+    def _session(self) -> Iterator[sqlite3.Connection]:
+        conn = self._connect()
+        try:
+            with conn:
+                yield conn
+        finally:
+            conn.close()
+
     def _initialize(self) -> None:
-        with self._connect() as conn:
+        with self._session() as conn:
             conn.execute("PRAGMA journal_mode=WAL")
             conn.execute("PRAGMA synchronous=FULL")
             conn.executescript("""
@@ -142,6 +152,9 @@ class ArtifactStore:
     ) -> Artifact:
         budget = budget or Budget()
         metadata = dict(metadata or {})
+        if any(not isinstance(key, str) for key in metadata):
+            raise ValidationError("metadata keys must be strings")
+        _canonical(metadata)
         parent_ids = tuple(parents)
         if not media_type or not schema_id:
             raise ValidationError("media_type and schema_id are required")
@@ -196,7 +209,7 @@ class ArtifactStore:
             artifact_id = "art_" + uuid.uuid4().hex
             created_at = time.time()
             tx_id = uuid.uuid4().hex
-            with self._connect() as conn:
+            with self._session() as conn:
                 conn.execute("BEGIN IMMEDIATE")
                 for parent_id in parent_ids:
                     if conn.execute("SELECT 1 FROM artifacts WHERE artifact_id=?", (parent_id,)).fetchone() is None:
@@ -223,7 +236,7 @@ class ArtifactStore:
                 temp_path.unlink()
 
     def get(self, artifact_id: str, *, verify: bool = True) -> Artifact:
-        with self._connect() as conn:
+        with self._session() as conn:
             row = conn.execute("SELECT * FROM artifacts WHERE artifact_id=?", (artifact_id,)).fetchone()
             if row is None:
                 raise ArtifactNotFound("artifact not found", details={"artifact_id": artifact_id})
@@ -292,7 +305,8 @@ class ArtifactStore:
             order = "value_number, artifact_id"
         where = " AND ".join(clauses)
         started = time.monotonic()
-        with self._connect() as conn:
+        with self._session() as conn:
+            conn.execute("BEGIN")
             snapshot = conn.execute("SELECT COALESCE(MAX(rowid),0) AS s FROM artifacts").fetchone()["s"]
             rows = conn.execute(
                 f"SELECT artifact_id FROM labels WHERE {where} ORDER BY {order} LIMIT ?",
@@ -313,7 +327,7 @@ class ArtifactStore:
 
     def record_run(self, *, run_id: str, service_id: str, operation: str, status: str,
                    inputs: list[str], outputs: list[str], evidence: dict[str, Any]) -> None:
-        with self._connect() as conn:
+        with self._session() as conn:
             conn.execute(
                 "INSERT INTO runs VALUES(?,?,?,?,?,?,?,?,?)",
                 (run_id, service_id, operation, status, time.time(), time.time(),
@@ -323,7 +337,7 @@ class ArtifactStore:
 
     def audit(self) -> dict[str, Any]:
         """Verify all catalog references and report unreferenced blobs without deleting them."""
-        with self._connect() as conn:
+        with self._session() as conn:
             rows = conn.execute("SELECT artifact_id FROM artifacts ORDER BY artifact_id").fetchall()
         valid = 0
         failures: list[str] = []

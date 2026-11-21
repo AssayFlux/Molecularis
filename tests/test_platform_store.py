@@ -6,7 +6,7 @@ import io
 import pytest
 
 from molecularis.platform import ArtifactStore, Budget
-from molecularis.platform.contracts import ArtifactNotFound, IntegrityError, ResourceLimitError, ValidationError
+from molecularis.platform.contracts import ArtifactNotFound, IntegrityError, ResourceLimitError
 
 
 def test_ingest_deduplicates_blob_and_preserves_distinct_artifact_identity(tmp_path):

@@ -5,9 +5,8 @@ from dataclasses import dataclass
 from typing import Any, Callable
 import json
 import time
-import uuid
 
-from .contracts import Capability, ExecutionContext, PlatformError, ResourceLimitError, ValidationError
+from .contracts import Capability, ExecutionContext, ResourceLimitError, ValidationError
 from .store import ArtifactStore
 
 
