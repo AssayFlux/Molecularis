@@ -381,15 +381,6 @@ tools:
     implementation: python/molecularis/sequence_service.py
     evidence_level: none
 
-engines: []
-data_packs: []
-domains: []
-device_logs: []
-validation_records: []
-claims: []
-clinical_gate:
-  enabled: false
-  part12_evidence: []
 
   - id: structure.msde_validate
     name: MSDE-backed canonical structure artifact validation
@@ -421,3 +412,14 @@ clinical_gate:
     status: implemented
     implementation: python/molecularis/structure_service.py
     evidence_level: none
+
+
+engines: []
+data_packs: []
+domains: []
+device_logs: []
+validation_records: []
+claims: []
+clinical_gate:
+  enabled: false
+  part12_evidence: []
