@@ -1,7 +1,7 @@
 # Architecture — Desktop-First Cross-Platform Target
 
 **Status:** Target architecture; not a claim that the runtime is already implemented.  
-**Authority:** NORTH_STAR.md, ROADMAP.md, DECISIONS.md and docs/alpha/MASTERPLAN.md.
+**Authority:** [NORTH_STAR.md](../NORTH_STAR.md), [docs/MASTER_PLAN.md](MASTER_PLAN.md), and [DECISIONS.md](../DECISIONS.md).
 
 ## Product delivery order
 
@@ -36,8 +36,8 @@ The UI is not a security boundary. Scientific engines and imported workflows are
 
 ## Migration
 
-Preserve useful Android/Kotlin, Python, C++, Rust, schemas, tests, provenance and user data. Extract domain logic from Android lifecycle/UI dependencies. Build desktop vertical slices and prove parity before retiring legacy flows. Then implement mobile platform adapters and UI parity. See docs/alpha/MIGRATION_PLAN.md.
+Preserve useful Android/Kotlin, Python, C++, Rust, schemas, tests, provenance and user data. Extract domain logic from Android lifecycle/UI dependencies. Build desktop vertical slices and prove parity before retiring legacy flows. Then implement mobile platform adapters and UI parity. See [MASTER_PLAN.md](MASTER_PLAN.md), [REPOSITORY_BASELINE.md](REPOSITORY_BASELINE.md) and [CAPABILITY_STATUS.md](CAPABILITY_STATUS.md).
 
 ## Evidence boundary
 
-A target architecture, framework spike, compiling package or green CI run does not prove complete platform support, security, scientific validity or release readiness. Every platform requires install/upgrade, accessibility, offline, filesystem, performance, graphics and recovery evidence. See docs/alpha/MASTERPLAN.md and docs/alpha/TEST_STRATEGY.md.
+A target architecture, framework spike, compiling package or green CI run does not prove complete platform support, security, scientific validity or release readiness. Every platform requires install/upgrade, accessibility, offline, filesystem, performance, graphics and recovery evidence. See [MASTER_PLAN.md](MASTER_PLAN.md) and the validation/security standards linked from [docs/README.md](README.md).
