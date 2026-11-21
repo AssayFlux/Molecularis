@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://molecularis.org/schemas/msde/query-request-0.1.schema.json",
+  "title": "MSDE Query Request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "target_type", "mode", "predicate", "budget"],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "target_type": {"type": "string", "minLength": 1},
+    "schema_ref": {"type": "string"},
+    "mode": {"enum": ["exact", "approximate"]},
+    "snapshot_id": {"type": "string"},
+    "predicate": {"type": "object"},
+    "limit": {"type": "integer", "minimum": 1},
+    "page_token": {"type": "string"},
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["max_memory_bytes", "max_wall_time_ms", "max_candidates"],
+      "properties": {
+        "max_memory_bytes": {"type": "integer", "minimum": 1},
+        "max_temp_bytes": {"type": "integer", "minimum": 0},
+        "max_bytes_read": {"type": "integer", "minimum": 0},
+        "max_wall_time_ms": {"type": "integer", "minimum": 1},
+        "max_cpu_time_ms": {"type": "integer", "minimum": 0},
+        "max_candidates": {"type": "integer", "minimum": 1}
+      }
+    }
+  }
+}

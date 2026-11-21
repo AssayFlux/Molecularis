@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://molecularis.org/schemas/msde/artifact-manifest-0.1.schema.json",
+  "title": "Molecularis Scientific Artifact Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "artifact_id", "artifact_type", "content_digest", "byte_length", "created_at", "provenance"],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "artifact_id": {"type": "string", "minLength": 1},
+    "artifact_type": {"type": "string", "minLength": 1},
+    "media_type": {"type": "string"},
+    "content_digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "byte_length": {"type": "integer", "minimum": 0},
+    "created_at": {"type": "string", "format": "date-time"},
+    "schema_ref": {"type": "string"},
+    "encoding": {"type": "string"},
+    "chunks": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["digest", "byte_length"], "properties": {"digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"}, "byte_length": {"type": "integer", "minimum": 0}}}},
+    "parents": {"type": "array", "items": {"type": "string"}},
+    "labels": {"type": "object", "additionalProperties": {"type": ["string", "number", "integer", "boolean", "null"]}},
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_kind"],
+      "properties": {
+        "source_kind": {"type": "string", "enum": ["user_input", "dataset", "derived", "generated", "imported", "reference"]},
+        "source_ref": {"type": "string"},
+        "license": {"type": "string"},
+        "dataset_version": {"type": "string"},
+        "transform": {"type": "string"},
+        "parameters_digest": {"type": "string"},
+        "engine_build": {"type": "string"}
+      }
+    }
+  }
+}
