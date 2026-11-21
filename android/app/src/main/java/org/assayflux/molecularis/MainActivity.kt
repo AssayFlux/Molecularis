@@ -373,7 +373,7 @@ private fun MolecularisResearchHome(activity: FragmentActivity) {
                         check(kotlin.math.abs(cpp - 25.0) < 1e-9) { "C++ JNI result mismatch" }
                         check(kotlin.math.abs(rust - 25.0) < 1e-9) { "Rust FFI result mismatch" }
                         val aad = LocalCrypto.associatedData("runtime-probe", 0)
-                        val plaintext = "kinetics-keystore-probe".toByteArray()
+                        val plaintext = "molecularis-keystore-probe".toByteArray()
                         val encrypted = LocalCrypto.encrypt(plaintext, aad)
                         check(LocalCrypto.decrypt(encrypted, aad).contentEquals(plaintext)) {
                             "Android Keystore AES-GCM roundtrip mismatch"
@@ -382,7 +382,7 @@ private fun MolecularisResearchHome(activity: FragmentActivity) {
                             LocalCrypto.decrypt(encrypted, LocalCrypto.associatedData("wrong-job", 0))
                         }.isFailure
                         check(wrongAadRejected) { "AES-GCM did not reject mismatched authenticated metadata" }
-                        val cryptoDir = File(activity.cacheDir, "kinetics-crypto-probe").apply { mkdirs() }
+                        val cryptoDir = File(activity.cacheDir, "molecularis-crypto-probe").apply { mkdirs() }
                         val encryptedFile = File(cryptoDir, "probe.kdat")
                         val plaintextFile = File(cryptoDir, "probe.txt")
                         try {
@@ -432,11 +432,11 @@ private fun MolecularisResearchHome(activity: FragmentActivity) {
         onDelete = { job -> deleteTarget = job },
         onExport = { job ->
             pendingExportJob = job.id
-            exportPicker.launch(job.inputName.substringAfterLast('/').take(120).ifBlank { "kinetics-research-export.bin" })
+            exportPicker.launch(job.inputName.substringAfterLast('/').take(120).ifBlank { "molecularis-research-export.bin" })
         },
         onExportProvenance = { job ->
             pendingProvenanceExportJob = job.id
-            provenanceExportPicker.launch("kinetics-provenance-${job.id}.json")
+            provenanceExportPicker.launch("molecularis-provenance-${job.id}.json")
         },
         onAnalyzeImported = { job ->
             val request = OneTimeWorkRequestBuilder<ImportedFastaAnalysisWorker>()
@@ -449,11 +449,11 @@ private fun MolecularisResearchHome(activity: FragmentActivity) {
         },
         onExportAnalysis = { job ->
             pendingAnalysisExportJob = job.id
-            analysisExportPicker.launch("kinetics-analysis-${job.id}.json")
+            analysisExportPicker.launch("molecularis-analysis-${job.id}.json")
         },
         onExportProvenanceSummary = { job ->
             pendingProvenanceSummaryJob = job.id
-            provenanceSummaryPicker.launch("kinetics-provenance-${job.id}.txt")
+            provenanceSummaryPicker.launch("molecularis-provenance-${job.id}.txt")
         },
         onAnalyzeFastq = { job, offset ->
             val request = OneTimeWorkRequestBuilder<ImportedFastqAnalysisWorker>()

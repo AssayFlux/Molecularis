@@ -1,4 +1,4 @@
-<!-- KINETICS · BY ASSAYFLUX -->
+<!-- MOLECULARIS · BY ASSAYFLUX -->
 <p align="center">
   <img src="Assets/Molecularis%20By%20AssayFlux©.png" alt="Molecularis guilloche DNA logo" width="100%">
 </p>
