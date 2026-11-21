@@ -3,7 +3,6 @@ from __future__ import annotations
 import pytest
 
 from molecularis.scientific_engines import (
-    ENGINE_SPECS,
     align_with_parasail,
     discover_engine,
     engine_inventory,
