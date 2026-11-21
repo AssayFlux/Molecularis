@@ -28,7 +28,10 @@ def test_omics_models_and_cross_matrix_correlation() -> None:
     assert pearson([1, 2, 3], [2, 4, 6]) == pytest.approx(1)
     matrix = cross_omics_correlation([[1, 2, 3]], [[3, 2, 1], [1, 2, 3]])
     assert matrix[0] == pytest.approx([-1, 1])
-    assert logistic_growth([0, 1], [1, 2], carrying_capacity=100, growth_rate=0.5, initial=1)[0] == 1
+    result = logistic_growth(
+        [0, 1], [1, 2], carrying_capacity=100, growth_rate=0.5, initial=1
+    )
+    assert result[0] == 1
 
 
 @pytest.mark.parametrize("bad", [float("nan"), float("inf")])
