@@ -1,4 +1,4 @@
-# Kinetics — active monochrome design system implementation guide
+# Molecularis — active monochrome design system implementation guide
 
 **Authority:** Owner V1 prompt, recorded as D-024 (2026-11-17).  
 **Status:** Specification approved; native Compose implementation and evidence in progress.  
@@ -27,7 +27,7 @@ The actual application shell remains Home, Work, Explore and Settings, with adap
 Measure contrast for every semantic foreground/background pair; target WCAG AA thresholds specified by the project accessibility contract. Verify large text, 200% font scale, TalkBack, focus order, keyboard/switch navigation, RTL, reduced motion, touch targets, dynamic resizing and empty/loading/error/recovery states. Do not claim accessibility conformance until evidence is committed.
 
 ## 8. Token and code ownership
-Canonical source: design/tokens.json. Generator: scripts/gen_design_tokens.py. Generated outputs: android/designsystem/.../GeneratedTokens.kt and web/viewers/src/styles/kinetics-tokens.css. Never edit generated outputs manually. Compose UI primitives live in android/designsystem; app state and navigation remain in Kotlin app layer. Scientific logic remains outside Compose.
+Canonical source: design/tokens.json. Generator: scripts/gen_design_tokens.py. Generated outputs: android/designsystem/.../GeneratedTokens.kt and web/viewers/src/styles/molecularis-tokens.css. Never edit generated outputs manually. Compose UI primitives live in android/designsystem; app state and navigation remain in Kotlin app layer. Scientific logic remains outside Compose.
 
 ## 9. Required implementation sequence
 1. Inventory UI source, assets, tokens, settings, navigation and tests.

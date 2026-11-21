@@ -96,6 +96,7 @@ def css_source(data: dict[str, Any]) -> str:
                 property_name = prop.replace("_", "-")
                 css_name = f"--molecularis-{palette_name}-{property_name}"
                 lines.append(f"  {css_name}: {palette[prop]};")
+                lines.append(f"  --kinetics-{palette_name}-{property_name}: var({css_name});")
     lines += ["}", ""]
     return "\n".join(lines)
 
