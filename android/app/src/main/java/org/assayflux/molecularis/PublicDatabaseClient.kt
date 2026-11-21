@@ -32,13 +32,13 @@ internal class PublicDatabaseClient {
         val term = checkedQuery(query)
         val count = checkedLimit(limit)
         val searchUrl = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi" +
-            "?db=gene&term=${encode(term)}&retmode=json&retmax=$count&tool=kinetics"
+            "?db=gene&term=${encode(term)}&retmode=json&retmax=$count&tool=molecularis"
         val search = JSONObject(request(searchUrl, MAX_METADATA_BYTES))
         val ids = search.getJSONObject("esearchresult").optJSONArray("idlist") ?: return emptyList()
         if (ids.length() == 0) return emptyList()
         val idList = (0 until ids.length()).joinToString(",") { ids.getString(it) }
         val summaryUrl = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi" +
-            "?db=gene&id=${encode(idList)}&retmode=json&tool=kinetics"
+            "?db=gene&id=${encode(idList)}&retmode=json&tool=molecularis"
         val summary = JSONObject(request(summaryUrl, MAX_METADATA_BYTES)).getJSONObject("result")
         return (0 until ids.length()).mapNotNull { index ->
             val id = ids.getString(index)
@@ -57,13 +57,13 @@ internal class PublicDatabaseClient {
         val term = checkedQuery(query)
         val count = checkedLimit(limit)
         val searchUrl = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi" +
-            "?db=$database&term=${encode(term)}&retmode=json&retmax=$count&tool=kinetics"
+            "?db=$database&term=${encode(term)}&retmode=json&retmax=$count&tool=molecularis"
         val search = JSONObject(request(searchUrl, MAX_METADATA_BYTES))
         val ids = search.getJSONObject("esearchresult").optJSONArray("idlist") ?: return emptyList()
         if (ids.length() == 0) return emptyList()
         val idList = (0 until ids.length()).joinToString(",") { ids.getString(it) }
         val summaryUrl = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi" +
-            "?db=$database&id=${encode(idList)}&retmode=json&tool=kinetics"
+            "?db=$database&id=${encode(idList)}&retmode=json&tool=molecularis"
         val summary = JSONObject(request(summaryUrl, MAX_METADATA_BYTES)).getJSONObject("result")
         return (0 until ids.length()).mapNotNull { index ->
             val id = ids.getString(index)
@@ -85,7 +85,7 @@ internal class PublicDatabaseClient {
         require(id.matches(Regex("[0-9]{1,12}"))) { "NCBI Gene identifier must be numeric" }
         val count = checkedLimit(limit)
         val linkUrl = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi" +
-            "?dbfrom=gene&db=$database&id=${encode(id)}&retmode=json&tool=kinetics"
+            "?dbfrom=gene&db=$database&id=${encode(id)}&retmode=json&tool=molecularis"
         val linkSets = JSONObject(request(linkUrl, MAX_METADATA_BYTES))
             .optJSONArray("linksets") ?: return emptyList()
         val linkedIds = LinkedHashSet<String>()
@@ -106,7 +106,7 @@ internal class PublicDatabaseClient {
         if (linkedIds.isEmpty()) return emptyList()
         val joinedIds = linkedIds.joinToString(",")
         val summaryUrl = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi" +
-            "?db=$database&id=${encode(joinedIds)}&retmode=json&tool=kinetics"
+            "?db=$database&id=${encode(joinedIds)}&retmode=json&tool=molecularis"
         val summary = JSONObject(request(summaryUrl, MAX_METADATA_BYTES)).getJSONObject("result")
         return linkedIds.mapNotNull { linkedId ->
             val item = summary.optJSONObject(linkedId) ?: return@mapNotNull null
@@ -125,7 +125,7 @@ internal class PublicDatabaseClient {
         require(database in setOf("nuccore", "protein")) { "Only NCBI nuccore or protein records are supported" }
         val id = checkedAccession(accession)
         val url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi" +
-            "?db=$database&id=${encode(id)}&rettype=fasta&retmode=text&tool=kinetics"
+            "?db=$database&id=${encode(id)}&rettype=fasta&retmode=text&tool=molecularis"
         val body = request(url, MAX_SEQUENCE_BYTES)
         require(body.lineSequence().firstOrNull()?.startsWith(">") == true) {
             "NCBI did not return a FASTA record for this accession"

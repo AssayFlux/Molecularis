@@ -1,5 +1,8 @@
 # Track G implementation audit — 2026-11-12
 
+
+> **Historical record:** This document records evidence created before the product rebrand. References to Kinetics, the former repository name and historical source paths are retained where needed to preserve the accuracy of the dated evidence. The current product identity is Molecularis; see [the brand migration contract](brand-migration.md).
+
 **Audit type:** repository implementation and automated-control audit  
 **Audit status:** IN PROGRESS — not a Track G closure or independent assurance report  
 **Repository:** `AssayFlux/Kinetics`, branch `main`  

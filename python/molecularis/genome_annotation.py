@@ -122,7 +122,7 @@ def run_pinned_local_gff3_annotator(
         for name, sequence in contigs.items()
     }
     fasta = "".join(f">{name}\n{sequence}\n" for name, sequence in contigs.items())
-    with tempfile.TemporaryDirectory(prefix="kinetics-s7-") as directory:
+    with tempfile.TemporaryDirectory(prefix="molecularis-s7-") as directory:
         work = Path(directory)
         input_path = work / "genome.fasta"
         output_path = work / "annotation.gff3"
@@ -131,10 +131,10 @@ def run_pinned_local_gff3_annotator(
             result = subprocess.run(
                 [
                     str(executable),
-                    "--kinetics-input-fasta", str(input_path),
-                    "--kinetics-output-gff3", str(output_path),
-                    "--kinetics-mode", mode,
-                    "--kinetics-translation-table", str(translation_table),
+                    "--molecularis-input-fasta", str(input_path),
+                    "--molecularis-output-gff3", str(output_path),
+                    "--molecularis-mode", mode,
+                    "--molecularis-translation-table", str(translation_table),
                 ],
                 stdin=subprocess.DEVNULL,
                 stdout=subprocess.DEVNULL,

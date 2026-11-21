@@ -1,5 +1,8 @@
 # Track G0 — governance control and evidence register
 
+
+> **Historical record:** This dated audit/workplan predates the Molecularis rebrand. Former product names, source paths and repository URLs are retained where they document the state of the project at that time. Current identity and compatibility rules are in [brand-migration.md](../brand-migration.md).
+
 **Baseline date:** 2026-11-17  
 **Status:** G0–G7 bounded research-only engineering foundation **CLOSED** on exact-head commit `31b1618c4e843d0ec90feb2ceae0d0e4fb1615b1`; workflow [#44108451571](https://github.com/AssayFlux/Kinetics/actions/runs/44108451571) passed 9/9 jobs. Overall Track G acceptance remains OPEN; no independent or operational approval is inferred.  
 **Authority:** Owner instruction to execute G; D-023 sequence R → S → I → P → G → U.  

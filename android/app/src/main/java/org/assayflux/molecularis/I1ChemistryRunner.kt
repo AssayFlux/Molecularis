@@ -20,7 +20,7 @@ internal object I1ChemistryRunner {
         require(sourceText.toByteArray(Charsets.UTF_8).size <= MAX_SDF_BYTES) {
             "SDF input exceeds the 16 MiB limit."
         }
-        val json = python(context).getModule("kinetics_probe")
+        val json = python(context).getModule("molecularis_probe")
             .callAttr("analyze_ligand_sdf_graph", sourceText)
             .toString()
         return JSONObject(json)

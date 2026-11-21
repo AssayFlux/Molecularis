@@ -32,7 +32,7 @@ class ImportedFastqAnalysisWorker(context: Context, parameters: WorkerParameters
                 }
                 val text = SequenceFileSupport.readText(file, name.lowercase().endsWith(".gz"), MAX_INPUT_BYTES, MAX_INPUT_CHARS)
                 if (!Python.isStarted()) Python.start(AndroidPlatform(applicationContext))
-                val json = Python.getInstance().getModule("kinetics_probe")
+                val json = Python.getInstance().getModule("molecularis_probe")
                     .callAttr("analyze_fastq", text, phredOffset).toString()
                 require(json.length <= MAX_RESULT_CHARS) {
                     "FASTQ QC result exceeds the 2,000,000-character storage limit"

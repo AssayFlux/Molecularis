@@ -19,7 +19,7 @@ internal object GenomicsVcfQcRunner {
             "VCF input exceeds the 5 MiB limit."
         }
         return JSONObject(
-            python(context).getModule("kinetics_probe")
+            python(context).getModule("molecularis_probe")
                 .callAttr("summarize_vcf_research_qc", vcfText).toString(),
         )
     }

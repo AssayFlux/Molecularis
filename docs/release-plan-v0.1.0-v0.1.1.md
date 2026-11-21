@@ -1,4 +1,4 @@
-# Kinetics release plan — v0.1.0 baseline and v0.1.1 next release
+# Molecularis release plan — v0.1.0 baseline and v0.1.1 next release
 
 **Planning baseline:** `main` at `a799f6619c080ee1695784faf01e60fef6405504` (2026-11-18).
 **Release policy:** version metadata may identify the v0.1.0 target, but no GitHub Release or immutable tag is to be published until every v0.1.0 acceptance gate below passes on the exact release commit.
@@ -105,7 +105,7 @@ The engine must label output class precisely:
 - **AI prediction:** model-generated outputs with model identity, training/data provenance where available, confidence/uncertainty and domain limits.
 - **Database retrieval:** an existing record, never described as locally generated.
 
-A rulebook alone cannot uniquely determine a protein's native fold or every biological outcome. Those tasks require additional evidence, trained models, physics-based computation or experimental data. Kinetics must not blur these categories.
+A rulebook alone cannot uniquely determine a protein's native fold or every biological outcome. Those tasks require additional evidence, trained models, physics-based computation or experimental data. Molecularis must not blur these categories.
 
 ### v0.1.1 staged implementation
 

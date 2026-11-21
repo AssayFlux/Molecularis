@@ -109,7 +109,7 @@ internal fun PublicDatabaseCard(
                     val saved = store.save(fetched)
                     val analysis = runCatching {
                         if (!Python.isStarted()) Python.start(AndroidPlatform(context.applicationContext))
-                        Python.getInstance().getModule("kinetics_probe")
+                        Python.getInstance().getModule("molecularis_probe")
                             .callAttr("analyze_fasta", fetched.content).toString().also { json ->
                                 require(JSONObject(json).optInt("record_count", 0) > 0) {
                                     "Retrieved FASTA did not produce a valid sequence analysis"
@@ -282,7 +282,7 @@ internal fun PublicDatabaseCard(
                                                 val loaded = store.loadRecord(saved.id)
                                                     ?: error("Saved FASTA record is unavailable")
                                                 if (!Python.isStarted()) Python.start(AndroidPlatform(context.applicationContext))
-                                                Python.getInstance().getModule("kinetics_probe")
+                                                Python.getInstance().getModule("molecularis_probe")
                                                     .callAttr("analyze_fasta", loaded.content).toString()
                                                     .also { json ->
                                                         require(JSONObject(json).optInt("record_count", 0) > 0)

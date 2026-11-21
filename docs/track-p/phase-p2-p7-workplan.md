@@ -1,5 +1,8 @@
 # Track P — Precision Medicine (PGx First): P0–P7 engineering workplan
 
+
+> **Historical record:** This dated audit/workplan predates the Molecularis rebrand. Former product names, source paths and repository URLs are retained where they document the state of the project at that time. Current identity and compatibility rules are in [brand-migration.md](../brand-migration.md).
+
 **Scope:** research-only, synthetic fixtures and public non-patient metadata. **Overall:** in progress; P0 NOT APPROVED; no patient/clinical authorization.
 
 ## Verified baseline (2026-11-11)

@@ -20,7 +20,7 @@ def _annotator(tmp_path: Path, *, end: int = 9) -> tuple[Path, str]:
         "#!" + sys.executable,
         "import pathlib, sys",
         "args=sys.argv[1:]",
-        "out=pathlib.Path(args[args.index('--kinetics-output-gff3')+1])",
+        "out=pathlib.Path(args[args.index('--molecularis-output-gff3')+1])",
         f"out.write_text({gff3!r})",
     ])
     executable.write_text(script + "\n", encoding="utf-8")

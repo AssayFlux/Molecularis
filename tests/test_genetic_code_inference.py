@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from kinetics import infer_genetic_code_candidates
+from molecularis import infer_genetic_code_candidates
 
 
 def test_genetic_code_inference_ranks_table_that_avoids_internal_stops() -> None:

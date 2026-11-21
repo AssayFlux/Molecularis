@@ -135,7 +135,7 @@ The project prioritises reproducibility, provenance, bounded inputs and explicit
     <td align="center"><img src="https://api.iconify.design/lucide/activity.svg?color=%23800020" width="28" height="28" alt=""><br><strong>MOLECULAR DYNAMICS</strong><br>Optional OpenMM runner with explicit setup and force-field limitations.</td>
   </tr>
   <tr>
-    <td align="center"><img src="https://api.iconify.design/lucide/chart-line.svg?color=%23800020" width="28" height="28" alt=""><br><strong>KINETICS &amp; PK/PD</strong><br>Michaelis–Menten models and exploratory pharmacokinetic/pharmacodynamic utilities.</td>
+    <td align="center"><img src="https://api.iconify.design/lucide/chart-line.svg?color=%23800020" width="28" height="28" alt=""><br><strong>ENZYME KINETICS &amp; PK/PD</strong><br>Michaelis–Menten models and exploratory pharmacokinetic/pharmacodynamic utilities.</td>
     <td align="center"><img src="https://api.iconify.design/lucide/chart-bar.svg?color=%23800020" width="28" height="28" alt=""><br><strong>OMICS &amp; PGx</strong><br>Exploratory statistics, synthetic cohort utilities and research-only pharmacogenomics parsing.</td>
   </tr>
   <tr>
@@ -202,7 +202,7 @@ flowchart TD
     APP --> NATIVE["C++ / JNI · RUST"]
     APP --> VIEW["OFFLINE VIEWERS"]
     APP --> CONTRACTS["VERSIONED CONTRACTS · REGISTRY · PROVENANCE"]
-    PY --> SCI["SEQUENCE · STRUCTURE · CHEMISTRY · KINETICS · OMICS"]
+    PY --> SCI["SEQUENCE · STRUCTURE · CHEMISTRY · ENZYME KINETICS · OMICS"]
     PY --> OPTIONAL["OPTIONAL HOST ENGINES · RDKit / Vina / OpenMM"]
     NODE["OPTIONAL NODE 22 WORKER · DISABLED BY DEFAULT"] -.-> VINA["AUTHENTICATED DOCKING ROUTE"]
     CI["GITHUB ACTIONS"] --> CHECKS["TESTS · VALIDATION · GOVERNANCE"]

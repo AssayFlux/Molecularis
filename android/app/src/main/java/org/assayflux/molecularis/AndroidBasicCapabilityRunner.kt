@@ -80,7 +80,7 @@ internal object AndroidBasicCapabilityRunner {
             "Sequence input exceeds the 1,000,000-character mobile limit"
         }
         if (!Python.isStarted()) Python.start(AndroidPlatform(context.applicationContext))
-        return Python.getInstance().getModule("kinetics_probe")
+        return Python.getInstance().getModule("molecularis_probe")
             .callAttr("run_android_basic_capability", capabilityId, sequenceText)
             .toString()
     }

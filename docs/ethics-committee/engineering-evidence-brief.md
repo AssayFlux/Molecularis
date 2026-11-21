@@ -1,14 +1,14 @@
-# Kinetics — engineering evidence brief for ethics committee review
+# Molecularis — engineering evidence brief for ethics committee review
 
 **Prepared:** 18 November 2026  
-**Repository:** AssayFlux/Kinetics  
+**Repository:** AssayFlux/Molecularis  
 **Branch:** main  
 **Review baseline:** ad0b1d7b0f0594489cf4623b74df022d80619659  
 **Purpose:** explain the current research-software engineering boundary and support a transparent demonstration. This document is not an ethics approval, protocol, clinical validation or data-use authorization.
 
 ## 1. What the application is
 
-Kinetics is an offline-first Android/Python research application. Its current native shell has four destinations: Home, Work, Explore and Settings. It is designed to support bounded, traceable research workflows and local inspection of scientific files. Research Mode only is in scope.
+Molecularis is an offline-first Android/Python research application. Its current native shell has four destinations: Home, Work, Explore and Settings. It is designed to support bounded, traceable research workflows and local inspection of scientific files. Research Mode only is in scope.
 
 ## 2. Demonstrable engineering surfaces
 
@@ -33,7 +33,7 @@ Only use synthetic or authorized public non-patient fixtures in a committee demo
 - Temporary plaintext analysis inputs are held in app-private cache and cleaned on normal completion; stale prefixed cache files older than 24 hours are cleaned at store startup.
 - Optional local biometric/device-credential re-authentication is implemented. Physical-device lifecycle, lockout and recovery acceptance remains open.
 - Job deletion requests cancellation of associated WorkManager analysis work and removes app-managed records/files where operations succeed. Flash-storage secure erasure and deletion of previously exported copies cannot be guaranteed.
-- User-selected SAF exports leave Kinetics' storage boundary; Kinetics cannot guarantee deletion or access controls imposed by the destination provider.
+- User-selected SAF exports leave Molecularis' storage boundary; Molecularis cannot guarantee deletion or access controls imposed by the destination provider.
 - Screenshot/Recents suppression is not enabled pending owner-approved threat/privacy review.
 - Runtime network, merged-manifest and backup/restore audits remain in the engineering acceptance register; do not claim a completed independent security certification.
 
@@ -73,4 +73,4 @@ Keep fixtures small and have them available offline before the meeting. Avoid co
 - Python CI on commit 3300b97c84114cb3ba6eb31fa7655247956430e6 reported 538 passed, 2 failed and 9 skipped. The two failures were test-fixture escaping defects and have been corrected in ad0b1d7b0f0594489cf4623b74df022d80619659; exact-head CI is pending.
 - Physical-device accessibility/performance, independent security review and scientific validation remain separate acceptance activities.
 
-**Committee-facing statement:** Kinetics currently demonstrates bounded research-software engineering, not an ethics-approved human-subject study or a clinically validated system. The committee's review should determine the proposed study and governance conditions; software capability must not be represented as approval.
+**Committee-facing statement:** Molecularis currently demonstrates bounded research-software engineering, not an ethics-approved human-subject study or a clinically validated system. The committee's review should determine the proposed study and governance conditions; software capability must not be represented as approval.

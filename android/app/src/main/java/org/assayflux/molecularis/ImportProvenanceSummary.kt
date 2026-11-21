@@ -23,7 +23,7 @@ data class ImportProvenanceSummary(
 
 object ImportProvenanceSummaryFormatter {
     fun render(record: ImportProvenanceSummary): String = buildString {
-        appendLine("KINETICS — IMPORT PROVENANCE SUMMARY")
+        appendLine("MOLECULARIS — IMPORT PROVENANCE SUMMARY")
         appendLine("Schema: org.assayflux.molecularis.provenance-summary")
         appendLine("Schema version: 1")
         appendLine()
