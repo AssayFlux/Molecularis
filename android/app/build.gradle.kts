@@ -6,12 +6,12 @@ plugins {
 }
 
 android {
-    namespace = "org.assayflux.kinetics"
+    namespace = "org.assayflux.molecularis"
     compileSdk = 36
     ndkVersion = "28.2.13676358"
 
     defaultConfig {
-        applicationId = "org.assayflux.kinetics"
+        applicationId = "org.assayflux.molecularis"
         minSdk = 29
         targetSdk = 36
         versionCode = 1
@@ -99,7 +99,7 @@ kotlin {
 
 val verifyOwnerBrandAssets by tasks.registering {
     group = "verification"
-    description = "Fail release builds while owner-approved Kinetics brand assets are placeholders."
+    description = "Fail release builds while owner-approved Molecularis brand assets are placeholders."
     doLast {
         val brandDir = rootProject.file("../assets/brand")
         val required = listOf(
