@@ -40,9 +40,12 @@ A scaffold or specification does not imply implementation or scientific validati
 | K | Phylogeny | Existing Newick parser/serializer, patristic distances, JC69, NJ, UPGMA and seeded site-bootstrap algorithms retained and integrated | Python v1 canonical aligned-nucleotide artifact service | MSDE artifact lifecycle and five capabilities | PHY-001–PHY-007 executable | Engineering complete; CI run #44896994652 green; scientific review deferred |
 | L | Pharmacogenomics | Existing reference-checked normalization, star-allele JSON definitions and PharmVar TSV parser retained and integrated | Python v1 canonical sample/definition artifacts and deterministic phased star-allele matching | MSDE artifact lifecycle, two capabilities and bounded definition-pack ingestion | PGX-001–PGX-007 operational | Engineering complete; CI run #44898692562 green; scientific/clinical review deferred |
 | M | Cohorts | Canonical synthetic non-patient cohorts, longitudinal visits, aggregate summaries, stratification and pseudonymous overlap | Python v1 MSDE artifact lifecycle and four capabilities | COH-001–COH-008 operational | Engineering complete; CI run #44899270453 green; scientific/privacy review deferred |
-| N | Workflows | Native cross-service DAG orchestration; FASTA/FASTQ QC and Galaxy adapter retained | Canonical WorkflowDocument, MSDE artifact lifecycle and Core RulebookExecutor integration | WF-001–WF-009 operational; two registered capabilities | Engineering implementation committed; CI verification pending; independent review deferred |
+| N | Workflows | Native cross-service DAG orchestration; FASTA/FASTQ QC and Galaxy adapter retained | Canonical WorkflowDocument, MSDE artifact lifecycle and Core RulebookExecutor integration | WF-001–WF-009 operational; two registered capabilities | Engineering complete; CI run #44900460557 green; scientific review deferred |
 
 ## Verification evidence
+
+- [Run #44900460557](https://github.com/AssayFlux/Molecularis/actions/runs/44900460557), commit `220dd2a`: Workflows N verified; core 746 passed/12 skipped; optional Chemistry 754/4, Genomics 747/11, Sequence 749/9 (4 existing warnings). Registry, 64 JSON Schemas, Ruff E9/F, compilation, Workflows DAG benchmark smoke and all test profiles passed.
+
 
 - [Run #44899270453](https://github.com/AssayFlux/Molecularis/actions/runs/44899270453), commit `70031be`: Cohorts M verified; core 737 passed/12 skipped; optional Chemistry 745/4, Sequence 740/9 (4 existing warnings), Genomics 738/11. Registry, 61 JSON Schemas, Ruff E9/F, compilation, Cohorts aggregate benchmark smoke and all test profiles passed.
 
@@ -68,9 +71,9 @@ A scaffold or specification does not imply implementation or scientific validati
 
 ## Active phase and next exact work
 
-**Active phase:** Service N — Workflows native DAG orchestration implementation committed; CI verification pending. The service validates canonical workflow contracts and executes registered capabilities through the existing MSDE RulebookExecutor with input/output artifact lineage. Existing Galaxy REST and FASTA/FASTQ helpers are retained as optional integrations. The platform is not yet a distributed, multi-language, OS-isolated production runtime.
+**Active phase:** Service N — Workflows engineering implementation and CI verification complete in run #44900460557 (core 746 passed/12 skipped; optional Chemistry 754/4, Genomics 747/11, Sequence 749/9 with 4 existing warnings). Native workflow DAGs validate registered capabilities and execute through MSDE RulebookExecutor with artifact lineage. Galaxy REST and FASTA/FASTQ helpers remain optional integrations. The platform is not yet a distributed, multi-language, OS-isolated production runtime.
 
-**Next:** N is the final service in the A–N engineering sequence. After its CI verification, proceed to platform-wide integration, university scientific/privacy review and acceptance gates. University-level scientific and privacy review, independent reference comparisons and formal contract freezes will be conducted after the full A–N engineering build, as directed by the owner. Platform-wide recovery, backup/restore, service discovery, language conformance and isolation gates remain open.
+**Next:** A–N service engineering is complete. Proceed to platform-wide integration, recovery/security/language-conformance work and university scientific/privacy review and acceptance gates. Service CI does not certify scientific correctness. University-level scientific and privacy review, independent reference comparisons and formal contract freezes will be conducted after the full A–N engineering build, as directed by the owner. Platform-wide recovery, backup/restore, service discovery, language conformance and isolation gates remain open.
 
 ## Reporting rule
 

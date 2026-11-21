@@ -41,7 +41,7 @@ The **Engine** implements domain operations. The **Runtime** governs lifecycle a
 
 The local Core/MSDE reference slice now includes immutable SHA-256 blobs, SQLite WAL catalog, lineage, bounded streaming, integrity audit, exact/numeric metadata lookup, snapshot-bound pagination, capability registration, Rulebook DAG execution and success/failure run evidence. Optional sequence, genomics and chemistry CI profiles are configured. It remains a local single-catalog reference implementation—not a distributed production platform. Native sorted-segment indexes, robust recovery certification, general query planning, cross-process discovery, C++/Rust interoperability and OS-level sandboxing remain open.
 
-Latest fully green engineering CI is [run #44899270453](https://github.com/AssayFlux/Molecularis/actions/runs/44899270453): core 737 passed/12 skipped; optional Chemistry 745/4, Sequence 740/9, Genomics 738/11. Registry, 61 schemas, Ruff E9/F, compilation, Cohorts benchmark smoke and all service profiles passed. Software CI is not scientific accuracy certification.
+Latest fully green engineering CI is [run #44900460557](https://github.com/AssayFlux/Molecularis/actions/runs/44900460557): core 746 passed/12 skipped; optional Chemistry 754/4, Sequence 749/9, Genomics 747/11. Registry, 64 schemas, Ruff E9/F, compilation, Workflows DAG benchmark smoke and all service profiles passed. Software CI is not scientific accuracy certification.
 
 ## Development
 

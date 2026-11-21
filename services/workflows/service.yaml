@@ -4,7 +4,7 @@ roadmap_step: "N"
 roadmap_order: 14
 depends_on: ["molecular","sequence","structure","chemistry","protein","genomics","dna-rna","simulation","kinetics","omics","phylogeny","pharmacogenomics","cohorts"]
 status: "implemented"
-completion_status: "engineering_implemented_ci_verification_pending"
+completion_status: "engineering_implementation_ci_verified"
 primary_languages: ["python"]
 engine: "ENGINE.md"
 runtime: "RUNTIME.md"
