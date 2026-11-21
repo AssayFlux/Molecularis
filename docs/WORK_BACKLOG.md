@@ -65,4 +65,4 @@ Each letter requires discovery/audit, Engine, Runtime, Rulebook, schemas/contrac
 
 ## Active task
 
-A's engineering implementation is complete; independent scientific approval and freeze remain pending. B's Python v1 engineering implementation is complete. C's Python v1 engineering implementation is complete pending CI verification. Per owner direction, university scientific review and contract freezes for A–N are deferred until the entire engineering build is complete. Proceed to D after C's engineering commit and CI verification.
+A's engineering implementation is complete; independent scientific approval and freeze remain pending. B's Python v1 engineering implementation is complete. C's Python v1 engineering implementation is complete and CI-verified in run #158 (core 636 passed/12 skipped; optional profiles passed). Per owner direction, university scientific review and contract freezes for A–N are deferred until the entire engineering build is complete. Proceed to D after C's engineering commit and CI verification.

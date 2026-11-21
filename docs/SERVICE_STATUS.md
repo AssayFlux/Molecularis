@@ -1,7 +1,7 @@
 # Service and Platform Status Register
 
 Last verified: 2026-11-21  
-Current implementation commit: pending C implementation commit.
+Current implementation commit: [221f44481d4aa1ad59590d5fb7b29f6e9ebe3bfd](https://github.com/AssayFlux/Molecularis/commit/221f44481d4aa1ad59590d5fb7b29f6e9ebe3bfd).
 
 A scaffold or specification does not imply implementation or scientific validation.
 
@@ -49,6 +49,8 @@ A scaffold or specification does not imply implementation or scientific validati
 - [Run #150](https://github.com/AssayFlux/Molecularis/actions/runs/44883890013), commit `7e0785a`: 608 passed, 12 skipped; core, capability registry, 28 JSON Schemas, Ruff E9/F, compilation, 1k/10k graph benchmark smoke and all sequence/genomics/chemistry optional profiles passed.
 - [Run #153](https://github.com/AssayFlux/Molecularis/actions/runs/44884757468), commit `f940fe4`: core 624 passed/12 skipped; optional sequence 627 passed/9 skipped, genomics 625 passed/11 skipped, chemistry 632 passed/4 skipped. Registry, 31 JSON Schemas, Ruff E9/F, compilation, molecular benchmark smoke and 1,000-record/1,000,000-base sequence streaming benchmark all passed.
 - Ruff remains limited to E9/F; this is not full style conformance.
+
+- [Run #158](https://github.com/AssayFlux/Molecularis/actions/runs/44886827271), commit `221f444`: core 636 passed/12 skipped; optional sequence 639 passed/9 skipped, genomics 637 passed/11 skipped, chemistry 644 passed/4 skipped. Capability registry, 34 JSON Schemas, Ruff E9/F, compilation and Molecular/Molecularis Sequence/Structure benchmark smoke passed.
 
 ## Active phase and next exact work
 
