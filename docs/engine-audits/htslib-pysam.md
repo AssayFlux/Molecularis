@@ -36,7 +36,7 @@ Existing adapter: `python/molecularis/genomics_htslib.py`.
 - Converts decoded numeric qualities to Sanger/Phred+33 text for the existing `SamRecord` contract.
 - Does not expose auxiliary tags, read groups, template/mate fields, base modifications, per-record reference IDs, binning, mapping-quality semantics, CIGAR operations as structured data, or reference/header provenance. The current `SamRecord` type is intentionally much narrower than a lossless alignment record.
 - The adapter checks path suffixes and local file existence but does not itself impose file-size, record-count, elapsed-time, reference-size, or decompression limits. These are required at the job/worker boundary for untrusted inputs.
-- No matching `tests/test_genomics_htslib.py` file was found in the inspected CORE tree. Do not infer runtime correctness from the adapter's presence.
+- There is no separate `tests/test_genomics_htslib.py`, but `tests/test_genomics.py` contains an optional `pytest.importorskip("pysam")` fixture that writes/indexes a tiny BAM and checks one indexed-region read plus the CRAM-local-reference guard. This is a useful smoke test, not a comprehensive adapter suite; it does not cover CRAM decoding against a real reference, malformed/index edge cases, metadata preservation or resource exhaustion.
 
 ## Recommended Molecularis design
 
@@ -50,7 +50,7 @@ Existing adapter: `python/molecularis/genomics_htslib.py`.
 
 ## Adoption verdict
 
-**Accept as an optional host engine candidate, not as a product dependency.** The existing adapter is directionally correct and already enforces an important safety property (explicit local CRAM reference), but the record model is lossy, there is no matching adapter test module in the inspected tree, resource controls are external, and the full bundled native licence/dependency closure is not yet established.
+**Accept as an optional host engine candidate, not as a product dependency.** The existing adapter is directionally correct and already enforces an important safety property (explicit local CRAM reference), but the record model is lossy, the only discovered coverage is one optional BAM smoke test embedded in `tests/test_genomics.py`, resource controls are external, and the full bundled native licence/dependency closure is not yet established.
 
 No tests, builds, benchmarks, Android device runs, or biological validation were performed as part of this source audit.
 
