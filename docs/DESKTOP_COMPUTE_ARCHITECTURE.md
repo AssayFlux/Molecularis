@@ -1,3 +1,8 @@
+> **HISTORICAL / SUPERSEDED FOR EXECUTION (2026-11-21):** This document is retained as source history and technical evidence. Do not use it as an active roadmap or implementation authority. The current repository-first plan is [Master Plan](MASTER_PLAN.md). Current exact inventory: [REPOSITORY_BASELINE.md](REPOSITORY_BASELINE.md); capability mapping: [CAPABILITY_STATUS.md](CAPABILITY_STATUS.md). Reconcile any still-useful details into the current plan before implementation. No completion or validation claim is implied by this historical document.
+
+---
+
+
 # Molecularis — Desktop Compute Architecture
 
 **Status:** Proposed architecture; not an implementation or security approval.  

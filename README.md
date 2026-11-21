@@ -1,6 +1,6 @@
-> **ALPHA BRANCH — DESKTOP-FIRST CROSS-PLATFORM DIRECTION**  
-> Molecularis is an installed scientific research application. Desktop apps for **Linux, Windows and macOS come first**; Android and Apple iOS/iPadOS apps follow on shared domain logic, contracts and project formats. No website/PWA-first strategy. A web companion is deferred. Preferred core languages: **C++, Rust and Python**; UI framework selection requires a cross-platform feasibility spike.  
-> Start here: [Alpha masterplan](docs/alpha/MASTERPLAN.md) · [North Star](NORTH_STAR.md) · [Roadmap](ROADMAP.md) · [Decisions](DECISIONS.md) · [Migration plan](docs/alpha/MIGRATION_PLAN.md).  
+> **MOLECULARIS — DESKTOP-FIRST SCIENTIFIC RESEARCH PLATFORM**  
+> Installed desktop applications for **Linux, Windows and macOS** are the first product delivery. Android and Apple iOS/iPadOS applications follow on the same scientific foundation, project formats and contracts. A website/PWA is not the first product. Preferred core languages: **C++, Rust and Python**; UI framework selection requires a measured five-platform feasibility spike.  
+> Start here: [Master plan](docs/MASTER_PLAN.md) · [Repository baseline](docs/REPOSITORY_BASELINE.md) · [Capability status](docs/CAPABILITY_STATUS.md) · [North Star](NORTH_STAR.md) · [Decisions](DECISIONS.md).
 
 
 <!-- MOLECULARIS · BY ASSAYFLUX -->
@@ -109,16 +109,12 @@ src="https://readme-typing-svg.demolab.com?font=Cinzel+Decorative&weight=600&siz
 
 ## RELEASE DIRECTION
 
-**v0.1.0** is the basic working-model target: a bounded, research-only Android workbench with real local workflows and verified packaging. It is not yet published; release acceptance remains gated by exact-head CI, APK verification, device, accessibility, security and licensing evidence.
-
-**v0.1.1** is planned for the first shared scientific rulebook and computational-generation foundation: common scientific objects, machine-readable rulebooks, chemistry and sequence construction, bounded peptide/structure generation, reaction models and validated engine adapters.
-
-See the [v0.1.0 and v0.1.1 release plan](docs/release-plan-v0.1.0-v0.1.1.md).
+The previous Android v0.1.0/v0.1.1 release sequence is historical and is not the current product delivery plan. The active delivery sequence is defined in the [repository-first Master Plan](docs/MASTER_PLAN.md): exact baseline and migration audit, cross-platform framework feasibility, shared contracts/project foundation, installed desktop application, desktop scientific vertical slices, compute extensions, mobile applications, and institutional readiness. No future release is claimed complete until its implementation and evidence gates pass.
 
 ## ABOUT
 **Molecularis** is an open-source scientific research workbench from **AssayFlux Scientific Systems**. It combines an Android-native, offline-first application with a Python research core and selected C++ and Rust components. Sequence, structure, chemistry, kinetics and omics foundations sit behind versioned contracts and a capability registry.
 
-The project prioritises reproducibility, provenance, bounded inputs and explicit limitations. It is a research-engineering prototype, not a clinically validated platform. See the [Molecularis identity migration and compatibility contract](docs/brand-migration.md) for retained legacy identifiers and integration aliases.
+The project prioritises reproducibility, provenance, bounded inputs and explicit limitations. The current repository is a research-engineering prototype with selected scientific source implementations; it is not a completed cross-platform application or clinically validated platform. See the [Molecularis identity migration and compatibility contract](docs/brand-migration.md) for retained legacy identifiers and integration aliases.
 
 <table>
   <tr>
