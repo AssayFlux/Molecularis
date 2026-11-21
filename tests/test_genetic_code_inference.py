@@ -14,7 +14,9 @@ def test_genetic_code_inference_ranks_table_that_avoids_internal_stops() -> None
         {"id": "cds-2", "sequence": "ATG" + "GCT" * 10 + "TGA" + "GCC" * 10 + "TAA",
          "complete_cds": True},
     ]
-    result = infer_genetic_code_candidates(records, table_ids=[1, 4], min_codons=30, minimum_score_margin=0.02)
+    result = infer_genetic_code_candidates(
+        records, table_ids=[1, 4], min_codons=30, minimum_score_margin=0.02
+    )
     assert result["status"] == "candidate_table_ranked"
     assert result["candidate_table_id"] == 4
     assert result["ranked_candidates"][0]["internal_stop_count"] == 0
