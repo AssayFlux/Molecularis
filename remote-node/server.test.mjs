@@ -125,3 +125,9 @@ test("enabled worker rejects unauthenticated docking requests before spawning", 
     });
   }
 });
+
+
+test("Molecularis environment names take precedence while legacy names remain supported", () => {
+  assert.equal(readConfig({ MOLECULARIS_NODE_PORT: "9001", KINETICS_NODE_PORT: "9002" }).port, 9001);
+  assert.equal(readConfig({ KINETICS_NODE_PORT: "9002" }).port, 9002);
+});

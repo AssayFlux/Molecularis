@@ -31,15 +31,15 @@ export function readConfig(env = process.env) {
   // Prefer Molecularis names; retain KINETICS_* aliases for existing deployments.
   const setting = (name) => env[name.replace(/^KINETICS_/, "MOLECULARIS_")] ?? env[name];
   const host = setting("KINETICS_NODE_HOST") || "127.0.0.1";
-  const port = Number(setting("KINETICS_NODE_PORT") || "8765");
+  const port = Number(setting("MOLECULARIS_NODE_PORT") || "8765");
   const enabled = setting("KINETICS_NODE_ALLOW_DOCKING") === "true";
-  const token = setting("KINETICS_NODE_AUTH_TOKEN") || "";
+  const token = setting("MOLECULARIS_NODE_AUTH_TOKEN") || "";
   const remote = !isLoopbackHost(host);
   if (!Number.isInteger(port) || port < 1 || port > 65535) {
-    throw new Error("KINETICS_NODE_PORT must be an integer from 1 to 65535");
+    throw new Error("MOLECULARIS_NODE_PORT must be an integer from 1 to 65535");
   }
   if (enabled && token.length < 32) {
-    throw new Error("A 32-character KINETICS_NODE_AUTH_TOKEN is required when docking is enabled");
+    throw new Error("A 32-character MOLECULARIS_NODE_AUTH_TOKEN is required when docking is enabled");
   }
   if (remote && (!setting("KINETICS_NODE_TLS_CERT") || !setting("KINETICS_NODE_TLS_KEY"))) {
     throw new Error("Non-loopback binding requires TLS certificate and key paths");
