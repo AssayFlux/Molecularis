@@ -25,8 +25,8 @@
 - Official license guide: https://docs.openmm.org/latest/userguide/library/01_introduction.html
 - OpenMM documents the API, low-level API, Reference, CPU and application layers under MIT; CUDA, HIP and OpenCL platforms are LGPL. The project also includes separately licensed third-party components.
 - The PyPI 8.6.1 distribution reports no provenance attestation: https://pypi.org/project/OpenMM/8.6.1/.
-- The Kinetics adapter accepts already-constructed OpenMM System/Topology/position objects, refuses arbitrary XML input, uses the CPU platform, records engine-binary and protocol hashes, runs independent seeded replicas and emits bounded DCD artifacts.
-- `python/kinetics/md_openmm.py` executes trusted, already-constructed OpenMM systems on the CPU platform, runs independently seeded replicas and emits bounded DCD artifacts with engine/protocol/input provenance.
+- The Molecularis adapter accepts already-constructed OpenMM System/Topology/position objects, refuses arbitrary XML input, uses the CPU platform, records engine-binary and protocol hashes, runs independent seeded replicas and emits bounded DCD artifacts.
+- `python/molecularis/md_openmm.py` executes trusted, already-constructed OpenMM systems on the CPU platform, runs independently seeded replicas and emits bounded DCD artifacts with engine/protocol/input provenance.
 - The CI smoke system is a synthetic two-particle harmonic bond. It verifies engine execution, serialization, replica creation, DCD output and schema only. It is not a biomolecular force-field benchmark.
 
 **Decision:** proceed with CPU-only adapter and synthetic engine smoke. CUDA/HIP/OpenCL are excluded. Do not select or bundle a protein/ligand force field until the exact parameter release, source, redistribution terms, supported chemical domain and validation benchmarks are recorded. No NPT run is possible unless the supplied System has periodic boundary conditions.
@@ -37,7 +37,7 @@ GROMACS 2026.4 is an available alternative and identifies LGPL-2.1-or-later in i
 
 ## ADMET data candidates
 
-| Source | Public evidence / known terms | Kinetics intake decision |
+| Source | Public evidence / known terms | Molecularis intake decision |
 |---|---|---|
 | ChEMBL | CC BY-SA 3.0; attribution and share-alike obligations apply. Commercially derived calculated properties may have additional terms. https://chembl.gitbook.io/chembl-interface-documentation/frequently-asked-questions/general-questions | Candidate only; pin release, exclude/segregate restricted calculated properties, preserve citations and review share-alike implications before intake |
 | PubChem BioAssay | NCBI provides policy and depositor guidance, but the catalogue may contain depositor-submitted material with record-specific provenance. https://pubchem.ncbi.nlm.nih.gov/docs/policy-and-guidelines | Candidate only; verify record-level depositor rights and source terms; do not assume one blanket licence |

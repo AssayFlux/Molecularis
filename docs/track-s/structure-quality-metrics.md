@@ -2,7 +2,7 @@
 
 ## Current implementation
 
-`python/kinetics/structure_quality.py` reports atom/residue counts, supported/unknown element coverage, bounded nonbonded steric-overlap candidates and severe-overlap counts. A spatial cell index bounds candidate enumeration; callers can cap atom and candidate-pair counts.
+`python/molecularis/structure_quality.py` reports atom/residue counts, supported/unknown element coverage, bounded nonbonded steric-overlap candidates and severe-overlap counts. A spatial cell index bounds candidate enumeration; callers can cap atom and candidate-pair counts.
 
 The same module now exposes `backbone_torsion_angles`, a bounded N/CA/C backbone geometry calculation. It reports observed phi/psi angles in degrees only when the required adjacent backbone atoms exist and residue numbering is contiguous. Missing atoms, termini and numbering gaps remain unavailable; no coordinates are reconstructed and no Ramachandran outlier grade is assigned.
 
