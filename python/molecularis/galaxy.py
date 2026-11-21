@@ -127,19 +127,19 @@ class GalaxyClient:
             while chunk := stream.read(1024 * 1024):
                 digest.update(chunk)
         boundary = "molecularis-" + os.urandom(16).hex()
-        filename = path.name.replace('"', "_").replace("\\r", "_").replace("\\n", "_")
+        filename = path.name.replace('"', "_").replace("\r", "_").replace("\n", "_")
         chunks = [
-            f"--{boundary}\\r\\nContent-Disposition: form-data; name=\"history_id\"\\r\\n\\r\\n{history}\\r\\n".encode(),
-            f"--{boundary}\\r\\nContent-Disposition: form-data; name=\"tool_id\"\\r\\n\\r\\nupload1\\r\\n".encode(),
-            f"--{boundary}\\r\\nContent-Disposition: form-data; name=\\"files_0|type\\"\\r\\n\\r\\nupload_dataset\\r\\n".encode(),
-            f"--{boundary}\\r\\nContent-Disposition: form-data; name=\\"files_0|file_type\\"\\r\\n\\r\\n{file_type}\\r\\n".encode(),
-            f"--{boundary}\\r\\nContent-Disposition: form-data; name=\"files_0|file_data\"; filename=\"{filename}\"\\r\\nContent-Type: application/octet-stream\\r\\n\\r\\n".encode(),
+            f"--{boundary}\r\nContent-Disposition: form-data; name=\"history_id\"\r\n\r\n{history}\r\n".encode(),
+            f"--{boundary}\r\nContent-Disposition: form-data; name=\"tool_id\"\r\n\r\nupload1\r\n".encode(),
+            f"--{boundary}\r\nContent-Disposition: form-data; name=\\"files_0|type\\"\r\n\r\nupload_dataset\r\n".encode(),
+            f"--{boundary}\r\nContent-Disposition: form-data; name=\\"files_0|file_type\\"\r\n\r\n{file_type}\r\n".encode(),
+            f"--{boundary}\r\nContent-Disposition: form-data; name=\"files_0|file_data\"; filename=\"{filename}\"\r\nContent-Type: application/octet-stream\r\n\r\n".encode(),
         ]
         with path.open("rb") as stream:
             file_bytes = stream.read(max_file_bytes + 1)
         if len(file_bytes) != size:
             raise RuntimeError("upload file changed while being read")
-        body = b"".join(chunks) + file_bytes + f"\\r\\n--{boundary}--\\r\\n".encode()
+        body = b"".join(chunks) + file_bytes + f"\r\n--{boundary}--\r\n".encode()
         result = self._request("POST", "/api/tools", body,
                                f"multipart/form-data; boundary={boundary}")
         datasets = result if isinstance(result, list) else [result]
