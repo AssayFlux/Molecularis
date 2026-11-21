@@ -33,3 +33,16 @@
 ## Decision rule
 
 No third-party code, model weights, databases, reference data or assets may be bundled or redistributed until its exact terms are reviewed and recorded. Molecularis' Apache-2.0 project licence applies to Molecularis-authored material and does not relicense upstream components. A candidate listed here is not approved for use.
+
+
+## Additional engines in the coordinated integration pass
+
+- Parasail: `jeffdaily/parasail`, v2.6.2 source reviewed at `src/sw.c` and `src/nw.c`. Its custom Battelle licence and required citation/name restrictions must be preserved before redistribution. Molecularis wraps the Python/native API; it does not copy Parasail source.
+- HTSlib, Samtools and BCFtools: source paths `sam.c`, `bam_sort.c` and `mpileup.c` reviewed. Preserve each upstream licence and bundled dependency notices separately; pysam remains the current Molecularis HTSlib integration seam.
+- AlphaFold: `run_alphafold.py` reviewed. Code licence does not settle model-weight, database, or dataset terms; Molecularis uses only the isolated local-process contract until those are approved.
+- RDKit: `SmilesParse.cpp` reviewed; per-file BSD notices remain applicable.
+- OpenMM: `openmm/app/simulation.py` reviewed; wrapper/API use does not approve force fields or parameter sources.
+- GROMACS: `md.cpp` reviewed; LGPL-2.1-or-later project terms and build/dependency notices require separate distribution review.
+- SciPy: `scipy/stats/_stats_py.py` reviewed; the file contains historical upstream copyright/disclaimer material, so retain upstream notices with any redistributed binaries.
+- Galaxy: workflow API implementation reviewed; server deployment and API use require separate operational/security approval.
+- ESM, NUAD, NUPACK and MolProbity: exact source/API/licence was not established in this pass. Do not bundle, redistribute, or mark these as integrated until canonical upstream sources and terms are confirmed.
