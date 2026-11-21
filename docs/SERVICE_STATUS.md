@@ -1,7 +1,7 @@
 # Service and Platform Status Register
 
 Last verified: 2026-11-21  
-Current implementation commit: [bfb3bf8ba807e9f971a38663734d7fb455f7654b](https://github.com/AssayFlux/Molecularis/commit/bfb3bf8ba807e9f971a38663734d7fb455f7654b) (G implementation); acceptance evidence recorded in the following commit.
+Current implementation commits: G [bfb3bf8ba807e9f971a38663734d7fb455f7654b](https://github.com/AssayFlux/Molecularis/commit/bfb3bf8ba807e9f971a38663734d7fb455f7654b); H [6e03dcbc7820f26bbda7b666fb005f898f5df487](https://github.com/AssayFlux/Molecularis/commit/6e03dcbc7820f26bbda7b666fb005f898f5df487), with test fix [3849c1e9e4c62e6ed41758b38d69a760fd215f92](https://github.com/AssayFlux/Molecularis/commit/3849c1e9e4c62e6ed41758b38d69a760fd215f92).
 
 A scaffold or specification does not imply implementation or scientific validation.
 
@@ -34,7 +34,7 @@ A scaffold or specification does not imply implementation or scientific validati
 | E | Protein | Existing descriptors, ESM local inference, HMMER evidence, motif scan and design brief retained | Native sequence/artifact v1 | MSDE artifacts and four capabilities; ESM/HMMER remain optional local workflows | PRO-001–PRO-006 executable | Engineering complete; CI run #44889593877 green; scientific review deferred |
 | F | Genomics | Existing SAM/VCF, BAM/CRAM, assembly QC, GFF3, ORF, reference normalization and optional HTSlib/tool adapters retained; canonical genome artifact added | Python v1 | MSDE artifacts and five capabilities | GEN-001–GEN-007 executable | Engineering implementation complete; university review deferred |
 | G | DNA/RNA | Canonical DNA/RNA artifacts, transcription, reverse transcription, explicit translation, oligo screening and Nussinov RNA fold; existing sequence/genetic-code primitives reused | Python v1 native operations | MSDE artifact lifecycle and eight capabilities | DRNA-001–DRNA-007 executable | Engineering implementation complete; CI run #44892707015 green; university review deferred |
-| H | Simulation | Canonical NVT/NPT protocol artifacts, energy-series analysis, hash-pinned GROMACS TPR runner integration and existing OpenMM CPU replica runner | Python v1 | MSDE lifecycle and three capabilities; OpenMM direct trusted-object API | SIM-001–SIM-007 executable | Engineering implementation committed; CI pending; scientific review deferred |
+| H | Simulation | Canonical NVT/NPT protocol artifacts, energy-series analysis, hash-pinned GROMACS TPR runner integration and existing OpenMM CPU replica runner | Python v1 | MSDE lifecycle and three capabilities; OpenMM direct trusted-object API | SIM-001–SIM-007 executable | Engineering complete; CI run #44893264385 green; scientific review deferred |
 | I | Kinetics | Existing modules; audit pending | Not started | Not started | Not operational | Planned |
 | J | Omics | Existing modules; audit pending | Not started | Not started | Not operational | Planned |
 | K | Phylogeny | Existing modules; audit pending | Not started | Not started | Not operational | Planned |
@@ -57,9 +57,9 @@ A scaffold or specification does not imply implementation or scientific validati
 
 ## Active phase and next exact work
 
-**Active phase:** Service H — Simulation Python v1 engineering implementation committed; CI verification pending. University scientific review, independent OpenMM/GROMACS reference comparisons and formal freeze deferred until A–N engineering completion per owner direction. The platform is not yet a distributed, multi-language, OS-isolated production runtime.
+**Active phase:** Service H — Simulation Python v1 engineering implementation complete and CI-verified in run #44893264385 (core 696 passed/12 skipped; optional Chemistry 704/4, Genomics 697/11, Sequence 699/9). University scientific review, independent OpenMM/GROMACS reference comparisons and formal freeze deferred until A–N engineering completion per owner direction. The platform is not yet a distributed, multi-language, OS-isolated production runtime.
 
-**Next:** complete H CI verification, then proceed to I — Kinetics. University scientific review and formal freeze remain deferred until A–N engineering completion. University-level scientific review, cross-reference testing and formal contract freezes will be conducted after the full A–N engineering build, as directed by the owner. Platform-wide recovery, backup/restore, service discovery, language conformance and isolation gates remain open.
+**Next:** proceed to I — Kinetics. H's engineering CI is green; university scientific review and formal freeze remain deferred until A–N engineering completion. University-level scientific review, cross-reference testing and formal contract freezes will be conducted after the full A–N engineering build, as directed by the owner. Platform-wide recovery, backup/restore, service discovery, language conformance and isolation gates remain open.
 
 ## Reporting rule
 
