@@ -25,7 +25,7 @@ def _tree_hash(path: Path) -> str:
 
 
 def test_alphafold3_runner_executes_pinned_local_runtime_and_hashes_outputs(tmp_path: Path) -> None:
-    python = Path(sys.executable)
+    python = Path(sys.executable).resolve(strict=True)
     script = tmp_path / "run_alphafold.py"
     script.write_text(
         "import argparse, pathlib\n"
@@ -60,7 +60,7 @@ def test_alphafold3_runner_executes_pinned_local_runtime_and_hashes_outputs(tmp_
 
 
 def test_alphafold3_runner_rejects_model_digest_mismatch_before_execution(tmp_path: Path) -> None:
-    python = Path(sys.executable)
+    python = Path(sys.executable).resolve(strict=True)
     script = tmp_path / "run.py"
     script.write_text("raise SystemExit(99)", encoding="utf-8")
     model = tmp_path / "model"
