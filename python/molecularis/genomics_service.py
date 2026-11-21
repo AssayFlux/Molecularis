@@ -158,15 +158,15 @@ def register_genomics_service(platform):
                 result = {"valid": True, "contig_count": len(records),
                           "total_bases": document.total_bases, "alphabet": document.alphabet}
             elif selected == "assembly_qc":
-                result = summarize_contigs(records, max_records=min(100_000, context.budget.max_records),
-                    max_total_bases=min(500_000_000, context.budget.max_bases),
+                result = summarize_contigs(records, max_records=min(100_000, context.budget.max_candidates),
+                    max_total_bases=min(500_000_000, context.budget.max_bytes),
                     min_contig_length=parameters.get("min_contig_length", 1))
             elif selected == "orf_scan":
                 result = scan_contig_orf_candidates(records,
                     table_id=parameters.get("table_id", 11),
                     min_protein_length=parameters.get("min_protein_length", 30),
-                    max_contigs=min(100_000, context.budget.max_records),
-                    max_total_bases=min(100_000_000, context.budget.max_bases),
+                    max_contigs=min(100_000, context.budget.max_candidates),
+                    max_total_bases=min(100_000_000, context.budget.max_bytes),
                     max_total_orfs=parameters.get("max_total_orfs", 100_000),
                     max_candidate_pairs_total=parameters.get("max_candidate_pairs_total", 2_000_000))
             elif selected == "annotation_validate":
@@ -174,8 +174,8 @@ def register_genomics_service(platform):
                 if not isinstance(text, str) or len(text.encode("utf-8")) > min(16 * 1024 * 1024, context.budget.max_bytes):
                     raise ValidationError("annotation_validate requires bounded gff3_text (maximum 16 MiB)")
                 result = parse_gff3(text.splitlines(keepends=True),
-                    max_lines=min(1_000_000, context.budget.max_records),
-                    max_features=min(500_000, context.budget.max_records))
+                    max_lines=min(1_000_000, context.budget.max_candidates),
+                    max_features=min(500_000, context.budget.max_candidates))
                 known = {record.identifier for record in records}
                 annotated = {feature["seqid"] for feature in result["features"]}
                 unknown = sorted(annotated - known)
@@ -190,7 +190,7 @@ def register_genomics_service(platform):
                     raise ValidationError("variant_qc requires vcf_text")
                 result = summarize_vcf_qc(text,
                     max_input_bytes=min(5 * 1024 * 1024, context.budget.max_bytes),
-                    max_records=min(10_000, context.budget.max_records),
+                    max_records=min(10_000, context.budget.max_candidates),
                     max_samples=parameters.get("max_samples", 32))
                 contigs = {record.identifier: record.sequence for record in records}
                 missing = sorted(set(result["contig_record_counts"]) - set(contigs))
