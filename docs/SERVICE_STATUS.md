@@ -1,7 +1,7 @@
 # Service and Platform Status Register
 
 Last verified: 2026-11-21  
-Current implementation commit: [221f44481d4aa1ad59590d5fb7b29f6e9ebe3bfd](https://github.com/AssayFlux/Molecularis/commit/221f44481d4aa1ad59590d5fb7b29f6e9ebe3bfd).
+Current implementation commit: [b7d077e07c95cf94fab1c862b025651e179077a9](https://github.com/AssayFlux/Molecularis/commit/b7d077e07c95cf94fab1c862b025651e179077a9).
 
 A scaffold or specification does not imply implementation or scientific validation.
 
@@ -50,13 +50,13 @@ A scaffold or specification does not imply implementation or scientific validati
 - [Run #153](https://github.com/AssayFlux/Molecularis/actions/runs/44884757468), commit `f940fe4`: core 624 passed/12 skipped; optional sequence 627 passed/9 skipped, genomics 625 passed/11 skipped, chemistry 632 passed/4 skipped. Registry, 31 JSON Schemas, Ruff E9/F, compilation, molecular benchmark smoke and 1,000-record/1,000,000-base sequence streaming benchmark all passed.
 - Ruff remains limited to E9/F; this is not full style conformance.
 
-- [Run #158](https://github.com/AssayFlux/Molecularis/actions/runs/44886827271), commit `221f444`: core 636 passed/12 skipped; optional sequence 639 passed/9 skipped, genomics 637 passed/11 skipped, chemistry 644 passed/4 skipped. Capability registry, 34 JSON Schemas, Ruff E9/F, compilation and Molecular/Molecularis Sequence/Structure benchmark smoke passed.
+- [Run #158](https://github.com/AssayFlux/Molecularis/actions/runs/44886827271), commit `221f444`: core 636 passed/12 skipped; optional sequence 639 passed/9 skipped, genomics 637 passed/11 skipped, chemistry 644 passed/4 skipped. Capability registry, 34 JSON Schemas, Ruff E9/F, compilation and Molecular/Molecularis Sequence/Structure benchmark smoke passed.\n- [Run #159](https://github.com/AssayFlux/Molecularis/actions/runs/44886943910), commit `47e4a62`: cumulative Structure baseline, all four jobs green.\n- [Run #160](https://github.com/AssayFlux/Molecularis/actions/runs/44888621807), commit `b7d077e`: Chemistry D verified; core 644 passed/12 skipped; optional Chemistry 652 passed/4 skipped, Sequence 647 passed/9 skipped, Genomics 645 passed/11 skipped. Registry valid, 37 JSON Schemas, Ruff E9/F, compile and all benchmark smoke steps passed.
 
 ## Active phase and next exact work
 
-**Active phase:** Service D — Chemistry Python v1 engineering implementation complete pending CI evidence; university review and formal freeze deferred until the complete A–N engineering build per owner direction. A and B engineering implementations remain complete; their university reviews are likewise deferred. The platform is not yet a distributed, multi-language, OS-isolated production runtime.
+**Active phase:** Service D — Chemistry Python v1 engineering implementation complete and CI-verified in run #44888621807; university review and formal freeze deferred until the complete A–N engineering build per owner direction. A and B engineering implementations remain complete; their university reviews are likewise deferred. The platform is not yet a distributed, multi-language, OS-isolated production runtime.
 
-**Next:** proceed to E — Protein after D CI verification. University-level scientific review, cross-reference testing and formal contract freezes will be conducted after the full A–N engineering build, as directed by the owner. Platform-wide recovery, backup/restore, service discovery, language conformance and isolation gates remain open.
+**Next:** proceed to E — Protein. University-level scientific review, cross-reference testing and formal contract freezes will be conducted after the full A–N engineering build, as directed by the owner. Platform-wide recovery, backup/restore, service discovery, language conformance and isolation gates remain open.
 
 ## Reporting rule
 

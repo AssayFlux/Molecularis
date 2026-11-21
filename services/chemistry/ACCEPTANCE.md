@@ -1,6 +1,6 @@
 # Chemistry D — Engineering acceptance record
 
-Status: Engineering implementation complete pending CI evidence. University scientific review, independent reference comparison and formal contract freeze are deferred until A–N engineering completion under DEC-0010.
+Status: Engineering implementation complete and CI-verified. University scientific review, independent reference comparison and formal contract freeze are deferred until A–N engineering completion under DEC-0010.
 
 ## Implemented slice
 - Immutable canonical explicit-atom molecular graph artifacts with SHA-256 identity and MSDE lineage.
@@ -13,4 +13,4 @@ Status: Engineering implementation complete pending CI evidence. University scie
 Native v1 does not claim chemical valence/aromaticity sanitization, stereochemical interpretation, protonation/tautomer normalization, implicit-hydrogen inference, reaction balancing, conformer generation, quantum chemistry, ADMET or clinical prediction. Path fingerprints are not ECFP/Morgan fingerprints. No university scientific acceptance or production readiness is claimed.
 
 ## Verification
-Record the exact commit and CI run here after the CORE workflow completes.
+Engineering commit: b2db7823c2fe3d1a0a48c9479a13b571ebb1b98c (initial D implementation); lint correction: b7d077e07c95cf94fab1c862b025651e179077a9.\n\nCI run [#44888621807](https://github.com/AssayFlux/Molecularis/actions/runs/44888621807) on b7d077e: all four jobs succeeded. Core: 644 passed, 12 skipped. Optional Chemistry: 652 passed, 4 skipped; Sequence: 647 passed, 9 skipped, 4 warnings; Genomics: 645 passed, 11 skipped. Capability registry valid; 37 JSON Schemas validated; Ruff E9/F, Python compilation and all benchmark smoke steps passed.

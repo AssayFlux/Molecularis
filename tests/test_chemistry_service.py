@@ -2,6 +2,7 @@ from __future__ import annotations
 import pytest
 from molecularis.chemistry_service import ChemistryDocument, ingest_chemistry, load_chemistry, register_chemistry_service, chemistry_rulebook
 from molecularis.platform import MolecularisPlatform
+from molecularis.platform.contracts import ValidationError
 
 def sdf():
     counts=f"{2:3d}{1:3d}  0  0  0  0            999 V2000"
