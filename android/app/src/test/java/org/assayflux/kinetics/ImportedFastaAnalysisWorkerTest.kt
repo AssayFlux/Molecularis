@@ -1,4 +1,4 @@
-package org.assayflux.kinetics
+package org.assayflux.molecularis
 
 import androidx.work.ListenableWorker
 import androidx.work.testing.TestListenableWorkerBuilder

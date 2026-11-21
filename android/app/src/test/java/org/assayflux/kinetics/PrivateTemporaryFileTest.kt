@@ -1,4 +1,4 @@
-package org.assayflux.kinetics
+package org.assayflux.molecularis
 
 import java.nio.file.Files
 import org.junit.Assert.assertEquals

@@ -1,4 +1,4 @@
-package org.assayflux.kinetics
+package org.assayflux.molecularis
 
 import org.junit.Assert.assertTrue
 import org.junit.Test
