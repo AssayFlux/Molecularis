@@ -3,8 +3,8 @@ name: "Molecular"
 roadmap_step: "A"
 roadmap_order: 1
 depends_on: []
-status: "implementation_in_progress"
-completion_status: "v1_implemented_pending_independent_scientific_approval"
+status: "implementation_complete"
+completion_status: "implementation_complete_pending_independent_scientific_approval_and_freeze"
 primary_languages: ["python"]
 planned_languages: ["cpp", "rust"]
 engine: "ENGINE.md"

@@ -1,7 +1,7 @@
 # Service and Platform Status Register
 
 Last verified: 2026-11-21  
-Current implementation commit: [e2957f801f307f1c5cdc470e1f9ca0e3e12bee68](https://github.com/AssayFlux/Molecularis/commit/e2957f801f307f1c5cdc470e1f9ca0e3e12bee68).
+Current implementation commit: [fb2afc2017eb0e74e4d4e9209d33323f5b279e6c](https://github.com/AssayFlux/Molecularis/commit/fb2afc2017eb0e74e4d4e9209d33323f5b279e6c).
 
 A scaffold or specification does not imply implementation or scientific validation.
 
@@ -27,7 +27,7 @@ A scaffold or specification does not imply implementation or scientific validati
 
 | Step | Service | Existing code | Engine | Runtime | Rulebook | State |
 |---|---|---|---|---|---|---|
-| A | Molecular | Native v1 graph model, strict serialization, graph summaries and MSDE integration | Implemented v1 | Python reference runtime and artifact-store capability | Ten executable structural rules; independent scientific approval pending | v1 implementation pending CI and acceptance review |
+| A | Molecular | Native v1 graph model, strict serialization, graph summaries and MSDE integration | Implemented v1 | Python reference runtime and artifact-store capability | Ten executable structural rules; independent scientific approval pending | Implementation complete; scientific acceptance pending |
 | B | Sequence | Existing modules; audit pending | Not started | Not started | Not operational | Planned |
 | C | Structure | Existing modules; audit pending | Not started | Not started | Not operational | Planned |
 | D | Chemistry | Existing modules; audit pending | Not started | Not started | Not operational | Planned |
@@ -46,14 +46,14 @@ A scaffold or specification does not imply implementation or scientific validati
 
 - Previous baseline [run #132](https://github.com/AssayFlux/Molecularis/actions/runs/44880497095): 568 passed, 12 skipped.
 - [Run #133](https://github.com/AssayFlux/Molecularis/actions/runs/44880802259): optional dependency profiles passed; the core job exposed a malformed legacy JSON schema that was subsequently repaired.
-- [Run #142](https://github.com/AssayFlux/Molecularis/actions/runs/44882468777), commit `e2957f8`: 593 passed, 12 skipped; core, schema validation, Ruff, compilation and all sequence/genomics/chemistry optional profiles passed.
+- [Run #148](https://github.com/AssayFlux/Molecularis/actions/runs/44883726169), commit `fb2afc2`: 606 passed, 12 skipped; core, capability registry, 28 JSON Schemas, Ruff E9/F, compilation, 1k/10k graph benchmark smoke and all sequence/genomics/chemistry optional profiles passed.
 - Ruff remains limited to E9/F; this is not full style conformance.
 
 ## Active phase and next exact work
 
-**Active phase:** Service A — Molecular v1 implementation and acceptance, while Core/MSDE hardening continues. The platform is not yet a distributed, multi-language, OS-isolated production runtime.
+**Active phase:** Service A — v1 implementation complete; independent scientific review and formal freeze pending, while Core/MSDE hardening continues. The platform is not yet a distributed, multi-language, OS-isolated production runtime.
 
-**Next:** complete CI verification for the v1 artifact integration, review the molecular fixture provenance and benchmark results, obtain independent scientific Rulebook approval, then freeze A. Platform-wide recovery, backup/restore, service discovery, language conformance and isolation gates remain open. Continue platform crash recovery, backup/restore, service discovery, language conformance and isolation work. The platform gate remains open.
+**Next:** obtain independent scientific review of the structural Rulebook and fixture provenance, record approval, and freeze A's v1 contracts. Do not start B before that gate. Platform-wide recovery, backup/restore, service discovery, language conformance and isolation gates remain open. Continue platform crash recovery, backup/restore, service discovery, language conformance and isolation work. The platform gate remains open.
 
 ## Reporting rule
 

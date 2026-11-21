@@ -1,6 +1,6 @@
 # Service A — Molecular v1 Acceptance Record
 
-Status: implementation delivered; final CI verification and independent scientific approval pending.
+Status: v1 engineering implementation complete; CI green; independent scientific approval and formal contract freeze pending.
 
 ## Delivered implementation
 
@@ -18,10 +18,10 @@ Status: implementation delivered; final CI verification and independent scientif
 
 ## Verification required
 
-- [ ] CI run for the implementation commit is green.
-- [ ] All three Molecular schemas pass the repository schema validator.
-- [ ] Molecular tests pass, including Rulebook success/failure and provenance checks.
-- [ ] Benchmark harness runs at 1k and 10k atom scales; record machine/runtime details before setting performance thresholds.
+- [x] [CI run #148](https://github.com/AssayFlux/Molecularis/actions/runs/44883726169) is green on commit fb2afc2.
+- [x] All 28 repository JSON Schemas, including all three Molecular schemas, pass validation in run #148.
+- [x] 606 tests pass (12 skipped); Molecular Rulebook success/failure and artifact provenance tests are included.
+- [x] Benchmark smoke passed on GitHub ubuntu-latest / Python 3.11.18: 1k atoms/999 bonds construction 0.00612 s, components 0.00049 s; 10k atoms/9,999 bonds construction 0.05971 s, components 0.00645 s. Single-run smoke measurements only; no performance threshold is asserted.
 - [ ] Scientific reviewer confirms fixture provenance and approves MOL-001 through MOL-010.
 - [ ] Public API and service manifest are reviewed and v1 contracts frozen.
 
