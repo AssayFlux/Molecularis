@@ -44,6 +44,9 @@ A scaffold or specification does not imply implementation or scientific validati
 
 ## Verification evidence
 
+- [Run #44899270453](https://github.com/AssayFlux/Molecularis/actions/runs/44899270453), commit `70031be`: Cohorts M verified; core 737 passed/12 skipped; optional Chemistry 745/4, Sequence 740/9 (4 existing warnings), Genomics 738/11. Registry, 61 JSON Schemas, Ruff E9/F, compilation, Cohorts aggregate benchmark smoke and all test profiles passed.
+
+
 - [Run #207](https://github.com/AssayFlux/Molecularis/actions/runs/44898692562), commit `3e758f6`: Pharmacogenomics L verified; core 728 passed/12 skipped; optional Genomics 729/11, Chemistry 736/4, Sequence 731/9 (4 existing warnings). Registry, 58 JSON Schemas, Ruff E9/F, compilation, Pharmacogenomics matching benchmark smoke and all test profiles passed.
 
 - [Run #201](https://github.com/AssayFlux/Molecularis/actions/runs/44896994652), commit `cb9479a`: Phylogeny K verified; core 721 passed/12 skipped; optional Sequence 724/9 (4 existing warnings), Genomics 722/11, Chemistry 729/4. Registry, 55 JSON Schemas, Ruff E9/F, compilation, Phylogeny benchmark smoke and all profiles passed.
@@ -65,9 +68,9 @@ A scaffold or specification does not imply implementation or scientific validati
 
 ## Active phase and next exact work
 
-**Active phase:** Service M — Cohorts implementation committed in `40f08c7`; CI verification is pending. The service accepts synthetic non-patient cohorts only and provides aggregate descriptive summaries, stratification with small-cell suppression and pseudonymous membership overlap. Independent scientific/clinical review remains deferred until A–N engineering completion. The platform is not yet a distributed, multi-language, OS-isolated production runtime.
+**Active phase:** Service M — Cohorts engineering implementation and CI verification complete in run #44899270453 (core 737 passed/12 skipped; optional Chemistry 745/4, Sequence 740/9, Genomics 738/11). The service accepts synthetic non-patient cohorts only and provides aggregate descriptive summaries, stratification with small-cell suppression and pseudonymous membership overlap. Independent scientific/clinical review remains deferred until A–N engineering completion. The platform is not yet a distributed, multi-language, OS-isolated production runtime.
 
-**Next:** proceed to N — Workflows. M supports release-pinned star-allele definition ingestion and exact matching of already-phased complete haplotypes. It does not infer phenotype, medication, dose or treatment. University-level scientific review, independent PharmVar/CPIC/DPWG comparisons and formal contract freezes will be conducted after the full A–N engineering build, as directed by the owner. Platform-wide recovery, backup/restore, service discovery, language conformance and isolation gates remain open.
+**Next:** proceed to N — Workflows. M supports canonical cohort artifacts, descriptive longitudinal summaries, minimum-cell-suppressed stratification and pseudonymous membership overlap. It does not perform clinical eligibility, causal or inferential analysis. University-level scientific review, independent PharmVar/CPIC/DPWG comparisons and formal contract freezes will be conducted after the full A–N engineering build, as directed by the owner. Platform-wide recovery, backup/restore, service discovery, language conformance and isolation gates remain open.
 
 ## Reporting rule
 

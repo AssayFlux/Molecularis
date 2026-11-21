@@ -28,6 +28,7 @@ Each step includes discovery, specification, native engine, runtime, Rulebook, s
 - `services/omics/` — canonical feature-by-sample artifacts, CPM/CLR, exploratory differential analysis, diversity and cross-omics correlation.
 - `services/phylogeny/` — canonical aligned nucleotide artifacts, Jukes-Cantor distance matrices, neighbor joining, UPGMA and seeded site-bootstrap split support.
 - `services/pharmacogenomics/` — provenance-pinned star-allele definition packs and conservative matching of already-phased synthetic haplotypes; no phenotype or treatment advice.
+- `services/cohorts/` — canonical synthetic non-patient cohort artifacts, longitudinal descriptive summaries, minimum-cell-suppressed stratification and pseudonymous membership overlap.
 - `services/cohorts/` — canonical synthetic non-patient cohort artifacts, longitudinal descriptive summaries, stratification with minimum-cell suppression and pseudonymous membership overlap.
 - `data/`, `validation/` — reference metadata and validation assets.
 - `remote-node/` — isolated remote execution component.
@@ -40,7 +41,7 @@ The **Engine** implements domain operations. The **Runtime** governs lifecycle a
 
 The local Core/MSDE reference slice now includes immutable SHA-256 blobs, SQLite WAL catalog, lineage, bounded streaming, integrity audit, exact/numeric metadata lookup, snapshot-bound pagination, capability registration, Rulebook DAG execution and success/failure run evidence. Optional sequence, genomics and chemistry CI profiles are configured. It remains a local single-catalog reference implementation—not a distributed production platform. Native sorted-segment indexes, robust recovery certification, general query planning, cross-process discovery, C++/Rust interoperability and OS-level sandboxing remain open.
 
-Latest fully green engineering CI is [run #207](https://github.com/AssayFlux/Molecularis/actions/runs/44898692562): core 728 passed/12 skipped; optional Genomics 729/11, Chemistry 736/4, Sequence 731/9. Registry, 58 schemas, Ruff E9/F, compilation and service benchmark smoke passed. Software CI is not scientific accuracy certification.
+Latest fully green engineering CI is [run #44899270453](https://github.com/AssayFlux/Molecularis/actions/runs/44899270453): core 737 passed/12 skipped; optional Chemistry 745/4, Sequence 740/9, Genomics 738/11. Registry, 61 schemas, Ruff E9/F, compilation, Cohorts benchmark smoke and all service profiles passed. Software CI is not scientific accuracy certification.
 
 ## Development
 
