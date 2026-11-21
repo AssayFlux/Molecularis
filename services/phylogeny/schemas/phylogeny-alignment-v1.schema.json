@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "molecularis.phylogeny-alignment.v1",
+  "title": "Molecularis Phylogeny Aligned Nucleotide Artifact v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "identifier",
+    "taxon_ids",
+    "aligned_sequences",
+    "alignment_method",
+    "alphabet"
+  ],
+  "properties": {
+    "schema": {
+      "const": "molecularis.phylogeny-alignment.v1"
+    },
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "taxon_ids": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 500,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 256
+      }
+    },
+    "aligned_sequences": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 500,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 2000000
+      }
+    },
+    "alignment_method": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "alphabet": {
+      "const": "DNA_IUPAC"
+    }
+  }
+}

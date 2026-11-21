@@ -47,6 +47,7 @@ from .omics import (
     welch_differential_expression,
 )
 from .phylo import Node, bootstrap_neighbor_joining_from_alignment, leaf_names, jukes_cantor_distance, neighbor_joining, neighbor_joining_from_alignment, parse_newick, patristic_distance, to_newick, upgma
+from .phylogeny_service import PhylogenyDocument, ingest_phylogeny, load_phylogeny, register_phylogeny_service, phylogeny_rulebook
 from .pharmvar import (PharmVarAlleleDefinition, PharmVarMatch, PharmVarVariant, match_pharmvar_haplotype, parse_pharmvar_tsv)
 from .pgx import AlleleMatch, StarAlleleDefinition, VariantKey, match_phased_haplotype, parse_star_allele_definitions
 from .docking_vina import run_vina_docking
@@ -75,6 +76,7 @@ from .structure import (
 )
 
 __all__ = [
+    "PhylogenyDocument", "ingest_phylogeny", "load_phylogeny", "register_phylogeny_service", "phylogeny_rulebook",
     "OmicsDocument", "ingest_omics", "load_omics", "register_omics_service", "omics_rulebook",
     "ReactionNetworkDocument", "ingest_kinetics", "load_kinetics", "register_kinetics_service", "kinetics_rulebook", "simulate_reaction_network",
     "SimulationDocument", "ingest_simulation", "load_simulation", "register_simulation_service", "simulation_rulebook", "analyze_energy_series", "run_gromacs",

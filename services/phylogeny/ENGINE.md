@@ -1,12 +1,20 @@
-# Phylogeny Engine
+# Phylogeny Engine K
 
-Status: scaffold — not yet implemented or validated.
+Status: implemented as a Molecularis-native Python v1 distance-based engine; independent scientific validation deferred until A–N engineering is complete.
 
-## Scope
-Define the scientific operations owned by this service, including supported inputs, outputs, algorithms, invariants, and explicit exclusions.
+## Canonical input
+PhylogenyDocument stores 3–500 uniquely named, caller-aligned homologous nucleotide sequences, DNA-IUPAC symbols, alignment method label and deterministic SHA-256 identity. Alignment is an upstream Sequence workflow responsibility. Equal aligned lengths and bounded total cells are mandatory.
 
-## Native implementation
-Prefer Molecularis-owned algorithms and data structures. Document source literature, assumptions, numerical methods, and licensing. External tools are optional references only, not required execution engines.
+## Operations
+- Strict canonical artifact validation and MSDE lifecycle.
+- Pairwise Jukes–Cantor 1969 distances using pairwise deletion of gaps and ambiguous bases; minimum comparable sites are explicit.
+- Neighbor joining (unrooted topology; deterministic tie-breaking; negative inferred limbs rejected).
+- UPGMA (rooted ultrametric construction; molecular-clock assumption stated).
+- Seeded nonparametric alignment-site bootstrap for NJ split support, bounded to 1,000 service replicates and exposing failed replicate counts.
 
-## Acceptance criteria
-Specify observable behavior and measurable correctness criteria before implementation. Add tests and reference comparisons; do not claim completion without evidence.
+Existing python/molecularis/phylo.py algorithms (Newick parse/serialize, leaf extraction, patristic distances, UPGMA, NJ and bootstrap) are retained and wired into the artifact service.
+
+## Numerical and scientific boundaries
+Jukes–Cantor assumes equal nucleotide frequencies and equal substitution rates; it is not a general substitution model. Pairwise deletion can make pairwise estimates use different site sets. Saturation at p >= 0.75 and insufficient comparable sites fail explicitly. NJ is not inherently rooted; its emitted Newick root is computational/arbitrary. UPGMA is valid as a dated-clock-like interpretation only under ultrametric/constant-rate assumptions. Bootstrap support is conditional on successfully reconstructed replicates and is not a posterior probability.
+
+No native aligner, maximum-likelihood or Bayesian inference, codon model, recombination detection, gene-tree/species-tree reconciliation, ancestral reconstruction or calibrated divergence dating is claimed.

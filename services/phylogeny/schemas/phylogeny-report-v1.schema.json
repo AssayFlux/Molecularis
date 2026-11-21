@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "molecularis.phylogeny-report.v1",
+  "title": "Molecularis Phylogeny Operation Report v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "operation",
+    "alignment_id",
+    "alignment_sha256",
+    "result",
+    "rulebook",
+    "rules_checked",
+    "limitations"
+  ],
+  "properties": {
+    "schema": {
+      "const": "molecularis.phylogeny-report.v1"
+    },
+    "operation": {
+      "enum": [
+        "validate",
+        "distance_matrix",
+        "neighbor_joining",
+        "upgma",
+        "bootstrap"
+      ]
+    },
+    "alignment_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "alignment_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "result": {
+      "type": "object"
+    },
+    "rulebook": {
+      "const": "phylogeny-core-v1"
+    },
+    "rules_checked": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^PHY-[0-9]{3}$"
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

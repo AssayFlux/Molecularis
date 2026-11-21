@@ -592,3 +592,29 @@ claims: []
 clinical_gate:
   enabled: false
   part12_evidence: []
+
+  - id: phylogeny.msde_alignment
+    name: Canonical aligned nucleotide artifact and integrity validation
+    status: implemented
+    implementation: python/molecularis/phylogeny_service.py
+    evidence_level: none
+  - id: phylogeny.jukes_cantor_distance
+    name: Pairwise-deletion Jukes-Cantor nucleotide distance matrix
+    status: implemented
+    implementation: python/molecularis/phylogeny_service.py
+    evidence_level: none
+  - id: phylogeny.neighbor_joining
+    name: Neighbor-joining tree construction from explicit nucleotide distances
+    status: implemented
+    implementation: python/molecularis/phylogeny_service.py
+    evidence_level: none
+  - id: phylogeny.upgma
+    name: UPGMA tree construction with explicit ultrametric assumption
+    status: implemented
+    implementation: python/molecularis/phylogeny_service.py
+    evidence_level: none
+  - id: phylogeny.bootstrap
+    name: Seeded alignment-site bootstrap split support for neighbor joining
+    status: implemented
+    implementation: python/molecularis/phylogeny_service.py
+    evidence_level: none

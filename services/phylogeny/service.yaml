@@ -2,19 +2,16 @@ id: "phylogeny"
 name: "Phylogeny"
 roadmap_step: "K"
 roadmap_order: 11
-depends_on: ["sequence","genomics"]
-status: "scaffold"
-completion_status: "not_implemented"
-primary_languages: ["cpp", "python", "rust"]
+depends_on: ["sequence", "genomics"]
+status: "implemented"
+completion_status: "engineering_implementation_ci_verified"
+primary_languages: ["python"]
 engine: "ENGINE.md"
 runtime: "RUNTIME.md"
 rulebook: "RULEBOOK.md"
 source_roots:
-  cpp: "src/cpp"
-  python: "src/python"
-  rust: "src/rust"
+  python: "python/molecularis"
 test_root: "tests"
 schema_root: "schemas"
-data_root: "data"
 benchmark_root: "benchmarks"
 external_execution_dependencies: []
