@@ -99,38 +99,68 @@ class RulebookExecutor:
         context = context or ExecutionContext(rulebook_version=rulebook.version)
         ordered = rulebook.validate(self.registry)
         values = dict(initial)
-        outputs: list[str] = []
-        started = time.monotonic()
-        for op in ordered:
-            if time.monotonic() - started > context.budget.max_wall_seconds:
-                raise ResourceLimitError("Rulebook wall-time budget exceeded")
-            capability = self.registry.get(op.capability_id)
-            handler = self._handlers.get(op.capability_id)
-            if handler is None:
-                raise ValidationError("capability has no executable handler",
-                                      details={"capability_id": op.capability_id})
-            missing = [name for name in op.inputs if name not in values]
-            if missing:
-                raise ValidationError("operation input is missing", details={"inputs": missing})
-            inputs = {name: values[name] for name in op.inputs}
-            result = handler(inputs, dict(op.parameters), context)
-            encoded = json.dumps(result, sort_keys=True, default=str).encode("utf-8")
-            if len(encoded) > context.budget.max_bytes:
-                raise ResourceLimitError("operation output exceeds byte budget")
-            artifact = self.store.ingest(
-                encoded, media_type="application/json",
-                schema_id=capability.output_schema,
-                metadata={"operation": op.id, "capability_id": capability.id,
-                          "capability_version": capability.version,
-                          "rulebook_id": rulebook.id, "rulebook_version": rulebook.version},
-            )
-            values[op.output] = result
-            outputs.append(artifact.artifact_id)
-        self.store.record_run(
-            run_id=context.run_id, service_id=context.service_id,
-            operation="rulebook:" + rulebook.id, status="succeeded",
-            inputs=[], outputs=outputs,
-            evidence={"rulebook_version": rulebook.version, "engine_version": context.engine_version,
-                      "operations": [op.id for op in ordered], "elapsed_seconds": time.monotonic() - started},
-        )
-        return values
+        output_ids: list[str] = []
+        input_ids: set[str] = set()
+        for value in values.values():
+            if isinstance(value, str) and value.startswith("art_"):
+                try:
+                    self.store.get(value, verify=False)
+                    input_ids.add(value)
+                except Exception:
+                    continue
+        started_clock, started_at = time.monotonic(), time.time()
+        active_operation = "validation"
+        try:
+            for op in ordered:
+                active_operation = op.id
+                if time.monotonic() - started_clock > context.budget.max_wall_seconds:
+                    raise ResourceLimitError("Rulebook wall-time budget exceeded")
+                capability = self.registry.get(op.capability_id)
+                handler = self._handlers.get(op.capability_id)
+                if handler is None:
+                    raise ValidationError("capability has no executable handler", details={"capability_id": op.capability_id})
+                missing = [name for name in op.inputs if name not in values]
+                if missing:
+                    raise ValidationError("operation input is missing", details={"inputs": missing})
+                inputs = {name: values[name] for name in op.inputs}
+                parents = []
+                for value in inputs.values():
+                    if isinstance(value, str) and value.startswith("art_"):
+                        try:
+                            self.store.get(value, verify=False)
+                            parents.append(value)
+                            input_ids.add(value)
+                        except Exception:
+                            pass
+                result = handler(inputs, dict(op.parameters), context)
+                encoded = json.dumps(result, sort_keys=True, ensure_ascii=False, allow_nan=False,
+                                     separators=(",", ":")).encode("utf-8")
+                if len(encoded) > context.budget.max_bytes:
+                    raise ResourceLimitError("operation output exceeds byte budget")
+                artifact = self.store.ingest(encoded, media_type="application/json",
+                    schema_id=capability.output_schema,
+                    metadata={"operation": op.id, "capability_id": capability.id,
+                              "capability_version": capability.version, "rulebook_id": rulebook.id,
+                              "rulebook_version": rulebook.version, "run_id": context.run_id},
+                    parents=parents, budget=context.budget)
+                values[op.output] = result
+                output_ids.append(artifact.artifact_id)
+            self.store.record_run(run_id=context.run_id, service_id=context.service_id,
+                operation="rulebook:" + rulebook.id, status="succeeded",
+                inputs=sorted(input_ids), outputs=output_ids,
+                evidence={"rulebook_id": rulebook.id, "rulebook_version": rulebook.version,
+                          "engine_version": context.engine_version, "schema_version": context.schema_version,
+                          "parameters": context.parameters, "operations": [op.id for op in ordered],
+                          "elapsed_seconds": time.monotonic() - started_clock}, started_at=started_at)
+            return values
+        except Exception as exc:
+            self.store.record_run(run_id=context.run_id, service_id=context.service_id,
+                operation="rulebook:" + rulebook.id, status="failed",
+                inputs=sorted(input_ids), outputs=output_ids,
+                evidence={"rulebook_id": rulebook.id, "rulebook_version": rulebook.version,
+                          "failed_operation": active_operation,
+                          "error_code": getattr(exc, "code", "UNHANDLED_EXCEPTION"),
+                          "error_type": type(exc).__name__, "error_message": str(exc),
+                          "completed_output_count": len(output_ids),
+                          "elapsed_seconds": time.monotonic() - started_clock}, started_at=started_at)
+            raise

@@ -26,9 +26,28 @@ jobs:
         run: python -m pip install -e .
       - name: Validate capability registry
         run: python scripts/check_registry.py
+      - name: Validate JSON schemas
+        run: python scripts/validate_schemas.py
       - name: Static code quality (Ruff)
         run: ruff check --select E9,F --output-format=github python scripts tests
       - name: Compile Python sources
         run: python -m compileall -q python scripts
       - name: Run tests
         run: pytest
+  scientific-optional-profiles:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        extra: [sequence, genomics, chemistry]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install scientific profile
+        run: python -m pip install -e ".[dev,${{ matrix.extra }}]"
+      - name: Run profile tests
+        run: pytest -ra

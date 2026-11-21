@@ -62,6 +62,11 @@ class Capability:
     deterministic: bool = True
     description: str = ""
 
+    def __post_init__(self) -> None:
+        required = (self.id, self.version, self.service, self.operation, self.input_schema, self.output_schema)
+        if any(not isinstance(value, str) or not value.strip() for value in required):
+            raise ValueError("capability identity and schema fields must be non-empty strings")
+
 
 @dataclass(frozen=True)
 class ExecutionContext:

@@ -50,3 +50,36 @@ def test_duplicate_capability_registration_rejected():
     registry.register(cap)
     with pytest.raises(ValidationError):
         registry.register(cap)
+
+
+def test_failed_rulebook_execution_persists_failure_evidence(tmp_path):
+    from molecularis.platform import ExecutionContext
+    registry = ServiceRegistry()
+    registry.register(Capability('test.fail', '1', 'test', 'fail', 'in:v1', 'out:v1'))
+    store = ArtifactStore(tmp_path)
+    executor = RulebookExecutor(registry, store)
+    def fail(inputs, params, context):
+        raise RuntimeError('intentional test failure')
+    executor.bind('test.fail', fail)
+    context = ExecutionContext(run_id='failure-evidence-test')
+    book = Rulebook('failure-book', '1', (Operation('fail-step', 'test.fail', ('x',), 'y', {}),))
+    with pytest.raises(RuntimeError):
+        executor.execute(book, {'x': 7}, context=context)
+    evidence = store.get_run(context.run_id)
+    assert evidence['status'] == 'failed'
+    assert evidence['evidence']['failed_operation'] == 'fail-step'
+
+
+def test_operation_outputs_preserve_input_artifact_lineage(tmp_path):
+    registry = ServiceRegistry()
+    registry.register(Capability('test.copy', '1', 'test', 'copy', 'in:v1', 'out:v1'))
+    store = ArtifactStore(tmp_path)
+    source = store.ingest(b'source')
+    executor = RulebookExecutor(registry, store)
+    executor.bind('test.copy', lambda inputs, params, ctx: {'source': inputs['source']})
+    book = Rulebook('lineage-book', '1', (Operation('copy-step', 'test.copy', ('source',), 'copied', {}),))
+    executor.execute(book, {'source': source.artifact_id})
+    with store._session() as conn:
+        row = conn.execute("SELECT artifact_id FROM artifacts WHERE json_extract(metadata_json, '$.rulebook_id')='lineage-book'").fetchone()
+    assert row is not None
+    assert store.get(row['artifact_id']).parents == (source.artifact_id,)

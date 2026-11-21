@@ -25,7 +25,7 @@ from .contracts import (
 
 
 def _canonical(value: Any) -> bytes:
-    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False).encode("utf-8")
 
 
 @dataclass(frozen=True)
@@ -270,71 +270,88 @@ class ArtifactStore:
                     break
                 yield part
 
-    def find_exact(self, key: str, value: Any, *, limit: int = 1000,
-                   budget: Budget | None = None) -> QueryResult:
-        return self._query_label(key, value, None, limit=limit, budget=budget)
+    def find_exact(self, key: str, value: Any, *, limit: int = 1000, offset: int = 0,
+                   snapshot_id: str | None = None, budget: Budget | None = None) -> QueryResult:
+        return self._query_label(key, value, None, limit=limit, offset=offset, snapshot_id=snapshot_id, budget=budget)
 
-    def find_range(self, key: str, *, minimum: float | None = None,
-                   maximum: float | None = None, limit: int = 1000,
+    def find_range(self, key: str, *, minimum: float | None = None, maximum: float | None = None,
+                   limit: int = 1000, offset: int = 0, snapshot_id: str | None = None,
                    budget: Budget | None = None) -> QueryResult:
         if minimum is not None and maximum is not None and minimum > maximum:
             raise ValidationError("minimum cannot exceed maximum")
-        return self._query_label(key, None, (minimum, maximum), limit=limit, budget=budget)
+        return self._query_label(key, None, (minimum, maximum), limit=limit, offset=offset,
+                                 snapshot_id=snapshot_id, budget=budget)
 
-    def _query_label(self, key: str, exact: Any, bounds: tuple[float | None, float | None] | None,
-                     *, limit: int, budget: Budget | None) -> QueryResult:
+    def _query_label(self, key: str, exact: Any, bounds: tuple[float | None, float | None] | None, *,
+                     limit: int, offset: int, snapshot_id: str | None, budget: Budget | None) -> QueryResult:
         budget = budget or Budget()
-        if limit <= 0:
-            raise ValidationError("limit must be positive")
-        effective_limit = min(limit, budget.max_results)
-        clauses = ["key=?"]
+        if not key or limit <= 0 or offset < 0:
+            raise ValidationError("key and positive limit are required; offset cannot be negative")
+        page_size = min(limit, budget.max_results, budget.max_candidates)
+        clauses = ["l.key=?"]
         args: list[Any] = [key]
         if bounds is None:
-            clauses.append("value_json=?")
+            clauses.append("l.value_json=?")
             args.append(_canonical(exact).decode("utf-8"))
-            order = "artifact_id"
+            order = "l.artifact_id"
         else:
             low, high = bounds
             if low is not None:
-                clauses.append("value_number>=?")
+                clauses.append("l.value_number>=?")
                 args.append(low)
             if high is not None:
-                clauses.append("value_number<=?")
+                clauses.append("l.value_number<=?")
                 args.append(high)
-            clauses.append("value_number IS NOT NULL")
-            order = "value_number, artifact_id"
-        where = " AND ".join(clauses)
+            clauses.append("l.value_number IS NOT NULL")
+            order = "l.value_number, l.artifact_id"
         started = time.monotonic()
         with self._session() as conn:
             conn.execute("BEGIN")
-            snapshot = conn.execute("SELECT COALESCE(MAX(rowid),0) AS s FROM artifacts").fetchone()["s"]
+            current = int(conn.execute("SELECT COALESCE(MAX(rowid),0) FROM artifacts").fetchone()[0])
+            if snapshot_id is None:
+                snapshot = current
+            else:
+                try:
+                    snapshot = int(snapshot_id)
+                except (TypeError, ValueError) as exc:
+                    raise ValidationError("snapshot_id must be a catalog snapshot integer") from exc
+                if snapshot < 0 or snapshot > current:
+                    raise ValidationError("snapshot_id is outside available catalog history")
+            where = " AND ".join(["a.rowid<=?"] + clauses)
             rows = conn.execute(
-                f"SELECT artifact_id FROM labels WHERE {where} ORDER BY {order} LIMIT ?",
-                (*args, budget.max_candidates + 1),
+                f"SELECT l.artifact_id FROM labels l JOIN artifacts a ON a.artifact_id=l.artifact_id "
+                f"WHERE {where} ORDER BY {order} LIMIT ? OFFSET ?",
+                (snapshot, *args, page_size + 1, offset),
             ).fetchall()
-        candidates = len(rows)
-        if candidates > budget.max_candidates:
-            rows = rows[:budget.max_candidates]
+        has_more = len(rows) > page_size
+        selected = rows[:page_size]
         if time.monotonic() - started > budget.max_wall_seconds:
-            return QueryResult((), str(snapshot), min(candidates, budget.max_candidates),
-                               False, True, None)
-        complete = candidates <= budget.max_candidates and len(rows) <= effective_limit
-        selected = rows[:effective_limit]
-        next_offset = None if complete else effective_limit
-        items = tuple({"artifact_id": row["artifact_id"]} for row in selected)
-        return QueryResult(items, str(snapshot), min(candidates, budget.max_candidates),
-                           complete, True, next_offset)
+            return QueryResult((), str(snapshot), len(selected), False, True, offset)
+        next_offset = offset + len(selected) if has_more else None
+        return QueryResult(tuple({"artifact_id": row["artifact_id"]} for row in selected),
+                           str(snapshot), len(selected), not has_more, True, next_offset)
 
     def record_run(self, *, run_id: str, service_id: str, operation: str, status: str,
-                   inputs: list[str], outputs: list[str], evidence: dict[str, Any]) -> None:
+                   inputs: list[str], outputs: list[str], evidence: dict[str, Any],
+                   started_at: float | None = None, finished_at: float | None = None) -> None:
+        if not all((run_id, service_id, operation, status)):
+            raise ValidationError("run identity and status fields must be non-empty")
         with self._session() as conn:
-            conn.execute(
-                "INSERT INTO runs VALUES(?,?,?,?,?,?,?,?,?)",
-                (run_id, service_id, operation, status, time.time(), time.time(),
-                 _canonical(inputs).decode(), _canonical(outputs).decode(),
-                 _canonical(evidence).decode()),
-            )
+            conn.execute("INSERT INTO runs VALUES(?,?,?,?,?,?,?,?,?)",
+                         (run_id, service_id, operation, status, started_at or time.time(),
+                          finished_at or time.time(), _canonical(inputs).decode(),
+                          _canonical(outputs).decode(), _canonical(evidence).decode()))
 
+    def get_run(self, run_id: str) -> dict[str, Any]:
+        with self._session() as conn:
+            row = conn.execute("SELECT * FROM runs WHERE run_id=?", (run_id,)).fetchone()
+        if row is None:
+            raise ArtifactNotFound("run evidence not found", details={"run_id": run_id})
+        return {"run_id": row["run_id"], "service_id": row["service_id"],
+                "operation": row["operation"], "status": row["status"],
+                "started_at": row["started_at"], "finished_at": row["finished_at"],
+                "inputs": json.loads(row["inputs_json"]), "outputs": json.loads(row["outputs_json"]),
+                "evidence": json.loads(row["evidence_json"])}
     def audit(self) -> dict[str, Any]:
         """Verify all catalog references and report unreferenced blobs without deleting them."""
         with self._session() as conn:

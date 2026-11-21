@@ -71,3 +71,22 @@ def test_metadata_rejects_non_json_values(tmp_path):
     store = ArtifactStore(tmp_path)
     with pytest.raises((TypeError, ValueError)):
         store.ingest(b"x", metadata={"not_json": object()})
+
+
+def test_query_pages_are_bound_to_a_stable_snapshot(tmp_path):
+    store = ArtifactStore(tmp_path)
+    store.ingest(b'first', metadata={'kind': 'protein'})
+    first = store.find_exact('kind', 'protein', limit=1)
+    assert first.complete is True
+    store.ingest(b'later', metadata={'kind': 'protein'})
+    next_page = store.find_exact('kind', 'protein', limit=1, offset=1, snapshot_id=first.snapshot_id)
+    assert next_page.items == ()
+    assert next_page.complete is True
+
+
+def test_query_rejects_invalid_pagination_arguments(tmp_path):
+    store = ArtifactStore(tmp_path)
+    with pytest.raises(Exception):
+        store.find_exact('kind', 'protein', offset=-1)
+    with pytest.raises(Exception):
+        store.find_exact('kind', 'protein', snapshot_id='invalid')
