@@ -1,5 +1,5 @@
 # Omics Acceptance
-Engineering acceptance is defined by automated contract/runtime tests and repository CI. University scientific review and independent comparison against specialist references are deferred until A–N engineering completion.
+Engineering acceptance is defined by automated contract/runtime tests and repository CI. CI run #44895300775 passed all four jobs: core 711 passed/12 skipped; optional Genomics 712/11, Sequence 714/9 and Chemistry 719/4. University scientific review and independent comparison against specialist references are deferred until A–N engineering completion.
 
 Required checks: canonical artifact round-trip/digest; malformed and duplicate JSON; dimensions, identifiers, raw-count integrality and finite values; CPM, CLR, Welch, NB2, diversity and cross-omics correlation; scale mismatch rejection; artifact integrity and budgets; Ruff, compilation, JSON Schema/registry validation, all test profiles and benchmark smoke.
 

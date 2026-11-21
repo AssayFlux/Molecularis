@@ -1,7 +1,7 @@
 # Service and Platform Status Register
 
 Last verified: 2026-11-21  
-Current implementation commits: G [bfb3bf8ba807e9f971a38663734d7fb455f7654b](https://github.com/AssayFlux/Molecularis/commit/bfb3bf8ba807e9f971a38663734d7fb455f7654b); H [6e03dcbc7820f26bbda7b666fb005f898f5df487](https://github.com/AssayFlux/Molecularis/commit/6e03dcbc7820f26bbda7b666fb005f898f5df487), with test fix [3849c1e9e4c62e6ed41758b38d69a760fd215f92](https://github.com/AssayFlux/Molecularis/commit/3849c1e9e4c62e6ed41758b38d69a760fd215f92).
+Current implementation commits: G [bfb3bf8ba807e9f971a38663734d7fb455f7654b](https://github.com/AssayFlux/Molecularis/commit/bfb3bf8ba807e9f971a38663734d7fb455f7654b); H [6e03dcbc7820f26bbda7b666fb005f898f5df487](https://github.com/AssayFlux/Molecularis/commit/6e03dcbc7820f26bbda7b666fb005f898f5df487); I [4992f5ad8c9cac783a977ce0ba409d8b0bf7c5b7](https://github.com/AssayFlux/Molecularis/commit/4992f5ad8c9cac783a977ce0ba409d8b0bf7c5b7); J [67a4d577fd8239f3465ef7eb8ae56d0ab6c193e9](https://github.com/AssayFlux/Molecularis/commit/67a4d577fd8239f3465ef7eb8ae56d0ab6c193e9).
 
 A scaffold or specification does not imply implementation or scientific validation.
 
@@ -44,6 +44,8 @@ A scaffold or specification does not imply implementation or scientific validati
 
 ## Verification evidence
 
+- [Run #197](https://github.com/AssayFlux/Molecularis/actions/runs/44895300775), commit `71f7355`: Omics J verified; core 711 passed/12 skipped; optional Genomics 712/11, Sequence 714/9 (4 existing warnings), Chemistry 719/4. Registry, 53 JSON Schemas, Ruff E9/F, compilation, Omics matrix benchmark smoke and all test profiles passed.
+
 - [Run #191](https://github.com/AssayFlux/Molecularis/actions/runs/44894304968), commit `4992f5a`: Kinetics I verified; core 702 passed/12 skipped; optional Chemistry 710/4, Genomics 703/11, Sequence 705/9 (4 existing sequence warnings). Registry valid, 51 JSON Schemas, Ruff E9/F, compilation, all benchmark smoke steps including 10,000 RK4 steps, and all test profiles passed.
 
 - Previous baseline [run #132](https://github.com/AssayFlux/Molecularis/actions/runs/44880497095): 568 passed, 12 skipped.
@@ -59,9 +61,9 @@ A scaffold or specification does not imply implementation or scientific validati
 
 ## Active phase and next exact work
 
-**Active phase:** Service J — Omics Python v1 engineering implementation authored; CI verification pending. Existing statistical primitives are retained and integrated. University scientific review, independent reference comparisons and formal freeze deferred until A–N engineering completion per owner direction. The platform is not yet a distributed, multi-language, OS-isolated production runtime.
+**Active phase:** Service J — Omics Python v1 engineering implementation complete and CI-verified in run #44895300775 (core 711 passed/12 skipped; optional Genomics 712/11, Sequence 714/9, Chemistry 719/4). University scientific review, independent reference comparisons and formal freeze deferred until A–N engineering completion per owner direction. The platform is not yet a distributed, multi-language, OS-isolated production runtime.
 
-**Next:** verify J — Omics CI, repair failures, then proceed to K — Phylogeny. University scientific review and formal freeze remain deferred until A–N engineering completion. University-level scientific review, cross-reference testing and formal contract freezes will be conducted after the full A–N engineering build, as directed by the owner. Platform-wide recovery, backup/restore, service discovery, language conformance and isolation gates remain open.
+**Next:** proceed to K — Phylogeny. Omics engineering CI is green; university scientific review and formal freeze remain deferred until A–N engineering completion. University-level scientific review, cross-reference testing and formal contract freezes will be conducted after the full A–N engineering build, as directed by the owner. Platform-wide recovery, backup/restore, service discovery, language conformance and isolation gates remain open.
 
 ## Reporting rule
 
