@@ -4,7 +4,7 @@ from dataclasses import dataclass
 import hashlib, json, math
 from typing import Any
 from .omics import clr_transform, cpm, cross_omics_correlation, negative_binomial_differential_expression, shannon_diversity, simpson_diversity, welch_differential_expression
-from .platform import Budget, Capability, ExecutionContext, MolecularisPlatform, Operation, Rulebook
+from .platform import Budget, Capability, MolecularisPlatform, Operation, Rulebook
 from .platform.contracts import ResourceLimitError, ValidationError
 
 OMICS_SCHEMA_ID = "molecularis.omics-matrix.v1"
@@ -125,6 +125,7 @@ def register_omics_service(platform: MolecularisPlatform):
             if selected=="correlate":
                 second=load_omics(platform,ids[1],budget=context.budget)
                 if first.sample_ids!=second.sample_ids: raise ValidationError("cross-omics matrices require identical ordered sample IDs")
+                if len(first.sample_ids)<3: raise ValidationError("cross-omics Pearson correlation requires at least three matched samples")
                 result={"method":"Pearson feature correlation","feature_ids_a":list(first.feature_ids),"feature_ids_b":list(second.feature_ids),"correlations":cross_omics_correlation([list(r) for r in first.values],[list(r) for r in second.values])}
             else: result=_execute(selected,first,parameters)
             return {"schema":OMICS_REPORT_SCHEMA_ID,"operation":selected,"matrix_id":first.identifier,"matrix_sha256":first.sha256,"result":_safe(result),"rulebook":OMICS_RULEBOOK_ID,"rules_checked":list(_RULES),"limitations":["Caller-provided units, normalization and study design are not inferred","Differential tests are exploratory and do not model repeated measures or latent batch effects","NB2 uses unmoderated moment dispersions and asymptotic Wald p-values","No causal, clinical, diagnostic or biological-function inference is provided"]}
