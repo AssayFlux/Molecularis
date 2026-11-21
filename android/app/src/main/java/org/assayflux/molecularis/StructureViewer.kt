@@ -124,7 +124,7 @@ internal fun StructureViewerPreview(publicRecord: PublicScientificRecord? = null
                     }
                     if (!Python.isStarted()) Python.start(AndroidPlatform(context.applicationContext))
                     val envelope = JSONObject(
-                        Python.getInstance().getModule("kinetics_probe")
+                        Python.getInstance().getModule("molecularis_probe")
                             .callAttr("prepare_structure_viewer_import", fetched.content, "mmcif")
                             .toString(),
                     )
@@ -245,7 +245,7 @@ internal fun StructureViewerPreview(publicRecord: PublicScientificRecord? = null
                             Python.start(AndroidPlatform(context.applicationContext))
                         }
                         val envelope = JSONObject(
-                            Python.getInstance().getModule("kinetics_probe")
+                            Python.getInstance().getModule("molecularis_probe")
                                 .callAttr("prepare_structure_viewer_import", sourceText, format)
                                 .toString(),
                         )
@@ -383,7 +383,7 @@ internal fun StructureViewerPreview(publicRecord: PublicScientificRecord? = null
                                 }
                                 pendingSessionJson = encoded
                                 val baseName = sourceLabel.substringBeforeLast('.', sourceLabel)
-                                exportPicker.launch("$baseName.kinetics-session.json")
+                                exportPicker.launch("$baseName.molecularis-session.json")
                             }.onFailure { error ->
                                 importMessage = "Session state capture failed: " +
                                     (error.message ?: error.javaClass.simpleName)

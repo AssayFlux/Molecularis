@@ -130,9 +130,13 @@
   document.getElementById("reset-view").addEventListener("click",()=>{yaw=.55;pitch=-.35;zoom=1;draw();});
   window.addEventListener("resize",resize);
   // Deliberately no generic native bridge, eval hook, network loader or file access.
-  window.KineticsStructureViewer = Object.freeze({
+  const structureViewerApi = Object.freeze({
     load,exportSvg,getState,setState,
     clear(){atoms=[];selected=-1;projected=[];atomList.replaceChildren();empty.hidden=false;status.textContent="Waiting for structure payload";updateSelection();draw();}
   });
   resize();
+});
+  window.MolecularisStructureViewer = structureViewerApi;
+  // Backward-compatible global for previously embedded viewer clients.
+  window.KineticsStructureViewer = structureViewerApi;
 })();
