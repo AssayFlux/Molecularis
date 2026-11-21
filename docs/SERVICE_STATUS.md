@@ -1,7 +1,7 @@
 # Service and Platform Status Register
 
 Last verified: 2026-11-21  
-Current implementation commits: K [cb9479a1e86f9b3130a45cca208ee33e9b9ae1bc](https://github.com/AssayFlux/Molecularis/commit/cb9479a1e86f9b3130a45cca208ee33e9b9ae1bc); G [bfb3bf8ba807e9f971a38663734d7fb455f7654b](https://github.com/AssayFlux/Molecularis/commit/bfb3bf8ba807e9f971a38663734d7fb455f7654b); H [6e03dcbc7820f26bbda7b666fb005f898f5df487](https://github.com/AssayFlux/Molecularis/commit/6e03dcbc7820f26bbda7b666fb005f898f5df487); I [4992f5ad8c9cac783a977ce0ba409d8b0bf7c5b7](https://github.com/AssayFlux/Molecularis/commit/4992f5ad8c9cac783a977ce0ba409d8b0bf7c5b7); J [67a4d577fd8239f3465ef7eb8ae56d0ab6c193e9](https://github.com/AssayFlux/Molecularis/commit/67a4d577fd8239f3465ef7eb8ae56d0ab6c193e9).
+Current implementation commits: L [3e758f6a90e8be8adc3b02098958db3dad11ed98](https://github.com/AssayFlux/Molecularis/commit/3e758f6a90e8be8adc3b02098958db3dad11ed98); K [cb9479a1e86f9b3130a45cca208ee33e9b9ae1bc](https://github.com/AssayFlux/Molecularis/commit/cb9479a1e86f9b3130a45cca208ee33e9b9ae1bc); G [bfb3bf8ba807e9f971a38663734d7fb455f7654b](https://github.com/AssayFlux/Molecularis/commit/bfb3bf8ba807e9f971a38663734d7fb455f7654b); H [6e03dcbc7820f26bbda7b666fb005f898f5df487](https://github.com/AssayFlux/Molecularis/commit/6e03dcbc7820f26bbda7b666fb005f898f5df487); I [4992f5ad8c9cac783a977ce0ba409d8b0bf7c5b7](https://github.com/AssayFlux/Molecularis/commit/4992f5ad8c9cac783a977ce0ba409d8b0bf7c5b7); J [67a4d577fd8239f3465ef7eb8ae56d0ab6c193e9](https://github.com/AssayFlux/Molecularis/commit/67a4d577fd8239f3465ef7eb8ae56d0ab6c193e9).
 
 A scaffold or specification does not imply implementation or scientific validation.
 
@@ -38,11 +38,13 @@ A scaffold or specification does not imply implementation or scientific validati
 | I | Kinetics | Existing Michaelis–Menten, inhibition, fitting, bootstrap and PK/PD primitives retained; canonical reaction-network artifacts and mass-action RK4 added | Python v1 | MSDE artifact lifecycle and four capabilities | KIN-001–KIN-006 executable | Engineering complete; CI run #44894304968 green (core 702 passed/12 skipped; Chemistry 710/4; Genomics 703/11; Sequence 705/9); university review deferred |
 | J | Omics | Existing CPM/CLR, Welch/NB2 differential expression, diversity, growth and correlation primitives retained; canonical matrix artifact and MSDE service added | Python v1 | MSDE artifact lifecycle and seven capabilities | OMI-001–OMI-009 executable | Engineering implementation authored; CI verification pending; university review deferred |
 | K | Phylogeny | Existing Newick parser/serializer, patristic distances, JC69, NJ, UPGMA and seeded site-bootstrap algorithms retained and integrated | Python v1 canonical aligned-nucleotide artifact service | MSDE artifact lifecycle and five capabilities | PHY-001–PHY-007 executable | Engineering complete; CI run #44896994652 green; scientific review deferred |
-| L | Pharmacogenomics | Existing reference-checked normalization, star-allele JSON definitions and PharmVar TSV parser retained and integrated | Python v1 canonical sample/definition artifacts and deterministic phased star-allele matching | MSDE artifact lifecycle, two capabilities and bounded definition-pack ingestion | PGX-001–PGX-007 operational | Engineering implementation complete; CI verification pending; scientific/clinical review deferred |
+| L | Pharmacogenomics | Existing reference-checked normalization, star-allele JSON definitions and PharmVar TSV parser retained and integrated | Python v1 canonical sample/definition artifacts and deterministic phased star-allele matching | MSDE artifact lifecycle, two capabilities and bounded definition-pack ingestion | PGX-001–PGX-007 operational | Engineering complete; CI run #44898692562 green; scientific/clinical review deferred |
 | M | Cohorts | Scaffold | Not started | Not started | Not operational | Planned |
 | N | Workflows | Existing workflow code; audit pending | Not started | Not started | Not operational | Planned |
 
 ## Verification evidence
+
+- [Run #207](https://github.com/AssayFlux/Molecularis/actions/runs/44898692562), commit `3e758f6`: Pharmacogenomics L verified; core 728 passed/12 skipped; optional Genomics 729/11, Chemistry 736/4, Sequence 731/9 (4 existing warnings). Registry, 58 JSON Schemas, Ruff E9/F, compilation, Pharmacogenomics matching benchmark smoke and all test profiles passed.
 
 - [Run #201](https://github.com/AssayFlux/Molecularis/actions/runs/44896994652), commit `cb9479a`: Phylogeny K verified; core 721 passed/12 skipped; optional Sequence 724/9 (4 existing warnings), Genomics 722/11, Chemistry 729/4. Registry, 55 JSON Schemas, Ruff E9/F, compilation, Phylogeny benchmark smoke and all profiles passed.
 
@@ -63,9 +65,9 @@ A scaffold or specification does not imply implementation or scientific validati
 
 ## Active phase and next exact work
 
-**Active phase:** Service L — Pharmacogenomics Python v1 engineering implementation complete; CI verification pending. The service performs conservative, source-pinned matching of caller-phased complete synthetic haplotypes only. Independent scientific/clinical review remains deferred until A–N engineering completion. The platform is not yet a distributed, multi-language, OS-isolated production runtime.
+**Active phase:** Service L — Pharmacogenomics Python v1 engineering implementation and CI verification complete in run #44898692562 (core 728 passed/12 skipped; Genomics 729/11, Chemistry 736/4, Sequence 731/9). The service performs conservative, source-pinned matching of caller-phased complete synthetic haplotypes only. Independent scientific/clinical review remains deferred until A–N engineering completion. The platform is not yet a distributed, multi-language, OS-isolated production runtime.
 
-**Next:** proceed to M — Cohorts after L CI verification. L supports release-pinned star-allele definition ingestion and exact matching of already-phased complete haplotypes. It does not infer phenotype, medication, dose or treatment. University-level scientific review, independent PharmVar/CPIC/DPWG comparisons and formal contract freezes will be conducted after the full A–N engineering build, as directed by the owner. Platform-wide recovery, backup/restore, service discovery, language conformance and isolation gates remain open.
+**Next:** proceed to M — Cohorts. L supports release-pinned star-allele definition ingestion and exact matching of already-phased complete haplotypes. It does not infer phenotype, medication, dose or treatment. University-level scientific review, independent PharmVar/CPIC/DPWG comparisons and formal contract freezes will be conducted after the full A–N engineering build, as directed by the owner. Platform-wide recovery, backup/restore, service discovery, language conformance and isolation gates remain open.
 
 ## Reporting rule
 

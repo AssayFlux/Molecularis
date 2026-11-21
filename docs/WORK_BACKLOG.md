@@ -1,9 +1,6 @@
 # Molecularis Work Backlog
-
 Mark an item complete only with a commit SHA and verification evidence. Services A, B and C are authorized; the Core/MSDE platform acceptance gate remains open and must not be reported as passed.
-
 ## P0 — Trustworthy baseline
-
 - [x] Baseline CI repaired. Evidence: run #127.
 - [x] Implement local MSDE reference slice. Evidence: commits 5b39b44 and ccae6c1; run #130.
 - [x] Add optional scientific dependency profiles for sequence, genomics and chemistry. Evidence: all three profile jobs passed in run #133.
@@ -12,9 +9,7 @@ Mark an item complete only with a commit SHA and verification evidence. Services
 - [ ] Audit dependencies, licenses, data provenance, model/runtime assumptions and security.
 - [ ] Expand Ruff beyond E9/F; introduce targeted strict typing.
 - [ ] Establish reproducibility, scientific reference and performance baselines.
-
 ## P1 — Core/MSDE platform
-
 - [x] Typed platform budgets, capability and execution-context contracts.
 - [x] Local service lifecycle and JSON capability manifest loader.
 - [x] SHA-256 immutable blob store, SQLite catalog, lineage and atomic publication.
@@ -32,11 +27,8 @@ Mark an item complete only with a commit SHA and verification evidence. Services
 - [ ] Cross-process service discovery and language-neutral request/response runtime.
 - [ ] C++/Python/Rust conformance suite and executable cross-language reference service.
 - [ ] Threat model, sandboxing and operational resource-isolation controls.
-
 ## P2 — Scientific service sequence
-
 Execute exactly one letter at a time, following [SERVICE_ROADMAP.md](SERVICE_ROADMAP.md).
-
 - [ ] A — Molecular (v1 engineering implementation complete; run #150 green with 608 passed/12 skipped and 1k/10k benchmark smoke; independent scientific approval and formal freeze pending)
 - [x] B — Sequence (Python v1 engineering implementation complete; independent scientific review and freeze pending)
 - [x] C — Structure (Python v1 engineering implementation complete; university review deferred until A–N completion)
@@ -51,22 +43,16 @@ Execute exactly one letter at a time, following [SERVICE_ROADMAP.md](SERVICE_ROA
 - [x] J — Omics (canonical matrix artifacts, seven MSDE operations, OMI-001–OMI-009, schemas, tests and benchmark; CI run #44895300775 green: core 711/12 skipped, Genomics 712/11, Sequence 714/9, Chemistry 719/4)
 - [x] K — Phylogeny implementation (canonical aligned nucleotide artifacts, JC69 pairwise distances, NJ, UPGMA, seeded bootstrap, five MSDE capabilities, PHY-001–PHY-007, schemas, tests and benchmark; CI verification pending, scientific review deferred)
 - [x] K — Phylogeny CI verification (run #44896994652: core 721 passed/12 skipped; Sequence 724/9, Genomics 722/11, Chemistry 729/4; registry, 55 schemas, Ruff E9/F, compilation and phylogeny benchmark green)
-- [x] L — Pharmacogenomics implementation (canonical synthetic non-patient sample and source-pinned definition artifacts, phased star-allele matching, two MSDE capabilities, PGX-001–PGX-007, schemas, tests and benchmark; CI verification pending, scientific/clinical review deferred)
-- [ ] L — Pharmacogenomics CI verification
+- [x] L — Pharmacogenomics implementation and CI verification (canonical synthetic non-patient sample and source-pinned definition artifacts, phased star-allele matching, two MSDE capabilities, PGX-001–PGX-007, schemas, tests and benchmark; run #44898692562 green: core 728/12 skipped, Genomics 729/11, Chemistry 736/4, Sequence 731/9; scientific/clinical review deferred)
 - [ ] M — Cohorts
 - [ ] N — Workflows
-
 Each letter requires discovery/audit, Engine, Runtime, Rulebook, schemas/contracts, implementation, integration, mandatory tests, independent scientific evidence, documentation, acceptance and freeze.
-
 ## P3 — System integration and release
-
 - [ ] Cross-service workflows and provenance continuity.
 - [ ] Deterministic replay, dependency invalidation and failure recovery.
 - [ ] Security, resource limits, backup/restore and supply-chain governance.
 - [ ] System-scale performance and scientific acceptance report.
 - [ ] Complete resolved release SBOM and license evidence.
 - [ ] Device/deployment assessment based on measured requirements.
-
 ## Active task
-
-A's engineering implementation is complete; independent scientific approval and freeze remain pending. B's Python v1 engineering implementation is complete. C's Python v1 engineering implementation is complete and CI-verified in run #159. D's Chemistry Python v1 engineering implementation is complete and CI-verified in run #44888785327 (core 644 passed/12 skipped; optional chemistry 652 passed/4 skipped; sequence 647 passed/9 skipped; genomics 645 passed/11 skipped). E Protein Python v1 implementation is complete and CI-verified in run #44889593877 (core 651 passed/12 skipped; optional sequence 654 passed/9 skipped; genomics 652 passed/11 skipped; chemistry 659 passed/4 skipped). Per owner direction, university scientific review and contract freezes for A–N are deferred until the entire engineering build is complete. F Genomics CI evidence was recorded in the latest status commit. G DNA/RNA engineering implementation and CI verification complete in run #44892707015 (core 679 passed/12 skipped; optional Sequence 682/9, Chemistry 687/4, Genomics 680/11). University scientific review and formal contract freeze remain deferred until A–N engineering completion. H Simulation engineering implementation and CI verification complete in run #44893264385 (core 696 passed/12 skipped; optional Chemistry 704/4, Genomics 697/11, Sequence 699/9). University scientific review and formal contract freeze remain deferred until A–N engineering completion. I — Kinetics engineering implementation and CI verification complete in run #44894304968 (core 702 passed/12 skipped; optional Chemistry 710/4, Genomics 703/11, Sequence 705/9). University scientific review and formal freeze remain deferred until A–N engineering completion. J — Omics engineering implementation and CI verification complete in run #44895300775 (core 711 passed/12 skipped; Genomics 712/11, Sequence 714/9, Chemistry 719/4). K — Phylogeny engineering implementation and CI verification complete in run #44896994652 (core 721/12 skipped; Sequence 724/9, Genomics 722/11, Chemistry 729/4). University scientific review and formal freeze remain deferred until A–N engineering completion. Proceed to L — Pharmacogenomics CI verification; then M — Cohorts.
+A's engineering implementation is complete; independent scientific approval and freeze remain pending. B's Python v1 engineering implementation is complete. C's Python v1 engineering implementation is complete and CI-verified in run #159. D's Chemistry Python v1 engineering implementation is complete and CI-verified in run #44888785327 (core 644 passed/12 skipped; optional chemistry 652 passed/4 skipped; sequence 647 passed/9 skipped; genomics 645 passed/11 skipped). E Protein Python v1 implementation is complete and CI-verified in run #44889593877 (core 651 passed/12 skipped; optional sequence 654 passed/9 skipped; genomics 652 passed/11 skipped; chemistry 659 passed/4 skipped). Per owner direction, university scientific review and contract freezes for A–N are deferred until the entire engineering build is complete. F Genomics CI evidence was recorded in the latest status commit. G DNA/RNA engineering implementation and CI verification complete in run #44892707015 (core 679 passed/12 skipped; optional Sequence 682/9, Chemistry 687/4, Genomics 680/11). University scientific review and formal contract freeze remain deferred until A–N engineering completion. H Simulation engineering implementation and CI verification complete in run #44893264385 (core 696 passed/12 skipped; optional Chemistry 704/4, Genomics 697/11, Sequence 699/9). University scientific review and formal contract freeze remain deferred until A–N engineering completion. I — Kinetics engineering implementation and CI verification complete in run #44894304968 (core 702 passed/12 skipped; optional Chemistry 710/4, Genomics 703/11, Sequence 705/9). University scientific review and formal freeze remain deferred until A–N engineering completion. J — Omics engineering implementation and CI verification complete in run #44895300775 (core 711 passed/12 skipped; Genomics 712/11, Sequence 714/9, Chemistry 719/4). K — Phylogeny engineering implementation and CI verification complete in run #44896994652 (core 721/12 skipped; Sequence 724/9, Genomics 722/11, Chemistry 729/4). University scientific review and formal freeze remain deferred until A–N engineering completion. Proceed to M — Cohorts.
