@@ -414,6 +414,33 @@ tools:
     evidence_level: none
 
 
+  - id: chemistry.msde_validate
+    name: MSDE-backed canonical Chemistry graph artifact validation
+    status: implemented
+    implementation: python/molecularis/chemistry_service.py
+    evidence_level: none
+  - id: chemistry.msde_descriptors
+    name: Native explicit-atom graph descriptors
+    status: implemented
+    implementation: python/molecularis/chemistry_service.py
+    evidence_level: none
+  - id: chemistry.msde_path_fingerprint
+    name: Bounded deterministic Molecularis path fingerprint
+    status: implemented
+    implementation: python/molecularis/chemistry_service.py
+    evidence_level: none
+  - id: chemistry.msde_substructure
+    name: Bounded exact element and bond-order substructure matching
+    status: implemented
+    implementation: python/molecularis/chemistry_service.py
+    evidence_level: none
+  - id: chemistry.msde_similarity
+    name: Tanimoto similarity over Molecularis path-v1 features
+    status: implemented
+    implementation: python/molecularis/chemistry_service.py
+    evidence_level: none
+
+
 engines: []
 data_packs: []
 domains: []

@@ -54,9 +54,9 @@ A scaffold or specification does not imply implementation or scientific validati
 
 ## Active phase and next exact work
 
-**Active phase:** Service C — Python v1 engineering implementation complete; university review and formal freeze deferred until the complete A–N engineering build per owner direction. A and B engineering implementations remain complete; their university reviews are likewise deferred. The platform is not yet a distributed, multi-language, OS-isolated production runtime.
+**Active phase:** Service D — Chemistry Python v1 engineering implementation complete pending CI evidence; university review and formal freeze deferred until the complete A–N engineering build per owner direction. A and B engineering implementations remain complete; their university reviews are likewise deferred. The platform is not yet a distributed, multi-language, OS-isolated production runtime.
 
-**Next:** proceed to D — Chemistry. University-level scientific review, cross-reference testing and formal contract freezes will be conducted after the full A–N engineering build, as directed by the owner. Platform-wide recovery, backup/restore, service discovery, language conformance and isolation gates remain open.
+**Next:** proceed to E — Protein after D CI verification. University-level scientific review, cross-reference testing and formal contract freezes will be conducted after the full A–N engineering build, as directed by the owner. Platform-wide recovery, backup/restore, service discovery, language conformance and isolation gates remain open.
 
 ## Reporting rule
 

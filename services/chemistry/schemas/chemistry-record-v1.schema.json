@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "molecularis.chemistry-record.v1",
+  "title": "Molecularis Chemistry Record v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "identifier", "source_format", "source_sha256", "coordinate_unit", "atoms", "bonds"],
+  "properties": {
+    "schema": {"const": "molecularis.chemistry-record.v1"},
+    "identifier": {"type": "string", "minLength": 1, "maxLength": 256},
+    "source_format": {"enum": ["native", "sdf-v2000", "sdf-v3000"]},
+    "source_sha256": {"type": "string", "pattern": "^([0-9a-f]{64})?$"},
+    "coordinate_unit": {"const": "angstrom"},
+    "atoms": {"type": "array", "minItems": 1, "maxItems": 100000, "items": {"type": "object", "additionalProperties": false, "required": ["element", "x", "y", "z"], "properties": {"element": {"enum": ["H","C","N","O","F","P","S","CL","BR","I","B","SI"]}, "x": {"type": "number"}, "y": {"type": "number"}, "z": {"type": "number"}}}},
+    "bonds": {"type": "array", "maxItems": 200000, "items": {"type": "array", "prefixItems": [{"type":"integer","minimum":0},{"type":"integer","minimum":0},{"type":"integer","enum":[1,2,3,4]}], "minItems":3,"maxItems":3}}
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"molecularis.chemistry-operation-report.v1",
+  "type":"object","additionalProperties":false,
+  "required":["schema","operation","molecule_id","molecule_sha256","result","rulebook","rules_checked","limitations"],
+  "properties":{"schema":{"const":"molecularis.chemistry-operation-report.v1"},"operation":{"enum":["validate","descriptors","fingerprint","substructure","similarity"]},"molecule_id":{"type":"string"},"molecule_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"},"result":{"type":"object"},"rulebook":{"const":"chemistry-core-v1"},"rules_checked":{"type":"array","items":{"type":"string"}},"limitations":{"type":"array","items":{"type":"string"}}}
+}

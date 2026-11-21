@@ -2,10 +2,11 @@ id: "chemistry"
 name: "Chemistry"
 roadmap_step: "D"
 roadmap_order: 4
-depends_on: ["molecular"]
-status: "scaffold"
-completion_status: "not_implemented"
-primary_languages: ["cpp", "python", "rust"]
+depends_on: ["molecular", "structure"]
+status: "implemented"
+completion_status: "engineering_implemented_scientific_review_pending"
+primary_languages: ["python"]
+planned_languages: ["cpp", "rust"]
 engine: "ENGINE.md"
 runtime: "RUNTIME.md"
 rulebook: "RULEBOOK.md"
@@ -18,3 +19,5 @@ schema_root: "schemas"
 data_root: "data"
 benchmark_root: "benchmarks"
 external_execution_dependencies: []
+optional_adapters:
+  - "python/molecularis/chemistry_rdkit.py"

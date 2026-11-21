@@ -40,7 +40,7 @@ Execute exactly one letter at a time, following [SERVICE_ROADMAP.md](SERVICE_ROA
 - [ ] A — Molecular (v1 engineering implementation complete; run #150 green with 608 passed/12 skipped and 1k/10k benchmark smoke; independent scientific approval and formal freeze pending)
 - [x] B — Sequence (Python v1 engineering implementation complete; independent scientific review and freeze pending)
 - [x] C — Structure (Python v1 engineering implementation complete; university review deferred until A–N completion)
-- [ ] D — Chemistry
+- [x] D — Chemistry (native graph v1, MSDE artifacts, five capabilities and CHM-001–CHM-006; scientific review deferred)
 - [ ] E — Protein
 - [ ] F — Genomics
 - [ ] G — DNA/RNA
@@ -65,4 +65,4 @@ Each letter requires discovery/audit, Engine, Runtime, Rulebook, schemas/contrac
 
 ## Active task
 
-A's engineering implementation is complete; independent scientific approval and freeze remain pending. B's Python v1 engineering implementation is complete. C's Python v1 engineering implementation is complete and CI-verified in run #158 (core 636 passed/12 skipped; optional profiles passed). Per owner direction, university scientific review and contract freezes for A–N are deferred until the entire engineering build is complete. Proceed to D after C's engineering commit and CI verification.
+A's engineering implementation is complete; independent scientific approval and freeze remain pending. B's Python v1 engineering implementation is complete. C's Python v1 engineering implementation is complete and CI-verified in run #159. D's Chemistry engineering slice is implemented; CI verification is pending. Per owner direction, university scientific review and contract freezes for A–N are deferred until the entire engineering build is complete. Proceed to D after C's engineering commit and CI verification.

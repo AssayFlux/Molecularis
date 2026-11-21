@@ -14,6 +14,7 @@ from .admet_validation import (
 from .catalog import (
     GeneEntry, iter_ncbi_gene_info, iter_ncbi_gene_info_file, search_gene_catalog, validate_gene_catalog,
 )
+from .chemistry_service import (ChemistryDocument, ingest_chemistry, load_chemistry, register_chemistry_service, chemistry_rulebook)
 from .chemistry_rdkit import analyze_molblock, analyze_smiles, morgan_tanimoto, rdkit_backend_info
 from .chemistry import (
     graph_descriptors, iter_sdf_records, parse_sdf_record, path_fingerprint, substructure_match, tanimoto,
@@ -67,6 +68,7 @@ from .structure import (
 )
 
 __all__ = [
+    "ChemistryDocument", "ingest_chemistry", "load_chemistry", "register_chemistry_service", "chemistry_rulebook",
     "align_pairwise_biopython", "binary_admet_metrics", "scaffold_group_split", "tanimoto_applicability_domain", "bootstrap_neighbor_joining_from_alignment", "simulate_hardy_weinberg_cohort", "simulate_synthetic_additive_variant_effects", "emax_pd", "one_compartment_oral_pk", "run_vina_docking", "run_openmm_dynamics", "apo_pocket_candidates", "analyze_molblock", "analyze_smiles", "morgan_tanimoto", "rdkit_backend_info", "PharmVarAlleleDefinition", "PharmVarMatch", "PharmVarVariant", "match_pharmvar_haplotype", "parse_pharmvar_tsv", "AlleleMatch", "Atom", "GeneEntry", "StarAlleleDefinition", "VariantKey", "bootstrap_michaelis_menten", "Node", "SamRecord", "SequenceRecord",
     "clr_transform", "contact_pairs", "cpm", "cross_omics_correlation",
     "eadie_hofstee", "fastq_quality_summary", "fit_michaelis_menten",
