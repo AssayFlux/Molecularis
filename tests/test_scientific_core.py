@@ -85,3 +85,17 @@ def test_candidate_count_is_enforced() -> None:
 
     with pytest.raises(ValueError, match="exceeded"):
         ScientificCore().run(_goal(), Many(), [_Validator()], max_candidates=1)
+
+
+def test_empty_validator_output_is_not_reported_as_a_pass() -> None:
+    class EmptyValidator:
+        validator_id = "empty.validator"
+        version = "1.0"
+
+        def validate(self, goal: ScientificGoal, artifact: ScientificArtifact):
+            return []
+
+    run = ScientificCore().run(_goal(), _Generator(), [EmptyValidator()])
+    assert run.state == "validation_incomplete"
+    assert run.reports[0].validation_state == "not_assessed"
+    assert run.reports[0].passed is False
