@@ -14,7 +14,7 @@ def platform_fixture(tmp_path):
     p=MolecularisPlatform(tmp_path); p.start()
     p.register(Capability("test.add.v1","1","test","add","input","output"))
     p.register(Capability("test.double.v1","1","test","double","input","output"))
-    p.bind("test.add.v1",lambda i,params,ctx:{"value":int(i["source_artifact"])+params["offset"]})
+    p.bind("test.add.v1",lambda i,params,ctx:{"value":int(b"".join(p.store.read(i["source_artifact"])))+params["offset"]})
     p.bind("test.double.v1",lambda i,params,ctx:{"value":i["first_result"]["value"]*params["factor"]})
     register_workflows_service(p); return p
 
@@ -44,9 +44,10 @@ def test_end_to_end_execution_and_lineage(tmp_path):
     p=platform_fixture(tmp_path)
     try:
         a=p.ingest(b"41",media_type="text/plain",schema_id="test.input")
-        result=execute_workflow(p,fixture(),{"source_artifact":a.artifact_id},context=ExecutionContext(service_id="workflows"))
+        context=ExecutionContext(service_id="workflows")
+        result=execute_workflow(p,fixture(),{"source_artifact":a.artifact_id},context=context)
         assert result["first_result"]=={"value":42} and result["second_result"]=={"value":84}
-        run=p.store.list_runs(limit=10)[0]
+        run=p.store.get_run(context.run_id)
         assert run["status"]=="succeeded" and len(run["outputs"])==2 and a.artifact_id in run["inputs"]
     finally: p.close()
 
