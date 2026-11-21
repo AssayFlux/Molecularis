@@ -136,7 +136,7 @@ def test_backup_refuses_overwrite_and_backup_inside_live_store(tmp_path):
 
 def test_restore_rejects_tampered_catalog_and_objects(tmp_path):
     store = ArtifactStore(tmp_path / "live")
-    artifact = store.ingest(b"payload")
+    store.ingest(b"payload")
     backup = tmp_path / "backup"
     store.backup(backup)
     object_path = next((backup / "objects" / "sha256").glob("*/*"))
