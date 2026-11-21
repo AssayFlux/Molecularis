@@ -11,8 +11,8 @@ This repository's product identity is **Molecularis**. New source namespaces, pa
 | Node worker configuration | `MOLECULARIS_*` | Existing `KINETICS_*` environment variables remain accepted as fallbacks. Molecularis variables take precedence. |
 | Structure viewer API | `window.MolecularisStructureViewer` | `window.KineticsStructureViewer` aliases the same API for embedded clients. |
 | CSS design tokens | `--molecularis-*` | `--kinetics-*` variables alias the new tokens. |
-| Versioned scientific schemas | New source and product labels use Molecularis | Existing versioned identifiers such as `kinetics.structure-view.v1` remain stable protocol contracts; changing them requires explicit schema-version migration. |
-| Persisted Android identifiers | Kept stable | The SQLite database filename, SharedPreferences key, WorkManager tags and cache prefixes remain unchanged so upgrades can find prior jobs, settings, work and files. Migrate them only with explicit copy/dual-read logic. |
+| Versioned scientific schemas | New source and product labels use Molecularis | Existing versioned identifiers, including `kinetics.*` capability IDs, engine IDs and schemas such as `kinetics.structure-view.v1`, remain stable protocol contracts; changing them requires explicit versioned migrations. |
+| Persisted Android identifiers | Kept stable | The SQLite database filenames, SharedPreferences key, WorkManager tags, Android Keystore alias, cryptographic AAD labels and cache prefixes remain unchanged so upgrades can find prior jobs, settings, keys and files. Migrate them only with explicit copy/dual-read logic. |
 | Scientific terminology | Unchanged | Enzyme kinetics, Michaelis–Menten models, kinetic transforms and the scientific `kinetics.py` module retain their correct domain meaning. |
 
 ## Historical material and artwork
