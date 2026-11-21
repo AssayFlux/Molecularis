@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import pytest
 
-from kinetics.genome_qc import summarize_contigs
-from kinetics.sequence import SequenceRecord
+from molecularis.genome_qc import summarize_contigs
+from molecularis.sequence import SequenceRecord
 
 
 def test_contig_qc_reports_n50_gc_and_ambiguity() -> None:

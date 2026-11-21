@@ -8,8 +8,8 @@ from pathlib import Path
 import pytest
 from jsonschema import Draft202012Validator, FormatChecker
 
-from kinetics.genotype_qc import aggregate_synthetic_vcf_qc
-from kinetics.variant_reference import ReferenceSequence
+from molecularis.genotype_qc import aggregate_synthetic_vcf_qc
+from molecularis.variant_reference import ReferenceSequence
 
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA = json.loads(

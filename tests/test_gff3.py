@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from kinetics.gff3 import parse_gff3
+from molecularis.gff3 import parse_gff3
 
 
 def test_gff3_import_checks_hierarchy_and_coordinate_system() -> None:

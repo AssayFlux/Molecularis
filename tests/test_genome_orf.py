@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import pytest
 
-from kinetics.genome_orf import scan_contig_orf_candidates
-from kinetics.sequence import SequenceRecord
+from molecularis.genome_orf import scan_contig_orf_candidates
+from molecularis.sequence import SequenceRecord
 
 
 def test_genome_orf_scan_aggregates_contigs_and_preserves_coordinates() -> None:
