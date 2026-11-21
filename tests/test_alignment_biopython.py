@@ -27,3 +27,5 @@ def test_biopython_pairwise_adapter_validates_limits_and_scoring() -> None:
         align_pairwise_biopython("AC", "AG", max_sequence_length=1)
     with pytest.raises(ValueError, match="non-empty"):
         align_pairwise_biopython("", "AG")
+    with pytest.raises(ValueError, match="max_alignment_cells"):
+        align_pairwise_biopython("A" * 10, "A" * 10, max_alignment_cells=100)
