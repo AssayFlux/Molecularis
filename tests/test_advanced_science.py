@@ -178,3 +178,23 @@ def test_nuad_runner_rejects_non_dna_sequences(tmp_path: Path, monkeypatch: pyte
     with pytest.raises(RuntimeError, match="invalid or incomplete"):
         run_nuad_design(FakeDesign(), [FakeConstraint()], tmp_path / "bad-out",
                         random_seed=1, max_iterations=5, run_id="bad")
+
+
+def test_molprobity_oneline_analysis_receives_isolated_input_directory(tmp_path: Path) -> None:
+    executable = tmp_path / "oneline-analysis"
+    executable.write_text(
+        "#!/bin/sh\\n"
+        "test -d \"$1\" || exit 8\\n"
+        "test -f \"$1/input.pdb\" || exit 9\\n"
+        "printf 'summary\\n'\\n",
+        encoding="utf-8",
+    )
+    executable.chmod(0o755)
+    pdb = tmp_path / "input.pdb"
+    pdb.write_text("HEADER TEST\\n", encoding="utf-8")
+    result = run_molprobity_cli(
+        pdb, tmp_path / "oneline-out", executable_path=executable,
+        executable_sha256=_hash(executable), tool="oneline-analysis", run_id="mp-summary",
+    )
+    assert "summary" in result["stdout"]
+    assert (tmp_path / "oneline-out" / "input" / "input.pdb").is_file()
