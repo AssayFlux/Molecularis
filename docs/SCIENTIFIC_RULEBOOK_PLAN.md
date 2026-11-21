@@ -49,17 +49,51 @@ Use explicit states such as `not_assessed`, `not_applicable`, `not_available`, `
 - **Genomics:** reference genome/build, coordinate conventions, strand, variant representation and annotation provenance.
 - **Design:** explicit constraints, objective functions, thermodynamic model/version and feasibility semantics.
 
-## 6. Implementation method
+## 6. Molecularis-owned rule authoring and scientific generation
 
-1. Inventory existing validators and schemas.
-2. Define one versioned rule specification per domain.
-3. Map existing implementations to rules; identify gaps and conflicting semantics.
-4. Add positive, negative, boundary and malformed-input fixtures.
-5. Compare outputs with independent reference tools/datasets.
-6. Record tolerances and reasons; do not tune thresholds solely to make tests pass.
-7. Add regression tests and a migration policy for schema/rule changes.
-8. Obtain independent domain review before using rules for scientific claims.
+The rulebook is part of the Molecularis-owned scientific framework. It must support every scientific domain in product scope and must not be limited to validating imported data.
 
-## 7. Governance
+### Rule authoring
+
+Provide a governed authoring model for scientists and domain specialists to define:
+- declarative constraints and invariants;
+- equations, physical/chemical models and numerical methods;
+- allowed ranges, units, boundary conditions and applicability domains;
+- objective functions, scoring terms and optimization criteria;
+- transformation and normalization procedures;
+- uncertainty, confidence, abstention and failure semantics.
+
+A rule is executable only when its inputs, outputs, units, assumptions, scope, tolerances, dependencies and failure behavior are specified. Rule authorship, technical implementation and independent scientific review must be distinguishable roles. Rules must be versioned, testable, attributable and reviewable; user-defined rules must not silently become globally trusted defaults.
+
+### Rule execution and composition
+
+Define a Molecularis-owned rule representation and execution contract that can be implemented across Python, Rust and C++ backends. Rules may compose into domain workflows, but composition must preserve units, coordinate/reference conventions, preconditions, postconditions and provenance. Execution must be deterministic where the method permits it and must record seeds and numerical environment where it does not.
+
+### Candidate generation and optimization
+
+Treat generation as a first-class scientific operation. A generator accepts a typed goal/specification and explicit constraints, constructs candidate scientific artifacts, evaluates feasibility and optionally optimizes a declared objective. Initial artifact families may include sequences, molecular graphs, conformations, 3D structures, topologies, simulation inputs and analysis workflows. A generator must report unsatisfied constraints, search limits, approximations and non-uniqueness rather than silently returning an apparently definitive answer.
+
+### Independent validation
+
+Generation and validation are separate interfaces and, where practical, separate implementations or methods. Validate generated outputs using independent invariants, reference implementations, benchmark fixtures, numerical diagnostics and experimental evidence when available. A successful rule check establishes only that the checked conditions passed within their declared scope; it does not establish experimental correctness, biological function or clinical validity.
+
+### External engines and resources
+
+Upstream projects may supply reusable algorithms, parsers, numerical kernels, inference engines, simulation engines or independent validators. Molecularis owns the surrounding contracts, rule semantics, workflow composition and provenance model. Keep upstream engines replaceable and optional. Track code licences, model/weight terms, parameter-set terms and dataset terms separately. A required reference genome, template, model weight, force-field parameter set or other resource must be declared per method; do not make a universal database dependency.
+
+## 7. Implementation method
+
+1. Inventory existing validators, generators, schemas and scientific methods.
+2. Define Molecularis-owned scientific object, goal, constraint, rule and artifact contracts.
+3. Define rule authoring, review, versioning, execution and composition semantics.
+4. Define generation and optimization interfaces separately from validation interfaces.
+5. Specify one versioned rulebook and generator contract per domain; map existing/upstream engines to those contracts.
+6. Add positive, negative, boundary, infeasible-goal and malformed-input fixtures.
+7. Compare generated and validated outputs with independent reference methods, benchmarks and experimental evidence where available.
+8. Record tolerances and reasons; do not tune thresholds solely to make tests pass.
+9. Add regression tests and a migration policy for schema/rule changes.
+10. Obtain independent domain review before using rules for scientific claims.
+
+## 8. Governance
 
 Each rule requires an identifier, definition, rationale, units, scope, severity, method/version, test fixtures, known limitations, owner and review date. Breaking changes require schema versioning and a migration note. Rulebook completion is not clinical validation or regulatory clearance.
