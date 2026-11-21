@@ -49,7 +49,8 @@ def main() -> int:
     errors = validate()
     if errors:
         print("Brand asset gate BLOCKED:")
-        for error in errors: print(f"- {error}")
+        for error in errors:
+            print(f"- {error}")
         return 1
     if args.check_only:
         print("Owner brand inputs present; no generated outputs requested.")
@@ -57,16 +58,37 @@ def main() -> int:
     try:
         import cairosvg  # type: ignore[import-not-found]
     except ImportError:
-        print("Install the pinned CairoSVG build dependency to generate raster assets.", file=sys.stderr)
+        print(
+            "Install the pinned CairoSVG build dependency to generate raster assets.",
+            file=sys.stderr,
+        )
         return 2
     output = BRAND / "generated"
     output.mkdir(parents=True, exist_ok=True)
     app = BRAND / "app-logo.svg"
-    cairosvg.svg2png(url=str(app), write_to=str(output / "play-store-icon-512.png"), output_width=512, output_height=512)
-    cairosvg.svg2png(url=str(BRAND / "app-logo-foreground.svg"), write_to=str(output / "adaptive-foreground-432.png"), output_width=432, output_height=432)
-    cairosvg.svg2png(url=str(BRAND / "app-logo-monochrome.svg"), write_to=str(output / "notification-monochrome-72.png"), output_width=72, output_height=72)
+    cairosvg.svg2png(
+        url=str(app),
+        write_to=str(output / "play-store-icon-512.png"),
+        output_width=512,
+        output_height=512,
+    )
+    cairosvg.svg2png(
+        url=str(BRAND / "app-logo-foreground.svg"),
+        write_to=str(output / "adaptive-foreground-432.png"),
+        output_width=432,
+        output_height=432,
+    )
+    cairosvg.svg2png(
+        url=str(BRAND / "app-logo-monochrome.svg"),
+        write_to=str(output / "notification-monochrome-72.png"),
+        output_width=72,
+        output_height=72,
+    )
     for variant in ("brand-logo.svg", "brand-logo-light.svg", "brand-logo-dark.svg"):
-        cairosvg.svg2png(url=str(BRAND / variant), write_to=str(output / (Path(variant).stem + ".png")))
+        cairosvg.svg2png(
+            url=str(BRAND / variant),
+            write_to=str(output / (Path(variant).stem + ".png")),
+        )
     print(f"Generated owner-authorized raster outputs in {output.relative_to(ROOT)}")
     print(
         "Adaptive icon XML, splash, report/PDF and feature-graphic composition "

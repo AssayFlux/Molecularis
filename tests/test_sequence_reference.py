@@ -114,7 +114,8 @@ def test_fasta_reference_search_verifies_raw_bytes_and_emits_exact_hits() -> Non
         "ACGT", payload, sequence_type="DNA", reference_pack=reference_pack,
     )
     assert [hit["reference_id"] for hit in result["hits"]] == ["ref-1"]
-    assert result["search"]["reference_packs"][0]["content_sha256"] == hashlib.sha256(payload).hexdigest()
+    expected_digest = hashlib.sha256(payload).hexdigest()
+    assert result["search"]["reference_packs"][0]["content_sha256"] == expected_digest
 
 
 def test_fasta_reference_search_rejects_hash_mismatch_and_byte_budget() -> None:

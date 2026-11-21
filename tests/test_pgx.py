@@ -24,10 +24,17 @@ def test_synthetic_pack_and_confirmed_haplotype_match():
       definitions,genome_build="synthetic-build-v1",phase_confirmed=True,call_complete=True)
     assert result.status=="matched" and result.star_allele=="*2"
 
-@pytest.mark.parametrize(("phase","complete","expected"),[(False,True,"no_call_unphased"),(True,False,"no_call_incomplete")])
+@pytest.mark.parametrize(
+    ("phase", "complete", "expected"),
+    [(False, True, "no_call_unphased"), (True, False, "no_call_incomplete")],
+)
 def test_incomplete_or_unphased_abstains(phase,complete,expected):
-    result=match_phased_haplotype("SYN1",[],parse_star_allele_definitions(pack(),expected_source_release="fixture-1"),
-      genome_build="synthetic-build-v1",phase_confirmed=phase,call_complete=complete)
+    result = match_phased_haplotype(
+        "SYN1", [],
+        parse_star_allele_definitions(pack(), expected_source_release="fixture-1"),
+        genome_build="synthetic-build-v1", phase_confirmed=phase,
+        call_complete=complete,
+    )
     assert result.status==expected and result.star_allele is None
 
 def test_build_mismatch_and_release_digest_metadata_rejected():
@@ -37,22 +44,30 @@ def test_build_mismatch_and_release_digest_metadata_rejected():
         genome_build="synthetic-build-v1",phase_confirmed=True,call_complete=True)
     with pytest.raises(ValueError,match="release"):
       parse_star_allele_definitions(pack(),expected_source_release="fixture-2")
-    value=json.loads(pack()); value["source"]["sha256"]="bad"
+    value = json.loads(pack())
+    value["source"]["sha256"] = "bad"
     with pytest.raises(ValueError,match="SHA-256"):
       parse_star_allele_definitions(json.dumps(value),expected_source_release="fixture-1")
 
 def test_overlapping_best_definitions_abstain_as_ambiguous():
-    value=json.loads(pack()); value["definitions"].append({
+    value = json.loads(pack())
+    value["definitions"].append({
       "gene":"SYN1","star_allele":"*3","id":"syn1-star3",
-      "required_variants":[{"chromosome":"chr1","position":2,"ref":"A","alt":"G"}],"excluded_variants":[]})
+        "required_variants": [{
+            "chromosome": "chr1", "position": 2, "ref": "A", "alt": "G",
+        }],
+        "excluded_variants": [],
+    })
     defs=parse_star_allele_definitions(json.dumps(value),expected_source_release="fixture-1")
     result=match_phased_haplotype("SYN1",[VariantKey("synthetic-build-v1","chr1",2,"A","G")],defs,
       genome_build="synthetic-build-v1",phase_confirmed=True,call_complete=True)
     assert result.status=="ambiguous" and result.star_allele is None
 
 def test_variant_key_rejects_bool_coordinate_and_nonliteral_allele():
-    with pytest.raises(ValueError): VariantKey("b","c",True,"A","G")
-    with pytest.raises(ValueError): VariantKey("b","c",1,"N","G")
+    with pytest.raises(ValueError):
+        VariantKey("b", "c", True, "A", "G")
+    with pytest.raises(ValueError):
+        VariantKey("b", "c", 1, "N", "G")
 
 
 def test_pgx_definition_parser_enforces_resource_bounds():

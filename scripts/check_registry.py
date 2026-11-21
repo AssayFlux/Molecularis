@@ -77,13 +77,19 @@ def validate_registry(data: Any) -> list[str]:
         implementation = tool.get("implementation")
         if implementation is not None:
             if not isinstance(implementation, str) or not implementation.strip():
-                errors.append(f"tool {tid}: implementation must be a non-empty repository-relative path")
+                errors.append(
+                    f"tool {tid}: implementation must be a non-empty repository-relative path"
+                )
             else:
                 relative = PurePosixPath(implementation)
                 if relative.is_absolute() or ".." in relative.parts:
-                    errors.append(f"tool {tid}: implementation path must stay inside the repository")
+                    errors.append(
+                        f"tool {tid}: implementation path must stay inside the repository"
+                    )
                 elif not (ROOT / Path(*relative.parts)).is_file():
-                    errors.append(f"tool {tid}: implementation file does not exist: {implementation}")
+                    errors.append(
+                        f"tool {tid}: implementation file does not exist: {implementation}"
+                    )
         references = (
             ("engine_ids", "engines"),
             ("data_pack_ids", "data_packs"),

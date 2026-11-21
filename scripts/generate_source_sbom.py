@@ -57,7 +57,10 @@ def generate(root: Path = ROOT) -> dict[str, object]:
     bom = re.search(r'compose-bom:([0-9.]+)', gradle_app)
     bom_version = bom.group(1) if bom else "NOASSERTION"
     for group, artifact in re.findall(
-        r'(?:implementation|debugImplementation|testImplementation|androidTestImplementation)\("([A-Za-z0-9_.-]+):([A-Za-z0-9_.-]+)"\)',
+        (
+            r'(?:implementation|debugImplementation|testImplementation|'
+            r'androidTestImplementation)\("([A-Za-z0-9_.-]+):([A-Za-z0-9_.-]+)"\)'
+        ),
         gradle_app,
     ):
         add(f"{group}:{artifact}", f"managed-by-compose-bom-{bom_version}", "maven",
@@ -134,8 +137,14 @@ def generate(root: Path = ROOT) -> dict[str, object]:
     cmake_version = pinned(r'version = "([^"]+)"', app_build, "CMake")
     add("Gradle", gradle_version, "build-tool", f"pkg:generic/gradle@{gradle_version}")
     add("Android NDK", ndk_version, "build-tool", f"pkg:generic/android-ndk@{ndk_version}")
-    add("Android Build Tools", build_tools, "build-tool", f"pkg:generic/android-build-tools@{build_tools}")
-    add("Android SDK Platform", sdk_platform, "build-tool", f"pkg:generic/android-sdk-platform@{sdk_platform}")
+    add(
+        "Android Build Tools", build_tools, "build-tool",
+        f"pkg:generic/android-build-tools@{build_tools}"
+    )
+    add(
+        "Android SDK Platform", sdk_platform, "build-tool",
+        f"pkg:generic/android-sdk-platform@{sdk_platform}"
+    )
     add("CMake", cmake_version, "build-tool", f"pkg:generic/cmake@{cmake_version}")
     add("Python host", python_host, "build-tool", f"pkg:generic/python@{python_host}")
     add("Chaquopy Python target", python_target, "runtime-target",

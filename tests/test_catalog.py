@@ -25,8 +25,14 @@ def test_gene_catalog_rejects_truncated_rows_and_duplicate_ids() -> None:
     with pytest.raises(ValueError, match="16 NCBI columns"):
         list(iter_ncbi_gene_info(["9606\t1\tA"], source_release="release"))
     entries = list(iter_ncbi_gene_info([
-        "\t".join(["9606", "1", "A", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "20250101", "gene"]),
-        "\t".join(["9606", "1", "A2", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "20250101", "gene"]),
+        "\t".join([
+            "9606", "1", "A", "-", "-", "-", "-", "-",
+            "-", "-", "-", "-", "-", "-", "20250101", "gene",
+        ]),
+        "\t".join([
+            "9606", "1", "A2", "-", "-", "-", "-", "-",
+            "-", "-", "-", "-", "-", "-", "20250101", "gene",
+        ]),
     ], source_release="release"))
     with pytest.raises(ValueError, match="Duplicate"):
         validate_gene_catalog(entries)
@@ -36,7 +42,10 @@ def test_catalog_import_cannot_mark_gene_validated() -> None:
     from dataclasses import replace
 
     entry = next(iter_ncbi_gene_info([
-        "\t".join(["9606", "1", "A", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "20250101", "gene"])
+        "\t".join([
+            "9606", "1", "A", "-", "-", "-", "-", "-",
+            "-", "-", "-", "-", "-", "-", "20250101", "gene",
+        ])
     ], source_release="release"))
     with pytest.raises(ValueError, match="cannot confer validated"):
         validate_gene_catalog([replace(entry, evidence_status="validated")])
@@ -66,14 +75,19 @@ def test_pgx_definition_pack_requires_pinned_source_and_matches_only_complete_ph
     pack = {
         "schema_version": 1, "genome_build": "GRCh38",
         "source": {"name": "Reviewed PGx source fixture", "release": "fixture-1",
-                   "url": "https://example.org/fixture", "sha256": "a" * 64, "license": "CC-BY-4.0"},
+                   "url": "https://example.org/fixture",
+                   "sha256": "a" * 64, "license": "CC-BY-4.0"},
         "definitions": [{
             "id": "CYP2C19-17-def-1", "gene": "CYP2C19", "star_allele": "*17",
-            "required_variants": [{"chromosome": "10", "position": 94781859, "ref": "C", "alt": "T"}],
+            "required_variants": [{
+                "chromosome": "10", "position": 94781859, "ref": "C", "alt": "T"
+            }],
             "excluded_variants": [],
         }],
     }
-    definitions = parse_star_allele_definitions(json.dumps(pack), expected_source_release="fixture-1")
+    definitions = parse_star_allele_definitions(
+        json.dumps(pack), expected_source_release="fixture-1"
+    )
     variant = VariantKey("GRCh38", "10", 94781859, "C", "T")
     incomplete = match_phased_haplotype(
         "CYP2C19", [variant], definitions, genome_build="GRCh38", phase_confirmed=True,
@@ -94,7 +108,10 @@ def test_pgx_definition_pack_rejects_release_mismatch_and_unphased_call() -> Non
 
     pack = {
         "schema_version": 1, "genome_build": "GRCh38",
-        "source": {"name": "fixture", "release": "v1", "url": "https://example.org", "sha256": "b" * 64, "license": "MIT"},
+        "source": {
+            "name": "fixture", "release": "v1", "url": "https://example.org",
+            "sha256": "b" * 64, "license": "MIT",
+        },
         "definitions": [{"id": "d1", "gene": "GENE1", "star_allele": "*1",
                          "required_variants": [], "excluded_variants": []}],
     }
@@ -180,7 +197,10 @@ def test_gene_catalogue_coverage_report_enforces_bounds() -> None:
     from molecularis.catalog import gene_catalogue_coverage_report
 
     entry = next(iter_ncbi_gene_info([
-        "\t".join(["9606", "1", "A", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "20250101", "gene"])
+        "\t".join([
+            "9606", "1", "A", "-", "-", "-", "-", "-",
+            "-", "-", "-", "-", "-", "-", "20250101", "gene",
+        ])
     ], source_release="fixture"))
     with pytest.raises(ValueError, match="max_entries"):
         gene_catalogue_coverage_report([entry, entry], max_entries=1)

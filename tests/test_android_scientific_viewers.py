@@ -79,11 +79,21 @@ def test_android_vcf_chaquopy_bridge_returns_only_aggregate_qc() -> None:
 
 def test_android_safe_insets_status_cards_and_gzip_imports() -> None:
     ui = (ROOT / "android/app/src/main/java/org/assayflux/molecularis/MolecularisUi.kt").read_text()
-    main = (ROOT / "android/app/src/main/java/org/assayflux/molecularis/MainActivity.kt").read_text()
-    vcf = (ROOT / "android/app/src/main/java/org/assayflux/molecularis/GenomicsVcfQcCard.kt").read_text()
-    structure = (ROOT / "android/app/src/main/java/org/assayflux/molecularis/StructureViewer.kt").read_text()
-    chemistry = (ROOT / "android/app/src/main/java/org/assayflux/molecularis/I1ChemistryCard.kt").read_text()
-    sequence = (ROOT / "android/app/src/main/java/org/assayflux/molecularis/SequenceFileSupport.kt").read_text()
+    main = (
+        ROOT / "android/app/src/main/java/org/assayflux/molecularis/MainActivity.kt"
+    ).read_text()
+    vcf = (
+        ROOT / "android/app/src/main/java/org/assayflux/molecularis/GenomicsVcfQcCard.kt"
+    ).read_text()
+    structure = (
+        ROOT / "android/app/src/main/java/org/assayflux/molecularis/StructureViewer.kt"
+    ).read_text()
+    chemistry = (
+        ROOT / "android/app/src/main/java/org/assayflux/molecularis/I1ChemistryCard.kt"
+    ).read_text()
+    sequence = (
+        ROOT / "android/app/src/main/java/org/assayflux/molecularis/SequenceFileSupport.kt"
+    ).read_text()
     assert "WindowInsets.safeDrawing" in ui
     assert 'getString("theme_family", "system")' in main
     assert "RuntimeStatusCard" in ui
@@ -97,7 +107,9 @@ def test_android_safe_insets_status_cards_and_gzip_imports() -> None:
 
 def test_owner_blueprint_has_one_actionable_card_per_capability() -> None:
     ui = (ROOT / "android/app/src/main/java/org/assayflux/molecularis/MolecularisUi.kt").read_text()
-    catalogue = json.loads((ROOT / "android/app/src/main/assets/capability-catalog.json").read_text())
+    catalogue = json.loads(
+        (ROOT / "android/app/src/main/assets/capability-catalog.json").read_text()
+    )
     assert len(catalogue) == 68
     assert "rememberPagerState(pageCount = { services.size })" in ui
     assert "onOpenService(service.id)" in ui

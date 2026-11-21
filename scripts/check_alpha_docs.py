@@ -34,10 +34,17 @@ REQUIRED = [
     "docs/README.md",
 ]
 REQUIRED_PHRASES = {
-    "NORTH_STAR.md": ["desktop-first", "Linux", "Windows", "macOS", "Android", "iOS/iPadOS", "C++", "Rust", "Python"],
+    "NORTH_STAR.md": [
+        "desktop-first", "Linux", "Windows", "macOS", "Android",
+        "iOS/iPadOS", "C++", "Rust", "Python",
+    ],
     "docs/alpha/MASTERPLAN.md": ["Alpha", "Mol*", "Galaxy", "Molecularis Node"],
     "docs/alpha/INTEGRATION_CATALOG.md": ["Biotite", "AlphaFold", "OpenMM", "NUAD", "SciREPL"],
-    "README.md": ["desktop-first", "Linux", "Windows", "macOS", "Android", "iOS/iPadOS", "130 entries", "68 source-present", "62 planned", "0 scientifically validated"],
+    "README.md": [
+        "desktop-first", "Linux", "Windows", "macOS", "Android",
+        "iOS/iPadOS", "130 entries", "68 source-present", "62 planned",
+        "0 scientifically validated",
+    ],
     "docs/CAPABILITY_AUDIT.md": ["130", "68", "62", "0 validated", "evidence_level: none"],
 }
 missing = [p for p in REQUIRED if not (ROOT / p).is_file()]

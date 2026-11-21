@@ -17,7 +17,12 @@ def test_sdf_v2000_parses_formula_and_rejects_non_finite_coordinates() -> None:
     atom_a = f"{0.0:10.4f}{0.0:10.4f}{0.0:10.4f} {'C':>3s}"
     atom_b = f"{1.0:10.4f}{0.0:10.4f}{0.0:10.4f} {'C':>3s}"
     bond = f"{1:3d}{2:3d}{1:3d}"
-    parsed = parse_sdf_record("\n".join(["ethane", "Molecularis", "", counts, atom_a, atom_b, bond, "M  END", "$$$$"]))
+    parsed = parse_sdf_record(
+        "\n".join([
+            "ethane", "Molecularis", "", counts, atom_a, atom_b,
+            bond, "M  END", "$$",
+        ])
+    )
     assert parsed["formula"] == "C2"
     assert parsed["atom_count"] == 2
     assert graph_descriptors(parsed)["cycle_rank"] == 0
@@ -238,10 +243,13 @@ def test_bounded_sdf_graph_analysis_reports_provenance_and_explicit_atom_limitat
     assert result["source_utf8_bytes"] == len(source.encode("utf-8"))
     assert result["formula_explicit_atoms"] == "CO"
     assert result["graph"]["atom_count"] == 2
-    assert "Implicit hydrogens are not inferred; formula and mass use explicit atoms only" in result["limitations"]
+    assert (
+        "Implicit hydrogens are not inferred; formula and mass use explicit atoms only"
+        in result["limitations"]
+    )
 
 
-def test_bounded_sdf_graph_analysis_rejects_nul_oversize_invalid_unicode_and_multiple_records() -> None:
+def test_bounded_sdf_graph_analysis_rejects_invalid_records() -> None:
     from molecularis.chemistry import analyze_sdf_graph
 
     counts = f"{1:3d}{0:3d}  0  0  0  0            999 V2000"

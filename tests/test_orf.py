@@ -59,7 +59,9 @@ def test_orf_scan_rejects_non_integer_or_boolean_table_ids(table_id: object) -> 
 
 
 
-def test_orf_scan_enforces_total_candidate_pair_work_ceiling(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_orf_scan_enforces_candidate_pair_work_ceiling(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     # Lower the module ceiling so the boundary is exercised without a million translations.
     import molecularis.orf as orf_module
 
