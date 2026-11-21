@@ -2,7 +2,7 @@
 
 **Baseline:** CORE `dbda3496386edf46270d54296b2204a53d7de573`  
 **Purpose:** Map existing repository assets to the new desktop-first delivery programme.  
-**Status:** Initial source-tree mapping; per-capability runtime and scientific evidence audit remains Phase 0 work.
+**Status:** Repository source map reconciled with original R/S/I/P/G/U work packages; per-capability runtime and scientific evidence audit remains Phase 0 work. See [REQUIREMENTS_TRACEABILITY.md](REQUIREMENTS_TRACEABILITY.md).
 
 ## Status vocabulary
 
@@ -47,13 +47,19 @@
 | DNA/RNA nanostructures | No complete workflow established | Exact NUAD source/licence review, thermodynamic dependencies and validated workflow |
 | Notebooks/workflow federation | Workflow modules and SciREPL/Galaxy references in docs | Isolated execution model, durable manifests, security review and justified federation |
 
-## 3. External integration candidates
+## 3. Source-level inventory highlights
+
+The 51-module Python package includes kinetics, sequence, genomics/HTSlib, genome QC/annotation/ORFs, GFF3, BLASTP, HMMER, phylogeny, protein properties/design/motifs, structure parsing/alignment/pockets/quality/prediction/view payloads, sequence-structure mapping, chemistry/RDKit, Vina docking, OpenMM, omics, PK/PD, PGx/PharmVar, genotype QC, ADMET validation and virtual-cohort modules. This is a mixed-maturity source inventory, not a validated-service list.
+
+The Android app has 33 Kotlin source files in its application package, including encrypted import/storage, WorkManager, data-pack management, public-reference clients, sequence/VCF/chemistry runners, structure viewer and Research UI. Keep it as a migration and compatibility reference. Rust and C++ contain placeholders only; `engines/`, `datapacks/`, `domains/` and `benchmarks/` are also placeholders. The Node worker is Vina-specific, not a generic compute service.
+
+## 4. External integration candidates
 
 Candidate projects: Biotite, Mol*, MolProbity, RDKit, OpenMM, ESM, AlphaFold, Genome-Wide Workbench, Open Chemistry, ChemGraph, NUAD, Galaxy and SciREPL.
 
 No candidate is considered integrated merely because it appears in a plan. Exact upstream commit, release, component, licence, dependencies, model/data terms, supported OS/ABI, adapter, tests, benchmarks and removal plan are mandatory before adoption. NUPACK is a separate licence/integration review from NUAD.
 
-## 4. Required Phase 0 reconciliation
+## 5. Required Phase 0 reconciliation
 
 For each of the 130 registry entries:
 1. verify referenced implementation path exists;

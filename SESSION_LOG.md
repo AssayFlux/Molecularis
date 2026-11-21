@@ -2957,3 +2957,14 @@ Continue U0 token/component integration into actual screens, run exact-branch CI
 - Rebranded product metadata, Android source namespace, Kotlin UI/design-system identifiers, Python package namespace, Node worker package/configuration, generated CSS tokens, viewer global API, documentation and active asset paths to Molecularis.
 - Kept the Android applicationId and versioned scientific schema identifiers stable for compatibility; added Python, Node, viewer and CSS aliases for existing integrations.
 - Retained enzyme-kinetics terminology and the scientific Michaelis–Menten implementation as domain concepts. The historical owner-supplied master and prior session entries remain archival evidence.
+
+
+## 2026-11-21 — Deep repository and legacy-plan reconciliation
+
+- Re-reviewed the original 18-part owner specification in `docs/origin/KINETICS_MASTER.md`, R0–R10, S1–S10, I engine evaluations, P0–P7, G0–G7, U0–U6, device/language/security/validation/UI plans, engine/runtime matrices and current source tree.
+- Added `docs/REQUIREMENTS_TRACEABILITY.md` mapping original requirements and old work packages to existing source, superseded deployment assumptions and open evidence gates.
+- Expanded `docs/MASTER_PLAN.md` with the retained scientific portfolio, explicit 3D structure service stages, engine resource tiers, vertical-slice selection criteria and continuous governance/validation requirements.
+- Expanded `docs/CAPABILITY_STATUS.md` with concrete Python/Android source inventory and placeholder directories; clarified that source presence is not service validation.
+- Updated `docs/PLAN_RETIREMENT.md` and documentation index so detailed historical plans remain traceability inputs, not disposable documents or competing roadmaps.
+- No scientific source, schemas, user data, capability IDs, persisted identifiers or validation records were deleted or changed.
+- Pending: exact-head documentation and full CI on this review branch; Phase 0 still requires entry-by-entry audit of all 130 registry entries and persisted Android data identifiers.

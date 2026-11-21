@@ -4,7 +4,7 @@
 **Baseline commit:** `dbda3496386edf46270d54296b2204a53d7de573`  
 **Baseline tree:** `dbda3496386edf46270d54296b2204a53d7de573`  
 **Plan date:** 2026-11-21  
-**Authority:** `NORTH_STAR.md`, this plan, approved entries in `DECISIONS.md`, and the evidence ledger linked below.
+**Authority:** `NORTH_STAR.md`, this plan, approved entries in `DECISIONS.md`, [legacy requirements traceability](REQUIREMENTS_TRACEABILITY.md), and the evidence ledger linked below.
 
 > This document replaces the competing implementation roadmaps and masterplans as the single execution authority. It is a plan, not a claim that planned applications, services, integrations, validation or platform support already exist.
 
@@ -271,7 +271,43 @@ A deliverable is complete only when:
 - rollback and data recovery are demonstrated;
 - owner acceptance is recorded.
 
-## 12. Canonical supporting records
+## 12. Reconciliation with the original Molecularis/Kinetics scope
+
+This plan was cross-checked against the original 18-part owner specification, the R0–R10 foundation/science plans, S1–S10 discovery roadmap, I-track engine evaluations, P0–P7 PGx governance pathway, G0–G7 assurance work and U0–U6 interface/viewer programme. The detailed requirement-to-source mapping and retained open gates are in [REQUIREMENTS_TRACEABILITY.md](REQUIREMENTS_TRACEABILITY.md). The original Android-first deployment sequence is superseded, not the scientific scope, offline-first principle, provenance model, engine-tier thinking, governance, research-only boundary or owner UI design contract.
+
+### 12.1 Scientific service portfolio and delivery order
+
+The long-term portfolio includes sequence bioinformatics; genomics and transcriptomics; proteomics and protein discovery; structural biology and 3D visualization; chemoinformatics; enzyme kinetics; phylogenetics/evolution; systems biology; multi-omics; microbiology/metagenomics; immunoinformatics; biostatistics; PGx research; in-silico discovery; molecular biology/CRISPR/primer tools; PK/PD; and workflow/provenance infrastructure. Registry presence does not mean each service is a deliverable. Each is independently gated by data, engine, licence, contracts, tests, validation and platform support.
+
+Initial delivery candidates should be selected after Phase 0 by a weighted readiness review: existing working source, smallest missing dependency chain, scientific reference availability, local/offline feasibility, user value, cross-platform feasibility, safety/licence risk and time to a complete end-to-end workflow. Do not pre-commit to a broad catalogue. Enzyme kinetics remains a candidate flagship from the original specification; sequence QC/import is another candidate because there is an existing Android path and Python tests. Choose one or at most two vertical slices based on exact-head evidence and independent reference quality.
+
+### 12.2 3D structure service — explicit staged scope
+
+3D structure work is a first-class scientific service, not just a viewer screen. Its staged scope is:
+1. **Data foundation:** PDB and mmCIF ingestion, stable atom/residue/chain identity, alternate locations, insertion codes, assemblies, coordinate units/frames, model numbering, missing atoms/residues and validation diagnostics.
+2. **Preparation pipeline:** explicit, provenance-recorded choices for biological assembly, protonation, hydrogens, alternate conformers, waters, ions/metals, cofactors, ligands and missing atoms/residues. No silent repair or inferred chemistry.
+3. **Viewer:** offline-capable 3D rendering, representations, chain/residue/atom selection, sequence-to-structure mapping, camera/view state, annotations, export and accessibility; evaluate Mol* selectively against the existing viewer assets and target framework.
+4. **Analysis:** contacts, distances, RMSD/superposition, SASA, secondary structure, hydrogen-bond/salt-bridge/disulfide candidates, interfaces, pockets, residue environments and variant mapping, each with method definitions and limitations.
+5. **Quality and prediction:** geometry/validation metrics and predicted-model confidence kept distinct from experimental resolution/R-free; prediction engines and weights are separate optional profiles, never bundled by assumption.
+6. **Evidence:** fixed public reference structures, independent implementations, mmCIF edge cases, large-file and GPU/CPU benchmarks, visual correctness, accessibility and platform/device tests.
+
+Current structure.py, structure_alignment.py, structure_pockets.py, structure_quality.py, structure_view.py, sequence_structure.py, Android StructureViewer.kt, viewer assets and API schema are foundations. They do not establish the full service above. Mol* is a candidate integration, not an existing dependency or guaranteed choice.
+
+### 12.3 Engine tiers and compute placement
+
+Retain the original Tier A/B/C concept but make it hardware-profile-specific: **A** local lightweight capabilities suitable for ordinary supported hardware; **B** optional local engines/data packs that pass measured resource and ABI tests; **C** optional paired node, workstation, GPU or institutional/HPC execution. A capability may have different placement by OS/device. Record CPU, RAM, disk, GPU, runtime, licence, network, timeout, cancellation and output-size requirements in engine manifests. Never equate Tier C with cloud upload by default; user consent and data locality are explicit.
+
+### 12.4 Cross-cutting requirements retained from the earlier tracks
+
+- Registry remains Tool → Engine → Data pack → Domain, with method/version, source/licence, runtime, tier, status, platform, evidence and validation path. Do not mark a tool validated from source presence or a smoke test.
+- Data packs are versioned, checksum-verified, licence-reviewed, source-attributed and explicitly delivered (bundled, optional local download or remote-only). No runtime executable-code downloads.
+- Result provenance includes immutable input/output digests, reference/model/data release, parameters, units, seeds, warnings, environment, compute placement and limitations.
+- Scientific validation includes synthetic truth fixtures, independent references, calibration/uncertainty, negative cases, benchmark/performance, domain review and reproducibility. Prediction, docking, MD and clinical-adjacent services each need independent validation.
+- PGx remains a staged research-only pathway with indeterminate/abstention states, ancestry coverage disclosure and separate source/guideline versions. No clinical interpretation or recommendations.
+- Security/privacy, accessibility, data migration, source/model/data rights and governance are continuous gates, not a final paperwork phase.
+- Research-paper and publication work follows validated, reproducible results; it does not drive or overstate product capability.
+
+## 13. Canonical supporting records
 
 - [Repository baseline](REPOSITORY_BASELINE.md)
 - [Capability and migration status](CAPABILITY_STATUS.md)
