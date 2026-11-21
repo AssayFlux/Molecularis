@@ -7,7 +7,6 @@ approved runtime profile.
 """
 from __future__ import annotations
 
-import importlib.metadata
 import importlib.util
 import shutil
 from dataclasses import asdict, dataclass
