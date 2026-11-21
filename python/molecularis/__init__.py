@@ -1,4 +1,4 @@
-"""Kinetics offline research primitives.
+"""Molecularis offline research primitives.
 
 Source implementation does not imply independent scientific validation or clinical use.
 """

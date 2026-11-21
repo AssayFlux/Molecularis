@@ -56,7 +56,7 @@ class MainActivity : FragmentActivity() {
 @androidx.compose.runtime.Composable
 private fun MolecularisResearchHome(activity: FragmentActivity) {
     val preferences = remember {
-        activity.getSharedPreferences("molecularis_preferences", android.content.Context.MODE_PRIVATE)
+        activity.getSharedPreferences("kinetics_preferences", android.content.Context.MODE_PRIVATE)
     }
     var themeFamily by remember {
         mutableStateOf(preferences.getString("theme_family", "system") ?: "system")

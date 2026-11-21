@@ -26,11 +26,11 @@ def test_active_d024_palette_matches_owner_monochrome_spec() -> None:
     tokens = json.loads((ROOT / "design/tokens.json").read_text())
     light = next(
         item for item in tokens["theme_families"]["light"]["themes"]
-        if item["id"] == "kinetics_light_classic"
+        if item["id"] == "molecularis_light_classic"
     )
     dark = next(
         item for item in tokens["theme_families"]["dark"]["themes"]
-        if item["id"] == "kinetics_dark_classic"
+        if item["id"] == "molecularis_dark_classic"
     )
     assert {
         "background": light["background"],
@@ -93,7 +93,7 @@ def test_spacing_and_touch_target_contract_is_present() -> None:
 
 def test_active_compose_cards_follow_v1_radius_scale() -> None:
     ui = (
-        ROOT / "android/app/src/main/java/org/assayflux/kinetics/MolecularisUi.kt"
+        ROOT / "android/app/src/main/java/org/assayflux/molecularis/MolecularisUi.kt"
     ).read_text()
     assert "RoundedCornerShape(18.dp)" not in ui
     assert "RoundedCornerShape(20.dp)" not in ui
@@ -113,7 +113,7 @@ def test_semantic_decision_colours_remain_status_only_and_accessible() -> None:
                 f"{family} {role} status text lacks 4.5:1 contrast"
             )
     ui = (
-        ROOT / "android/app/src/main/java/org/assayflux/kinetics/MolecularisUi.kt"
+        ROOT / "android/app/src/main/java/org/assayflux/molecularis/MolecularisUi.kt"
     ).read_text()
     assert "statusColors.success" in ui
     assert "statusColors.warning" in ui
