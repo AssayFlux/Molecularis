@@ -4,7 +4,7 @@ from __future__ import annotations
 from typing import Any
 
 from .molecular_model import Molecule
-from .platform import Budget, Capability, ExecutionContext, MolecularisPlatform, Operation, Rulebook
+from .platform import Artifact, Budget, Capability, ExecutionContext, MolecularisPlatform, Operation, Rulebook
 from .platform.contracts import ResourceLimitError, ValidationError
 
 MOLECULE_MEDIA_TYPE = "application/vnd.molecularis.molecule+json"
@@ -20,7 +20,7 @@ def ingest_molecule(
     *,
     parents: tuple[str, ...] = (),
     budget: Budget | None = None,
-):
+) -> Artifact:
     """Persist a validated molecule as an immutable, provenance-linked artifact."""
     if not isinstance(molecule, Molecule):
         raise TypeError("molecule must be a validated Molecule instance")
@@ -95,11 +95,12 @@ def register_molecular_service(platform: MolecularisPlatform) -> None:
     def validate_artifact(
         inputs: dict[str, Any], parameters: dict[str, Any], context: ExecutionContext
     ) -> dict[str, Any]:
-        if set(inputs) != {"molecule_artifact_id"}:
-            raise ValidationError("molecular.validate requires molecule_artifact_id only")
-        molecule = load_molecule(
-            platform, inputs["molecule_artifact_id"], budget=context.budget
-        )
+        if len(inputs) != 1:
+            raise ValidationError("molecular.validate requires exactly one molecule artifact ID")
+        artifact_id = next(iter(inputs.values()))
+        if not isinstance(artifact_id, str):
+            raise ValidationError("molecular.validate artifact ID must be a string")
+        molecule = load_molecule(platform, artifact_id, budget=context.budget)
         expected_sha = parameters.get("expected_sha256")
         if expected_sha is not None and expected_sha != molecule.sha256:
             raise ValidationError("molecule digest differs from expected_sha256")

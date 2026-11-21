@@ -103,3 +103,27 @@ def test_rulebook_rejects_expected_digest_mismatch(tmp_path) -> None:
             {"molecule_artifact_id": molecule_artifact.artifact_id},
         )
     platform.close()
+
+
+def test_rulebook_supports_custom_artifact_input_key(tmp_path) -> None:
+    platform = MolecularisPlatform(tmp_path)
+    platform.start()
+    artifact = ingest_molecule(platform, water())
+    register_molecular_service(platform)
+    result = platform.execute(
+        molecular_validation_rulebook("input_molecule"),
+        {"input_molecule": artifact.artifact_id},
+    )
+    assert result["molecular_validation"]["valid"] is True
+    platform.close()
+
+
+def test_molecule_load_enforces_byte_budget(tmp_path) -> None:
+    from molecularis.platform.contracts import ResourceLimitError
+
+    platform = MolecularisPlatform(tmp_path)
+    platform.start()
+    artifact = ingest_molecule(platform, water())
+    with pytest.raises(ResourceLimitError, match="byte budget"):
+        load_molecule(platform, artifact.artifact_id, budget=Budget(max_bytes=1))
+    platform.close()
