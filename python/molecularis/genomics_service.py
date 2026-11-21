@@ -25,8 +25,6 @@ OPS = {
     "annotation_validate": "genomics.annotation-validate.v1",
     "variant_qc": "genomics.variant-qc.v1",
 }
-_CANONICAL = frozenset("ACGT")
-
 
 @dataclass(frozen=True, slots=True)
 class GenomeDocument:
