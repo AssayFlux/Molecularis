@@ -13,6 +13,7 @@ from typing import BinaryIO, Iterable, Iterator, Any
 import hashlib
 import json
 import os
+import shutil
 import sqlite3
 import tempfile
 import time
@@ -352,6 +353,171 @@ class ArtifactStore:
                 "started_at": row["started_at"], "finished_at": row["finished_at"],
                 "inputs": json.loads(row["inputs_json"]), "outputs": json.loads(row["outputs_json"]),
                 "evidence": json.loads(row["evidence_json"])}
+
+    @staticmethod
+    def _file_sha256(path: Path) -> str:
+        digest = hashlib.sha256()
+        with path.open("rb") as stream:
+            for part in iter(lambda: stream.read(1_048_576), b""):
+                digest.update(part)
+        return digest.hexdigest()
+
+    def backup(self, destination: str | Path) -> dict[str, Any]:
+        """Create a verified, non-overwriting, self-contained local backup.
+
+        The SQLite backup API captures a consistent catalog snapshot. Only blobs
+        referenced by that snapshot are copied. The destination is atomically
+        published after the catalog and every object have been verified.
+        """
+        target = Path(destination).expanduser().resolve()
+        if target == self.root or self.root in target.parents:
+            raise ValidationError("backup destination cannot be inside the live store")
+        if target.exists():
+            raise ValidationError("backup destination already exists")
+        target.parent.mkdir(parents=True, exist_ok=True)
+        staging = Path(tempfile.mkdtemp(prefix=f".{target.name}.backup-", dir=target.parent))
+        try:
+            db_target = staging / "catalog.sqlite3"
+            source = sqlite3.connect(self.db_path)
+            replica = sqlite3.connect(db_target)
+            try:
+                source.backup(replica)
+                integrity = replica.execute("PRAGMA integrity_check").fetchone()
+                if integrity is None or integrity[0] != "ok":
+                    raise IntegrityError("SQLite backup failed integrity_check")
+                rows = replica.execute(
+                    "SELECT digest, size_bytes FROM artifacts ORDER BY digest"
+                ).fetchall()
+            finally:
+                replica.close()
+                source.close()
+
+            objects: dict[str, int] = {}
+            for digest, size in rows:
+                objects[digest] = int(size)
+            for digest, expected_size in objects.items():
+                source_path = self._blob_path(digest)
+                if (source_path.is_symlink()
+                        or not source_path.resolve().is_relative_to(self.blob_root)
+                        or not source_path.is_file()
+                        or source_path.stat().st_size != expected_size):
+                    raise IntegrityError("cannot back up a missing or incorrectly sized object",
+                                         details={"digest": digest})
+                if self._file_sha256(source_path) != digest:
+                    raise IntegrityError("cannot back up a corrupt object",
+                                         details={"digest": digest})
+                object_target = staging / "objects" / "sha256" / digest[:2] / digest[2:]
+                object_target.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(source_path, object_target)
+                if self._file_sha256(object_target) != digest:
+                    raise IntegrityError("backup object verification failed",
+                                         details={"digest": digest})
+
+            count_connection = sqlite3.connect(db_target)
+            try:
+                artifact_count = int(count_connection.execute(
+                    "SELECT COUNT(*) FROM artifacts"
+                ).fetchone()[0])
+            finally:
+                count_connection.close()
+            manifest = {
+                "format_version": self.FORMAT_VERSION,
+                "created_at": time.time(),
+                "catalog_sha256": self._file_sha256(db_target),
+                "artifact_count": artifact_count,
+                "objects": [{"digest": digest, "size_bytes": size}
+                            for digest, size in sorted(objects.items())],
+            }
+            manifest_path = staging / "backup-manifest.json"
+            manifest_path.write_text(
+                json.dumps(manifest, sort_keys=True, indent=2, allow_nan=False) + "\\n",
+                encoding="utf-8",
+            )
+            with manifest_path.open("rb") as stream:
+                os.fsync(stream.fileno())
+            os.replace(staging, target)
+            return manifest
+        except Exception:
+            shutil.rmtree(staging, ignore_errors=True)
+            raise
+
+    @classmethod
+    def restore(cls, backup_dir: str | Path, destination: str | Path) -> "ArtifactStore":
+        """Restore a verified backup into a new, non-existing store directory."""
+        source = Path(backup_dir).expanduser().resolve()
+        target = Path(destination).expanduser().resolve()
+        if (not source.is_dir() or target.exists() or target == source
+                or source in target.parents):
+            raise ValidationError("backup must exist and restore destination must be a new directory outside the backup")
+        manifest_path = source / "backup-manifest.json"
+        db_source = source / "catalog.sqlite3"
+        if (manifest_path.is_symlink() or db_source.is_symlink()
+                or not manifest_path.is_file() or not db_source.is_file()):
+            raise IntegrityError("backup is missing or links its manifest/catalog unsafely")
+        try:
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+            raise IntegrityError("backup manifest is unreadable") from exc
+        if not isinstance(manifest, dict) or manifest.get("format_version") != cls.FORMAT_VERSION:
+            raise IntegrityError("unsupported backup format")
+        if cls._file_sha256(db_source) != manifest.get("catalog_sha256"):
+            raise IntegrityError("backup catalog digest mismatch")
+
+        try:
+            conn = sqlite3.connect(f"file:{db_source}?mode=ro", uri=True)
+            try:
+                check = conn.execute("PRAGMA integrity_check").fetchone()
+                if check is None or check[0] != "ok":
+                    raise IntegrityError("backup catalog failed integrity_check")
+                rows = conn.execute("SELECT digest, size_bytes FROM artifacts").fetchall()
+            finally:
+                conn.close()
+            expected = {digest: int(size) for digest, size in rows}
+            if any(not isinstance(digest, str) or len(digest) != 64
+                   or any(char not in "0123456789abcdef" for char in digest)
+                   for digest in expected):
+                raise IntegrityError("backup catalog contains an invalid object digest")
+            objects = manifest.get("objects")
+            if not isinstance(objects, list) or any(not isinstance(item, dict) for item in objects):
+                raise IntegrityError("backup manifest object list is invalid")
+            listed = {item["digest"]: int(item["size_bytes"]) for item in objects}
+            if expected != listed or len(listed) != len(objects):
+                raise IntegrityError("backup manifest does not match catalog object references")
+            if int(manifest.get("artifact_count", -1)) != len(rows):
+                raise IntegrityError("backup manifest artifact count does not match catalog")
+
+            target.parent.mkdir(parents=True, exist_ok=True)
+            staging = Path(tempfile.mkdtemp(prefix=f".{target.name}.restore-", dir=target.parent))
+            try:
+                shutil.copyfile(db_source, staging / "catalog.sqlite3")
+                for digest, size in expected.items():
+                    source_object = source / "objects" / "sha256" / digest[:2] / digest[2:]
+                    if (any(path.is_symlink() for path in (
+                            source / "objects", source / "objects" / "sha256",
+                            source_object.parent, source_object))
+                            or not source_object.resolve().is_relative_to(source)
+                            or not source_object.is_file() or source_object.stat().st_size != size
+                            or cls._file_sha256(source_object) != digest):
+                        raise IntegrityError("backup contains a missing or corrupt object",
+                                             details={"digest": digest})
+                    object_target = staging / "objects" / "sha256" / digest[:2] / digest[2:]
+                    object_target.parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copyfile(source_object, object_target)
+                os.replace(staging, target)
+            except Exception:
+                shutil.rmtree(staging, ignore_errors=True)
+                raise
+        except Exception:
+            raise
+
+        restored = cls(target)
+        report = restored.audit()
+        if not report["ok"] or report["orphan_digests"]:
+            shutil.rmtree(target, ignore_errors=True)
+            raise IntegrityError("restored store failed its post-restore audit",
+                                 details={"audit": report})
+        return restored
+
     def audit(self) -> dict[str, Any]:
         """Verify all catalog references and report unreferenced blobs without deleting them."""
         with self._session() as conn:
@@ -366,6 +532,23 @@ class ArtifactStore:
                 referenced.add(artifact.digest)
             except (ArtifactNotFound, IntegrityError):
                 failures.append(row["artifact_id"])
+        with self._session() as conn:
+            dangling_parents = conn.execute(
+                "SELECT l.artifact_id, l.parent_id FROM lineage l "
+                "LEFT JOIN artifacts p ON p.artifact_id=l.parent_id "
+                "WHERE p.artifact_id IS NULL ORDER BY l.artifact_id, l.parent_id"
+            ).fetchall()
         all_blobs = {p.parent.name + p.name for p in self.blob_root.glob("*/*") if p.is_file()}
-        return {"catalog_artifacts": len(rows), "verified": valid, "failures": failures,
-                "orphan_digests": sorted(all_blobs - referenced)}
+        temp_files = sorted(p.name for p in self.tmp_root.iterdir() if p.is_file())
+        return {
+            "catalog_artifacts": len(rows),
+            "verified": valid,
+            "failures": failures,
+            "dangling_lineage": [
+                {"artifact_id": row["artifact_id"], "parent_id": row["parent_id"]}
+                for row in dangling_parents
+            ],
+            "orphan_digests": sorted(all_blobs - referenced),
+            "temporary_files": temp_files,
+            "ok": not failures and not dangling_parents,
+        }

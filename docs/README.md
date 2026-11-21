@@ -18,6 +18,7 @@ Read in this order:
 15. SERVICE_STATUS.md — verified current state.
 16. WORK_BACKLOG.md — ordered next tasks.
 17. A_N_AUDIT.md — repository-wide A–N service inventory and gaps.
+18. P0_PLATFORM_AUDIT.md — repository-grounded threat model, dependency baseline, data classification, recovery controls and P0 exit gates.
 
 Service-specific documents live under services/<service>/. Update status and backlog only from verified commits and test results.
 

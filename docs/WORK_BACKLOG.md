@@ -12,10 +12,13 @@ The [Agentics Molecularis Master Plan](AGENTICS_MOLECULARIS_MASTER_PLAN.md) is t
 - [ ] Add deterministic replay, dependency invalidation, cancellation, timeout and failure-propagation evidence.
 - [ ] Complete threat model, trust boundaries, privacy classification, secret handling and data-egress policy.
 - [ ] Implement and test OS-level process isolation, resource enforcement and reliable termination before untrusted tools/models execute.
-- [ ] Add artifact-store crash-boundary fault injection, backup/restore and corruption-recovery tests.
+- [x] Implement verified catalog/object backup and restore with non-overwrite semantics and corruption checks (CI verification pending in this commit).
+- [ ] Add filesystem crash-boundary fault injection, restore drills, encryption/signing and a reviewed corruption-recovery matrix.
 - [ ] Publish a reviewed platform acceptance report with exact supported and unsupported operating conditions.
 
 **P0 gate:** repository truth is reconciled; representative cross-service workflows preserve typed meaning and provenance; security, isolation, recovery and failure behavior have reproducible evidence or explicitly accepted blockers. Do not start P1 until this gate passes.
+
+See [P0 Platform Trust, Safety and Reliability Audit](P0_PLATFORM_AUDIT.md) for the evidence-backed baseline, threat model, data classifications, dependency inventory and exact P0 residual gates.
 
 ## P1 — Universal Scientific Knowledge Engine
 

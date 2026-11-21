@@ -83,3 +83,17 @@ def test_operation_outputs_preserve_input_artifact_lineage(tmp_path):
         row = conn.execute("SELECT artifact_id FROM artifacts WHERE json_extract(metadata_json, '$.rulebook_id')='lineage-book'").fetchone()
     assert row is not None
     assert store.get(row['artifact_id']).parents == (source.artifact_id,)
+
+
+def test_missing_artifact_reference_is_rejected_before_handler_execution(tmp_path):
+    registry = ServiceRegistry()
+    registry.register(Capability("test.inspect", "1", "test", "inspect", "in:v1", "out:v1"))
+    executor = RulebookExecutor(registry, ArtifactStore(tmp_path))
+    called = []
+    executor.bind("test.inspect", lambda inputs, params, ctx: called.append(True))
+    book = Rulebook("missing-artifact", "1", (
+        Operation("inspect", "test.inspect", ("source",), "result", {}),
+    ))
+    with pytest.raises(ValidationError, match="artifact"):
+        executor.execute(book, {"source": "art_missing-reference"})
+    assert called == []

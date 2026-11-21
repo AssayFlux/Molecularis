@@ -104,3 +104,63 @@ def test_query_pages_continue_within_the_same_snapshot(tmp_path):
     assert {item['artifact_id'] for item in page1.items + page2.items} == {
         item.artifact_id for item in expected
     }
+
+
+def test_backup_restore_round_trip_preserves_artifacts_lineage_and_runs(tmp_path):
+    store = ArtifactStore(tmp_path / "live")
+    parent = store.ingest(b"parent", metadata={"kind": "source"})
+    child = store.ingest(b"child", parents=[parent.artifact_id])
+    store.record_run(run_id="backup-run", service_id="test", operation="test:backup",
+                     status="succeeded", inputs=[parent.artifact_id],
+                     outputs=[child.artifact_id], evidence={"verified": True})
+    backup_dir = tmp_path / "backup"
+    manifest = store.backup(backup_dir)
+    assert manifest["artifact_count"] == 2
+    restored = ArtifactStore.restore(backup_dir, tmp_path / "restored")
+    assert restored.audit()["failures"] == []
+    assert b"".join(restored.read(parent.artifact_id)) == b"parent"
+    assert restored.get(child.artifact_id).parents == (parent.artifact_id,)
+    assert restored.get_run("backup-run")["evidence"]["verified"] is True
+
+
+def test_backup_refuses_overwrite_and_backup_inside_live_store(tmp_path):
+    store = ArtifactStore(tmp_path / "live")
+    store.ingest(b"data")
+    backup = tmp_path / "backup"
+    store.backup(backup)
+    with pytest.raises(Exception):
+        store.backup(backup)
+    with pytest.raises(Exception):
+        store.backup(tmp_path / "live" / "nested-backup")
+
+
+def test_restore_rejects_tampered_catalog_and_objects(tmp_path):
+    store = ArtifactStore(tmp_path / "live")
+    artifact = store.ingest(b"payload")
+    backup = tmp_path / "backup"
+    store.backup(backup)
+    object_path = next((backup / "objects" / "sha256").glob("*/*"))
+    object_path.write_bytes(b"tampered")
+    with pytest.raises(IntegrityError):
+        ArtifactStore.restore(backup, tmp_path / "restored")
+    assert not (tmp_path / "restored").exists()
+
+
+def test_restore_rejects_modified_catalog(tmp_path):
+    store = ArtifactStore(tmp_path / "live")
+    store.ingest(b"payload")
+    backup = tmp_path / "backup"
+    store.backup(backup)
+    with (backup / "catalog.sqlite3").open("ab") as stream:
+        stream.write(b"tamper")
+    with pytest.raises(IntegrityError):
+        ArtifactStore.restore(backup, tmp_path / "restored")
+
+
+def test_backup_reports_missing_or_corrupt_source_blob(tmp_path):
+    store = ArtifactStore(tmp_path / "live")
+    artifact = store.ingest(b"payload")
+    store._blob_path(artifact.digest).write_bytes(b"corrupt")
+    with pytest.raises(IntegrityError):
+        store.backup(tmp_path / "backup")
+    assert not (tmp_path / "backup").exists()

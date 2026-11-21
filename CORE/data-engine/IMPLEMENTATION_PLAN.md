@@ -7,7 +7,7 @@ Status: staged delivery with a working local reference slice. Do not equate a co
 - [x] Establish typed Python budget, capability, execution-context and error contracts.
 - [x] Add JSON capability-manifest and platform-envelope schemas.
 - [x] Add repository-wide JSON Schema validation to CI (repair malformed legacy schema before acceptance).
-- [ ] Complete threat model and data classification review.
+- [x] Publish repository-grounded P0 threat model and default data-classification policy; institutional review and enforceable deployment controls remain open.
 Exit: schemas validate; compatibility and recovery design reviewed.
 
 ## Stage 1 — Local artifact store and catalog
@@ -17,7 +17,8 @@ Exit: schemas validate; compatibility and recovery design reviewed.
 - [x] Streamed ingest/read with byte and chunk limits.
 - [x] Integrity verification and non-destructive orphan audit.
 - [x] Exact metadata and numeric range lookup using SQLite indexes.
-- [ ] Crash-boundary fault injection, catalog backup/restore and corruption-recovery matrix.
+- [x] Verified catalog/object backup and restore with non-overwrite semantics, manifest/catalog consistency, object digests and post-restore audit (regression tests added; CI verification pending).
+- [ ] Filesystem crash-boundary fault injection, restore drills, backup encryption/signing and corruption-recovery matrix.
 - [ ] Large-stream memory and throughput benchmarks.
 Exit: fault-injection, digest, round-trip, large-stream and path-safety tests pass.
 

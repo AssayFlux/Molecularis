@@ -93,3 +93,24 @@ def test_ai_rejects_untrusted_workflow_source(tmp_path):
             agent.plan("do work", input_artifacts={"source": source.artifact_id})
     finally:
         platform.close()
+
+
+def test_ai_execution_rejects_replaced_input_artifact_after_planning(tmp_path):
+    platform = MolecularisPlatform(tmp_path)
+    platform.start()
+    platform.register(Capability("test.echo.v1", "1", "molecular", "echo", "input", "output"))
+    platform.bind("test.echo.v1", lambda inputs, parameters, context: {"ok": True})
+    original = platform.ingest(b"approved", media_type="text/plain", schema_id="test.input")
+    replacement = platform.ingest(b"substituted", media_type="text/plain", schema_id="test.input")
+    agent = MolecularisAI(
+        platform,
+        lambda request, catalog, available: _workflow("test.echo.v1", tuple(available)),
+    )
+    try:
+        plan = agent.plan("process the approved input", input_artifacts={"source": original.artifact_id})
+        with pytest.raises(ValidationError, match="identities"):
+            agent.execute(
+                plan, input_artifacts={"source": replacement.artifact_id}, approved=True
+            )
+    finally:
+        platform.close()

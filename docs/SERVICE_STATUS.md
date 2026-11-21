@@ -18,8 +18,8 @@ A scaffold or specification does not imply implementation or scientific validati
 | JSON contracts | Validated baseline | Repository-wide JSON Schema validation passed in run #135 |
 | Scientific optional CI | Green baseline | Run #135: chemistry, sequence and genomics optional profiles passed |
 | Language strategy | Python-first | Existing Python implementation is the supported reference; no speculative language ports are required |
-| Recovery certification | Partial | Atomic blob publication and integrity audit; crash-boundary fault injection and backup/restore remain open |
-| Execution isolation | Partial | In-process trusted handlers; no OS-level sandbox or preemptive CPU/memory/GPU isolation |
+| Recovery certification | Partial | P0 adds verified local catalog/object backup and restore plus expanded integrity/lineage audit; crash-boundary fault injection, encryption/signing and restore drills remain open |
+| Execution isolation | Partial | P0 rejects missing artifact references, verifies artifact content and binds Agentics execution to planned input identities; handlers remain trusted in-process Python with no OS sandbox or preemptive CPU/memory/GPU isolation |
 | Distributed services | Not implemented | No distributed storage, replication or cross-process service-discovery protocol |
 | Scientific validation | Incomplete | Domain-specific independent reference and reproducibility evidence required |
 

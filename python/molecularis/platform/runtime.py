@@ -6,7 +6,9 @@ from typing import Any, Callable
 import json
 import time
 
-from .contracts import Capability, ExecutionContext, ResourceLimitError, ValidationError
+from .contracts import (
+    ArtifactNotFound, Capability, ExecutionContext, ResourceLimitError, ValidationError,
+)
 from .store import ArtifactStore
 
 
@@ -104,10 +106,13 @@ class RulebookExecutor:
         for value in values.values():
             if isinstance(value, str) and value.startswith("art_"):
                 try:
-                    self.store.get(value, verify=False)
+                    self.store.get(value)
                     input_ids.add(value)
-                except Exception:
-                    continue
+                except ArtifactNotFound as exc:
+                    raise ValidationError(
+                        "Rulebook input looks like an artifact ID but is not present",
+                        details={"artifact_id": value},
+                    ) from exc
         started_clock, started_at = time.monotonic(), time.time()
         active_operation = "validation"
         try:
@@ -127,11 +132,14 @@ class RulebookExecutor:
                 for value in inputs.values():
                     if isinstance(value, str) and value.startswith("art_"):
                         try:
-                            self.store.get(value, verify=False)
+                            self.store.get(value)
                             parents.append(value)
                             input_ids.add(value)
-                        except Exception:
-                            pass
+                        except ArtifactNotFound as exc:
+                            raise ValidationError(
+                                "operation input references a missing artifact",
+                                details={"artifact_id": value, "operation": op.id},
+                            ) from exc
                 result = handler(inputs, dict(op.parameters), context)
                 encoded = json.dumps(result, sort_keys=True, ensure_ascii=False, allow_nan=False,
                                      separators=(",", ":")).encode("utf-8")

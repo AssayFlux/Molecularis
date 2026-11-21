@@ -127,6 +127,9 @@ class MolecularisAI:
         supplied = dict(input_artifacts)
         if set(supplied) != set(workflow.input_keys):
             raise ValidationError("execution inputs must exactly match the validated plan")
+        plan_artifact = self.platform.store.get(artifact_id)
+        if tuple(sorted(supplied.values())) != tuple(sorted(plan_artifact.parents)):
+            raise ValidationError("execution artifact identities differ from the approved plan inputs")
         for artifact_id_value in supplied.values():
             self.platform.store.get(artifact_id_value)
         context = context or ExecutionContext(service_id="molecularis-ai", budget=self.budget)
