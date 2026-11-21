@@ -1,4 +1,4 @@
-package org.assayflux.kinetics
+package org.assayflux.molecularis
 
 import android.database.sqlite.SQLiteDatabase
 import org.junit.After

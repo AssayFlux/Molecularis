@@ -64,7 +64,7 @@ END
 
     return {
         "python": sys.version,
-        "kinetics_workbench": kinetics.__version__,
+        "molecularis_workbench": kinetics.__version__,
         "kinetics_package_smoke": package_record.sequence,
         "platform": platform.platform(),
         "biopython": Bio.__version__,
@@ -82,7 +82,7 @@ def analyze_fasta(text: str) -> str:
     """Bounded JSON adapter for the registry-backed local FASTA QC workflow."""
     import json
 
-    from kinetics.workflows import analyze_fasta_text
+    from molecularis.workflows import analyze_fasta_text
 
     return json.dumps(analyze_fasta_text(text), ensure_ascii=False, sort_keys=True)
 
@@ -90,7 +90,7 @@ def analyze_fasta(text: str) -> str:
 def analyze_fastq(text: str, phred_offset: int) -> str:
     """Bounded JSON adapter for FASTQ read-quality summaries."""
     import json
-    from kinetics.workflows import analyze_fastq_text
+    from molecularis.workflows import analyze_fastq_text
     return json.dumps(analyze_fastq_text(text, phred_offset=phred_offset),
                       ensure_ascii=False, sort_keys=True)
 
@@ -98,7 +98,7 @@ def prepare_structure_viewer_source(source_text: str, source_format: str) -> str
     """Chaquopy adapter for bounded local PDB/mmCIF parsing and viewer preparation."""
     import json
 
-    from kinetics.structure_view import prepare_structure_viewer_source as prepare
+    from molecularis.structure_view import prepare_structure_viewer_source as prepare
 
     result = prepare(source_text, source_format=source_format)
     return json.dumps(result, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
@@ -106,7 +106,7 @@ def prepare_structure_viewer_source(source_text: str, source_format: str) -> str
 
 def export_structure_viewer_session(source_text: str, source_format: str) -> str:
     """Create a bounded, provenance-bearing offline JSON session for SAF export."""
-    from kinetics.structure_view import (
+    from molecularis.structure_view import (
         build_structure_session_export,
         prepare_structure_viewer_source as prepare,
     )
@@ -124,7 +124,7 @@ def prepare_structure_viewer_import(source_text: str, source_format: str) -> str
     """Parse once and return viewer payload, provenance and bounded session export."""
     import json
 
-    from kinetics.structure_view import (
+    from molecularis.structure_view import (
         build_structure_session_export,
         prepare_structure_viewer_source as prepare,
     )
@@ -156,7 +156,7 @@ def _analysis_provenance(source_text: str, source_format: str, tool_id: str, par
 
 
 def _parse_structure_atoms(source_text: str, source_format: str):
-    from kinetics.structure import parse_mmcif, parse_pdb
+    from molecularis.structure import parse_mmcif, parse_pdb
 
     if not isinstance(source_text, str) or len(source_text.encode("utf-8")) > 16 * 1024 * 1024:
         raise ValueError("Structure input must be text within the 16 MiB limit")
@@ -231,7 +231,7 @@ def infer_genetic_code_from_fasta(fasta_text: str, complete_cds: bool = False) -
     import json
 
     from kinetics import infer_genetic_code_candidates
-    from kinetics.sequence import iter_fasta_records
+    from molecularis.sequence import iter_fasta_records
 
     if not isinstance(fasta_text, str) or len(fasta_text) > 1_000_000:
         raise ValueError("FASTA input must be text within the 1,000,000-character limit")
@@ -247,7 +247,7 @@ def infer_genetic_code_from_fasta(fasta_text: str, complete_cds: bool = False) -
             "complete_cds": complete_cds,
         })
     result = infer_genetic_code_candidates(records, min_records=3, min_codons=90)
-    from kinetics.genetic_code import GENETIC_CODES
+    from molecularis.genetic_code import GENETIC_CODES
 
     result["provenance"] = _analysis_provenance(
         fasta_text,
@@ -274,7 +274,7 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
         raise ValueError("Capability ID must be a string")
 
     if capability_id == "protein.descriptors":
-        from kinetics.protein import protein_descriptors
+        from molecularis.protein import protein_descriptors
         sequence = "".join(sequence_text.split()).upper()
         if len(sequence) > 100_000:
             raise ValueError("Protein sequence exceeds the 100,000-residue mobile limit")
@@ -285,7 +285,7 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "Theoretical pI is an approximate model, not an experimental measurement",
         ]
     elif capability_id == "molecular.primer_screen":
-        from kinetics.molecular import primer_properties
+        from molecularis.molecular import primer_properties
         sequence = "".join(sequence_text.split()).upper()
         result = primer_properties(sequence)
         limitations = [
@@ -294,7 +294,7 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "Not a primer design recommendation or wet-lab validation",
         ]
     elif capability_id == "molecular.crispr_pam":
-        from kinetics.molecular import scan_spcas9_ngg
+        from molecularis.molecular import scan_spcas9_ngg
         sequence = "".join(sequence_text.split()).upper()
         if len(sequence) > 1_000_000:
             raise ValueError("DNA sequence exceeds the 1,000,000-base mobile limit")
@@ -304,7 +304,7 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "No guide efficacy, off-target, editing outcome or safety prediction",
         ]
     elif capability_id == "sequence.global_alignment":
-        from kinetics.sequence import needleman_wunsch
+        from molecularis.sequence import needleman_wunsch
         parts = [line.strip() for line in sequence_text.splitlines() if line.strip()]
         if len(parts) != 2:
             raise ValueError("Enter exactly two non-empty sequences on separate lines")
@@ -316,8 +316,8 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "One deterministic optimal traceback is returned; this is not a clinical or variant interpretation",
         ]
     elif capability_id == "genome.contig_assembly_qc":
-        from kinetics.genome_qc import summarize_contigs
-        from kinetics.sequence import iter_fasta_records
+        from molecularis.genome_qc import summarize_contigs
+        from molecularis.sequence import iter_fasta_records
         records = iter_fasta_records(sequence_text.splitlines())
         result = summarize_contigs(records, max_records=10_000, max_total_bases=1_000_000)
         limitations = [
@@ -325,7 +325,7 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "Mobile input is capped at 1 MB, 10,000 records and 1,000,000 total bases",
         ]
     elif capability_id == "structure.sasa":
-        from kinetics.structure import parse_pdb, solvent_accessible_surface_area
+        from molecularis.structure import parse_pdb, solvent_accessible_surface_area
         atoms = parse_pdb(sequence_text, include_hetero=False)
         if len(atoms) > 2_000:
             raise ValueError("Mobile SASA is limited to 2,000 parsed atoms")
@@ -335,7 +335,7 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "No hydrogens, atom-specific radii, residue-relative accessibility or calibrated quality grade",
         ]
     elif capability_id == "structure.interaction_candidates":
-        from kinetics.structure import interaction_candidates, parse_pdb
+        from molecularis.structure import interaction_candidates, parse_pdb
         atoms = parse_pdb(sequence_text, include_hetero=False)
         if len(atoms) > 5_000:
             raise ValueError("Mobile interaction screening is limited to 5,000 parsed atoms")
@@ -345,7 +345,7 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "Mobile pairwise screening is limited to 5,000 parsed atoms",
         ]
     elif capability_id == "microbiome.diversity":
-        from kinetics.omics import shannon_diversity, simpson_diversity
+        from molecularis.omics import shannon_diversity, simpson_diversity
         try:
             counts = [float(part.strip()) for part in sequence_text.split(",") if part.strip()]
         except ValueError as exc:
@@ -363,7 +363,7 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
         ]
     elif capability_id == "omics.logistic_growth":
         import json
-        from kinetics.omics import logistic_growth
+        from molecularis.omics import logistic_growth
         try:
             parameters = json.loads(sequence_text)
             timepoints = parameters["timepoints"]
@@ -384,7 +384,7 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "Parameters and output units must be interpreted in the context of the study design",
         ]
     elif capability_id == "sequence.explicit_genetic_code_translation":
-        from kinetics.genetic_code import translate_coding_sequence
+        from molecularis.genetic_code import translate_coding_sequence
         try:
             parameters = json.loads(sequence_text)
             sequence = parameters["sequence"]
@@ -406,7 +406,7 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
         ]
     elif capability_id == "kinetics.inhibition_rate":
         import math
-        from kinetics.kinetics import inhibition_rate
+        from molecularis.kinetics import inhibition_rate
         try:
             parameters = json.loads(sequence_text)
             substrate = float(parameters["substrate"])
@@ -437,7 +437,7 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "Units must be consistent and model choice must be justified experimentally",
         ]
     elif capability_id == "phylo.upgma":
-        from kinetics.phylo import to_newick, upgma
+        from molecularis.phylo import to_newick, upgma
         try:
             parameters = json.loads(sequence_text)
             labels = parameters["labels"]
@@ -458,7 +458,7 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "No sequence alignment, distance estimation or bootstrap support is performed",
         ]
     elif capability_id == "omics.normalisation":
-        from kinetics.omics import clr_transform, cpm
+        from molecularis.omics import clr_transform, cpm
         try:
             parameters = json.loads(sequence_text)
             matrix = parameters["matrix"]
@@ -483,7 +483,7 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "CPM and CLR have different assumptions; select based on study design",
         ]
     elif capability_id == "omics.cross_correlation":
-        from kinetics.omics import cross_omics_correlation
+        from molecularis.omics import cross_omics_correlation
         try:
             parameters = json.loads(sequence_text)
             first = parameters["first"]
@@ -508,7 +508,7 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "Small sample counts and outliers can make correlations unstable",
         ]
     elif capability_id == "phylo.jukes_cantor_nj":
-        from kinetics.phylo import leaf_names, neighbor_joining_from_alignment, to_newick
+        from molecularis.phylo import leaf_names, neighbor_joining_from_alignment, to_newick
         try:
             parameters = json.loads(sequence_text)
             sequences = parameters["sequences"]
@@ -530,7 +530,7 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "No alignment generation, model selection, bootstrap support or phylogenetic confidence",
         ]
     elif capability_id == "genes.catalogue_coverage_report":
-        from kinetics.catalog import gene_catalogue_coverage_report, iter_ncbi_gene_info
+        from molecularis.catalog import gene_catalogue_coverage_report, iter_ncbi_gene_info
         try:
             parameters = json.loads(sequence_text)
             source_release = parameters["source_release"]
@@ -552,7 +552,7 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "Catalogue presence does not imply assay, interpretation or clinical validation",
         ]
     elif capability_id in {"protein.hmmscan_domain_evidence", "protein.hmmscan_domtblout_evidence"}:
-        from kinetics.hmmer import parse_hmmscan_domtblout
+        from molecularis.hmmer import parse_hmmscan_domtblout
         try:
             parameters = json.loads(sequence_text)
             domtblout = parameters["domtblout"]
@@ -580,7 +580,7 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "Domain matches are candidate evidence, not confirmed protein function or orthology",
         ]
     elif capability_id == "protein.hmmer_domain_candidate_ranking":
-        from kinetics.hmmer_rank import rank_hmmer_domain_candidates
+        from molecularis.hmmer_rank import rank_hmmer_domain_candidates
         try:
             parameters = json.loads(sequence_text)
             evidence = parameters["evidence"]
@@ -603,7 +603,7 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "Profile database licensing and provenance require separate approval",
         ]
     elif capability_id == "genome.gff3_annotation_import":
-        from kinetics.gff3 import parse_gff3
+        from molecularis.gff3 import parse_gff3
         if len(sequence_text.encode("utf-8")) > 1_000_000:
             raise ValueError("GFF3 input exceeds the 1 MB mobile limit")
         result = parse_gff3(
@@ -618,8 +618,8 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "Feature, parent-graph and coordinate checks are bounded to 50,000 features",
         ]
     elif capability_id == "genome.gff3_transcript_cds_reconstruction":
-        from kinetics.gff3 import parse_gff3
-        from kinetics.gff3_transcripts import reconstruct_gff3_cds
+        from molecularis.gff3 import parse_gff3
+        from molecularis.gff3_transcripts import reconstruct_gff3_cds
         try:
             parameters = json.loads(sequence_text)
             gff3_text = parameters["gff3"]
@@ -656,7 +656,7 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
         ]
     elif capability_id == "protein.fixed_width_motif_scan":
         import hashlib
-        from kinetics.protein_motifs import MotifPack, scan_protein_motif_pack
+        from molecularis.protein_motifs import MotifPack, scan_protein_motif_pack
         try:
             parameters = json.loads(sequence_text)
             query = parameters["query"]
@@ -702,8 +702,8 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "Source and licence metadata are user-supplied and are not independently verified",
         ]
     elif capability_id == "genome.prokaryotic_orf_candidate_scan":
-        from kinetics.genome_orf import scan_contig_orf_candidates
-        from kinetics.sequence import iter_fasta_records
+        from molecularis.genome_orf import scan_contig_orf_candidates
+        from molecularis.sequence import iter_fasta_records
         records = iter_fasta_records(sequence_text.splitlines())
         result = scan_contig_orf_candidates(
             records,
@@ -720,7 +720,7 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "Genome-wide budget: 1,000 contigs, 1 MB bases, 500 ORFs and 100,000 candidate pairs",
         ]
     elif capability_id == "kinetics.bootstrap_intervals":
-        from kinetics.kinetics import bootstrap_michaelis_menten
+        from molecularis.kinetics import bootstrap_michaelis_menten
         try:
             parameters = json.loads(sequence_text)
             substrates = parameters["substrates"]
@@ -752,7 +752,7 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "A numerical interval is not a clinical or regulatory decision threshold",
         ]
     elif capability_id == "protein.design_brief_validation":
-        from kinetics.protein_design import validate_protein_design_brief
+        from molecularis.protein_design import validate_protein_design_brief
         try:
             brief = json.loads(sequence_text)
         except json.JSONDecodeError as exc:
@@ -764,8 +764,8 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "A validated brief does not establish biological safety, function or experimental success",
         ]
     elif capability_id in {"structure.geometry_screen_metrics", "structure.pdb_geometry"}:
-        from kinetics.structure import parse_pdb
-        from kinetics.structure_quality import structure_geometry_metrics
+        from molecularis.structure import parse_pdb
+        from molecularis.structure_quality import structure_geometry_metrics
         atoms = parse_pdb(sequence_text, include_hetero=False)
         if len(atoms) > 2_000:
             raise ValueError("Mobile structure geometry is limited to 2,000 parsed atoms")
@@ -781,7 +781,7 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "Unknown elements are excluded rather than assigned estimated radii",
         ]
     elif capability_id == "phylo.nj_site_bootstrap":
-        from kinetics.phylo import bootstrap_neighbor_joining_from_alignment, to_newick
+        from molecularis.phylo import bootstrap_neighbor_joining_from_alignment, to_newick
         try:
             parameters = json.loads(sequence_text)
             sequences = parameters["sequences"]
@@ -806,8 +806,8 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "Support denominator excludes failed replicate trees; failure counts are returned",
         ]
     elif capability_id == "structure.exact_sequence_mapping":
-        from kinetics.sequence_structure import map_exact_chain_sequence
-        from kinetics.structure import parse_pdb
+        from molecularis.sequence_structure import map_exact_chain_sequence
+        from molecularis.structure import parse_pdb
         try:
             parameters = json.loads(sequence_text)
             query = parameters["sequence"]
@@ -827,8 +827,8 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "Coordinate correspondence only; no structural, functional or clinical effect is predicted",
         ]
     elif capability_id == "structure.chain_interface_contacts":
-        from kinetics.sequence_structure import chain_interface_contacts
-        from kinetics.structure import parse_pdb
+        from molecularis.sequence_structure import chain_interface_contacts
+        from molecularis.structure import parse_pdb
         try:
             parameters = json.loads(sequence_text)
             chain_a = parameters["chain_a"]
@@ -848,8 +848,8 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "No hydrogen placement, solvent, biological assembly or functional effect is inferred",
         ]
     elif capability_id == "structure.alignment_coordinate_mapping":
-        from kinetics.structure import parse_pdb
-        from kinetics.structure_alignment import map_chain_sequence_by_alignment
+        from molecularis.structure import parse_pdb
+        from molecularis.structure_alignment import map_chain_sequence_by_alignment
         try:
             parameters = json.loads(sequence_text)
             query = parameters["sequence"]
@@ -872,8 +872,8 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "Alignment thresholds are fixed at 80% identity and 80% structure coverage",
         ]
     elif capability_id == "structure.variant_coordinate_mapping":
-        from kinetics.sequence_structure import map_variant_to_structure
-        from kinetics.structure import parse_pdb
+        from molecularis.sequence_structure import map_variant_to_structure
+        from molecularis.structure import parse_pdb
         try:
             parameters = json.loads(sequence_text)
             query = parameters["sequence"]
@@ -908,8 +908,8 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
         "sequence.local_fasta_alignment_search",
     }:
         import hashlib
-        from kinetics.sequence import iter_fasta_records
-        from kinetics.sequence_reference import (
+        from molecularis.sequence import iter_fasta_records
+        from molecularis.sequence_reference import (
             ReferencePack, exact_reference_search, local_alignment_reference_search,
         )
         try:
@@ -954,7 +954,7 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "A no-hit result is not evidence of novelty",
         ]
     elif capability_id == "genome.orf_candidate_scan":
-        from kinetics.orf import find_orf_candidates
+        from molecularis.orf import find_orf_candidates
         sequence = "".join(sequence_text.split()).upper()
         if len(sequence) > 1_000_000:
             raise ValueError("Genome sequence exceeds the 1,000,000-base mobile limit")
@@ -974,7 +974,7 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
         ]
     elif capability_id == "kinetics.michaelis_menten":
         import math
-        from kinetics.kinetics import michaelis_menten
+        from molecularis.kinetics import michaelis_menten
         parts = [part.strip() for part in sequence_text.split(",")]
         if len(parts) != 3:
             raise ValueError("Enter substrate concentration, Vmax and Km as three comma-separated numbers")
@@ -992,8 +992,8 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
         ]
     elif capability_id == "structure.experimental_ca_comparison":
         import hashlib
-        from kinetics.structure import parse_pdb
-        from kinetics.structure_prediction import compare_predicted_to_experimental_ca
+        from molecularis.structure import parse_pdb
+        from molecularis.structure_prediction import compare_predicted_to_experimental_ca
         try:
             parameters = json.loads(sequence_text)
             predicted_pdb = parameters["predicted_pdb"]
@@ -1026,7 +1026,7 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "No TM-score, confidence calibration, biological function or experimental validity is inferred",
         ]
     elif capability_id == "structure.prediction_envelope_validation":
-        from kinetics.structure_prediction import validate_prediction_envelope
+        from molecularis.structure_prediction import validate_prediction_envelope
         try:
             parameters = json.loads(sequence_text)
             sequence = parameters["sequence"]
@@ -1047,7 +1047,7 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "A structurally valid prediction record is not experimental or clinical validation",
         ]
     elif capability_id in {"phylo.newick", "phylo.newick_export"}:
-        from kinetics.phylo import leaf_names, parse_newick, to_newick
+        from molecularis.phylo import leaf_names, parse_newick, to_newick
         root = parse_newick(sequence_text)
         leaves = leaf_names(root)
         result = {"leaf_count": len(leaves), "leaves": leaves, "normalized_newick": to_newick(root)}
@@ -1058,7 +1058,7 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
     elif capability_id == "sequence.local_reference_pack_loader":
         import tempfile
         from pathlib import Path
-        from kinetics.sequence_pack import load_local_fasta_reference_pack, search_local_fasta_reference
+        from molecularis.sequence_pack import load_local_fasta_reference_pack, search_local_fasta_reference
         try:
             p = json.loads(sequence_text)
             fasta, manifest, query = p["fasta"], p["manifest"], p.get("query")
@@ -1077,7 +1077,7 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
                 result = search_local_fasta_reference(query, fp, mp, max_pack_bytes=900_000, max_records=10_000, max_total_residues=500_000)
         limitations = ["Local caller-supplied FASTA only; no network retrieval", "Manifest license/source metadata must be reviewed", "Exact matches are not functional or clinical interpretations"]
     elif capability_id == "sequence.local_blastp":
-        from kinetics.blastp import run_local_blastp
+        from molecularis.blastp import run_local_blastp
         try:
             p = json.loads(sequence_text)
             result = run_local_blastp(p["query_fasta"], executable_path=p["executable_path"], executable_sha256=p["executable_sha256"], database_prefix=p["database_prefix"], database_file_sha256=p["database_file_sha256"], database_id=p["database_id"], database_version=p["database_version"], database_license=p["database_license"], database_source=p["database_source"], max_input_bytes=900_000, max_database_bytes=2_000_000_000, max_executable_bytes=200_000_000, max_output_bytes=8_000_000, timeout_seconds=180)
@@ -1085,7 +1085,7 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             raise ValueError("BLASTP requires query FASTA, local executable/database paths, SHA-256 pins and provenance") from exc
         limitations = ["Requires a separately installed, locally hash-pinned BLASTP executable and database", "Execution is local; no sequence data is sent to public services", "Homology hits are candidate evidence only"]
     elif capability_id == "sequence.local_hmmpress":
-        from kinetics.hmmer_runner import press_local_hmm_profile
+        from molecularis.hmmer_runner import press_local_hmm_profile
         try:
             p = json.loads(sequence_text)
             result = press_local_hmm_profile(hmmpress_executable_path=p["executable_path"], hmmpress_sha256=p["executable_sha256"], profile_path=p["profile_path"], source_hmm_sha256=p["source_hmm_sha256"], profile_name=p["profile_name"], profile_version=p["profile_version"], profile_license=p["profile_license"], profile_source=p["profile_source"], timeout_seconds=180)
@@ -1093,7 +1093,7 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             raise ValueError("hmmpress requires local executable/profile paths, SHA-256 pins and profile provenance") from exc
         limitations = ["Requires a locally installed hash-pinned HMMER hmmpress binary", "Profile license and source must be reviewed", "Preparation does not establish biological relevance"]
     elif capability_id == "sequence.local_hmmscan":
-        from kinetics.hmmer_runner import run_local_hmmscan
+        from molecularis.hmmer_runner import run_local_hmmscan
         try:
             p = json.loads(sequence_text)
             result = run_local_hmmscan(p["sequences_fasta"], executable_path=p["executable_path"], executable_sha256=p["executable_sha256"], profile_path=p["profile_path"], profile_pack=p["profile_pack"], max_input_bytes=900_000, max_profile_bytes=200_000_000, max_executable_bytes=200_000_000, max_output_bytes=8_000_000, timeout_seconds=180, max_domains=10_000)
@@ -1102,7 +1102,7 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
         limitations = ["Requires a locally installed hash-pinned HMMER hmmscan binary and profile pack", "Candidate domains do not establish protein function or orthology", "No remote execution or profile download occurs"]
     elif capability_id == "variant.reference_checked_normalization":
         import hashlib
-        from kinetics.variant_reference import ReferenceSequence, normalize_against_reference
+        from molecularis.variant_reference import ReferenceSequence, normalize_against_reference
         try:
             p = json.loads(sequence_text)
             ref = dict(p["reference"])
@@ -1112,7 +1112,7 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             raise ValueError("Provide reference metadata/sequence and chrom, position, ref and alt") from exc
         limitations = ["Representation normalization only against the supplied exact reference", "No transcript mapping, pathogenicity, phasing or clinical interpretation", "Reference provenance must be independently verified"]
     elif capability_id in {"genes.ncbi_catalogue", "genes.catalogue_coverage_report"}:
-        from kinetics.catalog import gene_catalogue_coverage_report, iter_ncbi_gene_info
+        from molecularis.catalog import gene_catalogue_coverage_report, iter_ncbi_gene_info
         try:
             p = json.loads(sequence_text)
             release, tsv = p["source_release"], p["gene_info_tsv"]
@@ -1123,7 +1123,7 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
         result = gene_catalogue_coverage_report(iter_ncbi_gene_info(tsv.splitlines(), source_release=release), max_entries=10_000)
         limitations = ["Describes only the supplied source-release snapshot", "No genome-wide completeness percentage is inferred", "Source licensing and provenance remain caller responsibilities"]
     elif capability_id == "genomics.variant_normalization":
-        from kinetics.genomics import normalize_small_variant
+        from molecularis.genomics import normalize_small_variant
         try:
             p = json.loads(sequence_text)
             result = normalize_small_variant(p["chrom"], p["position"], p["ref"], p["alt"], p["reference_sequence"])
@@ -1131,7 +1131,7 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             raise ValueError("Provide chrom, position, ref, alt and reference_sequence") from exc
         limitations = ["Literal biallelic small variants only", "Reference sequence is caller-supplied and not build-authenticated here", "No pathogenicity, transcript or clinical interpretation"]
     elif capability_id == "omics.nb2_glm":
-        from kinetics.omics import negative_binomial_differential_expression
+        from molecularis.omics import negative_binomial_differential_expression
         try:
             p = json.loads(sequence_text)
             result = negative_binomial_differential_expression(p["counts"], p["condition"], covariates=p.get("covariates"), feature_ids=p.get("feature_ids"))
@@ -1141,7 +1141,7 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
     elif capability_id == "genomics.bam_core":
         import base64
         import io
-        from kinetics.genomics import iter_bam_records
+        from molecularis.genomics import iter_bam_records
         try:
             raw = base64.b64decode(json.loads(sequence_text)["bam_base64"], validate=True)
         except (KeyError, TypeError, ValueError, json.JSONDecodeError) as exc:
@@ -1158,7 +1158,7 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
         limitations = ["BGZF BAM core fields only; CRAM and auxiliary tags are not decoded", "Only aggregate metrics are returned", "Caps: 900 KB compressed input, 100,000 records and 5 million query bases"]
     elif capability_id == "pgx.star_allele_definitions":
         from dataclasses import asdict
-        from kinetics.pgx import parse_star_allele_definitions, VariantKey, match_phased_haplotype
+        from molecularis.pgx import parse_star_allele_definitions, VariantKey, match_phased_haplotype
         try:
             p = json.loads(sequence_text)
             definitions = parse_star_allele_definitions(p["definitions_json"], expected_source_release=p["source_release"], max_definitions=2_000)
@@ -1169,7 +1169,7 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             raise ValueError("Provide definition JSON, source release, gene symbol, genome build and observed variants") from exc
         limitations = ["Exact matching only for complete, already phased calls", "Unphased/incomplete data returns no-call; no phase or copy-number inference", "Not a prescribing recommendation or clinical PGx interpretation"]
     elif capability_id == "chemistry.rdkit_adapter":
-        from kinetics.chemistry_rdkit import analyze_smiles, analyze_molblock
+        from molecularis.chemistry_rdkit import analyze_smiles, analyze_molblock
         try:
             p = json.loads(sequence_text)
             result = analyze_molblock(p["molblock"]) if p.get("molblock") else analyze_smiles(p["smiles"])
@@ -1177,7 +1177,7 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             raise ValueError("Provide a SMILES string or V2000/V3000 molblock") from exc
         limitations = ["Requires a compatible RDKit runtime; it is not bundled in the current Android Python environment", "Computed descriptors are not experimental ADMET or safety measurements"]
     elif capability_id == "genomics.htslib_bam_cram":
-        from kinetics.genomics_htslib import iter_alignment_records
+        from molecularis.genomics_htslib import iter_alignment_records
         try:
             p = json.loads(sequence_text)
             records = iter_alignment_records(p["path"], reference_fasta=p.get("reference_fasta"), region=tuple(p["region"]) if p.get("region") else None)
@@ -1194,7 +1194,7 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
         limitations = ["Requires pysam/HTSlib, which is not bundled in the current Android environment", "CRAM requires explicit local reference FASTA; remote reference fallback is disabled", "Local paths only"]
     elif capability_id == "pgx.pharmvar_tsv":
         from dataclasses import asdict
-        from kinetics.pharmvar import parse_pharmvar_tsv, PharmVarVariant, match_pharmvar_haplotype
+        from molecularis.pharmvar import parse_pharmvar_tsv, PharmVarVariant, match_pharmvar_haplotype
         try:
             p = json.loads(sequence_text)
             definitions = parse_pharmvar_tsv(p["tsv"], source_release=p["source_release"], source_url=p["source_url"], source_sha256=p["source_sha256"], license_id=p["license_id"], expected_release=p["expected_release"], max_input_bytes=900_000, max_rows=10_000)
@@ -1205,8 +1205,8 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             raise ValueError("Provide release-pinned PharmVar TSV, checksum, HTTPS source, license and match metadata") from exc
         limitations = ["Exact reference-accession matching only", "Unphased/incomplete calls return no-call", "Not a phenotype, drug-response or prescribing interpretation"]
     elif capability_id == "structure.viewer_payload":
-        from kinetics.structure import Atom
-        from kinetics.structure_view import prepare_viewer_payload, serialize_viewer_payload
+        from molecularis.structure import Atom
+        from molecularis.structure_view import prepare_viewer_payload, serialize_viewer_payload
         try:
             p = json.loads(sequence_text)
             atoms = [Atom(**a) for a in p["atoms"]]
@@ -1217,7 +1217,7 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
         limitations = ["Coordinate payload only; no bonds, protonation, secondary structure or quality inference", "Viewer rendering is a separate component", "Mobile cap: 20,000 atoms and 1 MB serialized payload"]
     elif capability_id == "structure.session_export":
         import base64
-        from kinetics.structure_view import build_structure_session_export, validate_viewer_payload
+        from molecularis.structure_view import build_structure_session_export, validate_viewer_payload
         try:
             p = json.loads(sequence_text)
             raw = base64.b64decode(p["source_base64"], validate=True)
@@ -1227,17 +1227,17 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             raise ValueError("Provide source_base64, a valid viewer payload and parser_version") from exc
         limitations = ["Deterministic JSON session export; not a rendered structure or native project file", "Exports contain source coordinates; protect exported files accordingly"]
     elif capability_id in {"structure.pinned_local_prediction_process", "structure.local_prediction_engine_adapter"}:
-        from kinetics.s4_process import PinnedSubprocessPredictionEngine, run_pinned_local_prediction
+        from molecularis.s4_process import PinnedSubprocessPredictionEngine, run_pinned_local_prediction
         try:
             p = json.loads(sequence_text)
             engine = PinnedSubprocessPredictionEngine(executable_path=p["executable_path"], executable_sha256=p["executable_sha256"], weights_path=p["weights_path"], weights_sha256=p["weights_sha256"], model_name=p["model_name"], model_version=p["model_version"], model_license=p["model_license"], engine_id=p["engine_id"], software_version=p["software_version"], node_id=p["node_id"], run_id=p["run_id"], timeout_seconds=180)
             result = run_pinned_local_prediction(p["sequence"], engine, max_residues=5_000, max_payload_bytes=1_000_000)
         except (KeyError, TypeError, json.JSONDecodeError) as exc:
             raise ValueError("Provide sequence, local executable/weights paths, SHA-256 pins and model/node provenance") from exc
-        limitations = ["Requires separately installed local executable and model weights; neither is bundled", "Executable must implement the Kinetics JSON request/response protocol", "Envelope validation does not establish model accuracy or clinical validity"]
+        limitations = ["Requires separately installed local executable and model weights; neither is bundled", "Executable must implement the Molecularis JSON request/response protocol", "Envelope validation does not establish model accuracy or clinical validity"]
     elif capability_id == "genome.augustus_local_gene_candidates":
-        from kinetics.augustus import run_local_augustus
-        from kinetics.sequence import iter_fasta_records
+        from molecularis.augustus import run_local_augustus
+        from molecularis.sequence import iter_fasta_records
         try:
             p = json.loads(sequence_text)
             records = iter_fasta_records(p["fasta"].splitlines())
@@ -1246,8 +1246,8 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             raise ValueError("AUGUSTUS requires FASTA, local executable/config paths, species and pinned hashes") from exc
         limitations = ["Requires a separately installed local AUGUSTUS binary and species model; neither is bundled", "Output is candidate annotation, not a validated gene set", "Model and license provenance must be reviewed"]
     elif capability_id == "genome.prodigal_local_gene_candidates":
-        from kinetics.prodigal import run_local_prodigal
-        from kinetics.sequence import iter_fasta_records
+        from molecularis.prodigal import run_local_prodigal
+        from molecularis.sequence import iter_fasta_records
         try:
             p = json.loads(sequence_text)
             records = iter_fasta_records(p["fasta"].splitlines())
@@ -1256,8 +1256,8 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             raise ValueError("Prodigal requires FASTA, local executable path/hash and tool version") from exc
         limitations = ["Requires a separately installed local Prodigal binary; it is not bundled", "GFF3 contains candidate genes, not a validated gene set", "Only engine-supported translation tables are accepted"]
     elif capability_id == "genome.pinned_local_gff3_annotator":
-        from kinetics.genome_annotation import run_pinned_local_gff3_annotator
-        from kinetics.sequence import iter_fasta_records
+        from molecularis.genome_annotation import run_pinned_local_gff3_annotator
+        from molecularis.sequence import iter_fasta_records
         try:
             p = json.loads(sequence_text)
             records = iter_fasta_records(p["fasta"].splitlines())
@@ -1278,7 +1278,7 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
 
 def analyze_ligand_sdf_graph(source_text: str):
     """Android bridge returning JSON for the bounded offline ligand graph preview."""
-    from kinetics.chemistry import analyze_sdf_graph
+    from molecularis.chemistry import analyze_sdf_graph
 
     return json.dumps(analyze_sdf_graph(source_text), sort_keys=True)
 
@@ -1286,6 +1286,6 @@ def analyze_ligand_sdf_graph(source_text: str):
 
 def summarize_vcf_research_qc(text: str) -> str:
     """Android bridge for aggregate-only, bounded VCF syntax/QC; no genotype output."""
-    from kinetics.genomics import summarize_vcf_qc
+    from molecularis.genomics import summarize_vcf_qc
 
     return json.dumps(summarize_vcf_qc(text), ensure_ascii=False, sort_keys=True)

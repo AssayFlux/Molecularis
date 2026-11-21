@@ -1,4 +1,4 @@
-package org.assayflux.kinetics
+package org.assayflux.molecularis
 
 import java.io.File
 import java.nio.charset.StandardCharsets
