@@ -536,6 +536,27 @@ tools:
     implementation: python/molecularis/simulation_service.py
     evidence_level: none
 
+  - id: kinetics.msde_validate
+    name: MSDE-backed canonical reaction-network artifact validation
+    status: implemented
+    implementation: python/molecularis/kinetics_service.py
+    evidence_level: none
+  - id: kinetics.mass_action_rk4
+    name: Bounded deterministic fixed-step RK4 mass-action reaction-network simulation
+    status: implemented
+    implementation: python/molecularis/kinetics_service.py
+    evidence_level: none
+  - id: kinetics.michaelis_menten
+    name: Classical Michaelis-Menten equation and inhibition models
+    status: implemented
+    implementation: python/molecularis/kinetics.py
+    evidence_level: none
+  - id: kinetics.msde_curve_fit
+    name: Exploratory bounded log-grid Michaelis-Menten fitting
+    status: implemented
+    implementation: python/molecularis/kinetics_service.py
+    evidence_level: none
+
 engines: []
 data_packs: []
 domains: []

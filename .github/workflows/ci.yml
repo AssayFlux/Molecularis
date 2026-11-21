@@ -44,7 +44,7 @@ jobs:
         run: PYTHONPATH=python python services/simulation/benchmarks/simulation_benchmark.py --samples 10000
       - name: DNA/RNA secondary-fold benchmark smoke
         run: PYTHONPATH=python python services/dna-rna/benchmarks/dna_rna_benchmark.py --length 120
-      - name: Protein sequence benchmark smoke
+      - name: Kinetics RK4 benchmark smoke\n        run: PYTHONPATH=python python services/kinetics/benchmarks/kinetics_benchmark.py --steps 10000\n      - name: Protein sequence benchmark smoke
         run: PYTHONPATH=python python services/protein/benchmarks/protein_benchmark.py --residues 10000
       - name: Chemistry graph benchmark smoke
         run: PYTHONPATH=python python services/chemistry/benchmarks/chemistry_benchmark.py --atoms 1000

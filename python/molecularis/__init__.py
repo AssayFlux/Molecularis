@@ -27,7 +27,7 @@ from .genomics import (
     SamRecord, fastq_quality_summary, iter_bam_records, normalize_small_variant, parse_sam, parse_vcf,
 )
 from .variant_reference import ReferenceSequence, normalize_against_reference
-from .kinetics import (
+from .kinetics_service import (ReactionNetworkDocument, ingest_kinetics, load_kinetics, register_kinetics_service, kinetics_rulebook, simulate_reaction_network)\nfrom .kinetics import (
     bootstrap_michaelis_menten, eadie_hofstee, fit_michaelis_menten, hanes_woolf, inhibition_rate,
     lineweaver_burk, michaelis_menten,
 )
@@ -73,7 +73,7 @@ from .structure import (
 )
 
 __all__ = [
-    "SimulationDocument", "ingest_simulation", "load_simulation", "register_simulation_service", "simulation_rulebook", "analyze_energy_series", "run_gromacs",
+    "ReactionNetworkDocument", "ingest_kinetics", "load_kinetics", "register_kinetics_service", "kinetics_rulebook", "simulate_reaction_network",\n    "SimulationDocument", "ingest_simulation", "load_simulation", "register_simulation_service", "simulation_rulebook", "analyze_energy_series", "run_gromacs",
     "NucleicAcidDocument", "ingest_nucleic_acid", "load_nucleic_acid", "register_dna_rna_service", "dna_rna_rulebook",
     "GenomeDocument", "ingest_genome", "load_genome", "register_genomics_service", "genomics_rulebook",
     "ProteinDocument", "ingest_protein", "load_protein", "register_protein_service", "protein_rulebook",

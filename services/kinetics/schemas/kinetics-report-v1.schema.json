@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "molecularis.kinetics-report.v1",
+  "title": "Molecularis Kinetics Report v1",
+  "type": "object",
+  "required": [
+    "schema",
+    "operation",
+    "result"
+  ],
+  "properties": {
+    "schema": {
+      "const": "molecularis.kinetics-report.v1"
+    },
+    "operation": {
+      "type": "string"
+    },
+    "network_id": {
+      "type": "string"
+    },
+    "network_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "result": {
+      "type": "object"
+    },
+    "rulebook": {
+      "type": "string"
+    },
+    "rules_checked": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": true
+}
