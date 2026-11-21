@@ -260,7 +260,7 @@ class ScientificCore:
             raise ValueError("max_candidates must be an integer between 1 and 1000")
         if not validators:
             raise ValueError("At least one independent validator is required")
-        if any(getattr(v, "validator_id", None) == generator.generator_id for v in validators):
+        if any(getattr(v, "validator_id", getattr(v, "generator_id", None)) == generator.generator_id for v in validators):
             raise ValueError("A generator cannot serve as its own validator")
         if not generator.generator_id or not generator.version:
             raise ValueError("Generator identity and version are required")
