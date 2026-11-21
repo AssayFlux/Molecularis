@@ -26,8 +26,13 @@ def main() -> None:
     actual = {item["source_id"] for item in catalog["candidate_sources"]}
     if actual != expected:
         raise SystemExit(f"Unexpected ADMET source inventory: {sorted(actual)}")
-    if any(item["license_review_status"] != "verify_before_intake" for item in catalog["candidate_sources"]):
-        raise SystemExit("Every ADMET source must remain gated pending exact-release licence review")
+    if any(
+        item["license_review_status"] != "verify_before_intake"
+        for item in catalog["candidate_sources"]
+    ):
+        raise SystemExit(
+            "Every ADMET source must remain gated pending exact-release licence review"
+        )
     print(
         json.dumps(
             {
