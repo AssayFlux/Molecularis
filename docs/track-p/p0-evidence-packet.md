@@ -6,7 +6,7 @@
 **Remaining boundary:** This does not by itself establish regulatory clearance, clinical validity, medical-device authorization or permission for clinical deployment or treatment decisions.
 
 ## 1. Draft intended use (owner/adviser review required)
-Kinetics is being developed as an offline-first computational biology and in-silico research workbench. Current permitted work is software development, synthetic fixtures and appropriately licensed public non-patient research resources. Outputs are exploratory research artifacts with provenance, limitations and uncertainty; they are not patient-specific medical advice or a substitute for professional judgment.
+Molecularis is being developed as an offline-first computational biology and in-silico research workbench. Current permitted work is software development, synthetic fixtures and appropriately licensed public non-patient research resources. Outputs are exploratory research artifacts with provenance, limitations and uncertainty; they are not patient-specific medical advice or a substitute for professional judgment.
 
 The eventual PGx research scope is a future objective, not a current authorization. Intended use, users, outputs, deployment model and jurisdictions must be specified and reviewed before patient-related work.
 

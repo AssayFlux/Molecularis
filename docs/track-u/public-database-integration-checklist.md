@@ -1,6 +1,6 @@
 # Public database integration — engineering checklist
 
-**Owner:** Kinetics engineering
+**Owner:** Molecularis engineering
 **Branch policy:** commit directly to `main`
 **Status date:** 2026-11-18
 **Current baseline:** `e89c475a2ad2fe4c5451926f077d5d1a9bb434a9`

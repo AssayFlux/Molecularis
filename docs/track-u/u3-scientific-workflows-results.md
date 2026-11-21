@@ -20,7 +20,7 @@
 - Input is bounded to 1,000,000 bytes and 1,000,000 decoded characters before Python analysis.
 - Phred offset is required as an explicit WorkManager input and restricted to 33 or 64. It is never guessed.
 - The Work UI asks the user to choose Phred+33 or Phred+64 before queuing the analysis.
-- The worker calls the existing kinetics_probe.analyze_fastq Python adapter and verifies that the returned result records the selected offset and at least one read.
+- The worker calls the existing molecularis_probe.analyze_fastq Python adapter and verifies that the returned result records the selected offset and at least one read.
 - The persisted result records sequence.fastq.quality_summary, version 1, the imported SHA-256 binding and explicit offset/size parameters.
 - Worker guard tests cover missing/malformed job IDs, invalid Phred offsets, missing jobs, wrong input type, oversized input without materializing plaintext, and preservation of the queued/import state when analysis preflight fails. FASTA and FASTQ analysis failures now update the explanatory message without rewriting the import job's durable state.
 
@@ -70,7 +70,7 @@ The import worker now atomically claims and finalizes the durable job state. Can
 - Home exposes NCBI Nucleotide, NCBI Protein and UniProtKB search; NCBI Gene search exposes linked nucleotide/protein discovery through ELink; the linked records then use the FASTA retrieval path.
 - Selected NCBI nucleotide/protein or UniProtKB records are fetched directly as FASTA inside the app.
 - Retrieved payload bytes are SHA-256 checked and stored as Android Keystore AES-GCM chunked files in app-private no-backup storage. The SQLite record index stores source, accession, format, endpoint, retrieval time, byte count and digest; the index and result JSON are not encrypted at rest.
-- Retrieved FASTA is dispatched to the existing embedded Python `kinetics_probe.analyze_fasta` adapter and the bounded local FASTA QC result is retained with the record.
+- Retrieved FASTA is dispatched to the existing embedded Python `molecularis_probe.analyze_fasta` adapter and the bounded local FASTA QC result is retained with the record.
 - Saved public records are listed and deletable from Home. A full saved-record detail/browser screen, WorkManager background execution, explicit cancel/retry, cache quotas, source release/licence fields and NCBI Gene-to-RefSeq linking remain open.
 - This is sequence QC integration, not full sequence annotation/alignment/ORF/translation integration. Exact-head CI and Android device verification remain required.
 
