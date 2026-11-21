@@ -1,7 +1,9 @@
 # Alpha Operations and Compute Architecture
 
 ## Compute targets
-1. Browser: UI, lightweight validation and visualization only.
+
+Desktop applications on Linux, Windows and macOS are the first delivery target; Android and iOS/iPadOS applications follow. Local execution is the default where feasible. Remote execution is optional and explicitly authorized.
+1. Installed application: UI, lightweight validation, visualization and local project workflows. Core desktop work must not depend on a website.
 2. Molecularis Node: opt-in local agent for filesystem, native engines and local CPU/GPU.
 3. Hosted workers: isolated OCI/container execution for approved engine profiles.
 4. Institutional/HPC: scheduler/API integration under institution policy.

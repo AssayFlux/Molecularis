@@ -1,32 +1,31 @@
-# Molecularis — Alpha Roadmap
+# Molecularis — Desktop-First Roadmap
 
-**Status:** Owner-directed target roadmap for branch Alpha. Milestones are plans, not completion claims.  
-**Updated:** 2026-11-21  
-**Base:** Alpha created from repository default branch CORE.
+**Status:** Owner-directed target roadmap for Alpha; integration into CORE proceeds through reviewed PRs. Milestones are plans, not completion claims.  
+**Updated:** 2026-11-21
 
 ## Product direction
 
-Molecularis is an all-device scientific research platform. Responsive web/PWA is the primary interface. Optional desktop packaging, local Molecularis Node, hosted workers and institutional/HPC connectors provide compute. Android-native development is retired as the product direction; useful existing code and data must be audited and migrated safely.
+Molecularis is an installed, desktop-first scientific research application. First delivery targets are Linux, Windows and macOS desktop applications. Android and Apple iOS/iPadOS applications are required next, sharing domain logic, contracts, project formats and provenance. A website/PWA is not the first product and may be considered later as a companion only.
 
-## Current baseline
+## Current baseline and evidence
 
-The current CORE README identifies an Android/Kotlin/Compose application with Python 3.10+, C++17, Rust, Node.js, SQLite, WebView, JSON Schema contracts and scientific foundations in sequence, structure, chemistry/RDKit, docking/Vina, OpenMM, kinetics, omics, pharmacogenomics and governance. The architecture document says its boundaries are intended design, not proof of a complete runtime.
+The repository contains established Android/Kotlin/Compose and Gradle material, Python scientific packages/tests, Rust and C++ native components, Node utilities, versioned JSON Schema contracts, capability catalogues, scientific rulebooks, validation plans, provenance/governance records and scientific adapters. These are foundations to audit, not proof of cross-platform readiness.
 
-Existing roadmap tracks R/S/I/P/G/U, rulebooks, validation plans, integration register and engineering standard contain reusable work and constraints. Their evidence and current status must be audited at the Alpha base SHA. Preserve research-only and clinical-safety restrictions.
+Alpha and CORE diverged from merge base `b038ef1065dd163108bd591e5e3a7e4c0d7b438d` at the audit snapshot. Do not force-reset either branch. The Alpha baseline audit records exact SHAs, CI evidence and M0 gaps.
 
 ## Milestones
 
 | ID | Milestone | Exit evidence |
 |---|---|---|
-| M0 | Baseline and branch audit | Base SHA, inventory, build/test/CI baseline, risk register, migration ledger |
-| M1 | Cross-device client foundation | Responsive app shell, design tokens, accessibility baseline, PWA install/offline shell |
-| M2 | Control plane and identity | Auth, projects/workspaces, API contracts, authorization and audit events |
-| M3 | Data and artifact platform | Upload/download, checksums, object storage, metadata, versioning and export |
-| M4 | Jobs and orchestration | Durable job state machine, queue, events, cancellation, retries, resource policy |
-| M5 | Molecularis Node | Pairing, signed manifests, capability allowlist, local files/CPU/GPU, revocation |
-| M6 | Scientific data model | Canonical entities, units, coordinate frames, schemas, provenance and rulebooks |
-| M7 | Structure experience | Mol* viewer, structure artifacts, deterministic rendering payloads and validation |
-| M8 | Sequence/genomics | Biotite and GWW selective adapters, reproducible sequence workflows |
+| M0 | Baseline and branch governance | Exact SHAs, inventory, CI baseline, risk register, compatibility and migration ledger |
+| M1 | Cross-platform framework feasibility | Measured vertical slice on Linux, Windows, macOS, Android and iOS/iPadOS; accessibility, graphics, packaging, licensing comparison; owner decision |
+| M2 | Desktop application foundation | Installable Linux/Windows/macOS shell, design system, local projects, settings, offline workflow |
+| M3 | Shared domain and local execution | Versioned project/artifact/provenance contracts, local job supervisor, first end-to-end scientific vertical slice |
+| M4 | Desktop release engineering | Reproducible builds, signing, updates, rollback, install/upgrade/uninstall, filesystem and GPU/3D validation on all desktop OSes |
+| M5 | Mobile application foundation | Android and iOS/iPadOS vertical slices, shared data format, lifecycle, permissions, offline and accessibility tests |
+| M6 | Compute and collaboration extensions | Optional Molecularis Node, hosted workers and institution/HPC connectors with explicit policy and threat models |
+| M7 | Scientific data and visualization | Canonical entities, units, coordinate frames, schemas, Mol* integration and contract tests |
+| M8 | Sequence/genomics | Biotite and GWW selective adapters, reproducible workflows |
 | M9 | Protein models | ESM and AlphaFold isolated profiles, model/data terms and benchmark gates |
 | M10 | Structure validation | MolProbity methods/adapters in audited isolated worker |
 | M11 | Chemistry | Open Chemistry components and ChemGraph workflows with reviewable inputs |
@@ -37,17 +36,15 @@ Existing roadmap tracks R/S/I/P/G/U, rulebooks, validation plans, integration re
 
 ## Delivery sequence
 
-M0–M6 establish platform and shared contracts. M7–M12 deliver scientific vertical slices in dependency order. M13–M14 add notebook/workflow and specialized design capabilities. M15 prepares institution-scale operations and release acceptance.
-
-The sequence may be adjusted only through DECISIONS.md with explicit rationale. Parallel work is allowed only when dependencies and shared files are controlled.
+M0–M4 establish desktop foundations, cross-platform architecture and local scientific execution. M5 extends the same product to mobile. M6 adds optional compute federation. M7–M14 deliver scientific vertical slices in dependency order. M15 prepares institution-scale operations and release acceptance. Parallel work is allowed only when dependencies and shared files are controlled.
 
 ## Definition of done
 
-A milestone is done only when code, tests, schemas, docs, exact-head CI, security review (where relevant), scientific evidence (where relevant), supported-device evidence and owner acceptance are recorded. A passing build is not proof of scientific validity, device support or release readiness.
+A milestone is done only when code, tests, schemas, docs, exact-head CI, security review (where relevant), scientific evidence (where relevant), platform-specific install/runtime/accessibility evidence and owner acceptance are recorded. A passing build is not proof of scientific validity, device support or release readiness.
 
 ## Historical work
 
-Previous R/S/I/P/G/U tracks and their detailed plans are retained as historical/evidence sources until the Alpha baseline audit classifies each artifact as current, superseded, historical or needs-review. Do not delete evidence or silently carry forward old completion claims.
+Previous R/S/I/P/G/U tracks and detailed plans remain evidence sources until the baseline audit classifies each artifact as current, superseded, historical or needs-review. Preserve evidence and map its obligations into these milestones; do not carry old completion claims forward without exact evidence.
 
 
 ---
@@ -339,3 +336,4 @@ This evidence closes the bounded P1–P7 software foundation only. It does not d
 - Connected retrieved FASTA to the existing on-device QC adapter and RCSB mmCIF to the existing structure parser/viewer.
 - Remaining: saved-record reopen/reanalyse, NCBI Gene cross-links, RCSB search, ENA/Ensembl/PubChem, provider retry/cancellation, source terms/licence metadata, exact-head build and device acceptance.
 - This is a source-level integration milestone, not a release-ready or scientifically validated claim.
+
