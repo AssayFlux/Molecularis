@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.sp
  */
 private val BaseTypography = Typography()
 
-val KineticsTypography = BaseTypography.copy(
+val MolecularisTypography = BaseTypography.copy(
     displayLarge = BaseTypography.displayLarge.copy(
         fontFamily = FontFamily.SansSerif, fontSize = 28.sp,
         fontWeight = FontWeight.SemiBold, letterSpacing = 0.sp,
@@ -75,7 +75,7 @@ val KineticsTypography = BaseTypography.copy(
 )
 
 /** Scientific identifiers and numeric summaries use tabular monospace fallback. */
-val KineticsScientificTextStyle = BaseTypography.bodyMedium.copy(
+val MolecularisScientificTextStyle = BaseTypography.bodyMedium.copy(
     fontFamily = FontFamily.Monospace,
     fontFeatureSettings = "tnum",
     letterSpacing = 0.sp,

@@ -1,4 +1,4 @@
-package org.assayflux.kinetics
+package org.assayflux.molecularis
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -30,13 +30,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import org.assayflux.designsystem.KineticsPrimaryButton
-import org.assayflux.designsystem.KineticsTokens
-import org.assayflux.designsystem.KineticsTypography
+import org.assayflux.designsystem.MolecularisPrimaryButton
+import org.assayflux.designsystem.MolecularisTokens
+import org.assayflux.designsystem.MolecularisTypography
 
 /** First-run orientation for the real on-device workspace; not an account or cloud setup. */
 @Composable
-internal fun KineticsOnboardingScreen(
+internal fun MolecularisOnboardingScreen(
     themeFamily: String,
     onComplete: () -> Unit,
 ) {
@@ -46,7 +46,7 @@ internal fun KineticsOnboardingScreen(
         "light" -> false
         else -> isSystemInDarkTheme()
     }
-    val palette = if (isDark) KineticsTokens.KineticsDarkClassic else KineticsTokens.KineticsLightClassic
+    val palette = if (isDark) MolecularisTokens.MolecularisDarkClassic else MolecularisTokens.MolecularisLightClassic
     val scheme = if (isDark) {
         darkColorScheme(
             primary = palette.primary, onPrimary = palette.background,
@@ -54,7 +54,7 @@ internal fun KineticsOnboardingScreen(
             background = palette.background, surface = palette.surface,
             onSurface = palette.text, onBackground = palette.text,
             surfaceVariant = palette.surfaceAlt, onSurfaceVariant = palette.muted,
-            outline = palette.outline, error = KineticsTokens.StatusDark.error,
+            outline = palette.outline, error = MolecularisTokens.StatusDark.error,
         )
     } else {
         lightColorScheme(
@@ -63,10 +63,10 @@ internal fun KineticsOnboardingScreen(
             background = palette.background, surface = palette.surface,
             onSurface = palette.text, onBackground = palette.text,
             surfaceVariant = palette.surfaceAlt, onSurfaceVariant = palette.muted,
-            outline = palette.outline, error = KineticsTokens.StatusLight.error,
+            outline = palette.outline, error = MolecularisTokens.StatusLight.error,
         )
     }
-    MaterialTheme(colorScheme = scheme, typography = KineticsTypography) {
+    MaterialTheme(colorScheme = scheme, typography = MolecularisTypography) {
         Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
             Column(
                 Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(20.dp),
@@ -101,7 +101,7 @@ internal fun KineticsOnboardingScreen(
                                 fontWeight = FontWeight.SemiBold)
                             Text("Use synthetic fixtures and appropriately licensed, non-patient research resources only. Do not import patient or clinical records.",
                                 style = MaterialTheme.typography.bodyMedium)
-                            Text("Kinetics does not provide diagnosis, patient-specific interpretation, treatment selection or dosing advice. Clinical functionality is not authorised.",
+                            Text("Molecularis does not provide diagnosis, patient-specific interpretation, treatment selection or dosing advice. Clinical functionality is not authorised.",
                                 style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
                     }
@@ -110,7 +110,7 @@ internal fun KineticsOnboardingScreen(
                         Text("I understand the local-storage and Research Mode boundaries.",
                             modifier = Modifier.weight(1f), style = MaterialTheme.typography.bodyMedium)
                     }
-                    KineticsPrimaryButton(
+                    MolecularisPrimaryButton(
                         label = "Continue to workspace",
                         onClick = onComplete,
                         enabled = acknowledged,

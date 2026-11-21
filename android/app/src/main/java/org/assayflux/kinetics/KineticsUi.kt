@@ -1,4 +1,4 @@
-package org.assayflux.kinetics
+package org.assayflux.molecularis
 
 import android.content.Context
 import androidx.compose.foundation.Image
@@ -42,32 +42,32 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import org.assayflux.designsystem.KineticsTokens
-import org.assayflux.designsystem.KineticsTypography
-import org.assayflux.designsystem.KineticsScientificTextStyle
-import org.assayflux.designsystem.KineticsAppBar
-import org.assayflux.designsystem.KineticsField
-import org.assayflux.designsystem.KineticsListRow
-import org.assayflux.designsystem.KineticsComponentGallery
+import org.assayflux.designsystem.MolecularisTokens
+import org.assayflux.designsystem.MolecularisTypography
+import org.assayflux.designsystem.MolecularisScientificTextStyle
+import org.assayflux.designsystem.MolecularisAppBar
+import org.assayflux.designsystem.MolecularisField
+import org.assayflux.designsystem.MolecularisListRow
+import org.assayflux.designsystem.MolecularisComponentGallery
 import org.json.JSONArray
 import org.json.JSONObject
 
-internal enum class KineticsTab(val label: String) {
+internal enum class MolecularisTab(val label: String) {
     Home("Home"), Work("Work"), Settings("Settings")
 }
 
 @Composable
-private fun KineticsTabIcon(tab: KineticsTab) {
+private fun MolecularisTabIcon(tab: MolecularisTab) {
     val image = when (tab) {
-        KineticsTab.Home -> Icons.Outlined.Home
-        KineticsTab.Work -> Icons.Outlined.WorkOutline
-        KineticsTab.Settings -> Icons.Outlined.Settings
+        MolecularisTab.Home -> Icons.Outlined.Home
+        MolecularisTab.Work -> Icons.Outlined.WorkOutline
+        MolecularisTab.Settings -> Icons.Outlined.Settings
     }
     Icon(image, contentDescription = null)
 }
 
 @Composable
-internal fun KineticsAppShell(
+internal fun MolecularisAppShell(
     jobs: List<ResearchJob>, notice: String, runtimeReport: String?,
     onImport: () -> Unit, onRefresh: () -> Unit, onRunRuntime: () -> Unit,
     onCancel: (ResearchJob) -> Unit, onResume: (ResearchJob) -> Unit,
@@ -81,7 +81,7 @@ internal fun KineticsAppShell(
     onBiometricChange: (Boolean) -> Unit,
     debugBuild: Boolean,
 ) {
-    var tab by rememberSaveable { mutableStateOf(KineticsTab.Home) }
+    var tab by rememberSaveable { mutableStateOf(MolecularisTab.Home) }
     var showSearch by rememberSaveable { mutableStateOf(false) }
     var searchQuery by rememberSaveable { mutableStateOf("") }
     var workSearchQuery by rememberSaveable { mutableStateOf("") }
@@ -113,8 +113,8 @@ internal fun KineticsAppShell(
         "system" -> if (isSystemInDarkTheme()) "dark" else "light"
         else -> themeFamily
     }
-    val palette = if (resolvedTheme == "dark") KineticsTokens.KineticsDarkClassic else KineticsTokens.KineticsLightClassic
-    val decisionColors = if (resolvedTheme == "dark") KineticsTokens.StatusDark else KineticsTokens.StatusLight
+    val palette = if (resolvedTheme == "dark") MolecularisTokens.MolecularisDarkClassic else MolecularisTokens.MolecularisLightClassic
+    val decisionColors = if (resolvedTheme == "dark") MolecularisTokens.StatusDark else MolecularisTokens.StatusLight
     val scheme = if (resolvedTheme == "light") {
         lightColorScheme(
             primary = palette.primary, secondary = palette.secondary, tertiary = palette.tertiary,
@@ -131,7 +131,7 @@ internal fun KineticsAppShell(
             onSurfaceVariant = palette.muted, outline = palette.outline, error = decisionColors.error,
         )
     }
-    MaterialTheme(colorScheme = scheme, typography = KineticsTypography) {
+    MaterialTheme(colorScheme = scheme, typography = MolecularisTypography) {
       BoxWithConstraints(Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.safeDrawing)) {
         val drawerState = rememberDrawerState(DrawerValue.Closed)
         val drawerScope = rememberCoroutineScope()
@@ -155,7 +155,7 @@ internal fun KineticsAppShell(
                     }
                     HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
                     Spacer(Modifier.height(12.dp))
-                    KineticsTab.entries.forEach { item ->
+                    MolecularisTab.entries.forEach { item ->
                         NavigationDrawerItem(
                             selected = tab == item && selectedServiceId == null && !showProfile && !showSearch,
                             onClick = {
@@ -165,7 +165,7 @@ internal fun KineticsAppShell(
                                 showSearch = false
                                 drawerScope.launch { drawerState.close() }
                             },
-                            icon = { KineticsTabIcon(item) },
+                            icon = { MolecularisTabIcon(item) },
                             label = { Text(item.label) },
                             modifier = Modifier.padding(horizontal = 12.dp, vertical = 2.dp),
                         )
@@ -193,13 +193,13 @@ internal fun KineticsAppShell(
             Scaffold(
                 containerColor = MaterialTheme.colorScheme.background,
                 topBar = {
-                    KineticsAppBar(
+                    MolecularisAppBar(
                         title = when {
                             showSearch -> "Search"
                             showComponentGallery -> "Design system"
                             showProfile -> "Profile"
                             selectedServiceId != null -> capabilities.firstOrNull { it.id == selectedServiceId }?.name ?: "Service"
-                            tab == KineticsTab.Home -> ""
+                            tab == MolecularisTab.Home -> ""
                             else -> "KINETICS"
                         },
                         subtitle = when {
@@ -207,7 +207,7 @@ internal fun KineticsAppShell(
                             showComponentGallery -> "Developer component preview"
                             showProfile -> "Local profile and device security"
                             selectedServiceId != null -> "Scientific service workspace"
-                            tab == KineticsTab.Home -> ""
+                            tab == MolecularisTab.Home -> ""
                             else -> tab.label
                         },
                         navigation = {
@@ -240,7 +240,7 @@ internal fun KineticsAppShell(
             ) { padding ->
                 val contentModifier = Modifier.padding(padding)
                 when {
-                    showComponentGallery -> KineticsComponentGallery()
+                    showComponentGallery -> MolecularisComponentGallery()
                     showProfile -> ProfileScreen(biometricEnabled, biometricAvailable)
                     showSearch -> GlobalSearchScreen(
                         query = searchQuery,
@@ -249,7 +249,7 @@ internal fun KineticsAppShell(
                         onSelectJob = { result ->
                             workSearchQuery = result.title
                             showSearch = false
-                            tab = KineticsTab.Work
+                            tab = MolecularisTab.Work
                         },
                         onSelectCapability = { result ->
                             val entry = capabilities.firstOrNull { it.id == result.id.removePrefix("capability:") }
@@ -265,19 +265,19 @@ internal fun KineticsAppShell(
                         modifier = contentModifier,
                     )
                     else -> when (tab) {
-                        KineticsTab.Home -> HomeScreen(
+                        MolecularisTab.Home -> HomeScreen(
                             jobs, notice, runtimeReport, resolvedTheme, onImport, onRunRuntime,
-                            { tab = KineticsTab.Work }, { selectedServiceId = it },
+                            { tab = MolecularisTab.Work }, { selectedServiceId = it },
                             onCancel, onResume, onDelete, onExport, onExportProvenance,
                             onExportProvenanceSummary, onAnalyzeImported, onExportAnalysis,
                             onAnalyzeFastq, contentModifier,
                         )
-                        KineticsTab.Work -> WorkScreen(
+                        MolecularisTab.Work -> WorkScreen(
                             jobs, workSearchQuery, onImport, onCancel, onResume, onDelete, onExport,
                             onExportProvenance, onExportProvenanceSummary, onAnalyzeImported,
                             onExportAnalysis, onAnalyzeFastq, contentModifier,
                         )
-                        KineticsTab.Settings -> SettingsScreen(
+                        MolecularisTab.Settings -> SettingsScreen(
                             runtimeReport, onRunRuntime, onRefresh, themeFamily, onThemeFamilyChange,
                             biometricEnabled, biometricAvailable, onBiometricChange,
                             debugBuild, { showComponentGallery = true }, contentModifier,
@@ -308,7 +308,7 @@ private fun loadLocalProfileBitmap(context: Context, uriText: String): android.g
 @Composable
 private fun ProfileAvatarButton(onClick: () -> Unit) {
     val context = LocalContext.current
-    val uri = context.getSharedPreferences("kinetics_preferences", Context.MODE_PRIVATE)
+    val uri = context.getSharedPreferences("molecularis_preferences", Context.MODE_PRIVATE)
         .getString("local_profile_avatar_uri", null)
     val bitmap by produceState<android.graphics.Bitmap?>(null, uri) {
         value = withContext(Dispatchers.IO) {
@@ -334,7 +334,7 @@ private fun ProfileAvatarButton(onClick: () -> Unit) {
 private fun ProfileScreen(biometricEnabled: Boolean, biometricAvailable: Boolean) {
     val context = LocalContext.current
     val preferences = remember(context) {
-        context.getSharedPreferences("kinetics_preferences", Context.MODE_PRIVATE)
+        context.getSharedPreferences("molecularis_preferences", Context.MODE_PRIVATE)
     }
     var displayName by rememberSaveable {
         mutableStateOf(preferences.getString("local_profile_name", "Researcher") ?: "Researcher")
@@ -418,7 +418,7 @@ private fun ProfileScreen(biometricEnabled: Boolean, biometricAvailable: Boolean
                     color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
             SettingGroup("ONLINE ACCOUNT", "Remote sign-in, password reset, account recovery and cloud sign-out are unavailable because no identity backend is configured.") {
-                Text("No remote account credentials are stored by Kinetics. Do not enter institutional or patient-system passwords here.",
+                Text("No remote account credentials are stored by Molecularis. Do not enter institutional or patient-system passwords here.",
                     style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
@@ -696,7 +696,7 @@ private fun ServiceDetailScreen(
                     capabilityId = "genome.gff3_annotation_import",
                     title = "GFF3 annotation validation",
                     description = "Validate GFF3 version, feature coordinates, IDs and Parent relationships. No gene function is inferred.",
-                    sample = "##gff-version 3\nchr1\tKinetics\tgene\t1\t100\t.\t+\t.\tID=gene1",
+                    sample = "##gff-version 3\nchr1\tMolecularis\tgene\t1\t100\t.\t+\t.\tID=gene1",
                     actionLabel = "Validate annotation",
                 ) }
             }
@@ -705,7 +705,7 @@ private fun ServiceDetailScreen(
                     capabilityId = "genome.gff3_transcript_cds_reconstruction",
                     title = "GFF3 transcript CDS reconstruction",
                     description = "Reconstruct spliced CDS from validated GFF3 and supplied contigs. Input JSON contains gff3, contigs and optional table_id.",
-                    sample = "{\"gff3\":\"##gff-version 3\\nchr1\\tKinetics\\tgene\\t1\\t9\\t.\\t+\\t.\\tID=g1\\nchr1\\tKinetics\\tmRNA\\t1\\t9\\t.\\t+\\t.\\tID=t1;Parent=g1\\nchr1\\tKinetics\\tCDS\\t1\\t9\\t.\\t+\\t0\\tID=c1;Parent=t1\",\"contigs\":{\"chr1\":\"ATGGCTTAA\"},\"table_id\":11}",
+                    sample = "{\"gff3\":\"##gff-version 3\\nchr1\\tMolecularis\\tgene\\t1\\t9\\t.\\t+\\t.\\tID=g1\\nchr1\\tMolecularis\\tmRNA\\t1\\t9\\t.\\t+\\t.\\tID=t1;Parent=g1\\nchr1\\tMolecularis\\tCDS\\t1\\t9\\t.\\t+\\t0\\tID=c1;Parent=t1\",\"contigs\":{\"chr1\":\"ATGGCTTAA\"},\"table_id\":11}",
                     actionLabel = "Reconstruct CDS",
                 ) }
             }
@@ -974,10 +974,10 @@ private fun GlobalSearchScreen(
         }
     }
     val results = remember(query, documents) { filterSearchDocuments(query, documents) }
-    Frame("Find in Kinetics", "Search your workspace.", "Searches only saved local jobs and the bundled capability catalogue. No network search is performed.", modifier) {
+    Frame("Find in Molecularis", "Search your workspace.", "Searches only saved local jobs and the bundled capability catalogue. No network search is performed.", modifier) {
         LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
             item {
-                KineticsField(
+                MolecularisField(
                     value = query,
                     onValueChange = onQueryChange,
                     label = "Search jobs and capabilities",
@@ -996,7 +996,7 @@ private fun GlobalSearchScreen(
                 }
                 items(results, key = { it.id }) { result ->
                     OutlinedCard(Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp)) {
-                        KineticsListRow(
+                        MolecularisListRow(
                             title = result.title,
                             supportingText = result.subtitle,
                             trailing = { Text("OPEN", style = MaterialTheme.typography.labelSmall,
@@ -1035,7 +1035,7 @@ private fun Frame(eyebrow: String, title: String, subtitle: String, modifier: Mo
 
 @Composable
 private fun RuntimeStatusCard(label: String, status: String, modifier: Modifier = Modifier) {
-    val colors = if (MaterialTheme.colorScheme.background.luminance() < 0.5f) KineticsTokens.StatusDark else KineticsTokens.StatusLight
+    val colors = if (MaterialTheme.colorScheme.background.luminance() < 0.5f) MolecularisTokens.StatusDark else MolecularisTokens.StatusLight
     val tint = when (status) { "OK" -> colors.success; "Not working" -> colors.error; else -> colors.warning }
     OutlinedCard(modifier, shape = RoundedCornerShape(10.dp)) {
         Column(Modifier.padding(9.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
@@ -1176,7 +1176,7 @@ private fun Metric(label: String, value: String, modifier: Modifier) {
     OutlinedCard(modifier, shape = RoundedCornerShape(12.dp)) {
         Column(Modifier.padding(11.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
             Text(label, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, fontWeight = FontWeight.Bold, maxLines = 1)
-            Text(value, style = KineticsScientificTextStyle.copy(fontSize = MaterialTheme.typography.headlineMedium.fontSize, fontWeight = FontWeight.Bold))
+            Text(value, style = MolecularisScientificTextStyle.copy(fontSize = MaterialTheme.typography.headlineMedium.fontSize, fontWeight = FontWeight.Bold))
             Text("Research jobs", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1)
         }
     }
@@ -1400,7 +1400,7 @@ private fun JobCard(job: ResearchJob, onCancel: (ResearchJob) -> Unit, onResume:
         title = { Text("Choose FASTQ quality encoding") },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text("Kinetics never guesses the Phred offset. Select the encoding used by this file.")
+                Text("Molecularis never guesses the Phred offset. Select the encoding used by this file.")
                 listOf(33, 64).forEach { offset ->
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         RadioButton(selected = selectedPhredOffset == offset, onClick = { selectedPhredOffset = offset })
@@ -1426,9 +1426,9 @@ private fun StatePill(state: String) {
         "recovery_required" -> "RECOVERY"; else -> state.uppercase()
     }
     val statusColors = if (MaterialTheme.colorScheme.background.luminance() < 0.5f) {
-        KineticsTokens.StatusDark
+        MolecularisTokens.StatusDark
     } else {
-        KineticsTokens.StatusLight
+        MolecularisTokens.StatusLight
     }
     val statusColor = when (state) {
         "succeeded" -> statusColors.success
@@ -1696,7 +1696,7 @@ private fun SettingsScreen(
             } }
             item { SettingGroup(
                 "SECURITY · BIOMETRIC APP UNLOCK",
-                "Optional device-local app lock. This is not an online account login. Android manages biometric templates; Kinetics never receives or stores them. Research files remain encrypted at rest independently of this screen lock.",
+                "Optional device-local app lock. This is not an online account login. Android manages biometric templates; Molecularis never receives or stores them. Research files remain encrypted at rest independently of this screen lock.",
             ) {
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                     Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
@@ -1763,7 +1763,7 @@ private fun SettingsScreen(
                     style = MaterialTheme.typography.bodySmall)
                 Text("• Preferences: appearance, onboarding acknowledgement and the optional local app-lock setting are stored in private SharedPreferences.",
                     style = MaterialTheme.typography.bodySmall)
-                Text("• Exports: only created after you select a destination in Android's document picker. Copies at that destination are outside Kinetics' control.",
+                Text("• Exports: only created after you select a destination in Android's document picker. Copies at that destination are outside Molecularis' control.",
                     style = MaterialTheme.typography.bodySmall)
                 Text("Deletion removes the app-managed files and database rows where operations succeed. Flash-storage secure erasure and deletion of exported copies cannot be guaranteed. Android backup is disabled in the app manifest; merged-manifest and device verification remain pending.",
                     style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
@@ -1847,7 +1847,7 @@ internal fun BiometricLockScreen(
         else -> themeFamily
     }
     val isDark = resolvedTheme == "dark"
-    val palette = if (isDark) KineticsTokens.KineticsDarkClassic else KineticsTokens.KineticsLightClassic
+    val palette = if (isDark) MolecularisTokens.MolecularisDarkClassic else MolecularisTokens.MolecularisLightClassic
     val scheme = if (isDark) {
         darkColorScheme(
             primary = palette.primary,
@@ -1876,7 +1876,7 @@ internal fun BiometricLockScreen(
             outline = palette.outline,
         )
     }
-    MaterialTheme(colorScheme = scheme, typography = KineticsTypography) {
+    MaterialTheme(colorScheme = scheme, typography = MolecularisTypography) {
         Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
             Box(
                 Modifier.fillMaxSize().padding(horizontal = 24.dp, vertical = 32.dp),
@@ -1939,7 +1939,7 @@ internal fun BiometricLockScreen(
                     )
                     TextButton(onClick = onRetry) { Text("Try again") }
                     Text(
-                        "Android manages biometric data. Kinetics does not receive or store biometric templates.",
+                        "Android manages biometric data. Molecularis does not receive or store biometric templates.",
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )

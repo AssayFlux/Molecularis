@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 
 /** Shared 56dp app bar. Navigation and action slots remain caller-owned. */
 @Composable
-fun KineticsAppBar(
+fun MolecularisAppBar(
     title: String,
     subtitle: String,
     modifier: Modifier = Modifier,
@@ -58,7 +58,7 @@ fun KineticsAppBar(
 
 /** Reusable, full-width row with a 56dp minimum hit area and explicit semantics. */
 @Composable
-fun KineticsListRow(
+fun MolecularisListRow(
     title: String,
     supportingText: String? = null,
     modifier: Modifier = Modifier,
@@ -88,7 +88,7 @@ fun KineticsListRow(
 
 /** Monochrome selection chip; colour is never the sole selection cue. */
 @Composable
-fun KineticsChip(
+fun MolecularisChip(
     label: String,
     selected: Boolean,
     onClick: () -> Unit,
@@ -105,13 +105,13 @@ fun KineticsChip(
 }
 
 @Composable
-fun KineticsDivider(modifier: Modifier = Modifier) {
+fun MolecularisDivider(modifier: Modifier = Modifier) {
     HorizontalDivider(modifier, color = MaterialTheme.colorScheme.outline.copy(alpha = 0.55f))
 }
 
 /** Flat bordered panel for content that benefits from grouping. */
 @Composable
-fun KineticsCard(
+fun MolecularisCard(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
@@ -121,7 +121,7 @@ fun KineticsCard(
 }
 
 @Composable
-fun KineticsConfirmationDialog(
+fun MolecularisConfirmationDialog(
     title: String,
     message: String,
     confirmLabel: String,
@@ -140,7 +140,7 @@ fun KineticsConfirmationDialog(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun KineticsBottomSheet(
+fun MolecularisBottomSheet(
     onDismissRequest: () -> Unit,
     content: @Composable () -> Unit,
 ) {

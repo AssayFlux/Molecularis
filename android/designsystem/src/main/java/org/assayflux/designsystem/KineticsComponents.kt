@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.sp
 
 /** Shared V1 primary action: 48dp minimum height and restrained 10dp radius. */
 @Composable
-fun KineticsPrimaryButton(
+fun MolecularisPrimaryButton(
     label: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -62,7 +62,7 @@ fun KineticsPrimaryButton(
 
 /** Shared V1 secondary action: 44dp minimum height with a 1dp outline. */
 @Composable
-fun KineticsSecondaryButton(
+fun MolecularisSecondaryButton(
     label: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -84,7 +84,7 @@ fun KineticsSecondaryButton(
 
 /** Flat information grouping; callers opt into a card only when it adds structure. */
 @Composable
-fun KineticsPanel(
+fun MolecularisPanel(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
@@ -99,7 +99,7 @@ fun KineticsPanel(
 
 /** Semantic status always includes visible text; callers must not rely on colour alone. */
 @Composable
-fun KineticsStatus(
+fun MolecularisStatus(
     label: String,
     modifier: Modifier = Modifier,
     container: Color = MaterialTheme.colorScheme.surfaceVariant,
@@ -121,7 +121,7 @@ fun KineticsStatus(
 }
 
 @Composable
-fun KineticsSectionHeading(
+fun MolecularisSectionHeading(
     title: String,
     modifier: Modifier = Modifier,
     supportingText: String? = null,
@@ -147,7 +147,7 @@ fun KineticsSectionHeading(
 }
 
 @Composable
-fun KineticsField(
+fun MolecularisField(
     value: String,
     onValueChange: (String) -> Unit,
     label: String,

@@ -1,4 +1,4 @@
-package org.assayflux.kinetics
+package org.assayflux.molecularis
 
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
@@ -49,14 +49,14 @@ class MainActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContent { KineticsResearchHome(this) }
+        setContent { MolecularisResearchHome(this) }
     }
 }
 
 @androidx.compose.runtime.Composable
-private fun KineticsResearchHome(activity: FragmentActivity) {
+private fun MolecularisResearchHome(activity: FragmentActivity) {
     val preferences = remember {
-        activity.getSharedPreferences("kinetics_preferences", android.content.Context.MODE_PRIVATE)
+        activity.getSharedPreferences("molecularis_preferences", android.content.Context.MODE_PRIVATE)
     }
     var themeFamily by remember {
         mutableStateOf(preferences.getString("theme_family", "system") ?: "system")
@@ -334,7 +334,7 @@ private fun KineticsResearchHome(activity: FragmentActivity) {
         onDispose { workInfos.removeObserver(observer); analysisInfos.removeObserver(observer) }
     }
     if (!onboardingComplete) {
-        KineticsOnboardingScreen(
+        MolecularisOnboardingScreen(
             themeFamily = themeFamily,
             onComplete = {
                 preferences.edit().putBoolean("onboarding_complete", true).apply()
@@ -354,7 +354,7 @@ private fun KineticsResearchHome(activity: FragmentActivity) {
                 )
             },
         )
-    } else KineticsAppShell(
+    } else MolecularisAppShell(
         jobs = jobs,
         notice = notice,
         runtimeReport = runtimeReport,

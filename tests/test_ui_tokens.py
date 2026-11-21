@@ -93,7 +93,7 @@ def test_spacing_and_touch_target_contract_is_present() -> None:
 
 def test_active_compose_cards_follow_v1_radius_scale() -> None:
     ui = (
-        ROOT / "android/app/src/main/java/org/assayflux/kinetics/KineticsUi.kt"
+        ROOT / "android/app/src/main/java/org/assayflux/kinetics/MolecularisUi.kt"
     ).read_text()
     assert "RoundedCornerShape(18.dp)" not in ui
     assert "RoundedCornerShape(20.dp)" not in ui
@@ -113,7 +113,7 @@ def test_semantic_decision_colours_remain_status_only_and_accessible() -> None:
                 f"{family} {role} status text lacks 4.5:1 contrast"
             )
     ui = (
-        ROOT / "android/app/src/main/java/org/assayflux/kinetics/KineticsUi.kt"
+        ROOT / "android/app/src/main/java/org/assayflux/kinetics/MolecularisUi.kt"
     ).read_text()
     assert "statusColors.success" in ui
     assert "statusColors.warning" in ui
