@@ -1,7 +1,7 @@
 # Service and Platform Status Register
 
 Last verified: 2026-11-21  
-Current implementation commit: G implementation commit recorded below.
+Current implementation commit: [bfb3bf8ba807e9f971a38663734d7fb455f7654b](https://github.com/AssayFlux/Molecularis/commit/bfb3bf8ba807e9f971a38663734d7fb455f7654b) (G implementation); acceptance evidence recorded in the following commit.
 
 A scaffold or specification does not imply implementation or scientific validation.
 
@@ -33,7 +33,7 @@ A scaffold or specification does not imply implementation or scientific validati
 | D | Chemistry | Native explicit-graph v1; MSDE artifacts and optional RDKit retained | Implemented | Five capabilities | CHM-001–CHM-006 executable | Engineering complete; university review deferred |
 | E | Protein | Existing descriptors, ESM local inference, HMMER evidence, motif scan and design brief retained | Native sequence/artifact v1 | MSDE artifacts and four capabilities; ESM/HMMER remain optional local workflows | PRO-001–PRO-006 executable | Engineering complete; CI run #44889593877 green; scientific review deferred |
 | F | Genomics | Existing SAM/VCF, BAM/CRAM, assembly QC, GFF3, ORF, reference normalization and optional HTSlib/tool adapters retained; canonical genome artifact added | Python v1 | MSDE artifacts and five capabilities | GEN-001–GEN-007 executable | Engineering implementation complete; university review deferred |
-| G | DNA/RNA | Canonical DNA/RNA artifacts, transcription, reverse transcription, explicit translation, oligo screening and Nussinov RNA fold; existing sequence/genetic-code primitives reused | Python v1 native operations | MSDE artifact lifecycle and eight capabilities | DRNA-001–DRNA-007 executable | Engineering implementation committed; CI pending; university review deferred |
+| G | DNA/RNA | Canonical DNA/RNA artifacts, transcription, reverse transcription, explicit translation, oligo screening and Nussinov RNA fold; existing sequence/genetic-code primitives reused | Python v1 native operations | MSDE artifact lifecycle and eight capabilities | DRNA-001–DRNA-007 executable | Engineering implementation complete; CI run #44892707015 green; university review deferred |
 | H | Simulation | Existing modules; audit pending | Not started | Not started | Not operational | Planned |
 | I | Kinetics | Existing modules; audit pending | Not started | Not started | Not operational | Planned |
 | J | Omics | Existing modules; audit pending | Not started | Not started | Not operational | Planned |
@@ -57,9 +57,9 @@ A scaffold or specification does not imply implementation or scientific validati
 
 ## Active phase and next exact work
 
-**Active phase:** Service G — DNA/RNA Python v1 engineering implementation committed; CI verification pending. University review, independent NUPACK/NUAD comparisons and formal freeze deferred until the complete A–N engineering build per owner direction. The platform is not yet a distributed, multi-language, OS-isolated production runtime.
+**Active phase:** Service G — DNA/RNA Python v1 engineering implementation complete and CI-verified in run #44892707015 (core 679 passed/12 skipped; optional Sequence 682/9, Chemistry 687/4, Genomics 680/11). University review, independent NUPACK/NUAD comparisons and formal freeze deferred until the complete A–N engineering build per owner direction. The platform is not yet a distributed, multi-language, OS-isolated production runtime.
 
-**Next:** proceed to H — Simulation after G engineering integration and CI verification. University-level scientific review, cross-reference testing and formal contract freezes will be conducted after the full A–N engineering build, as directed by the owner. Platform-wide recovery, backup/restore, service discovery, language conformance and isolation gates remain open.
+**Next:** proceed to H — Simulation. G's engineering CI is green; university scientific review and formal freeze remain deferred until A–N engineering completion. University-level scientific review, cross-reference testing and formal contract freezes will be conducted after the full A–N engineering build, as directed by the owner. Platform-wide recovery, backup/restore, service discovery, language conformance and isolation gates remain open.
 
 ## Reporting rule
 
