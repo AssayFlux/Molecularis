@@ -51,7 +51,8 @@ Execute exactly one letter at a time, following [SERVICE_ROADMAP.md](SERVICE_ROA
 - [x] J — Omics (canonical matrix artifacts, seven MSDE operations, OMI-001–OMI-009, schemas, tests and benchmark; CI run #44895300775 green: core 711/12 skipped, Genomics 712/11, Sequence 714/9, Chemistry 719/4)
 - [x] K — Phylogeny implementation (canonical aligned nucleotide artifacts, JC69 pairwise distances, NJ, UPGMA, seeded bootstrap, five MSDE capabilities, PHY-001–PHY-007, schemas, tests and benchmark; CI verification pending, scientific review deferred)
 - [x] K — Phylogeny CI verification (run #44896994652: core 721 passed/12 skipped; Sequence 724/9, Genomics 722/11, Chemistry 729/4; registry, 55 schemas, Ruff E9/F, compilation and phylogeny benchmark green)
-- [x] L — Pharmacogenomics implementation (canonical synthetic non-patient sample and source-pinned definition artifacts, phased star-allele matching, two MSDE capabilities, PGX-001–PGX-007, schemas, tests and benchmark; CI verification pending, scientific/clinical review deferred)\n- [ ] L — Pharmacogenomics CI verification
+- [x] L — Pharmacogenomics implementation (canonical synthetic non-patient sample and source-pinned definition artifacts, phased star-allele matching, two MSDE capabilities, PGX-001–PGX-007, schemas, tests and benchmark; CI verification pending, scientific/clinical review deferred)
+- [ ] L — Pharmacogenomics CI verification
 - [ ] M — Cohorts
 - [ ] N — Workflows
 

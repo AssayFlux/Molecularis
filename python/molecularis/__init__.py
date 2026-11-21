@@ -80,7 +80,8 @@ from .structure import (
 )
 
 __all__ = [
-    "HaplotypeCall", "PharmacogenomicsDocument", "ingest_pharmacogenomics", "ingest_pgx_definitions", "load_pharmacogenomics", "register_pharmacogenomics_service", "pharmacogenomics_rulebook",\n    "PhylogenyDocument", "ingest_phylogeny", "load_phylogeny", "register_phylogeny_service", "phylogeny_rulebook",
+    "HaplotypeCall", "PharmacogenomicsDocument", "ingest_pharmacogenomics", "ingest_pgx_definitions", "load_pharmacogenomics", "register_pharmacogenomics_service", "pharmacogenomics_rulebook",
+    "PhylogenyDocument", "ingest_phylogeny", "load_phylogeny", "register_phylogeny_service", "phylogeny_rulebook",
     "OmicsDocument", "ingest_omics", "load_omics", "register_omics_service", "omics_rulebook",
     "ReactionNetworkDocument", "ingest_kinetics", "load_kinetics", "register_kinetics_service", "kinetics_rulebook", "simulate_reaction_network",
     "SimulationDocument", "ingest_simulation", "load_simulation", "register_simulation_service", "simulation_rulebook", "analyze_energy_series", "run_gromacs",
