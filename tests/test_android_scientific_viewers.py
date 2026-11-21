@@ -6,12 +6,12 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_home_routes_to_real_offline_structure_and_chemistry_viewers() -> None:
-    ui = (ROOT / "android/app/src/main/java/org/assayflux/kinetics/KineticsUi.kt").read_text()
+    ui = (ROOT / "android/app/src/main/java/org/assayflux/molecularis/MolecularisUi.kt").read_text()
     viewer = (
-        ROOT / "android/app/src/main/java/org/assayflux/kinetics/StructureViewer.kt"
+        ROOT / "android/app/src/main/java/org/assayflux/molecularis/StructureViewer.kt"
     ).read_text()
     chemistry = (
-        ROOT / "android/app/src/main/java/org/assayflux/kinetics/I1ChemistryCard.kt"
+        ROOT / "android/app/src/main/java/org/assayflux/molecularis/I1ChemistryCard.kt"
     ).read_text()
     assert "ServiceDetailScreen" in ui
     assert "ENGINE SOURCE REGISTERED" in ui
@@ -20,7 +20,7 @@ def test_home_routes_to_real_offline_structure_and_chemistry_viewers() -> None:
     assert "HorizontalPager(" in ui
     assert "OPEN SERVICE" in ui
     assert "fun ExploreScreen" not in ui
-    assert "KineticsTab.Explore" not in ui
+    assert "MolecularisTab.Explore" not in ui
     assert "StructureViewerPreview(publicRecord = publicStructureRecord)" in ui
     assert "LigandGraphPreviewCard()" in ui
     assert "WebViewAssetLoader" in viewer
@@ -37,13 +37,13 @@ def test_home_routes_to_real_offline_structure_and_chemistry_viewers() -> None:
 
 def test_vcf_research_screen_is_attestation_gated_and_aggregate_only() -> None:
     card = (
-        ROOT / "android/app/src/main/java/org/assayflux/kinetics/GenomicsVcfQcCard.kt"
+        ROOT / "android/app/src/main/java/org/assayflux/molecularis/GenomicsVcfQcCard.kt"
     ).read_text()
     runner = (
-        ROOT / "android/app/src/main/java/org/assayflux/kinetics/GenomicsVcfQcRunner.kt"
+        ROOT / "android/app/src/main/java/org/assayflux/molecularis/GenomicsVcfQcRunner.kt"
     ).read_text()
     gate = (
-        ROOT / "android/app/src/main/java/org/assayflux/kinetics/U5ResearchGateCard.kt"
+        ROOT / "android/app/src/main/java/org/assayflux/molecularis/U5ResearchGateCard.kt"
     ).read_text()
     assert "enabled = !busy && selectedUri != null && authorizationConfirmed" in card
     assert "MAX_INPUT_BYTES = 5 * 1024 * 1024" in runner
@@ -58,7 +58,7 @@ def test_vcf_research_screen_is_attestation_gated_and_aggregate_only() -> None:
 
 
 def test_android_vcf_chaquopy_bridge_returns_only_aggregate_qc() -> None:
-    bridge_path = ROOT / "android/app/src/main/python/kinetics_probe.py"
+    bridge_path = ROOT / "android/app/src/main/python/molecularis_probe.py"
     spec = importlib.util.spec_from_file_location("kinetics_probe_u5_test", bridge_path)
     assert spec is not None and spec.loader is not None
     bridge = importlib.util.module_from_spec(spec)
@@ -78,12 +78,12 @@ def test_android_vcf_chaquopy_bridge_returns_only_aggregate_qc() -> None:
 
 
 def test_android_safe_insets_status_cards_and_gzip_imports() -> None:
-    ui = (ROOT / "android/app/src/main/java/org/assayflux/kinetics/KineticsUi.kt").read_text()
-    main = (ROOT / "android/app/src/main/java/org/assayflux/kinetics/MainActivity.kt").read_text()
-    vcf = (ROOT / "android/app/src/main/java/org/assayflux/kinetics/GenomicsVcfQcCard.kt").read_text()
-    structure = (ROOT / "android/app/src/main/java/org/assayflux/kinetics/StructureViewer.kt").read_text()
-    chemistry = (ROOT / "android/app/src/main/java/org/assayflux/kinetics/I1ChemistryCard.kt").read_text()
-    sequence = (ROOT / "android/app/src/main/java/org/assayflux/kinetics/SequenceFileSupport.kt").read_text()
+    ui = (ROOT / "android/app/src/main/java/org/assayflux/molecularis/MolecularisUi.kt").read_text()
+    main = (ROOT / "android/app/src/main/java/org/assayflux/molecularis/MainActivity.kt").read_text()
+    vcf = (ROOT / "android/app/src/main/java/org/assayflux/molecularis/GenomicsVcfQcCard.kt").read_text()
+    structure = (ROOT / "android/app/src/main/java/org/assayflux/molecularis/StructureViewer.kt").read_text()
+    chemistry = (ROOT / "android/app/src/main/java/org/assayflux/molecularis/I1ChemistryCard.kt").read_text()
+    sequence = (ROOT / "android/app/src/main/java/org/assayflux/molecularis/SequenceFileSupport.kt").read_text()
     assert "WindowInsets.safeDrawing" in ui
     assert 'getString("theme_family", "system")' in main
     assert "RuntimeStatusCard" in ui
@@ -96,7 +96,7 @@ def test_android_safe_insets_status_cards_and_gzip_imports() -> None:
 
 
 def test_owner_blueprint_has_one_actionable_card_per_capability() -> None:
-    ui = (ROOT / "android/app/src/main/java/org/assayflux/kinetics/KineticsUi.kt").read_text()
+    ui = (ROOT / "android/app/src/main/java/org/assayflux/molecularis/MolecularisUi.kt").read_text()
     catalogue = json.loads((ROOT / "android/app/src/main/assets/capability-catalog.json").read_text())
     assert len(catalogue) == 68
     assert "rememberPagerState(pageCount = { services.size })" in ui

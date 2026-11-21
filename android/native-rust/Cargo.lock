@@ -3,5 +3,5 @@
 version = 4
 
 [[package]]
-name = "kinetics-rust"
+name = "molecularis-rust"
 version = "0.1.0"

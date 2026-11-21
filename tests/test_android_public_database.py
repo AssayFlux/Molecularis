@@ -1,7 +1,7 @@
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-ANDROID = ROOT / "android/app/src/main/java/org/assayflux/kinetics"
+ANDROID = ROOT / "android/app/src/main/java/org/assayflux/molecularis"
 
 
 def test_public_database_adapters_are_bounded_and_allowlisted() -> None:
@@ -34,7 +34,7 @@ def test_public_reference_payloads_are_encrypted_and_deletable() -> None:
 def test_public_sequences_and_structures_reach_existing_engines() -> None:
     card = (ANDROID / "PublicDatabaseCard.kt").read_text()
     viewer = (ANDROID / "StructureViewer.kt").read_text()
-    ui = (ANDROID / "KineticsUi.kt").read_text()
+    ui = (ANDROID / "MolecularisUi.kt").read_text()
     assert 'callAttr("analyze_fasta", fetched.content)' in card
     assert "store.saveAnalysis(saved.id, json)" in card
     assert "onStructureFetched(fetched)" in card
