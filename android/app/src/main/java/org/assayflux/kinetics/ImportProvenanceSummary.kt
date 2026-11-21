@@ -1,4 +1,4 @@
-package org.assayflux.kinetics
+package org.assayflux.molecularis
 
 import java.time.Instant
 import java.time.format.DateTimeFormatter
@@ -24,7 +24,7 @@ data class ImportProvenanceSummary(
 object ImportProvenanceSummaryFormatter {
     fun render(record: ImportProvenanceSummary): String = buildString {
         appendLine("KINETICS — IMPORT PROVENANCE SUMMARY")
-        appendLine("Schema: org.assayflux.kinetics.provenance-summary")
+        appendLine("Schema: org.assayflux.molecularis.provenance-summary")
         appendLine("Schema version: 1")
         appendLine()
         appendLine("JOB")

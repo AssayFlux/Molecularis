@@ -1,4 +1,4 @@
-package org.assayflux.kinetics
+package org.assayflux.molecularis
 
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
