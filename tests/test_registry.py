@@ -94,7 +94,7 @@ def test_invalid_status_is_rejected() -> None:
 
 def test_implemented_tool_must_reference_existing_repository_file() -> None:
     data = base_registry()
-    data["tools"] = [{"id": "tool-a", "status": "implemented", "implementation": "python/kinetics/not_a_real_module.py"}]
+    data["tools"] = [{"id": "tool-a", "status": "implemented", "implementation": "python/molecularis/not_a_real_module.py"}]
     assert any("implementation file does not exist" in error for error in validate_registry(data))
 
 

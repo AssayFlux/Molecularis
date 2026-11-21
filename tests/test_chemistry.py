@@ -17,7 +17,7 @@ def test_sdf_v2000_parses_formula_and_rejects_non_finite_coordinates() -> None:
     atom_a = f"{0.0:10.4f}{0.0:10.4f}{0.0:10.4f} {'C':>3s}"
     atom_b = f"{1.0:10.4f}{0.0:10.4f}{0.0:10.4f} {'C':>3s}"
     bond = f"{1:3d}{2:3d}{1:3d}"
-    parsed = parse_sdf_record("\n".join(["ethane", "Kinetics", "", counts, atom_a, atom_b, bond, "M  END", "$$$$"]))
+    parsed = parse_sdf_record("\n".join(["ethane", "Molecularis", "", counts, atom_a, atom_b, bond, "M  END", "$$$$"]))
     assert parsed["formula"] == "C2"
     assert parsed["atom_count"] == 2
     assert graph_descriptors(parsed)["cycle_rank"] == 0
@@ -58,7 +58,7 @@ def test_sdf_iterator_reads_multiple_records_and_skips_empty_blocks() -> None:
 
     counts = f"{1:3d}{0:3d}  0  0  0  0            999 V2000"
     atom = f"{0.0:10.4f}{0.0:10.4f}{0.0:10.4f} {'C':>3s}"
-    record = "\n".join(["methane", "Kinetics", "", counts, atom, "M  END"])
+    record = "\n".join(["methane", "Molecularis", "", counts, atom, "M  END"])
     parsed = list(iter_sdf_records(record + "\n$$$$\n\n" + record + "\n$$$$\n"))
     assert len(parsed) == 2
     assert parsed[0]["formula"] == "C"
@@ -68,7 +68,7 @@ def test_sdf_iterator_reads_multiple_records_and_skips_empty_blocks() -> None:
 
 def test_sdf_v3000_parses_basic_atom_and_bond_graph() -> None:
     block = "\n".join([
-        "ethane", "Kinetics", "",
+        "ethane", "Molecularis", "",
         "  0  0  0     0  0            999 V3000",
         "M  V30 BEGIN CTAB",
         "M  V30 COUNTS 2 1 0 0 0",
@@ -142,7 +142,7 @@ def test_sdf_stream_parses_incrementally_and_enforces_record_budgets() -> None:
 
     counts = f"{1:3d}{0:3d}  0  0  0  0            999 V2000"
     atom_line = f"{0.0:10.4f}{0.0:10.4f}{0.0:10.4f} {'C':>3s}"
-    record = ["carbon", "Kinetics", "", counts, atom_line, "M  END"]
+    record = ["carbon", "Molecularis", "", counts, atom_line, "M  END"]
     source = iter(record + ["$$$$"] + record)
     parsed = list(iter_sdf_stream(source, max_records=2))
     assert len(parsed) == 2
@@ -231,7 +231,7 @@ def test_bounded_sdf_graph_analysis_reports_provenance_and_explicit_atom_limitat
     atom_b = f"{1.0:10.4f}{0.0:10.4f}{0.0:10.4f} {'O':>3s}"
     bond = f"{1:3d}{2:3d}{1:3d}"
     source = "\n".join(
-        ["ethanol-fragment", "Kinetics", "", counts, atom_a, atom_b, bond, "M  END", "$$$$"]
+        ["ethanol-fragment", "Molecularis", "", counts, atom_a, atom_b, bond, "M  END", "$$$$"]
     )
     result = analyze_sdf_graph(source)
     assert result["source_sha256"] == sha256(source.encode("utf-8")).hexdigest()
@@ -246,7 +246,7 @@ def test_bounded_sdf_graph_analysis_rejects_nul_oversize_invalid_unicode_and_mul
 
     counts = f"{1:3d}{0:3d}  0  0  0  0            999 V2000"
     atom = f"{0.0:10.4f}{0.0:10.4f}{0.0:10.4f} {'C':>3s}"
-    record = "\n".join(["carbon", "Kinetics", "", counts, atom, "M  END"])
+    record = "\n".join(["carbon", "Molecularis", "", counts, atom, "M  END"])
     with pytest.raises(ValueError, match="NUL"):
         analyze_sdf_graph(record + "\x00")
     with pytest.raises(ValueError, match="UTF-8 limit"):

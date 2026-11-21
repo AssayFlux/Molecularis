@@ -7,13 +7,13 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 sys.path.insert(0, str(ROOT / "android/app/src/main/python"))
-import kinetics_probe  # noqa: E402
+import molecularis_probe  # noqa: E402
 
-UI = (ROOT / "android/app/src/main/java/org/assayflux/kinetics/KineticsUi.kt").read_text()
+UI = (ROOT / "android/app/src/main/java/org/assayflux/molecularis/MolecularisUi.kt").read_text()
 RUNNER = (
-    ROOT / "android/app/src/main/java/org/assayflux/kinetics/AndroidBasicCapabilityRunner.kt"
+    ROOT / "android/app/src/main/java/org/assayflux/molecularis/AndroidBasicCapabilityRunner.kt"
 ).read_text()
-PROBE = (ROOT / "android/app/src/main/python/kinetics_probe.py").read_text()
+PROBE = (ROOT / "android/app/src/main/python/molecularis_probe.py").read_text()
 
 
 def test_simple_sequence_capabilities_are_explicitly_exposed_on_android():
@@ -90,7 +90,7 @@ def test_all_new_capabilities_are_reported_as_android_connected():
 def _run_probe(capability_id: str, input_text: str):
     import json
 
-    payload = json.loads(kinetics_probe.run_android_basic_capability(capability_id, input_text))
+    payload = json.loads(molecularis_probe.run_android_basic_capability(capability_id, input_text))
     assert payload["capability_id"] == capability_id
     assert "limitations" in payload
     return payload["result"]
@@ -132,11 +132,11 @@ def test_android_probe_rejects_unknown_capability_and_malformed_parameters():
     import pytest
 
     with pytest.raises(ValueError, match="not exposed"):
-        kinetics_probe.run_android_basic_capability("unknown.tool", "ACGT")
+        molecularis_probe.run_android_basic_capability("unknown.tool", "ACGT")
     with pytest.raises(ValueError, match="three comma-separated"):
-        kinetics_probe.run_android_basic_capability("kinetics.michaelis_menten", "10,100")
+        molecularis_probe.run_android_basic_capability("kinetics.michaelis_menten", "10,100")
     with pytest.raises(ValueError, match="two non-empty sequences"):
-        kinetics_probe.run_android_basic_capability("sequence.global_alignment", "ACGT")
+        molecularis_probe.run_android_basic_capability("sequence.global_alignment", "ACGT")
 
 def test_translation_inhibition_and_upgma_routes_execute_and_validate():
     translated = _run_probe(
@@ -190,9 +190,9 @@ def test_omics_normalisation_correlation_and_jc_nj_routes_execute():
 def test_gff3_import_and_cds_reconstruction_routes_execute():
     gff3 = (
         "##gff-version 3\n"
-        "chr1\tKinetics\tgene\t1\t9\t.\t+\t.\tID=g1\n"
-        "chr1\tKinetics\tmRNA\t1\t9\t.\t+\t.\tID=t1;Parent=g1\n"
-        "chr1\tKinetics\tCDS\t1\t9\t.\t+\t0\tID=c1;Parent=t1"
+        "chr1\tMolecularis\tgene\t1\t9\t.\t+\t.\tID=g1\n"
+        "chr1\tMolecularis\tmRNA\t1\t9\t.\t+\t.\tID=t1;Parent=g1\n"
+        "chr1\tMolecularis\tCDS\t1\t9\t.\t+\t0\tID=c1;Parent=t1"
     )
     imported = _run_probe("genome.gff3_annotation_import", gff3)
     assert imported["schema"] == "kinetics.gff3-annotation-import.v1"

@@ -29,7 +29,12 @@ export function constantTimeTokenMatch(expected, supplied) {
 
 export function readConfig(env = process.env) {
   // Prefer Molecularis names; retain KINETICS_* aliases for existing deployments.
-  const setting = (name) => env[name.replace(/^KINETICS_/, "MOLECULARIS_")] ?? env[name];
+  const setting = (name) => {
+    if (name.startsWith("MOLECULARIS_")) {
+      return env[name] ?? env[name.replace(/^MOLECULARIS_/, "KINETICS_")];
+    }
+    return env[name.replace(/^KINETICS_/, "MOLECULARIS_")] ?? env[name];
+  };
   const host = setting("KINETICS_NODE_HOST") || "127.0.0.1";
   const port = Number(setting("MOLECULARIS_NODE_PORT") || "8765");
   const enabled = setting("KINETICS_NODE_ALLOW_DOCKING") === "true";
