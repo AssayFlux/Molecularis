@@ -5,8 +5,8 @@ import json
 
 import pytest
 
-from kinetics.structure import Atom
-from kinetics.structure_view import (
+from molecularis.structure import Atom
+from molecularis.structure_view import (
     PAYLOAD_SCHEMA,
     build_preparation_record,
     build_structure_session_export,
@@ -175,7 +175,7 @@ def test_structure_session_export_enforces_byte_limit() -> None:
 
 
 def test_structure_source_parser_builds_payload_and_provenance() -> None:
-    from kinetics.structure_view import prepare_structure_viewer_source
+    from molecularis.structure_view import prepare_structure_viewer_source
 
     pdb = (
         "ATOM      1  CA  ALA A   1      1.000   2.000   3.000  1.00 20.00           C  \\n"
@@ -189,7 +189,7 @@ def test_structure_source_parser_builds_payload_and_provenance() -> None:
 
 
 def test_structure_source_parser_supports_mmcif_and_rejects_bounds() -> None:
-    from kinetics.structure_view import prepare_structure_viewer_source
+    from molecularis.structure_view import prepare_structure_viewer_source
 
     cif = """data_demo
 loop_
