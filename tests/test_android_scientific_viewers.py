@@ -59,7 +59,7 @@ def test_vcf_research_screen_is_attestation_gated_and_aggregate_only() -> None:
 
 def test_android_vcf_chaquopy_bridge_returns_only_aggregate_qc() -> None:
     bridge_path = ROOT / "android/app/src/main/python/molecularis_probe.py"
-    spec = importlib.util.spec_from_file_location("kinetics_probe_u5_test", bridge_path)
+    spec = importlib.util.spec_from_file_location("molecularis_probe_u5_test", bridge_path)
     assert spec is not None and spec.loader is not None
     bridge = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(bridge)

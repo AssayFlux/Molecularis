@@ -190,9 +190,9 @@ def test_omics_normalisation_correlation_and_jc_nj_routes_execute():
 def test_gff3_import_and_cds_reconstruction_routes_execute():
     gff3 = (
         "##gff-version 3\n"
-        "chr1\tKinetics\tgene\t1\t9\t.\t+\t.\tID=g1\n"
-        "chr1\tKinetics\tmRNA\t1\t9\t.\t+\t.\tID=t1;Parent=g1\n"
-        "chr1\tKinetics\tCDS\t1\t9\t.\t+\t0\tID=c1;Parent=t1"
+        "chr1\tMolecularis\tgene\t1\t9\t.\t+\t.\tID=g1\n"
+        "chr1\tMolecularis\tmRNA\t1\t9\t.\t+\t.\tID=t1;Parent=g1\n"
+        "chr1\tMolecularis\tCDS\t1\t9\t.\t+\t0\tID=c1;Parent=t1"
     )
     imported = _run_probe("genome.gff3_annotation_import", gff3)
     assert imported["schema"] == "kinetics.gff3-annotation-import.v1"
