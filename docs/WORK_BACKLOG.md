@@ -7,7 +7,7 @@ Mark an item complete only with a commit SHA and verification evidence. Do not s
 - [x] Baseline CI repaired. Evidence: run #127.
 - [x] Implement local MSDE reference slice. Evidence: commits 5b39b44 and ccae6c1; run #130.
 - [x] Add optional scientific dependency profiles for sequence, genomics and chemistry. Evidence: all three profile jobs passed in run #133.
-- [ ] Pass repository-wide JSON Schema validation after repairing the malformed legacy schema; confirm core CI green.
+- [x] Repair malformed legacy JSON schema and pass repository-wide JSON Schema validation. Evidence: run #135.
 - [ ] Audit Python modules, public imports, tests and service ownership.
 - [ ] Audit dependencies, licenses, data provenance, model/runtime assumptions and security.
 - [ ] Expand Ruff beyond E9/F; introduce targeted strict typing.

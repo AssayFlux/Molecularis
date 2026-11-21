@@ -16,7 +16,7 @@ Status: local reference implementation v0.2; full production platform acceptance
 - Success and failure run evidence, including failed operation identity and error category.
 - Input artifact IDs are linked as parents of derived Rulebook output artifacts.
 - Optional dependency CI profiles for sequence, genomics and chemistry.
-- Repository-wide JSON Schema validation is now part of core CI; the first run exposed a malformed legacy schema that is being fixed.
+- Repository-wide JSON Schema validation is part of core CI and passed in run #135 after repairing a malformed legacy schema.
 
 ## Explicitly not claimed complete
 

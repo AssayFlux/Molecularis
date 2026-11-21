@@ -1,7 +1,7 @@
 # Service and Platform Status Register
 
 Last verified: 2026-11-21  
-Current implementation commit: [172c895eebf04c093ec8758ae093d855c3c55add](https://github.com/AssayFlux/Molecularis/commit/172c895eebf04c093ec8758ae093d855c3c55add)
+Current implementation commit: [bf86b3a36d72963d78beb482ae57780b75727a35](https://github.com/AssayFlux/Molecularis/commit/bf86b3a36d72963d78beb482ae57780b75727a35)
 
 A scaffold or specification does not imply implementation or scientific validation.
 
@@ -15,8 +15,8 @@ A scaffold or specification does not imply implementation or scientific validati
 | Metadata indexes | Implemented | SQLite exact/range B-tree indexes; native sorted-segment engine is not implemented |
 | Query execution | Implemented bounded snapshot pagination | Snapshot-bound offsets, deterministic ordering, result/candidate limits and explicit completeness |
 | Rulebook evidence | Improved baseline | Success/failure records; input artifact lineage is attached to operation outputs |
-| JSON contracts | CI validation added | Repository-wide schema validation exposed and is correcting one malformed legacy schema |
-| Scientific optional CI | Implemented | Run #133: sequence, genomics and chemistry profile jobs passed |
+| JSON contracts | Validated | Repository-wide JSON Schema validation passed in run #135 |
+| Scientific optional CI | Green | Run #135: chemistry 584/4 skipped; sequence 579/9 skipped; genomics 577/11 skipped |
 | Native C++ / Rust interoperability | Not implemented | Language-neutral schemas exist; bindings and conformance tests remain required |
 | Recovery certification | Partial | Atomic blob publication and integrity audit; crash-boundary fault injection and backup/restore remain open |
 | Execution isolation | Partial | In-process trusted handlers; no OS-level sandbox or preemptive CPU/memory/GPU isolation |
@@ -52,7 +52,7 @@ A scaffold or specification does not imply implementation or scientific validati
 
 **Active phase:** Core/MSDE platform hardening. The local reference implementation has artifact storage, bounded query pagination and success/failure Rulebook evidence. The platform is not yet a distributed, multi-language, OS-isolated production runtime.
 
-**Next:** pass repository-wide schema validation and core CI; then add crash fault injection and backup/restore tests, a durable index segment layer or evidence-backed SQLite index decision, process-level service discovery, C++/Rust conformance, and security/resource-isolation review.
+**Next:** complete crash fault injection and backup/restore tests, decide native sorted segments versus SQLite through benchmarks, add process-level service discovery and C++/Rust conformance, and complete security/resource-isolation review.
 
 Do not begin service A until the explicit platform acceptance criteria are met and recorded with passing evidence.
 
