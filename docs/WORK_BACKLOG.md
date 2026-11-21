@@ -43,7 +43,8 @@ Execute exactly one letter at a time, following [SERVICE_ROADMAP.md](SERVICE_ROA
 - [x] D — Chemistry (native graph v1, MSDE artifacts, five capabilities and CHM-001–CHM-006; scientific review deferred)
 - [x] E — Protein (canonical sequence artifacts, four MSDE capabilities, PRO-001–PRO-006; scientific review deferred)
 - [x] F — Genomics (canonical genome artifacts, five MSDE capabilities, GEN-001–GEN-007; CI verification pending)
-- [ ] G — DNA/RNA
+- [x] G — DNA/RNA (canonical DNA/RNA artifacts, eight MSDE capabilities, DRNA-001–DRNA-007, transcription/reverse-transcription, explicit translation, primer screen and bounded Nussinov RNA fold; CI pending, scientific review deferred)
+- [ ] G — DNA/RNA CI verification
 - [ ] H — Simulation
 - [ ] I — Kinetics
 - [ ] J — Omics
@@ -65,4 +66,4 @@ Each letter requires discovery/audit, Engine, Runtime, Rulebook, schemas/contrac
 
 ## Active task
 
-A's engineering implementation is complete; independent scientific approval and freeze remain pending. B's Python v1 engineering implementation is complete. C's Python v1 engineering implementation is complete and CI-verified in run #159. D's Chemistry Python v1 engineering implementation is complete and CI-verified in run #44888785327 (core 644 passed/12 skipped; optional chemistry 652 passed/4 skipped; sequence 647 passed/9 skipped; genomics 645 passed/11 skipped). E Protein Python v1 implementation is complete and CI-verified in run #44889593877 (core 651 passed/12 skipped; optional sequence 654 passed/9 skipped; genomics 652 passed/11 skipped; chemistry 659 passed/4 skipped). Per owner direction, university scientific review and contract freezes for A–N are deferred until the entire engineering build is complete. F Genomics implementation is committed; CI verification pending. Proceed to G after F CI verification.
+A's engineering implementation is complete; independent scientific approval and freeze remain pending. B's Python v1 engineering implementation is complete. C's Python v1 engineering implementation is complete and CI-verified in run #159. D's Chemistry Python v1 engineering implementation is complete and CI-verified in run #44888785327 (core 644 passed/12 skipped; optional chemistry 652 passed/4 skipped; sequence 647 passed/9 skipped; genomics 645 passed/11 skipped). E Protein Python v1 implementation is complete and CI-verified in run #44889593877 (core 651 passed/12 skipped; optional sequence 654 passed/9 skipped; genomics 652 passed/11 skipped; chemistry 659 passed/4 skipped). Per owner direction, university scientific review and contract freezes for A–N are deferred until the entire engineering build is complete. F Genomics CI evidence was recorded in the latest status commit. G DNA/RNA implementation is committed; CI verification pending. University scientific review and formal contract freeze remain deferred until A–N engineering completion. Proceed to H after G CI verification.

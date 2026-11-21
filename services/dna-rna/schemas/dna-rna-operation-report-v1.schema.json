@@ -1,0 +1,12 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://molecularis.assayflux.org/schemas/dna-rna-operation-report-v1.schema.json",
+  "title":"Molecularis DNA/RNA operation report v1","type":"object","additionalProperties":false,
+  "required":["schema","operation","sequence_id","sequence_sha256","result","rulebook","rules_checked","limitations"],
+  "properties":{"schema":{"const":"molecularis.dna-rna-operation-report.v1"},
+    "operation":{"enum":["validate","statistics","reverse_complement","transcribe","reverse_transcribe","translate","primer_screen","fold_rna"]},
+    "sequence_id":{"type":"string","minLength":1},"sequence_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"},
+    "result":{"type":"object"},"rulebook":{"const":"dna-rna-core-v1"},
+    "rules_checked":{"type":"array","items":{"enum":["DRNA-001","DRNA-002","DRNA-003","DRNA-004","DRNA-005","DRNA-006","DRNA-007"]},"uniqueItems":true},
+    "limitations":{"type":"array","items":{"type":"string"}}}
+}

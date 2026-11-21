@@ -489,6 +489,37 @@ tools:
     implementation: python/molecularis/genomics_service.py
     evidence_level: none
 
+  - id: dna-rna.msde_validate
+    name: MSDE-backed canonical DNA/RNA artifact validation
+    status: implemented
+    implementation: python/molecularis/dna_rna_service.py
+    evidence_level: none
+  - id: dna-rna.msde_statistics
+    name: DNA/RNA nucleotide composition and GC statistics
+    status: implemented
+    implementation: python/molecularis/dna_rna_service.py
+    evidence_level: none
+  - id: dna-rna.msde_transcription
+    name: Coding-strand DNA transcription and RNA-to-DNA alphabet conversion
+    status: implemented
+    implementation: python/molecularis/dna_rna_service.py
+    evidence_level: none
+  - id: dna-rna.msde_translation
+    name: Explicit genetic-code translation from canonical DNA/RNA artifacts
+    status: implemented
+    implementation: python/molecularis/dna_rna_service.py
+    evidence_level: none
+  - id: dna-rna.primer_screen
+    name: Bounded DNA oligo screening using Wallace Tm estimate
+    status: implemented
+    implementation: python/molecularis/dna_rna_service.py
+    evidence_level: none
+  - id: dna-rna.rna_nussinov_fold
+    name: Bounded deterministic Nussinov RNA secondary-structure candidate
+    status: implemented
+    implementation: python/molecularis/dna_rna_service.py
+    evidence_level: none
+
 engines: []
 data_packs: []
 domains: []

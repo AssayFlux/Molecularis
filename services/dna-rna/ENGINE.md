@@ -1,12 +1,11 @@
-# Dna Rna Engine
+# DNA/RNA Engine — G
 
-Status: scaffold — not yet implemented or validated.
+Status: Python v1 engineering implementation.
 
-## Scope
-Define the scientific operations owned by this service, including supported inputs, outputs, algorithms, invariants, and explicit exclusions.
+Owns canonical single-strand DNA/RNA artifacts and deterministic operations. Reuses B's sequence parser/genetic-code tables, A's molecular primitives and shared MSDE; does not duplicate FASTA/FASTQ, genome/variant or general alignment workflows.
 
-## Native implementation
-Prefer Molecularis-owned algorithms and data structures. Document source literature, assumptions, numerical methods, and licensing. External tools are optional references only, not required execution engines.
+Native operations: IUPAC-normalized typed DNA/RNA records; nucleotide composition and GC fraction; IUPAC DNA reverse complement; coding/sense DNA transcription and corresponding RNA-to-DNA alphabet conversion; explicit NCBI-table translation; bounded DNA oligo screen (length, GC, Wallace Tm, GC clamp); RNA secondary candidate by Nussinov maximum-pair DP with AU/GC/GU, minimum loop and deterministic traceback.
 
-## Acceptance criteria
-Specify observable behavior and measurable correctness criteria before implementation. Add tests and reference comparisons; do not claim completion without evidence.
+Artifact digest covers canonical JSON bytes; metadata is verified on load. Nussinov is O(n^3) time/O(n^2) memory, hard-limited to 300 nt. Wallace Tm is a rough heuristic only. Translation does not infer organism or gene boundaries.
+
+Non-goals: no NUPACK thermodynamic ensemble/partition function, multi-strand complex design, hybridization free energy, NUAD automated design, kinetic folding, pseudoknots, tertiary folding, modified-base model, primer-pair specificity, wet-lab protocol or biosafety certification. Future adapters must be optional, pinned and provenance-bearing; native execution never silently delegates. University scientific comparisons and acceptance deferred until A–N engineering completes.

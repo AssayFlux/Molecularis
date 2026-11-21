@@ -20,6 +20,7 @@ from .chemistry import (
     graph_descriptors, iter_sdf_records, parse_sdf_record, path_fingerprint, substructure_match, tanimoto,
 )
 from .alignment_biopython import align_pairwise_biopython
+from .dna_rna_service import NucleicAcidDocument, ingest_nucleic_acid, load_nucleic_acid, register_dna_rna_service, dna_rna_rulebook
 from .genomics_service import GenomeDocument, ingest_genome, load_genome, register_genomics_service, genomics_rulebook
 from .genomics_htslib import iter_alignment_records
 from .genomics import (
@@ -70,6 +71,7 @@ from .structure import (
 )
 
 __all__ = [
+    "NucleicAcidDocument", "ingest_nucleic_acid", "load_nucleic_acid", "register_dna_rna_service", "dna_rna_rulebook",
     "GenomeDocument", "ingest_genome", "load_genome", "register_genomics_service", "genomics_rulebook",
     "ProteinDocument", "ingest_protein", "load_protein", "register_protein_service", "protein_rulebook",
     "ChemistryDocument", "ingest_chemistry", "load_chemistry", "register_chemistry_service", "chemistry_rulebook",

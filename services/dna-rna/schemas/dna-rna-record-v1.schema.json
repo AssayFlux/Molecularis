@@ -1,0 +1,9 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://molecularis.assayflux.org/schemas/dna-rna-record-v1.schema.json",
+  "title":"Molecularis DNA/RNA record v1","type":"object","additionalProperties":false,
+  "required":["schema","identifier","description","sequence_type","sequence"],
+  "properties":{"schema":{"const":"molecularis.dna-rna-record.v1"},
+    "identifier":{"type":"string","minLength":1,"maxLength":256},"description":{"type":"string"},
+    "sequence_type":{"enum":["DNA","RNA"]},"sequence":{"type":"string","minLength":1}}
+}
