@@ -397,7 +397,7 @@ tools:
     status: implemented
     implementation: python/molecularis/structure_service.py
     evidence_level: none
-  - id: structure.sasa
+  - id: structure.msde_sasa
     name: Deterministic Shrake-Rupley SASA approximation
     status: implemented
     implementation: python/molecularis/structure_service.py
