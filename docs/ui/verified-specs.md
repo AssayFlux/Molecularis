@@ -6,7 +6,7 @@
 
 Android currently defines width breakpoints as compact (<600dp), medium (600–<840dp), expanded (840–<1200dp), large (1200–<1600dp), and extra-large (≥1600dp). Height classes are compact (<480dp), medium (480–<900dp), and expanded (≥900dp). Classification is based on the app window, not the physical device; it changes with rotation, fold/unfold and multi-window.
 
-Kinetics now evaluates live Compose window constraints. Navigation maps compact portrait windows to a bottom bar; all compact-height windows to a rail (including very wide short windows); medium/expanded windows to a rail; and large/extra-large windows (≥1200dp, non-compact height) to a permanent drawer. Readable content is capped at 840dp. JVM boundary tests cover the classifier, but device rendering is not verified.
+Molecularis now evaluates live Compose window constraints. Navigation maps compact portrait windows to a bottom bar; all compact-height windows to a rail (including very wide short windows); medium/expanded windows to a rail; and large/extra-large windows (≥1200dp, non-compact height) to a permanent drawer. Readable content is capped at 840dp. JVM boundary tests cover the classifier, but device rendering is not verified.
 
 Sources:
 - https://developer.android.com/develop/ui/views/layout/use-window-size-classes
@@ -14,7 +14,7 @@ Sources:
 
 ## Adaptive navigation
 
-Android documents `NavigationSuiteScaffold` in the Material 3 adaptive navigation suite. Kinetics currently uses stable Material 3 NavigationBar, NavigationRail and PermanentNavigationDrawer components with a window classifier, rather than NavigationSuiteScaffold. WindowManager fold posture/hinge support is not integrated. Do not describe the current shell as fold-aware.
+Android documents `NavigationSuiteScaffold` in the Material 3 adaptive navigation suite. Molecularis currently uses stable Material 3 NavigationBar, NavigationRail and PermanentNavigationDrawer components with a window classifier, rather than NavigationSuiteScaffold. WindowManager fold posture/hinge support is not integrated. Do not describe the current shell as fold-aware.
 
 Source:
 - https://developer.android.com/develop/adaptive-apps/guides/build-adaptive-navigation

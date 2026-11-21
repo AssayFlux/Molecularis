@@ -4,13 +4,13 @@
 
 ## Product contract
 
-Users search and retrieve public reference records from inside Kinetics. They are not asked to manually download a file in a browser. Retrieval is an app-managed network operation, followed by parsing and analysis on-device or by an explicitly selected Kinetics engine. Network access is opt-in by action, HTTPS-only, bounded and source-attributed. The app must continue to explain when a feature requires internet access and preserve the offline workflows.
+Users search and retrieve public reference records from inside Molecularis. They are not asked to manually download a file in a browser. Retrieval is an app-managed network operation, followed by parsing and analysis on-device or by an explicitly selected Molecularis engine. Network access is opt-in by action, HTTPS-only, bounded and source-attributed. The app must continue to explain when a feature requires internet access and preserve the offline workflows.
 
 The current Android adapters accept only public search terms and accessions. Never send imported patient sequences, VCFs, sample identifiers, research-job metadata or other user data to a public database. No telemetry or account service is introduced by this design.
 
 ## Database adapter registry
 
-| Source | Search / lookup | Retrieved representation | Initial Kinetics use |
+| Source | Search / lookup | Retrieved representation | Initial Molecularis use |
 |---|---|---|---|
 | NCBI Gene / Entrez | E-utilities Gene search + summary | JSON metadata | Gene discovery and accession navigation |
 | NCBI Nucleotide | E-utilities efetch | FASTA | Reference nucleotide sequence |
@@ -28,7 +28,7 @@ Next adapters, each requiring source-specific tests and provenance: ENA, Ensembl
 3. Retrieve: HTTPS allow-list, no redirects to arbitrary hosts, connection/read timeouts, response-size cap, strict status checking.
 4. Verify: compute SHA-256 on exact received bytes; record UTC retrieval time, endpoint, accession, format and source release/version where supplied.
 5. Parse: use a format-specific parser into a typed canonical model; reject malformed/truncated/unsupported records rather than silently repairing them.
-6. Process: dispatch only to a registered Kinetics capability with declared input/output schema and resource ceiling.
+6. Process: dispatch only to a registered Molecularis capability with declared input/output schema and resource ceiling.
 7. Present: show result, limitations, provenance and whether output is retrieved, transformed, computed or predicted.
 8. Cache: cache only after the user chooses the retention policy; keep source payload separate from derived results, expose delete/clear controls and never silently sync.
 9. Export: optional SAF export with provenance; not required for normal use.
@@ -75,7 +75,7 @@ Every fetched record should retain: source ID/name, exact request URL (redact qu
 - Home exposes NCBI Gene, NCBI Nucleotide, NCBI Protein, UniProtKB and RCSB PDB-by-ID search/retrieval controls.
 - Public retrieval uses allow-listed HTTPS hosts, GET-only requests, timeouts, response byte ceilings, strict accession checks and no automatic redirects.
 - Sequence records are fetched as FASTA, SHA-256 checked, encrypted in app-private no-backup storage using the existing Android Keystore AES-GCM chunk format, and indexed in a separate SQLite metadata store.
-- Retrieved FASTA is passed to the existing embedded Python `kinetics_probe.analyze_fasta` workflow; analysis JSON is retained with the public record. This is the existing bounded research QC workflow, not a new alignment/annotation engine.
+- Retrieved FASTA is passed to the existing embedded Python `molecularis_probe.analyze_fasta` workflow; analysis JSON is retained with the public record. This is the existing bounded research QC workflow, not a new alignment/annotation engine.
 - RCSB mmCIF is encrypted and indexed, then passed to the existing `prepare_structure_viewer_import` Python adapter and offline WebView structure viewer. The viewer's 16 MiB parser limit remains authoritative.
 - Saved public records are listed on Home, can be reopened (mmCIF) or re-analysed (FASTA), and can be deleted. Reopening decrypts to a short-lived app-private cache file, verifies the recorded SHA-256 and removes the temporary plaintext on completion. Deletion removes the encrypted payload and its index row.
 - Only public search terms and accessions are sent to providers. Patient inputs and private research metadata are not uploaded.

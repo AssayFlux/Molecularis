@@ -26,4 +26,4 @@ Competent ethics body; determination requested; submission reference/date; appro
 ## Sign-off
 Record actual reviewer identity, role, competence, organization, date, findings, conditions and evidence. Do not represent placeholders as approvals.
 
-**Current disposition:** no protocol submitted, no ethics determination obtained, no participants recruited and no human-subject activity authorized by Kinetics.
+**Current disposition:** no protocol submitted, no ethics determination obtained, no participants recruited and no human-subject activity authorized by Molecularis.

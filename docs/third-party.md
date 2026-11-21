@@ -78,12 +78,12 @@ Run `python scripts/generate_source_sbom.py --output sbom/source-dependencies.sp
 
 ## RDKit adapter status
 
-An optional source adapter exists at python/kinetics/chemistry_rdkit.py. It imports RDKit lazily and reports the active engine version; it is not a bundled dependency and is not used by the Android app. Before adoption, pin an exact compatible release, capture the full transitive dependency graph, audit notices/licenses at file and binary level, evaluate Android arm64/16 KB compatibility and benchmark binary footprint. The core RDKit project license is BSD-3-Clause, but that does not settle the licenses of all bundled dependencies or contributed components.
+An optional source adapter exists at python/molecularis/chemistry_rdkit.py. It imports RDKit lazily and reports the active engine version; it is not a bundled dependency and is not used by the Android app. Before adoption, pin an exact compatible release, capture the full transitive dependency graph, audit notices/licenses at file and binary level, evaluate Android arm64/16 KB compatibility and benchmark binary footprint. The core RDKit project license is BSD-3-Clause, but that does not settle the licenses of all bundled dependencies or contributed components.
 
 
 ## HTSlib/pysam adapter status
 
-A lazy host-side adapter at python/kinetics/genomics_htslib.py supports streaming BAM/CRAM through pysam/HTSlib. CRAM requires a local reference FASTA; remote reference retrieval is not enabled. pysam/HTSlib is not an Android dependency. Before adoption, pin exact pysam/HTSlib releases, audit bundled htslib/zlib and platform-specific licenses, verify native arm64 and 16 KB compatibility, and measure binary footprint. No Android bundling approval is implied.
+A lazy host-side adapter at python/molecularis/genomics_htslib.py supports streaming BAM/CRAM through pysam/HTSlib. CRAM requires a local reference FASTA; remote reference retrieval is not enabled. pysam/HTSlib is not an Android dependency. Before adoption, pin exact pysam/HTSlib releases, audit bundled htslib/zlib and platform-specific licenses, verify native arm64 and 16 KB compatibility, and measure binary footprint. No Android bundling approval is implied.
 
 
 ## PharmVar data source review
@@ -162,11 +162,11 @@ accepted archive bytes.
 
 ## First successful arm64 debug package build — 2026-11-08
 
-GitHub Actions run [#1904](https://github.com/AssayFlux/Kinetics/actions/runs/42465569625), commit `30d19ea2bec8a7ad0039eb48fa13ac6bfb6175ed`, produced both debug packages after checksum-verified Gradle 8.13 fallback retrieval:
+GitHub Actions run [#1904](https://github.com/AssayFlux/Molecularis/actions/runs/42465569625), commit `30d19ea2bec8a7ad0039eb48fa13ac6bfb6175ed`, produced both debug packages after checksum-verified Gradle 8.13 fallback retrieval:
 
 - APK: 67,678,526 bytes; SHA-256 `0877bfe3331fc596dcaf440f8a659ddf5396c75484e172d2697bf2a7245269f6`.
 - AAB: 38,860,218 bytes; SHA-256 `8ec29ece71ffbe3cef13ca3c25c759d4da958898cbdcde1e8ebad0c75b4db7cd`.
-- Android JVM unit-test task, APK ZIP alignment, native ELF alignment and package size/integrity checks passed in CI. The APK contains arm64-v8a native libraries, including the embedded CPython 3.11 runtime and Kinetics native library.
+- Android JVM unit-test task, APK ZIP alignment, native ELF alignment and package size/integrity checks passed in CI. The APK contains arm64-v8a native libraries, including the embedded CPython 3.11 runtime and Molecularis native library.
 
 This is debug build/package evidence only. No emulator or physical-device installation, offline-runtime, cold-start, memory, thermal or user-flow verification was performed. The build does not close the transitive/file-level license audit or approve Chaquopy, Biopython, SciPy, RDKit or any other engine for production distribution.
 

@@ -9,7 +9,7 @@
 - Future: domain-specific annotation packs, comprehensive PGx gene/allele inventories, star-allele definitions, haplotype/diplotype translation, phenotype evidence, ancestry portability and guideline-version tracking.
 
 ## Current source
-Implemented in `python/kinetics/catalog.py`. Catalogue ingestion does not elevate evidence status to validated.
+Implemented in `python/molecularis/catalog.py`. Catalogue ingestion does not elevate evidence status to validated.
 
 ## Limitations and gates
 - NCBI Gene gene_info is not a PGx allele-definition source.

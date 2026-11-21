@@ -1,4 +1,4 @@
-# Kinetics Android UI/UX specification — interaction requirements
+# Molecularis Android UI/UX specification — interaction requirements
 
 **Status:** Active interaction baseline; visual direction is owner V1 monochrome under D-024 in `docs/ui/ui-spec.md`. Where visual wording conflicts, V1 supersedes this document. Implementation and usability validation remain required.
 **Product boundary:** Research Mode only. This interface is not for diagnosis, treatment, patient management or clinical decision support.
@@ -22,7 +22,7 @@ Bottom navigation (four destinations):
 
 ## Home screen
 
-- Compact app bar with Kinetics identity, Research Mode chip and settings shortcut.
+- Compact app bar with Molecularis identity, Research Mode chip and settings shortcut.
 - Welcome/summary panel with counts of active and completed jobs.
 - Prominent **Import data** action with accepted-format guidance and large-file note.
 - Recent activity list with state text, progress where available, last update and a clear action to open details.
@@ -41,7 +41,7 @@ Bottom navigation (four destinations):
 
 ## Explore
 
-- Group tools by Genomics, Transcriptomics/Omics, Protein & Structure, Chemistry, Phylogenetics, Kinetics/Statistics and Pharmacogenomics.
+- Group tools by Genomics, Transcriptomics/Omics, Protein & Structure, Chemistry, Phylogenetics, Enzyme Kinetics/Statistics and Pharmacogenomics.
 - Every tool descriptor must show: input types, output types, engine/dependency, online/offline requirements, validation maturity, known limitations and provenance emitted.
 - Do not show a Run action for capabilities without an executable Android dispatcher.
 - Experimental/reference-only methods are visibly marked and cannot be mistaken for validated clinical methods.

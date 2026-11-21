@@ -1,9 +1,9 @@
-# Kinetics — Scientific Engine Integration Matrix
+# Molecularis — Scientific Engine Integration Matrix
 
 **Status:** Planning matrix; entries are candidates, not approved integrations.  
 **Date:** 2026-11-20
 
-| Candidate | Intended Kinetics role | Proposed disposition | Key prerequisites / risks | Acceptance evidence |
+| Candidate | Intended Molecularis role | Proposed disposition | Key prerequisites / risks | Acceptance evidence |
 |---|---|---|---|---|
 | Biotite | Sequence and structural-biology data processing | Selective adapter | Pin compatible release; define canonical residue/atom mapping; licence and dependency review | PDB/mmCIF/sequence fixtures, round-trip and reference comparisons |
 | Mol* | Offline molecular/structure visualization | Integrate viewer components selectively | WebView/offline packaging, asset licensing, payload limits and Android performance | Visual correctness, large-structure performance, accessibility and physical-device tests |
@@ -29,7 +29,7 @@ Use the acceptance ladder from `not_assessed` through `platform_verified` define
 - Component(s) to be used and whether code, model weights, datasets or documentation are included.
 - Licence text, notices, attribution, patent/data/model terms and redistribution decision.
 - Supported OS/ABI, language/runtime, accelerator and dependency lock.
-- Kinetics capability IDs and input/output schemas.
+- Molecularis capability IDs and input/output schemas.
 - Resource, security and privacy boundaries.
 - Reference fixtures, expected outputs, tolerances and benchmark methodology.
 - Maintainer, upgrade policy, known limitations and removal plan.

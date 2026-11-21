@@ -1,4 +1,4 @@
-# Kinetics — Scientific Validation Plan
+# Molecularis — Scientific Validation Plan
 
 **Status:** Validation framework proposal; no new scientific acceptance is claimed.  
 **Date:** 2026-11-20

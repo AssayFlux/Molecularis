@@ -9,7 +9,7 @@
 - Paired/repeated-measure designs, dispersion moderation, robust compositional methods, pathway analysis and multi-omics integration remain future work.
 
 ## Current source
-Implemented in `python/kinetics/omics.py`. Inputs are checked for finite values and invalid dimensions.
+Implemented in `python/molecularis/omics.py`. Inputs are checked for finite values and invalid dimensions.
 
 ## Limitations
 - Welch tests require independent biological samples and pre-normalized/log-scale input.
@@ -37,7 +37,7 @@ Features with all-zero raw counts are now retained in the tested family with p=1
 
 
 ### Exact-source automated audit — 2026-11-09 (CI #2101)
-- Source commit: `8c4128d5e448db51f2b48fec6c38ce6022fdb053`; [workflow #2101](https://github.com/AssayFlux/Kinetics/actions/runs/42554027490) completed successfully across all five jobs.
+- Source commit: `8c4128d5e448db51f2b48fec6c38ce6022fdb053`; [workflow #2101](https://github.com/AssayFlux/Molecularis/actions/runs/42554027490) completed successfully across all five jobs.
 - Python CI collected 233 tests: 229 passed, 4 skipped (3 optional RDKit adapter tests because RDKit is not installed in the base Python test environment; 1 optional pysam test because pysam is not installed). The separate pinned RDKit descriptor sanity job passed.
 - The suite executed the R3/R4 sequence and research primitive tests, R5 structure/structure-view tests, R6 core chemistry tests, R7 phylogenetics tests, R8 omics tests, R9 catalogue/variant-reference tests and R10 registry/SBOM/configuration checks.
 - The pinned host scientific-reference job passed its Michaelis–Menten/SciPy comparison and genetic-code/Biopython comparison steps. These are bounded synthetic/software-reference checks, not independent experimental validation.

@@ -1,4 +1,4 @@
-# Kinetics — Third-Party Integration Register
+# Molecularis — Third-Party Integration Register
 
 **Status:** Initial candidate register; all licence and version dispositions require exact-source review.  
 **Date:** 2026-11-20
@@ -27,9 +27,9 @@
 - Dependency and transitive dependency inventory; SBOM.
 - Whether binaries, weights, databases or datasets are redistributed, downloaded or user-supplied.
 - Security review, vulnerability posture and network behaviour.
-- Kinetics adapter owner, version policy, test suite and removal/upgrade plan.
+- Molecularis adapter owner, version policy, test suite and removal/upgrade plan.
 - Legal review for ambiguous, custom, non-commercial, research-only or model/data terms.
 
 ## Decision rule
 
-No third-party code, model weights, databases, reference data or assets may be bundled or redistributed until its exact terms are reviewed and recorded. Kinetics' Apache-2.0 project licence applies to Kinetics-authored material and does not relicense upstream components. A candidate listed here is not approved for use.
+No third-party code, model weights, databases, reference data or assets may be bundled or redistributed until its exact terms are reviewed and recorded. Molecularis' Apache-2.0 project licence applies to Molecularis-authored material and does not relicense upstream components. A candidate listed here is not approved for use.

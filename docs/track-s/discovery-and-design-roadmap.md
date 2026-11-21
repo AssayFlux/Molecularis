@@ -4,7 +4,7 @@
 
 ## Mission
 
-Turn Kinetics into a research workbench that can investigate unfamiliar DNA/RNA/protein sequences, infer and explain candidate biological meaning, compare structures and families, and support constrained computational protein design. Outputs must remain reproducible, uncertainty-aware research hypotheses. A sequence annotation is not proof of function; a designed sequence is not proof of folding, activity, safety or manufacturability.
+Turn Molecularis into a research workbench that can investigate unfamiliar DNA/RNA/protein sequences, infer and explain candidate biological meaning, compare structures and families, and support constrained computational protein design. Outputs must remain reproducible, uncertainty-aware research hypotheses. A sequence annotation is not proof of function; a designed sequence is not proof of folding, activity, safety or manufacturability.
 
 ## Work packages
 
@@ -136,7 +136,7 @@ Every S increment must be tested against the exact commit. Host tests are regres
 
 
 #### S6/S9 — Bounded caller-supplied protein motif evidence
-- Added `python/kinetics/protein_motifs.py` for deterministic fixed-width motif matching against a caller-supplied, SHA-256-pinned JSON motif pack.
+- Added `python/molecularis/protein_motifs.py` for deterministic fixed-width motif matching against a caller-supplied, SHA-256-pinned JSON motif pack.
 - Motifs support canonical amino-acid literals and a single-residue `.` wildcard; arbitrary regular expressions are intentionally unsupported.
 - Enforces pack-byte, motif-count, query-residue, comparison and hit budgets; rejects duplicate JSON keys, duplicate motif IDs and invalid alphabets.
 - Reports exact 1-based match coordinates and motif-pack provenance. A match does not infer family/function; a no-match does not establish novelty.

@@ -8,7 +8,7 @@
 - Added approximate Shrake–Rupley SASA and distance-only heavy-atom candidate screening for N...O hydrogen bonds, canonical Lys/Arg-Asp/Glu salt bridges and Cys SG disulfides. Future: mmCIF dictionary/assembly/symmetry semantics, residue mapping, secondary structure and structure quality checks.
 
 ## Current source
-Implemented in `python/kinetics/structure.py`. The mmCIF reader currently supports atom-site loops and label/auth identifier fallbacks; the RMSD superposition uses a Horn-quaternion fit.
+Implemented in `python/molecularis/structure.py`. The mmCIF reader currently supports atom-site loops and label/auth identifier fallbacks; the RMSD superposition uses a Horn-quaternion fit.
 
 ## Limitations
 - mmCIF parser is not a full dictionary or biological assembly implementation.

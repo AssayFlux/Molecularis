@@ -1,4 +1,4 @@
-# Kinetics — Engine Runtime Matrix
+# Molecularis — Engine Runtime Matrix
 
 **Status:** Initial planning inventory; exact pins and support claims are pending reproducible builds.  
 **Date:** 2026-11-20

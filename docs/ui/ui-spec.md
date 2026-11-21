@@ -1,8 +1,8 @@
-# Kinetics UI specification — owner-supplied V1
+# Molecularis UI specification — owner-supplied V1
 
 **Authority:** D-024, 2026-11-17. This 20-section specification is the active visual and interaction contract for Track U.  
 **Platform:** Native Android Jetpack Compose.  
-**Product scope:** KINETICS Research Mode only; no clinical or fabricated functionality.
+**Product scope:** MOLECULARIS Research Mode only; no clinical or fabricated functionality.
 
 ## 1. Design philosophy
 Minimalist, elegant, professional, monochromatic, readable and functional. Use refined typography, generous whitespace, thin line icons, subtle borders, consistent dimensions and native mobile interaction patterns. Avoid excessive gradients, shadows, rounding, decorative illustrations, colour, crowded screens and unnecessary animation.
@@ -99,7 +99,7 @@ Compact: 16 dp padding, accessible actions, natural scroll and no horizontal ove
 Consistent spacing, typography, radii, icons and component heights; balanced whitespace; clear hierarchy; accessible contrast; responsive layouts; light/dark appearance; realistic interactive states; pixel-consistent alignment.
 
 ## Product and engineering constraints
-- The active visual system does not change KINETICS product scope or architecture.
+- The active visual system does not change MOLECULARIS product scope or architecture.
 - Home/Work/Settings must use real app state and supported operations. The separate Explore destination is removed; registered services are surfaced in the Home carousel and service list.
 - No runnable capability without a real registry entry, dispatcher, input/result contract and tests.
 - Local biometric app lock must not be represented as cloud account authentication.
