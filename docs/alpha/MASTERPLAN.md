@@ -9,7 +9,7 @@
 
 ## 1. North Star
 
-Molecularis is an all-device scientific research platform. It must provide a coherent experience on phone, tablet, laptop, desktop and workstation without defining itself as an Android application. A responsive web application/PWA is the primary user experience. Optional desktop packaging and a separately installed local compute connector provide controlled access to local files, CPUs and GPUs. Remote and institutional compute are supported through authenticated, policy-controlled execution.
+Molecularis is an all-device scientific research platform. It must provide a coherent experience on phone, tablet, laptop, desktop and workstation without defining itself as an Android application. The installed desktop application is the first user experience on Linux, Windows and macOS. Android and Apple iOS/iPadOS applications follow on the same domain model and contracts. A web companion is deferred and is not the first product. Remote and institutional compute are supported through authenticated, policy-controlled execution.
 
 The platform exists to help researchers create, inspect, execute, compare and reproduce scientific workflows. It is not a clinical decision-support system. Clinical claims and deployment remain disabled unless separately authorized, validated and legally cleared.
 
@@ -36,15 +36,16 @@ No claim is made here that every component in the repository is complete, produc
 
 ## 4. Product experience
 
-### 4.1 Primary clients
-- Responsive browser application for phone, tablet and desktop.
-- Installable PWA with offline-capable shell, local cache and explicit sync states.
-- Desktop wrapper is optional and must not fork the product UI or business logic.
-- Accessible keyboard, screen-reader, touch and pointer support.
-- Progressive enhancement: core navigation and project inspection remain usable on modest devices and constrained networks.
+### 4.1 Application delivery order
+- First: installed desktop applications for Linux, Microsoft Windows and macOS.
+- Second: installed Android and Apple iOS/iPadOS applications sharing domain logic, project formats, contracts and design system.
+- Later/optional: web companion for collaboration or institutional access, only after installed applications are established.
+- The product must not require a website, browser or cloud connection for ordinary local desktop workflows.
+- UI framework selection is an open evidence-based decision. Evaluate a representative vertical slice on all five OS families before selecting a framework; do not assume PWA/React is primary.
+- Accessibility, offline operation, native filesystem integration and scientific visualization are core requirements.
 
 ### 4.2 Compute topology
-- Browser: UI, lightweight visualization, input validation, small deterministic tasks.
+- Installed application: UI, lightweight visualization, input validation, local project management and user-controlled local workflows.
 - Molecularis Node: user-installed local connector for filesystem access, local CPU/GPU and native engines; least privilege, explicit pairing and visible consent.
 - Hosted worker: isolated execution for supported workloads.
 - Institutional/HPC connector: queued jobs via institution-approved scheduler/API.
@@ -72,7 +73,7 @@ The browser must never be treated as a trusted execution sandbox for arbitrary s
 
 Use a modular, contract-first architecture:
 
-- Web client: TypeScript + React (or retain a demonstrably suitable existing client after audit), responsive design system, PWA service worker.
+- Cross-platform installed application UI: select after a desktop-first feasibility spike across Linux, Windows, macOS, Android and iOS/iPadOS. Evaluate Qt/C++, Tauri/Rust and other credible options against native integration, accessibility, graphics/3D, packaging/signing, updates, offline storage, mobile lifecycle and licensing. No framework is approved until the evidence and owner decision are recorded.
 - API/control plane: Python service layer initially, with Rust services where isolation, parsing or operational reliability warrants it.
 - Native libraries: C++ and Rust libraries behind stable C ABI or versioned IPC contracts.
 - Job orchestration: API, durable queue, scheduler, worker supervisor, event stream and artifact service.
@@ -80,7 +81,7 @@ Use a modular, contract-first architecture:
 - Contracts: versioned JSON Schema/OpenAPI plus explicit semantic versions and compatibility tests.
 - Visualization: Mol* for molecular structures, with other viewers only when justified.
 - Local connector: Rust-first supervisor with signed/versioned manifests, capability allowlists and OS-specific adapters.
-- Packaging: OCI containers for server workers; signed platform-specific releases for local node and optional desktop shell.
+- Packaging: signed platform-specific desktop application releases first; Android/iOS application packages next; OCI containers for optional server workers. A web deployment is a later companion, not the primary release.
 
 These are target choices. Existing components should be retained where they meet the requirements. A technology choice is not an implementation claim.
 
@@ -137,7 +138,7 @@ Clinical/health data is not authorized by this architecture. Any future handling
 ## 10. Migration policy
 
 - Preserve scientific domain logic and tests while decoupling them from Android lifecycle/UI.
-- Replace Android screens with responsive web flows by capability, not by blind screen copying.
+- Replace Android screens with shared cross-platform installed-app flows by capability, not by blind screen copying.
 - Replace WorkManager scheduling with durable server/local job queues; retain deterministic job semantics.
 - Replace Android-only storage with a migration path to project artifacts and local encrypted cache.
 - Replace JNI only where a stable C ABI, Rust API or IPC boundary is demonstrably better; do not rewrite working native code for fashion.
@@ -147,19 +148,20 @@ Clinical/health data is not authorized by this architecture. Any future handling
 ## 11. Milestones
 
 M0 — baseline audit, branch governance, architecture decisions and security threat model.  
-M1 — responsive client shell, design system, authentication, project/workspace model and PWA.  
-M2 — API, durable job state machine, event stream, artifact store and provenance.  
-M3 — Molecularis Node: pairing, capabilities, signed manifests, local files and resource controls.  
-M4 — shared scientific data model, schemas, rulebooks and contract tests.  
-M5 — Mol* viewer and structure artifacts.  
-M6 — Biotite and GWW genomics/sequence workflows.  
-M7 — ESM and AlphaFold isolated prediction workers.  
-M8 — structure validation and MolProbity audited adapters.  
-M9 — chemistry, Open Chemistry and ChemGraph workflows.  
-M10 — OpenMM preparation, simulation and analysis.  
-M11 — SciREPL-inspired notebooks and Galaxy federation.  
-M12 — NUAD workflow and external NUPACK integration review.  
-M13 — institution/HPC operations, security review, scientific validation and release readiness.
+M1 — desktop application shell for Linux/Windows/macOS, UI framework spike, design system, local projects and offline storage.  
+M2 — shared domain/contracts, local job supervisor, artifact/provenance model and first end-to-end local scientific workflow.  
+M3 — desktop packaging, signing, update/rollback and filesystem/graphics/accessibility validation across all three desktop OSes.  
+M4 — Android and iOS/iPadOS application feasibility/vertical slices, shared project format and mobile lifecycle adapters.  
+M5 — optional Molecularis Node/remote compute pairing, signed manifests, resource controls and institution/HPC connectors.  
+M6 — shared scientific data model, schemas, rulebooks, contract tests and Mol* visualization.  
+M7 — Biotite and GWW genomics/sequence workflows.  
+M8 — ESM and AlphaFold isolated prediction workers.  
+M9 — structure validation and MolProbity audited adapters.  
+M10 — chemistry, Open Chemistry and ChemGraph workflows.  
+M11 — OpenMM preparation, simulation and analysis.  
+M12 — SciREPL-inspired notebooks and Galaxy federation.  
+M13 — NUAD workflow and external NUPACK integration review.  
+M14 — institution/HPC operations, cross-platform security/scientific validation and release readiness.
 
 Each milestone has build, audit and owner-acceptance gates. Dependencies may be refined after repository audit; milestones are not completion claims.
 
@@ -188,4 +190,9 @@ Each milestone has build, audit and owner-acceptance gates. Dependencies may be 
 
 ## 14. Acceptance
 
-Alpha is ready for a first public all-device preview only when the responsive client, authentication, projects, artifact lifecycle, job status, one validated scientific vertical slice, provenance, accessible UI, security review, supported-browser matrix, deployment/rollback procedure and documentation are complete. This does not imply clinical readiness or validation of all twelve upstream integrations.
+Alpha is ready for a first public all-device preview only when the desktop applications on Linux, Windows and macOS; authentication where needed; local projects; artifact lifecycle; local job status; one validated scientific vertical slice; provenance; accessible UI; security review; install/upgrade/uninstall and rollback evidence; supported hardware/OS matrix and documentation are complete. This does not imply clinical readiness or validation of all twelve upstream integrations.
+
+
+## 15. Owner correction — desktop-first, not website-first
+
+On 2026-11-21 the owner explicitly corrected the initial Alpha direction: desktop application first for Linux, Microsoft Windows and macOS; Android and Apple mobile applications are also required. No website/PWA-first strategy. This section supersedes any remaining web-first wording in earlier planning text. The web companion is deferred until after installed application foundations. Update all linked plans and milestone documents consistently; preserve historical records rather than deleting evidence.
