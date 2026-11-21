@@ -520,6 +520,22 @@ tools:
     implementation: python/molecularis/dna_rna_service.py
     evidence_level: none
 
+  - id: simulation.msde_protocol
+    name: MSDE-backed canonical simulation protocol and NVT/NPT contract validation
+    status: implemented
+    implementation: python/molecularis/simulation_service.py
+    evidence_level: none
+  - id: simulation.energy_analysis
+    name: Bounded descriptive potential-energy time-series analysis
+    status: implemented
+    implementation: python/molecularis/simulation_service.py
+    evidence_level: none
+  - id: simulation.gromacs_execution
+    name: Hash-pinned bounded GROMACS mdrun against caller-prepared TPR
+    status: implemented
+    implementation: python/molecularis/simulation_service.py
+    evidence_level: none
+
 engines: []
 data_packs: []
 domains: []

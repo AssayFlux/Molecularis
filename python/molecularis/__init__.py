@@ -56,6 +56,8 @@ from .virtual_cohort import (
     simulate_hardy_weinberg_cohort,
     simulate_synthetic_additive_variant_effects,
 )
+from .simulation_service import SimulationDocument, ingest_simulation, load_simulation, register_simulation_service, simulation_rulebook, analyze_energy_series
+from .gromacs import run_gromacs
 from .sequence_service import (
     SequenceDocument, ingest_sequence, load_sequence, register_sequence_service, sequence_rulebook,
 )
@@ -71,6 +73,7 @@ from .structure import (
 )
 
 __all__ = [
+    "SimulationDocument", "ingest_simulation", "load_simulation", "register_simulation_service", "simulation_rulebook", "analyze_energy_series", "run_gromacs",
     "NucleicAcidDocument", "ingest_nucleic_acid", "load_nucleic_acid", "register_dna_rna_service", "dna_rna_rulebook",
     "GenomeDocument", "ingest_genome", "load_genome", "register_genomics_service", "genomics_rulebook",
     "ProteinDocument", "ingest_protein", "load_protein", "register_protein_service", "protein_rulebook",

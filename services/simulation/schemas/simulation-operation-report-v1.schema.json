@@ -1,0 +1,11 @@
+{
+ "$schema":"https://json-schema.org/draft/2020-12/schema",
+ "$id":"https://molecularis.assayflux.org/schemas/simulation-operation-report-v1.schema.json",
+ "title":"Simulation operation report v1","type":"object","additionalProperties":false,
+ "required":["schema","operation","simulation_id","protocol_sha256","result","rulebook","rules_checked","limitations"],
+ "properties":{"schema":{"const":"molecularis.simulation-operation-report.v1"},"operation":{"enum":["validate","energy_analysis","gromacs_run"]},
+ "simulation_id":{"type":"string","minLength":1},"protocol_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"},
+ "result":{"type":"object"},"rulebook":{"const":"simulation-core-v1"},
+ "rules_checked":{"type":"array","items":{"enum":["SIM-001","SIM-002","SIM-003","SIM-004","SIM-005","SIM-006","SIM-007"]},"uniqueItems":true},
+ "limitations":{"type":"array","items":{"type":"string"}}}
+}

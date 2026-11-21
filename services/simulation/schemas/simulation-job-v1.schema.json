@@ -1,0 +1,20 @@
+{
+ "$schema":"https://json-schema.org/draft/2020-12/schema",
+ "$id":"https://molecularis.assayflux.org/schemas/simulation-job-v1.schema.json",
+ "title":"Molecularis Simulation Protocol v1","type":"object","additionalProperties":false,
+ "required":["schema","identifier","engine","ensemble","temperature_kelvin","pressure_bar","timestep_fs","steps","equilibration_steps","replicas","seed","report_interval","coordinates_sha256","topology_sha256","force_field","gromacs","energy_series","energy_unit"],
+ "properties":{
+  "schema":{"const":"molecularis.simulation-job.v1"},"identifier":{"type":"string","minLength":1,"maxLength":256},
+  "engine":{"enum":["openmm","gromacs"]},"ensemble":{"enum":["NVT","NPT"]},
+  "temperature_kelvin":{"type":"number","exclusiveMinimum":0,"maximum":2000},
+  "pressure_bar":{"type":["number","null"],"exclusiveMinimum":0,"maximum":10000},
+  "timestep_fs":{"type":"number","exclusiveMinimum":0,"maximum":4},
+  "steps":{"type":"integer","minimum":1,"maximum":10000000},"equilibration_steps":{"type":"integer","minimum":0,"maximum":1000000},
+  "replicas":{"type":"integer","minimum":2,"maximum":10},"seed":{"type":"integer","minimum":0,"maximum":4294967295},
+  "report_interval":{"type":"integer","minimum":1,"maximum":10000000},
+  "coordinates_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"},"topology_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"},
+  "force_field":{"type":"object","additionalProperties":false,"required":["name","version","parameter_source_sha256"],"properties":{"name":{"type":"string","minLength":1},"version":{"type":"string","minLength":1},"parameter_source_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"}}},
+  "gromacs":{"type":"object","additionalProperties":false,"required":["tpr_path","tpr_sha256","executable_path","executable_sha256","threads","timeout_seconds"],"properties":{"tpr_path":{"type":["string","null"]},"tpr_sha256":{"type":["string","null"],"pattern":"^[0-9a-f]{64}$"},"executable_path":{"type":["string","null"]},"executable_sha256":{"type":["string","null"],"pattern":"^[0-9a-f]{64}$"},"threads":{"type":"integer","minimum":1,"maximum":256},"timeout_seconds":{"type":"integer","minimum":1,"maximum":604800}}},
+  "energy_series":{"type":"array","maxItems":1000000,"items":{"type":"number"}},"energy_unit":{"type":"string","minLength":1}
+ }
+}

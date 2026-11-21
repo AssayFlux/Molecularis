@@ -1,0 +1,6 @@
+{
+ "$schema":"https://json-schema.org/draft/2020-12/schema",
+ "$id":"https://molecularis.assayflux.org/schemas/simulation-artifact-reference-v1.schema.json",
+ "title":"Simulation artifact reference v1","type":"object","additionalProperties":false,
+ "required":["simulation_artifact_id"],"properties":{"simulation_artifact_id":{"type":"string","minLength":1}}
+}

@@ -2,10 +2,11 @@ id: "simulation"
 name: "Simulation"
 roadmap_step: "H"
 roadmap_order: 8
-depends_on: ["molecular","structure","chemistry"]
-status: "scaffold"
-completion_status: "not_implemented"
-primary_languages: ["cpp", "python", "rust"]
+depends_on: ["molecular","structure","chemistry","protein"]
+status: "implemented"
+completion_status: "engineering_implemented_ci_pending_scientific_review_deferred"
+primary_languages: ["python"]
+planned_languages: ["cpp","rust"]
 engine: "ENGINE.md"
 runtime: "RUNTIME.md"
 rulebook: "RULEBOOK.md"
@@ -18,3 +19,6 @@ schema_root: "schemas"
 data_root: "data"
 benchmark_root: "benchmarks"
 external_execution_dependencies: []
+optional_adapters:
+  - "OpenMM (local md extra; caller-constructed trusted objects)"
+  - "GROMACS (operator-installed hash-pinned executable and caller-prepared TPR)"
