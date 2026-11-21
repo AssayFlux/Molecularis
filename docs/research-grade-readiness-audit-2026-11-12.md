@@ -1,5 +1,8 @@
 # Repository documentation and research-readiness audit
 
+
+> **Historical record:** This document records evidence created before the product rebrand. References to Kinetics, the former repository name and historical source paths are retained where needed to preserve the accuracy of the dated evidence. The current product identity is Molecularis; see [the brand migration contract](brand-migration.md).
+
 **Audit date:** 2026-11-12  
 **Audited revision:** `dafc3cad56bc6b9b9b49cc30f9e5f65bbd655c47`  
 **Repository:** [AssayFlux/Kinetics](https://github.com/AssayFlux/Kinetics)  

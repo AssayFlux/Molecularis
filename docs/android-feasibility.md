@@ -1,5 +1,8 @@
 # Android feasibility — R1 in progress
 
+
+> **Historical record:** This document records evidence created before the product rebrand. References to Kinetics, the former repository name and historical source paths are retained where needed to preserve the accuracy of the dated evidence. The current product identity is Molecularis; see [the brand migration contract](brand-migration.md).
+
 **Current status (2026-11-09):** The current application has a reproducible GitHub Actions arm64 debug APK/AAB build lane, Android JVM tests, static APK/ELF alignment checks, and host-side scientific reference jobs. The latest exact-source workflow is [CI #2122](https://github.com/AssayFlux/Kinetics/actions/runs/42559172942) on commit `cb32bdb8cd5118a871ebdc45f462b62bd2ae310b`; Python tests (236 passed, 4 skipped), host scientific-reference comparisons, RDKit fixtures and SPDX inventory have passed. The Android arm64 build/package/JVM job remains in progress at this update. Do not count #2122 as complete until that job finishes successfully.
 
 **What this evidence means:** Android packaging and host/JVM tests are reproducible. They do not prove installation or execution on an Android device. The current app still lacks accepted emulator/physical-device evidence for Chaquopy, JNI/Rust runtime, SAF, WorkManager process-death recovery, 16 KB page-size runtime, cold-start, memory, battery or thermal behavior. The owner-selected first handset is the Motorola Moto G54 5G, but it has not been connected or tested in this environment.

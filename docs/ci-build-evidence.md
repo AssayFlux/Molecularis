@@ -1,5 +1,8 @@
 # CI build evidence — 2026-11-08
 
+
+> **Historical record:** This document records evidence created before the product rebrand. References to Kinetics, the former repository name and historical source paths are retained where needed to preserve the accuracy of the dated evidence. The current product identity is Molecularis; see [the brand migration contract](brand-migration.md).
+
 ## Latest verified source revision
 
 - Repository: [AssayFlux/Kinetics](https://github.com/AssayFlux/Kinetics)
