@@ -1,3 +1,8 @@
+> **ALPHA BRANCH — ALL-DEVICE DIRECTION**  
+> Molecularis is transitioning to an all-device scientific research platform. The responsive web/PWA is the primary client; optional desktop packaging, local Molecularis Node, hosted workers and institutional/HPC connectors provide compute. Android-native product development is retired, but existing scientific code and user data are preserved through a controlled migration. Preferred core languages: **C++, Rust and Python**; TypeScript/JavaScript supports the browser client.  
+> Start here: [Alpha masterplan](docs/alpha/MASTERPLAN.md) · [North Star](NORTH_STAR.md) · [Roadmap](ROADMAP.md) · [Decisions](DECISIONS.md) · [Migration plan](docs/alpha/MIGRATION_PLAN.md).  
+> This direction applies to branch Alpha; CORE is not changed by this commit.
+
 <!-- MOLECULARIS · BY ASSAYFLUX -->
 <h1 align="center">MOLECULARIS</h1>
 <p align="center"><strong>BY ASSAYFLUX SCIENTIFIC SYSTEMS</strong></p>
