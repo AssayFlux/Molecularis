@@ -60,7 +60,8 @@ def test_i1_android_ligand_graph_preview_is_bounded_and_registry_gated() -> None
     assert '"analyze_ligand_sdf_graph"' in runner
     assert "ActivityResultContracts.OpenDocument()" in card
     assert "readI1LigandDocument" in card
-    assert "source_sha256" in bridge or "source_sha256" in (ROOT / "python/molecularis/chemistry.py").read_text(encoding="utf-8")
+    chemistry_source = (ROOT / "python/molecularis/chemistry.py").read_text(encoding="utf-8")
+    assert "source_sha256" in bridge or "source_sha256" in chemistry_source
     assert 'capability?.id == "chemistry.sdf_graph"' in ui
     assert "LigandGraphPreviewCard()" in ui
-    assert "Graph-only parsing; no chemical sanitization or valence validation" in (ROOT / "python/molecularis/chemistry.py").read_text(encoding="utf-8")
+    assert "Graph-only parsing; no chemical sanitization or valence validation" in chemistry_source
