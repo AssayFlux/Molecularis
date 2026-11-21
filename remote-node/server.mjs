@@ -28,10 +28,12 @@ export function constantTimeTokenMatch(expected, supplied) {
 }
 
 export function readConfig(env = process.env) {
-  const host = env.KINETICS_NODE_HOST || "127.0.0.1";
-  const port = Number(env.KINETICS_NODE_PORT || "8765");
-  const enabled = env.KINETICS_NODE_ALLOW_DOCKING === "true";
-  const token = env.KINETICS_NODE_AUTH_TOKEN || "";
+  // Prefer Molecularis names; retain KINETICS_* aliases for existing deployments.
+  const setting = (name) => env[name.replace(/^KINETICS_/, "MOLECULARIS_")] ?? env[name];
+  const host = setting("KINETICS_NODE_HOST") || "127.0.0.1";
+  const port = Number(setting("KINETICS_NODE_PORT") || "8765");
+  const enabled = setting("KINETICS_NODE_ALLOW_DOCKING") === "true";
+  const token = setting("KINETICS_NODE_AUTH_TOKEN") || "";
   const remote = !isLoopbackHost(host);
   if (!Number.isInteger(port) || port < 1 || port > 65535) {
     throw new Error("KINETICS_NODE_PORT must be an integer from 1 to 65535");
@@ -39,7 +41,7 @@ export function readConfig(env = process.env) {
   if (enabled && token.length < 32) {
     throw new Error("A 32-character KINETICS_NODE_AUTH_TOKEN is required when docking is enabled");
   }
-  if (remote && (!env.KINETICS_NODE_TLS_CERT || !env.KINETICS_NODE_TLS_KEY)) {
+  if (remote && (!setting("KINETICS_NODE_TLS_CERT") || !setting("KINETICS_NODE_TLS_KEY"))) {
     throw new Error("Non-loopback binding requires TLS certificate and key paths");
   }
   return { host, port, enabled, token, remote };
@@ -130,7 +132,7 @@ export function createNodeServer({ env = process.env, spawnProcess = spawn } = {
     try {
       const body = await readBoundedBody(req);
       JSON.parse(body.toString("utf8"));
-      const python = env.KINETICS_PYTHON || "python3";
+      const python = setting("KINETICS_PYTHON") || "python3";
       child = spawnProcess(
         python,
         [RUNNER],
@@ -205,8 +207,8 @@ export function createNodeServer({ env = process.env, spawnProcess = spawn } = {
 
   if (config.remote) {
     return https.createServer({
-      cert: readFileSync(env.KINETICS_NODE_TLS_CERT),
-      key: readFileSync(env.KINETICS_NODE_TLS_KEY),
+      cert: readFileSync(setting("KINETICS_NODE_TLS_CERT")),
+      key: readFileSync(setting("KINETICS_NODE_TLS_KEY")),
     }, handler);
   }
   return http.createServer(handler);
@@ -217,7 +219,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.ar
   const config = readConfig();
   server.listen(config.port, config.host, () => {
     process.stdout.write(
-      "Kinetics private research worker listening on " +
+      "Molecularis private research worker listening on " +
       config.host + ":" + config.port + " (docking " +
       (config.enabled ? "enabled" : "disabled") + "; MD disabled)\n",
     );
