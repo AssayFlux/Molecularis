@@ -1,41 +1,53 @@
 # MSDE Platform Acceptance Record
 
-This record distinguishes the implemented local foundation from capabilities deliberately deferred.
+Status: local reference implementation v0.2; full production platform acceptance remains open.
 
-## Implemented in this release
+## Implemented and covered by tests
 
-- Typed Python contracts for budgets, capabilities, execution contexts and query outcomes.
+- Typed budgets, capability descriptors, execution contexts and stable platform errors.
 - Local immutable SHA-256 content-addressed object storage.
-- SQLite catalog with WAL and FULL synchronous durability settings.
-- Atomic temp-file publication before catalog visibility.
+- SQLite WAL catalog with FULL synchronous durability setting.
+- Atomic temporary-file publication before catalog visibility.
 - Artifact metadata, parent lineage and indexed exact/numeric labels.
 - Streamed ingestion and reads with byte/chunk limits.
 - Digest verification, catalog audit and non-destructive orphan reporting.
-- Explicitly incomplete bounded exact/range queries.
-- Capability registry and acyclic bounded Rulebook DAG execution.
-- Persisted run evidence and immutable operation outputs.
+- Exact/range query pagination bound to an explicit catalog row-ID snapshot, with stable ordering and explicit completeness.
+- Capability registry and acyclic bounded Rulebook DAG validation.
+- Success and failure run evidence, including failed operation identity and error category.
+- Input artifact IDs are linked as parents of derived Rulebook output artifacts.
+- Optional dependency CI profiles for sequence, genomics and chemistry.
+- Repository-wide JSON Schema validation is now part of core CI; the first run exposed a malformed legacy schema that is being fixed.
 
 ## Explicitly not claimed complete
 
+- Native append-only sorted-segment index manager, Bloom filters, compaction or specialized sequence/spatial indexes. SQLite B-tree indexes are the current implementation.
+- A general typed query planner, joins, opaque signed cursors or cross-process snapshot leases.
 - Multi-process writer coordination across network filesystems.
 - Distributed or remote object storage, replication and consensus.
-- General SQL-like query planner, joins or arbitrary predicate language.
-- Compaction/LSM index segment engine, Bloom filters or specialized sequence/spatial indexes.
-- Process sandboxing, OS-level CPU/memory isolation, cancellation of arbitrary Python handlers.
+- Process sandboxing, OS-level CPU/memory isolation, forced cancellation of arbitrary Python handlers.
 - Full crash fault-injection at every filesystem instruction or formal power-loss certification.
-- Cross-language C++/Rust bindings and executable service discovery protocol.
+- Cross-language C++/Rust bindings and executable cross-process service discovery.
 - Scientific domain validation; this platform is domain-neutral infrastructure.
 
 ## Operational constraints
 
 - One local catalog, SQLite single-writer semantics, concurrent readers.
 - Store root must be on a filesystem with reliable atomic rename semantics.
-- Do not use network filesystems until their locking, fsync and rename semantics are separately validated.
+- Do not use network filesystems until locking, fsync and rename semantics are separately validated.
 - Artifact IDs are logical identities; SHA-256 digests identify bytes.
 - Orphan blobs are reported by audit and are not automatically deleted.
-- Exact label queries use canonical JSON values; numeric range queries index JSON numeric metadata.
+- Exact label queries use canonical JSON values; numeric range queries index finite JSON numeric metadata.
+- Query pages must reuse the same snapshot ID. Snapshot IDs are current catalog row-ID boundaries, not durable leases; do not VACUUM the catalog while a multi-page query is in progress.
 - Query results report bounded candidate count and completeness; no approximate mode is implemented.
+- Rulebook handlers are trusted in-process Python code. They must be reviewed and resource-safe; declared wall-time checks occur between handlers and cannot preempt a running handler.
 
-## Gate
+## Acceptance gate
 
-The local platform gate is accepted only after CI executes the platform test suite and the repository's full baseline. This record is an implementation scope declaration, not a claim of distributed readiness or scientific validation.
+The platform is accepted for the next service only after:
+1. Core CI and all optional scientific profiles pass with no unexplained skips in their declared scope.
+2. JSON schemas validate.
+3. Artifact integrity, pagination, lineage and success/failure evidence tests pass.
+4. Recovery, backup/restore, security and resource-isolation risks have an explicit reviewed disposition.
+5. Cross-language contracts and service integration requirements are either implemented or explicitly removed from the required initial platform scope by a recorded decision.
+
+This record is an implementation scope declaration, not a claim of distributed readiness or scientific validation.

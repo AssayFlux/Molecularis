@@ -1,4 +1,4 @@
-<escape>{
+{
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:kinetics:structure-view:v1",
   "title": "Kinetics offline structure viewer payload",
@@ -40,4 +40,4 @@
       "minItems": 1
     }
   }
-}</escape>
+}

@@ -6,14 +6,14 @@ Mark an item complete only with a commit SHA and verification evidence. Do not s
 
 - [x] Baseline CI repaired. Evidence: run #127.
 - [x] Implement local MSDE reference slice. Evidence: commits 5b39b44 and ccae6c1; run #130.
-- [ ] Add dedicated optional-dependency CI profiles for RDKit, Biopython, Biotite, Parasail and pysam.
-- [ ] Add schema validation and package build/import coverage.
+- [x] Add optional scientific dependency profiles for sequence, genomics and chemistry. Evidence: all three profile jobs passed in run #133.
+- [ ] Pass repository-wide JSON Schema validation after repairing the malformed legacy schema; confirm core CI green.
 - [ ] Audit Python modules, public imports, tests and service ownership.
 - [ ] Audit dependencies, licenses, data provenance, model/runtime assumptions and security.
 - [ ] Expand Ruff beyond E9/F; introduce targeted strict typing.
 - [ ] Establish reproducibility, scientific reference and performance baselines.
 
-## P1 — Finish Core/MSDE platform gate
+## P1 — Core/MSDE platform
 
 - [x] Typed platform budgets, capability and execution-context contracts.
 - [x] Local service lifecycle and JSON capability manifest loader.
@@ -21,12 +21,14 @@ Mark an item complete only with a commit SHA and verification evidence. Do not s
 - [x] Bounded streaming, digest verification and non-destructive integrity audit.
 - [x] Exact scalar and numeric range metadata lookup.
 - [x] Capability registry and acyclic Rulebook DAG execution.
-- [x] Successful run evidence ledger.
-- [ ] Failed/partial run evidence and input artifact lineage.
-- [ ] Snapshot-bound pagination, typed query plan and deterministic planner.
-- [ ] Native sorted-segment indexes, compaction and differential benchmarks.
-- [ ] Crash-boundary fault injection, backup/restore and corruption-recovery matrix.
-- [ ] Full JSON schema validation in CI and compatibility policy tests.
+- [x] Successful and failed Rulebook run evidence.
+- [x] Input artifact lineage on derived operation outputs.
+- [x] Snapshot-bound exact/range query pagination with explicit completeness.
+- [x] CI jobs for optional scientific dependency profiles.
+- [ ] Native sorted-segment index manager, manifest snapshots and compaction, or a benchmark-backed formal decision to retain SQLite indexes.
+- [ ] Crash-boundary fault injection, catalog backup/restore and corruption-recovery matrix.
+- [ ] Typed query plan, deterministic cost model and bounded scan fallback.
+- [ ] Preconditions/postconditions, typed Rulebook input/output validation, retry policies and independent-validator gates.
 - [ ] Cross-process service discovery and language-neutral request/response runtime.
 - [ ] C++/Python/Rust conformance suite and executable cross-language reference service.
 - [ ] Threat model, sandboxing and operational resource-isolation controls.
@@ -63,4 +65,4 @@ Each letter requires discovery/audit, Engine, Runtime, Rulebook, schemas/contrac
 
 ## Active task
 
-Continue Phase 1 Core/MSDE platform gate. See [SERVICE_STATUS.md](SERVICE_STATUS.md) for evidence and next exact work.
+Finish the integrated Core/MSDE acceptance gate. Do not advance to service A until the acceptance record is green.

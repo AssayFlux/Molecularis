@@ -33,9 +33,9 @@ The **Engine** implements domain operations. The **Runtime** governs lifecycle a
 
 ## Current implementation reality
 
-The local Core/MSDE reference slice is implemented and tested: immutable SHA-256 blobs, SQLite WAL catalog, lineage, bounded streaming, integrity audit, exact/numeric metadata lookup, capability registration, Rulebook DAG execution and successful run evidence. It is a local single-catalog reference implementation—not yet the complete platform gate. Native sorted-segment indexes, robust recovery certification, stable snapshot pagination/planning, failed-run evidence, cross-process discovery, C++/Rust interoperability and OS-level sandboxing remain open.
+The local Core/MSDE reference slice now includes immutable SHA-256 blobs, SQLite WAL catalog, lineage, bounded streaming, integrity audit, exact/numeric metadata lookup, snapshot-bound pagination, capability registration, Rulebook DAG execution and success/failure run evidence. Optional sequence, genomics and chemistry CI profiles are configured. It remains a local single-catalog reference implementation—not a distributed production platform. Native sorted-segment indexes, robust recovery certification, general query planning, cross-process discovery, C++/Rust interoperability and OS-level sandboxing remain open.
 
-Latest verified CI: [run #130](https://github.com/AssayFlux/Molecularis/actions/runs/44880315191) — **568 passed, 12 skipped, 0 failed**. The 12 skips are optional scientific dependencies (including RDKit, Biopython, pysam, Parasail and Biotite). This is software verification, not scientific accuracy certification.
+Latest fully green core CI remains [run #132](https://github.com/AssayFlux/Molecularis/actions/runs/44880497095). [Run #133](https://github.com/AssayFlux/Molecularis/actions/runs/44880802259) passed all three optional scientific profile jobs but failed core schema validation because one legacy schema contained literal escape wrappers; that file is corrected in the current change and the next run is authoritative. Software CI is not scientific accuracy certification.
 
 ## Development
 

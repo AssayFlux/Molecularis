@@ -1,7 +1,7 @@
 # Service and Platform Status Register
 
 Last verified: 2026-11-21  
-Verified CORE commit: [ccae6c1d4fa28dad62d456f2731b03a7f24dfe2e](https://github.com/AssayFlux/Molecularis/commit/ccae6c1d4fa28dad62d456f2731b03a7f24dfe2e)
+Current implementation commit: [172c895eebf04c093ec8758ae093d855c3c55add](https://github.com/AssayFlux/Molecularis/commit/172c895eebf04c093ec8758ae093d855c3c55add)
 
 A scaffold or specification does not imply implementation or scientific validation.
 
@@ -10,17 +10,18 @@ A scaffold or specification does not imply implementation or scientific validati
 | Area | Status | Evidence / next gate |
 |---|---|---|
 | Governance | Established | North Star, A–N roadmap, future architecture, master plan and rules |
-| Existing Python package | Existing implementation; migration not performed | Audit module ownership, public imports and tests before moving |
-| Local Core reference runtime | Implemented v0.1 | Lifecycle facade, capability manifest loader, typed contracts and Rulebook executor; tests in `tests/test_platform_*.py` |
-| MSDE Stage 1 | Implemented local slice | SHA-256 blob store, SQLite WAL catalog, lineage, atomic publication, bounded streaming, integrity audit |
-| Metadata indexes | Functional SQLite indexes | Exact scalar and numeric range lookups; not yet native sorted-segment index engine |
-| Query execution | Partial | Bounded candidate/result limits and completeness flag; snapshot pagination/planner still open |
-| Evidence | Partial | Successful run records and immutable operation artifacts; failure/partial evidence and input lineage remain open |
-| Native C++ / Rust interoperability | Not implemented | Language-neutral schemas exist; bindings and cross-language conformance tests remain required |
-| Security / recovery certification | Partial | Path-safe digest-derived object layout; fault-injection, backup/restore and full threat model remain open |
-| CI | <badge color="success">Green</badge> | Run #130: 568 passed, 12 skipped, 0 failed |
-| Optional scientific test profiles | Incomplete | 12 skips include absent RDKit, Biopython, pysam, Parasail and Biotite |
-| Scientific validation | Incomplete | Reference-concordance and domain-specific evidence remain required |
+| Local Core reference runtime | Implemented v0.2 slice | Lifecycle facade, capability manifest loader, typed contracts and Rulebook executor |
+| Artifact store | Implemented local baseline | SHA-256 blobs, SQLite WAL catalog, parent lineage, atomic publication, bounded streaming and integrity audit |
+| Metadata indexes | Implemented | SQLite exact/range B-tree indexes; native sorted-segment engine is not implemented |
+| Query execution | Implemented bounded snapshot pagination | Snapshot-bound offsets, deterministic ordering, result/candidate limits and explicit completeness |
+| Rulebook evidence | Improved baseline | Success/failure records; input artifact lineage is attached to operation outputs |
+| JSON contracts | CI validation added | Repository-wide schema validation exposed and is correcting one malformed legacy schema |
+| Scientific optional CI | Implemented | Run #133: sequence, genomics and chemistry profile jobs passed |
+| Native C++ / Rust interoperability | Not implemented | Language-neutral schemas exist; bindings and conformance tests remain required |
+| Recovery certification | Partial | Atomic blob publication and integrity audit; crash-boundary fault injection and backup/restore remain open |
+| Execution isolation | Partial | In-process trusted handlers; no OS-level sandbox or preemptive CPU/memory/GPU isolation |
+| Distributed services | Not implemented | No distributed storage, replication or cross-process service-discovery protocol |
+| Scientific validation | Incomplete | Domain-specific independent reference and reproducibility evidence required |
 
 ## A–N service sequence
 
@@ -41,17 +42,19 @@ A scaffold or specification does not imply implementation or scientific validati
 | M | Cohorts | Scaffold | Not started | Not started | Not operational | Planned |
 | N | Workflows | Existing workflow code; audit pending | Not started | Not started | Not operational | Planned |
 
-## Verified CI baseline
+## Verification evidence
 
-GitHub Actions [run #130](https://github.com/AssayFlux/Molecularis/actions/runs/44880315191): **568 passed, 12 skipped, 0 failed**. The workflow validates the capability registry, Ruff E9/F, Python compilation and pytest. Optional scientific dependency skips remain outstanding. Ruff is not yet a full style gate.
+- Previous baseline [run #132](https://github.com/AssayFlux/Molecularis/actions/runs/44880497095): 568 passed, 12 skipped.
+- [Run #133](https://github.com/AssayFlux/Molecularis/actions/runs/44880802259): all three optional dependency profiles passed; core job exposed a malformed legacy JSON schema wrapped in literal escape markers. The schema is being corrected and the core job must pass before this baseline is upgraded.
+- Ruff remains limited to E9/F; this is not full style conformance.
 
 ## Active phase and next exact work
 
-**Active phase:** Phase 1 — Core/MSDE platform gate. The local reference slice is functional but the full gate is not passed.
+**Active phase:** Core/MSDE platform hardening. The local reference implementation has artifact storage, bounded query pagination and success/failure Rulebook evidence. The platform is not yet a distributed, multi-language, OS-isolated production runtime.
 
-**Next:** finish failed/partial run evidence and input lineage; add stable snapshot-bound pagination and typed query planning; implement the native sorted-segment exact/range index engine; add fault-injection/backup/restore tests and schema validation; then complete language-neutral service discovery and C++/Rust conformance.
+**Next:** pass repository-wide schema validation and core CI; then add crash fault injection and backup/restore tests, a durable index segment layer or evidence-backed SQLite index decision, process-level service discovery, C++/Rust conformance, and security/resource-isolation review.
 
-Do not begin service A until the Phase 1 exit criteria in the Master Development Plan are evidenced.
+Do not begin service A until the explicit platform acceptance criteria are met and recorded with passing evidence.
 
 ## Reporting rule
 

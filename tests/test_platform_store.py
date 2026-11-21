@@ -90,3 +90,17 @@ def test_query_rejects_invalid_pagination_arguments(tmp_path):
         store.find_exact('kind', 'protein', offset=-1)
     with pytest.raises(Exception):
         store.find_exact('kind', 'protein', snapshot_id='invalid')
+
+def test_query_pages_continue_within_the_same_snapshot(tmp_path):
+    store = ArtifactStore(tmp_path)
+    expected = [store.ingest(str(i).encode(), metadata={'group': 'same'}) for i in range(3)]
+    page1 = store.find_exact('group', 'same', limit=2)
+    assert page1.complete is False
+    assert page1.next_offset == 2
+    store.ingest(b'after-snapshot', metadata={'group': 'same'})
+    page2 = store.find_exact('group', 'same', limit=2, offset=page1.next_offset,
+                             snapshot_id=page1.snapshot_id)
+    assert page2.complete is True
+    assert [item['artifact_id'] for item in page1.items + page2.items] == [
+        item.artifact_id for item in expected
+    ]

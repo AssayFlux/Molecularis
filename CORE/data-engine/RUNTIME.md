@@ -1,6 +1,6 @@
 # MSDE Runtime Specification
 
-Version: 0.1.0-draft. Status: proposed; implementation not started.
+Version: 0.2.0. Status: local Python reference runtime implemented; production isolation and distributed service runtime remain unimplemented.
 
 ## Lifecycle
 1. Open configuration and storage roots.
@@ -18,7 +18,7 @@ Version: 0.1.0-draft. Status: proposed; implementation not started.
 Every job declares maximum memory, temporary disk, bytes read/written, CPU time, wall time, candidate count, concurrency, queue depth, retry count and output size. Budget breach returns a typed resource-limit outcome and preserves diagnostic evidence.
 
 ## Concurrency and consistency
-Initial implementation: single-writer per catalog with concurrent snapshot readers. Readers bind to immutable manifest snapshots. Writers create new segments and publish a new manifest atomically. Multi-writer and distributed operation are deferred.
+Initial implementation: single-writer per catalog with concurrent snapshot readers. Exact/range readers bind to a catalog row-ID boundary and pass that snapshot ID across pages. This is a local catalog snapshot boundary, not a durable lease; VACUUM must not run during pagination. SQLite serializes writers. Multi-writer and distributed operation are deferred.
 
 ## Recovery
 Use checksummed journal records and explicit prepare/commit states. On restart, discard uncommitted temporary objects, finish or roll back recoverable transactions, verify manifest references, and mark damaged indexes for rebuild. Canonical objects are never silently repaired by changing content.

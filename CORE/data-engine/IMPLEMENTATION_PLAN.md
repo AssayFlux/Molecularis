@@ -6,7 +6,7 @@ Status: staged delivery with a working local reference slice. Do not equate a co
 - [x] Establish versioned artifact/query drafts and format versioning.
 - [x] Establish typed Python budget, capability, execution-context and error contracts.
 - [x] Add JSON capability-manifest and platform-envelope schemas.
-- [ ] Validate all MSDE schemas in CI and publish compatibility tests.
+- [x] Add repository-wide JSON Schema validation to CI (repair malformed legacy schema before acceptance).
 - [ ] Complete threat model and data classification review.
 Exit: schemas validate; compatibility and recovery design reviewed.
 
@@ -30,7 +30,7 @@ Exit: differential correctness tests pass; reproducible memory/latency/throughpu
 ## Stage 3 — Query execution and planning
 - [x] Bounded exact scalar metadata lookup and numeric range lookup.
 - [x] Explicit result completeness and candidate limits.
-- [ ] Stable snapshot-bound pagination and typed predicate/query plan contract.
+- [x] Stable catalog snapshot-bound exact/range pagination with explicit completeness; typed predicate/query planner remains open.
 - [ ] Deterministic cost model and bounded scan fallback.
 Exit: query matrix passes and planner never violates exactness or resource limits.
 
@@ -41,7 +41,7 @@ Implement only when service requirements and fixtures exist: genomic intervals a
 - [x] Capability declaration registry and acyclic dependency validation.
 - [x] In-process bounded-step Rulebook executor and immutable operation output artifacts.
 - [x] Persist successful run evidence.
-- [ ] Persist failed/partial run evidence and input artifact lineage for each operation.
+- [x] Persist failed Rulebook run evidence and link artifact-valued operation inputs to derived outputs.
 - [ ] Preconditions/postconditions, typed input/output validation, retry policies and independent-validator gates.
 - [ ] Dependency invalidation and bounded repair branches.
 Exit: multi-operation workflow demonstrates candidate generation, independent checks, bounded retry and acceptance/rejection with complete lineage.

@@ -1,6 +1,6 @@
 # Molecularis Scientific Data Engine (MSDE)
 
-Status: local platform implementation v0.1 exists; full platform gate remains open.
+Status: local platform reference implementation v0.2; production platform gate remains open.
 
 MSDE is a Molecularis-owned, domain-neutral data substrate for scientific artifacts, indexing, streaming, provenance, evidence and Rulebook execution support. Scientific services consume stable Core contracts; Core does not depend on service implementations.
 
@@ -9,8 +9,8 @@ MSDE is a Molecularis-owned, domain-neutral data substrate for scientific artifa
 The Python reference implementation is in `python/molecularis/platform/`:
 
 - `contracts.py`: budgets, capability descriptors, execution context and typed platform errors.
-- `store.py`: immutable SHA-256 object store, SQLite catalog, lineage, scalar metadata indexes, bounded streaming, integrity audit and run ledger.
-- `runtime.py`: capability registry and validated acyclic Rulebook DAG executor.
+- `store.py`: immutable SHA-256 object store, SQLite catalog, lineage, scalar metadata indexes, bounded streaming, integrity audit, snapshot-bound pagination and success/failure run ledger.
+- `runtime.py`: capability registry and validated acyclic Rulebook DAG executor; persists failed runs and links artifact inputs to derived outputs.
 - `service.py`: lifecycle-managed local reference service and JSON capability-manifest loader.
 
 Quick start:
@@ -44,10 +44,10 @@ The Python runtime is a reference implementation, not yet a cross-language wire 
 
 - One local catalog; SQLite provides single-writer transaction serialization and concurrent snapshot readers.
 - Metadata exact/range indexes currently use SQLite B-tree indexes, not the planned append-only sorted-segment index engine.
-- Query API supports exact scalar metadata and numeric ranges; it is not a general query planner.
+- Query API supports exact scalar metadata and numeric ranges with stable catalog snapshot offsets; it is not a general query planner or opaque signed cursor protocol.
 - Rulebook execution is in-process. Handlers are trusted code; this is not an OS sandbox and cannot forcibly interrupt arbitrary handlers.
 - The current executor has bounded step count, output size and wall-time checks between operations, not preemptive CPU/memory/GPU isolation.
 - Distributed storage, remote backends, replication, C++/Rust bindings, specialized biological indexes and AI planning are not implemented.
-- Crash safety is designed around immutable blob publication plus SQLite transactions; comprehensive power-loss and boundary-by-boundary fault-injection certification remains open.
+- Crash safety is designed around immutable blob publication plus SQLite transactions; comprehensive power-loss and boundary-by-boundary fault-injection certification remains open. Snapshot offsets use catalog row IDs and assume the catalog is not VACUUM-rewritten during a paginated query.
 
 MSDE is not a scientific inference model. Search and ranking do not establish scientific truth. AI proposals cannot bypass deterministic contracts, resource controls or independent verification.

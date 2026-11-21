@@ -1,6 +1,6 @@
 # MSDE Engine Specification
 
-Version: 0.1.0-draft. Status: proposed architecture; not implemented.
+Version: 0.2.0. Status: local reference implementation exists; advanced index families and distributed layers remain planned.
 
 ## Mission
 Provide a reusable, auditable, bounded-resource substrate that lets Molecularis services ingest, identify, store, index, retrieve, transform and verify very large scientific datasets and intermediate artifacts.

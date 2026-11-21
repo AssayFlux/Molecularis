@@ -1,6 +1,6 @@
 # MSDE Core Rulebook
 
-Version: 0.1.0-draft. Status: normative requirements for future implementation; not yet executable.
+Version: 0.2.0. Status: normative Core rules; a tested subset is implemented in the local Python reference runtime.
 
 Rule classes: MUST, SHOULD (default with recorded exception), MAY (optional).
 
@@ -34,7 +34,7 @@ Rule classes: MUST, SHOULD (default with recorded exception), MAY (optional).
 
 ## Provenance and evidence
 - MSDE-EVD-001 MUST record input digests, method/build versions, parameters, schema versions and output digests.
-- MSDE-EVD-002 MUST preserve failed and superseded intermediate runs as immutable evidence.
+- MSDE-EVD-002 MUST preserve failed and superseded intermediate runs as immutable evidence. The current executor persists terminal failed-run evidence and successful outputs; partial-run evidence includes completed output artifact IDs.
 - MSDE-EVD-003 MUST distinguish prediction, heuristic score, simulation, measurement and independent validation.
 - MSDE-EVD-004 MUST record validator identity, outcome, threshold, tolerance and limitations.
 
