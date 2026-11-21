@@ -3,7 +3,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 import hashlib
 import json
-from typing import Any
 from .protein import protein_descriptors
 from .protein_motifs import MotifPack, scan_protein_motif_pack
 from .protein_design import validate_protein_design_brief
