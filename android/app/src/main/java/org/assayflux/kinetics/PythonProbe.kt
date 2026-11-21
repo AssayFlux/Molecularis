@@ -1,4 +1,4 @@
-package org.assayflux.kinetics
+package org.assayflux.molecularis
 
 import com.chaquo.python.Python
 import com.chaquo.python.android.AndroidPlatform

@@ -1,4 +1,4 @@
-package org.assayflux.kinetics
+package org.assayflux.molecularis
 
 /** R1-only JNI/FFI smoke-test bridge; not a production scientific API. */
 class NativeProbe {

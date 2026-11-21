@@ -1,4 +1,4 @@
-package org.assayflux.kinetics
+package org.assayflux.molecularis
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -151,7 +151,7 @@ internal fun PublicDatabaseCard(
                 { (fetched, saved) ->
                     savedRecords = withContext(Dispatchers.IO) { store.recent() }
                     onStructureFetched(fetched)
-                    message = "RCSB structure retrieved and encrypted locally · ${saved.accession}. Opening the existing Kinetics structure parser and viewer."
+                    message = "RCSB structure retrieved and encrypted locally · ${saved.accession}. Opening the existing Molecularis structure parser and viewer."
                 },
                 { error -> message = "Structure retrieval failed: ${error.message ?: error.javaClass.simpleName}" },
             )
@@ -166,7 +166,7 @@ internal fun PublicDatabaseCard(
         ) {
             Text("Public scientific databases", style = MaterialTheme.typography.titleMedium)
             Text(
-                "Search and retrieve reference sequences and structures directly inside Kinetics. Retrieved source records are checksum-verified and encrypted in app-private storage.",
+                "Search and retrieve reference sequences and structures directly inside Molecularis. Retrieved source records are checksum-verified and encrypted in app-private storage.",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )

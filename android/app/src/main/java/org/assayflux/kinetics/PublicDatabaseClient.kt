@@ -1,4 +1,4 @@
-package org.assayflux.kinetics
+package org.assayflux.molecularis
 
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
@@ -199,7 +199,7 @@ internal class PublicDatabaseClient {
                 readTimeout = READ_TIMEOUT_MS
                 instanceFollowRedirects = false
                 setRequestProperty("Accept", "application/json, text/plain, chemical/x-mmcif")
-                setRequestProperty("User-Agent", "Kinetics-Android/0.1 (public reference retrieval)")
+                setRequestProperty("User-Agent", "Molecularis-Android/0.1 (public reference retrieval)")
             }
             try {
                 val status = connection.responseCode
@@ -213,7 +213,7 @@ internal class PublicDatabaseClient {
                 require(status in 200..299) { "Public database request failed (HTTP $status)" }
                 val declaredLength = connection.contentLengthLong
                 require(declaredLength < 0 || declaredLength <= maximumBytes) {
-                    "Public database response exceeds the Kinetics size limit"
+                    "Public database response exceeds the Molecularis size limit"
                 }
                 val output = ByteArrayOutputStream()
                 connection.inputStream.use { input ->
@@ -227,7 +227,7 @@ internal class PublicDatabaseClient {
                         if (count < 0) break
                         total += count
                         require(total <= maximumBytes) {
-                            "Public database response exceeds the Kinetics size limit"
+                            "Public database response exceeds the Molecularis size limit"
                         }
                         output.write(buffer, 0, count)
                     }

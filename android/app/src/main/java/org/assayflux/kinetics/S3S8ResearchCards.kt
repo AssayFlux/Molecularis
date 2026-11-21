@@ -1,4 +1,4 @@
-package org.assayflux.kinetics
+package org.assayflux.molecularis
 
 import android.content.Context
 import android.net.Uri
@@ -336,7 +336,7 @@ internal fun GeneticCodeInferenceCard() {
         ) {
             Text("Genetic code finder", style = MaterialTheme.typography.titleMedium)
             Text(
-                "Choose a FASTA file or paste DNA sequences. Kinetics handles sequence parsing and genetic-code comparison in the background.",
+                "Choose a FASTA file or paste DNA sequences. Molecularis handles sequence parsing and genetic-code comparison in the background.",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )

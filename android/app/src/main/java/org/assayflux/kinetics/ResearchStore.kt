@@ -1,4 +1,4 @@
-package org.assayflux.kinetics
+package org.assayflux.molecularis
 
 import android.content.ContentValues
 import android.content.Context
@@ -261,7 +261,7 @@ class ResearchStore(context: Context) :
             val parameters = runCatching { JSONObject(cursor.getString(3)) }
                 .getOrElse { JSONObject().put("raw_parameters", cursor.getString(3)) }
             JSONObject()
-                .put("schema", "org.assayflux.kinetics.analysis-result")
+                .put("schema", "org.assayflux.molecularis.analysis-result")
                 .put("schema_version", 1)
                 .put("record_type", "research_analysis")
                 .put("tool_id", cursor.getString(0))
@@ -542,7 +542,7 @@ class ResearchStore(context: Context) :
                     .put("parameters", parameters)
                     .put("recorded_at_epoch_ms", cursor.getLong(11))
                 JSONObject()
-                    .put("schema", "org.assayflux.kinetics.provenance")
+                    .put("schema", "org.assayflux.molecularis.provenance")
                     .put("schema_version", 1)
                     .put("record_type", "import")
                     .put("job", job)
