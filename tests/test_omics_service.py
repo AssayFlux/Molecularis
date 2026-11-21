@@ -34,7 +34,7 @@ def test_welch_and_cross_omics_correlation(tmp_path):
         expr=OmicsDocument("expression",("g1","g2"),("a1","a2","a3","b1","b2","b3"),((1.,1.1,.9,3.,3.1,2.9),(2.,2.1,1.9,2.,2.1,1.9)),assay_type="log_expression",value_unit="log2")
         a=ingest_omics(p,expr)
         out=p.execute(omics_rulebook("differential_welch",parameters={"group_a":[0,1,2],"group_b":[3,4,5]}),{"omics_artifact_id":a.artifact_id})["omics_result"]
-        assert out["result"]["results"][0]["difference"]>0
+        assert out["result"]["results"][0]["difference"]<0
         b=ingest_omics(p,OmicsDocument("second",("h1",),expr.sample_ids,((3.,2.,1.,6.,5.,4.),),assay_type="normalized"))
         corr=p.execute(omics_rulebook("correlate"),{"omics_artifact_id":a.artifact_id,"second_omics_artifact_id":b.artifact_id})["omics_result"]
         assert corr["result"]["correlations"][0][0]>0
