@@ -16,7 +16,7 @@ A gap may be deferred only when the integration remains bounded, honest about it
 | Biopython | Optional host PairwiseAligner adapter integrated; Android feasibility prototype exists | Exact file-level licence and wheel notices; device runtime/16 KB proof; parser differential corpus; FASTQ encoding metadata; structure identity preservation; broader alignment modes |
 | Parasail | Source audit complete; not yet integrated | Fresh maintenance/security review; exact licence/citation notices; checked score-width/saturation; differential corpus; host build; Android NEON/JNI/16 KB proof |
 | HTSlib / pysam | Optional host BAM/CRAM streaming and indexed-region adapter exists | Lossless record/header/tags/mate/base-modification model; reference/index provenance; decompression/time/resource limits; broader SAM/BAM/CRAM fixtures; native supply-chain and binary notices; Android feasibility |
-| Biotite | Not integrated | Python >=3.12 host profile; Rust extension packaging; lossless structure contract; dependency/licence audit; differential mmCIF/BinaryCIF fixtures |
+| Biotite | Optional host mmCIF adapter integrated in `structure_biotite.py`; Molecularis-owned atom records and provenance | Python >=3.12 host profile; Rust extension packaging; BinaryCIF input; author/label identifier mapping; biological assemblies; optional annotation fidelity; dependency/licence audit; differential fixtures |
 | RDKit | Optional host chemistry adapter exists | Broader stereochemistry/isotope/salt/tautomer/aromaticity corpus; graph/resource ceilings and isolation; exact transitive SBOM/notices; Android feasibility |
 | AutoDock Vina | Optional host docking runner exists | Receptor/ligand preparation workflow; reproducibility across builds; redocking/cross-docking and enrichment benchmarks; resource isolation; binary provenance/licence inventory |
 | OpenMM | Optional CPU runner for caller-prepared systems exists | Approved system preparation; force-field and ligand parameter provenance; biomolecular reference systems; energy/stability convergence checks; resource/cancellation controls; no general remote-worker exposure |
@@ -59,3 +59,11 @@ These states are independent. Never infer one from another. Update status only w
 2. Integrate specialist engines only after their source, licence and runtime profiles are reviewed.
 3. Unify contracts, provenance, job orchestration and resource controls across all integrations.
 4. After the integration inventory is substantially complete, work through the deferred gaps above in priority order and record evidence for each closure.
+
+
+## Biotite integration increment (2026-11-21)
+
+- Reviewed upstream Biotite PDBx conversion implementation in `src/biotite/structure/io/pdbx/convert.py` and the `AtomArray` annotation model in `src/biotite/structure/atoms.py`. The upstream conversion path uses `CIFFile.read()`, `get_model_count()` and `get_structure()`; this adapter calls those APIs rather than reimplementing mmCIF parsing.
+- Added `python/molecularis/structure_biotite.py`: lazy optional Biotite backend, bounded UTF-8 input, explicit model selection, atom-count bound, finite coordinate checks, input SHA-256, and Molecularis-owned primitive atom records. No Biotite/NumPy objects escape the adapter.
+- Added `tests/test_structure_biotite.py` with optional dependency contract and input-bound tests. Tests were not executed in this repository-editing session.
+- The adapter currently accepts text mmCIF only. BinaryCIF, biological assembly expansion, author/label identifier reconciliation and broader differential validation remain deferred.
