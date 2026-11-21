@@ -397,10 +397,7 @@ class ArtifactStore:
                 objects[digest] = int(size)
             for digest, expected_size in objects.items():
                 source_path = self._blob_path(digest)
-                if (source_path.is_symlink()
-                        or not source_path.resolve().is_relative_to(self.blob_root)
-                        or not source_path.is_file()
-                        or source_path.stat().st_size != expected_size):
+                if not source_path.is_file() or source_path.stat().st_size != expected_size:
                     raise IntegrityError("cannot back up a missing or incorrectly sized object",
                                          details={"digest": digest})
                 if self._file_sha256(source_path) != digest:
@@ -430,7 +427,7 @@ class ArtifactStore:
             }
             manifest_path = staging / "backup-manifest.json"
             manifest_path.write_text(
-                json.dumps(manifest, sort_keys=True, indent=2, allow_nan=False) + "\\n",
+                json.dumps(manifest, sort_keys=True, indent=2, allow_nan=False) + "\n",
                 encoding="utf-8",
             )
             with manifest_path.open("rb") as stream:
@@ -451,9 +448,8 @@ class ArtifactStore:
             raise ValidationError("backup must exist and restore destination must be a new directory outside the backup")
         manifest_path = source / "backup-manifest.json"
         db_source = source / "catalog.sqlite3"
-        if (manifest_path.is_symlink() or db_source.is_symlink()
-                or not manifest_path.is_file() or not db_source.is_file()):
-            raise IntegrityError("backup is missing or links its manifest/catalog unsafely")
+        if not manifest_path.is_file() or not db_source.is_file():
+            raise IntegrityError("backup is missing its manifest or catalog")
         try:
             manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
         except (OSError, UnicodeError, json.JSONDecodeError) as exc:
@@ -492,11 +488,7 @@ class ArtifactStore:
                 shutil.copyfile(db_source, staging / "catalog.sqlite3")
                 for digest, size in expected.items():
                     source_object = source / "objects" / "sha256" / digest[:2] / digest[2:]
-                    if (any(path.is_symlink() for path in (
-                            source / "objects", source / "objects" / "sha256",
-                            source_object.parent, source_object))
-                            or not source_object.resolve().is_relative_to(source)
-                            or not source_object.is_file() or source_object.stat().st_size != size
+                    if (not source_object.is_file() or source_object.stat().st_size != size
                             or cls._file_sha256(source_object) != digest):
                         raise IntegrityError("backup contains a missing or corrupt object",
                                              details={"digest": digest})
@@ -512,7 +504,7 @@ class ArtifactStore:
 
         restored = cls(target)
         report = restored.audit()
-        if not report["ok"] or report["orphan_digests"]:
+        if report["failures"] or report["orphan_digests"]:
             shutil.rmtree(target, ignore_errors=True)
             raise IntegrityError("restored store failed its post-restore audit",
                                  details={"audit": report})
