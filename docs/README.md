@@ -10,6 +10,7 @@ This index has one implementation authority: [MASTER_PLAN.md](MASTER_PLAN.md). O
 | Complete implementation plan and phase gates | [Master Plan](MASTER_PLAN.md) |
 | Exact repository inventory and gaps | [Repository Baseline](REPOSITORY_BASELINE.md) |
 | Existing capabilities and migration mapping | [Capability Status](CAPABILITY_STATUS.md) |
+| Entry-by-entry registry, source and test mapping | [Capability Audit](CAPABILITY_AUDIT.md) |
 | Original owner requirements and old-track reconciliation | [Requirements Traceability](REQUIREMENTS_TRACEABILITY.md) |
 | Superseded plan/document map | [Plan Retirement](PLAN_RETIREMENT.md) |
 | Approved decisions and supersessions | [Decision Log](../DECISIONS.md) |
