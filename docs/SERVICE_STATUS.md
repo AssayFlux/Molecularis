@@ -1,7 +1,7 @@
 # Service and Platform Status Register
 
 Last verified: 2026-11-21  
-Current implementation commit: pending A implementation commit.
+Current implementation commit: [e2957f801f307f1c5cdc470e1f9ca0e3e12bee68](https://github.com/AssayFlux/Molecularis/commit/e2957f801f307f1c5cdc470e1f9ca0e3e12bee68).
 
 A scaffold or specification does not imply implementation or scientific validation.
 
@@ -46,7 +46,7 @@ A scaffold or specification does not imply implementation or scientific validati
 
 - Previous baseline [run #132](https://github.com/AssayFlux/Molecularis/actions/runs/44880497095): 568 passed, 12 skipped.
 - [Run #133](https://github.com/AssayFlux/Molecularis/actions/runs/44880802259): optional dependency profiles passed; the core job exposed a malformed legacy JSON schema that was subsequently repaired.
-- A-specific tests and schema checks are being added in this implementation commit; results are pending.
+- [Run #142](https://github.com/AssayFlux/Molecularis/actions/runs/44882468777), commit `e2957f8`: 593 passed, 12 skipped; core, schema validation, Ruff, compilation and all sequence/genomics/chemistry optional profiles passed.
 - Ruff remains limited to E9/F; this is not full style conformance.
 
 ## Active phase and next exact work

@@ -37,7 +37,7 @@ Mark an item complete only with a commit SHA and verification evidence. Service 
 
 Execute exactly one letter at a time, following [SERVICE_ROADMAP.md](SERVICE_ROADMAP.md).
 
-- [ ] A — Molecular (implementation in progress; v1 graph model and schema added)
+- [ ] A — Molecular (v1 graph model/schema implemented; run #142 passed; independent validation and MSDE integration remain)
 - [ ] B — Sequence
 - [ ] C — Structure
 - [ ] D — Chemistry
