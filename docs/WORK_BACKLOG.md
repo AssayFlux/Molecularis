@@ -37,7 +37,7 @@ Mark an item complete only with a commit SHA and verification evidence. Service 
 
 Execute exactly one letter at a time, following [SERVICE_ROADMAP.md](SERVICE_ROADMAP.md).
 
-- [ ] A — Molecular (v1 engineering implementation complete; run #148 green with 606 passed/12 skipped and 1k/10k benchmark smoke; independent scientific approval and formal freeze pending)
+- [ ] A — Molecular (v1 engineering implementation complete; run #150 green with 608 passed/12 skipped and 1k/10k benchmark smoke; independent scientific approval and formal freeze pending)
 - [ ] B — Sequence
 - [ ] C — Structure
 - [ ] D — Chemistry

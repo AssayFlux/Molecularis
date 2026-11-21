@@ -1,7 +1,7 @@
 # Service and Platform Status Register
 
 Last verified: 2026-11-21  
-Current implementation commit: [fb2afc2017eb0e74e4d4e9209d33323f5b279e6c](https://github.com/AssayFlux/Molecularis/commit/fb2afc2017eb0e74e4d4e9209d33323f5b279e6c).
+Current implementation commit: [7e0785a781a9423746717c3f96c2ad7ed6a1f92a](https://github.com/AssayFlux/Molecularis/commit/fb2afc2017eb0e74e4d4e9209d33323f5b279e6c).
 
 A scaffold or specification does not imply implementation or scientific validation.
 
@@ -46,7 +46,7 @@ A scaffold or specification does not imply implementation or scientific validati
 
 - Previous baseline [run #132](https://github.com/AssayFlux/Molecularis/actions/runs/44880497095): 568 passed, 12 skipped.
 - [Run #133](https://github.com/AssayFlux/Molecularis/actions/runs/44880802259): optional dependency profiles passed; the core job exposed a malformed legacy JSON schema that was subsequently repaired.
-- [Run #148](https://github.com/AssayFlux/Molecularis/actions/runs/44883726169), commit `fb2afc2`: 606 passed, 12 skipped; core, capability registry, 28 JSON Schemas, Ruff E9/F, compilation, 1k/10k graph benchmark smoke and all sequence/genomics/chemistry optional profiles passed.
+- [Run #150](https://github.com/AssayFlux/Molecularis/actions/runs/44883890013), commit `7e0785a`: 608 passed, 12 skipped; core, capability registry, 28 JSON Schemas, Ruff E9/F, compilation, 1k/10k graph benchmark smoke and all sequence/genomics/chemistry optional profiles passed.
 - Ruff remains limited to E9/F; this is not full style conformance.
 
 ## Active phase and next exact work

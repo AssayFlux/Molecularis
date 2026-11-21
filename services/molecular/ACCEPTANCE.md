@@ -18,9 +18,9 @@ Status: v1 engineering implementation complete; CI green; independent scientific
 
 ## Verification required
 
-- [x] [CI run #148](https://github.com/AssayFlux/Molecularis/actions/runs/44883726169) is green on commit fb2afc2.
-- [x] All 28 repository JSON Schemas, including all three Molecular schemas, pass validation in run #148.
-- [x] 606 tests pass (12 skipped); Molecular Rulebook success/failure and artifact provenance tests are included.
+- [x] [CI run #150](https://github.com/AssayFlux/Molecularis/actions/runs/44883890013) is green on commit 7e0785a.
+- [x] All 28 repository JSON Schemas, including all three Molecular schemas, pass validation in run #150.
+- [x] 608 tests pass (12 skipped); Molecular Rulebook success/failure and artifact provenance tests are included.
 - [x] Benchmark smoke passed on GitHub ubuntu-latest / Python 3.11.18: 1k atoms/999 bonds construction 0.00612 s, components 0.00049 s; 10k atoms/9,999 bonds construction 0.05971 s, components 0.00645 s. Single-run smoke measurements only; no performance threshold is asserted.
 - [ ] Scientific reviewer confirms fixture provenance and approves MOL-001 through MOL-010.
 - [ ] Public API and service manifest are reviewed and v1 contracts frozen.
