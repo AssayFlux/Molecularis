@@ -284,3 +284,11 @@ No Android-native product roadmap. Existing Android/Kotlin work is migration con
 ## D-029 — Alpha branch
 
 Alpha was created from CORE, the repository's actual default branch at branch creation. It is the isolated implementation branch for the all-device transition. All Alpha changes remain separate from CORE until reviewed and merged by the repository owner.
+
+
+## D-026 — Desktop-first cross-platform application direction (2026-11-21)
+- Context: The initial Alpha plan incorrectly placed a responsive website/PWA first. The owner explicitly clarified: desktop application first for Linux, Microsoft Windows and macOS, and applications for Android and Apple mobile devices as well; no websites first.
+- Choice: Adopt an installed, desktop-first cross-platform application. Deliver Linux/Windows/macOS desktop applications first, then Android and Apple iOS/iPadOS applications on shared domain logic, contracts, project formats and provenance. A web companion is deferred and optional, never the primary runtime.
+- Framework: Not yet selected. Run a measured vertical-slice comparison across all five OS families, including accessibility, native integration, scientific visualization/GPU, offline storage, packaging/signing/updating, mobile lifecycle, testability and licensing. Record the result and owner decision before committing the framework.
+- Consequences: Supersedes the web/PWA-first wording in Alpha planning docs. Re-sequence roadmap and backlog around desktop foundations, local scientific execution and desktop release engineering before mobile parity. Preserve Android scientific code and user data until migration parity is proven.
+- Approver: Project owner, explicit instruction in project conversation on 2026-11-21.
