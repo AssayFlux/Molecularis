@@ -75,11 +75,14 @@ def test_qc_digest_is_deterministic_and_changes_with_input() -> None:
 def test_rejects_non_synthetic_classification_and_bad_fixture_id() -> None:
     with pytest.raises(ValueError, match="Only explicitly synthetic"):
         aggregate_synthetic_vcf_qc(
-            VCF, fixture_id="fixture", data_classification="public_non_patient", reference=_reference()
+            VCF, fixture_id="fixture", data_classification="public_non_patient",
+            reference=_reference(),
         )
     with pytest.raises(ValueError, match="kebab-case"):
         aggregate_synthetic_vcf_qc(
-            VCF, fixture_id="Not Valid", data_classification="public_non_patient_synthetic", reference=_reference()
+            VCF, fixture_id="Not Valid",
+            data_classification="public_non_patient_synthetic",
+            reference=_reference(),
         )
 
 
