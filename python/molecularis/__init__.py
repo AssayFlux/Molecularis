@@ -27,7 +27,8 @@ from .genomics import (
     SamRecord, fastq_quality_summary, iter_bam_records, normalize_small_variant, parse_sam, parse_vcf,
 )
 from .variant_reference import ReferenceSequence, normalize_against_reference
-from .kinetics_service import (ReactionNetworkDocument, ingest_kinetics, load_kinetics, register_kinetics_service, kinetics_rulebook, simulate_reaction_network)\nfrom .kinetics import (
+from .kinetics_service import (ReactionNetworkDocument, ingest_kinetics, load_kinetics, register_kinetics_service, kinetics_rulebook, simulate_reaction_network)
+from .kinetics import (
     bootstrap_michaelis_menten, eadie_hofstee, fit_michaelis_menten, hanes_woolf, inhibition_rate,
     lineweaver_burk, michaelis_menten,
 )
