@@ -3,8 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 import hashlib, json
 from math import isfinite
-from typing import Any
-from .platform import Artifact, Budget, Capability, ExecutionContext, MolecularisPlatform, Operation, Rulebook
+from .platform import Budget, Capability, Operation, Rulebook
 from .platform.contracts import ResourceLimitError, ValidationError
 from .structure import Atom, contact_pairs, interaction_candidates, parse_mmcif, parse_pdb, rmsd, solvent_accessible_surface_area
 
