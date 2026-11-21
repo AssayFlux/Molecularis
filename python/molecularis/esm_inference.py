@@ -8,7 +8,6 @@ from __future__ import annotations
 
 import hashlib
 from pathlib import Path
-from typing import Any
 
 _AMINO_ACIDS = frozenset("ACDEFGHIKLMNPQRSTVWYXBZUO")
 _DEFAULT_MAX_MODEL_BYTES = 20 * 1024 * 1024 * 1024

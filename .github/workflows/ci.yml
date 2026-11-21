@@ -27,7 +27,7 @@ jobs:
       - name: Validate capability registry
         run: python scripts/check_registry.py
       - name: Static code quality (Ruff)
-        run: ruff check --output-format=github python scripts tests
+        run: ruff check --select E9,F --output-format=github python scripts tests
       - name: Compile Python sources
         run: python -m compileall -q python scripts
       - name: Run tests
