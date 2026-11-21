@@ -10,7 +10,7 @@
 - Maximum-likelihood/Bayesian inference, tree search and interactive offline viewers remain future work.
 
 ## Current source
-Implemented in `python/kinetics/phylo.py`. Non-finite/negative input distances and negative inferred neighbour-joining limbs are rejected rather than silently clipped.
+Implemented in `python/molecularis/phylo.py`. Non-finite/negative input distances and negative inferred neighbour-joining limbs are rejected rather than silently clipped.
 
 ## Limitations
 - UPGMA assumes an ultrametric clock-like distance structure.
@@ -36,7 +36,7 @@ Added deterministic, seeded alignment-column resampling for Jukes-Cantor + neigh
 
 
 ### Exact-source automated audit — 2026-11-09 (CI #2101)
-- Source commit: `8c4128d5e448db51f2b48fec6c38ce6022fdb053`; [workflow #2101](https://github.com/AssayFlux/Kinetics/actions/runs/42554027490) completed successfully across all five jobs.
+- Source commit: `8c4128d5e448db51f2b48fec6c38ce6022fdb053`; [workflow #2101](https://github.com/AssayFlux/Molecularis/actions/runs/42554027490) completed successfully across all five jobs.
 - Python CI collected 233 tests: 229 passed, 4 skipped (3 optional RDKit adapter tests because RDKit is not installed in the base Python test environment; 1 optional pysam test because pysam is not installed). The separate pinned RDKit descriptor sanity job passed.
 - The suite executed the R3/R4 sequence and research primitive tests, R5 structure/structure-view tests, R6 core chemistry tests, R7 phylogenetics tests, R8 omics tests, R9 catalogue/variant-reference tests and R10 registry/SBOM/configuration checks.
 - The pinned host scientific-reference job passed its Michaelis–Menten/SciPy comparison and genetic-code/Biopython comparison steps. These are bounded synthetic/software-reference checks, not independent experimental validation.

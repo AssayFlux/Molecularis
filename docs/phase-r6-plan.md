@@ -8,7 +8,7 @@
 - Added an optional RDKit adapter for sanitized SMILES/molblock parsing, canonical isomeric SMILES, standard descriptors and Morgan radius-2 fingerprints/Tanimoto. RDKit is not bundled in Android; Android ABI, transitive dependencies, version pin, binary size and license notices remain unapproved. Protonation/tautomer workflows, conformers and Android production integration remain open.
 
 ## Current source
-Implemented in `python/kinetics/chemistry.py`. Resource caps apply to substructure traversal and path fingerprints.
+Implemented in `python/molecularis/chemistry.py`. Resource caps apply to substructure traversal and path fingerprints.
 
 ## Limitations
 - V3000 support is limited to basic atom/bond graph records; stereochemical and other V3000 attributes are not interpreted. Robust SMILES is not implemented.

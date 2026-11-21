@@ -49,7 +49,7 @@ P0 and all patient/human-subject/clinical activities remain blocked.
 
 ## Synthetic reference and coordinate contract (2026-11-09)
 
-`python/kinetics/variant_reference.py` adds an immutable reference-contig contract
+`python/molecularis/variant_reference.py` adds an immutable reference-contig contract
 for non-clinical synthetic fixtures. It binds a sequence to an explicit assembly,
 accession, release, contig, 1-based-closed coordinate convention, timezone-aware
 retrieval timestamp and SHA-256 over the exact uppercase ASCII sequence bytes.
