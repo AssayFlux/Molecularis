@@ -11,6 +11,7 @@ The repository accumulated several generations of plans. This reset removes comp
 2. `docs/MASTER_PLAN.md` — single implementation plan, phase order and completion gates.
 3. `docs/REPOSITORY_BASELINE.md` — exact repository snapshot and observed gaps.
 4. `docs/CAPABILITY_STATUS.md` — source-to-capability mapping and migration obligations.
+5. `docs/REQUIREMENTS_TRACEABILITY.md` — original 18-part owner spec and R/S/I/P/G/U work-package reconciliation.
 5. `DECISIONS.md` — append-only decision history; superseded decisions remain visible.
 6. Domain-specific schemas, validation fixtures, security standards and third-party rights records remain authoritative within their technical scope unless explicitly superseded.
 
