@@ -31,7 +31,7 @@ A scaffold or specification does not imply implementation or scientific validati
 | B | Sequence | Existing parser, alignment, reference, GFF3, ORF and translation modules consolidated; new typed artifact service | Python v1 implementation | MSDE artifact lifecycle and five Rulebook capabilities | SEQ-001–SEQ-005 executable; review pending | Engineering implementation complete; scientific acceptance pending |
 | C | Structure | PDB/mmCIF, geometry, RMSD, contacts, SASA, interactions and related adapters retained | Python v1 canonical service | MSDE artifact lifecycle and six capabilities | STR-001–STR-007 executable; university review deferred | Engineering implementation complete; review deferred until A–N build |
 | D | Chemistry | Native explicit-graph v1; MSDE artifacts and optional RDKit retained | Implemented | Five capabilities | CHM-001–CHM-006 executable | Engineering complete; university review deferred |
-| E | Protein | Existing descriptors, ESM local inference, HMMER evidence, motif scan and design brief retained | Native sequence/artifact v1 | MSDE artifacts and four capabilities; ESM/HMMER remain optional local workflows | PRO-001–PRO-006 executable | Engineering complete; scientific review deferred pending CI |
+| E | Protein | Existing descriptors, ESM local inference, HMMER evidence, motif scan and design brief retained | Native sequence/artifact v1 | MSDE artifacts and four capabilities; ESM/HMMER remain optional local workflows | PRO-001–PRO-006 executable | Engineering complete; CI run #44889593877 green; scientific review deferred |
 | F | Genomics | Existing modules; audit pending | Not started | Not started | Not operational | Planned |
 | G | DNA/RNA | Scaffold | Not started | Not started | Not operational | Planned |
 | H | Simulation | Existing modules; audit pending | Not started | Not started | Not operational | Planned |
@@ -57,9 +57,9 @@ A scaffold or specification does not imply implementation or scientific validati
 
 ## Active phase and next exact work
 
-**Active phase:** Service E — Protein Python v1 engineering implementation implemented; CI verification pending; university review and formal freeze deferred until the complete A–N engineering build per owner direction. A and B engineering implementations remain complete; their university reviews are likewise deferred. The platform is not yet a distributed, multi-language, OS-isolated production runtime.
+**Active phase:** Service E — Protein Python v1 engineering implementation complete and CI-verified in run #44889593877; university review and formal freeze deferred until the complete A–N engineering build per owner direction. A and B engineering implementations remain complete; their university reviews are likewise deferred. The platform is not yet a distributed, multi-language, OS-isolated production runtime.
 
-**Next:** proceed to F — Genomics after E CI verification. University-level scientific review, cross-reference testing and formal contract freezes will be conducted after the full A–N engineering build, as directed by the owner. Platform-wide recovery, backup/restore, service discovery, language conformance and isolation gates remain open.
+**Next:** proceed to F — Genomics. University-level scientific review, cross-reference testing and formal contract freezes will be conducted after the full A–N engineering build, as directed by the owner. Platform-wide recovery, backup/restore, service discovery, language conformance and isolation gates remain open.
 
 ## Reporting rule
 
