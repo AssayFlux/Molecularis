@@ -41,7 +41,7 @@ The interface must never label a sequence “novel gene/protein” solely becaus
 
 ## Explicit genetic-code translation (S8 foundation)
 
-`python/kinetics/genetic_code.py` supports explicit translation tables 1, 2, 4,
+`python/molecularis/genetic_code.py` supports explicit translation tables 1, 2, 4,
 5 and 11 for canonical DNA/RNA sequences. The caller must select the table.
 CDS mode checks table-specific start/terminal-stop codons and rejects internal
 in-frame stops. Alternative initiators are represented as methionine only in

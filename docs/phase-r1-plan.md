@@ -53,7 +53,7 @@ D-006 sets the target at Android 10+ (API 29), 64-bit ARM (arm64-v8a), with low-
 ## Deliverables
 
 - `docs/android-feasibility.md`: experiment matrix, historical evidence, current blockers, local build procedure and eventual owner-device runbook.
-- Minimal isolated prototypes for each R1 feasibility question; the app shell now exposes a manual embedded-Python and Rust/C++ JNI smoke-probe action. The Chaquopy source set explicitly includes the repository's `python/` package, and the runtime probe now imports `kinetics` and exercises FASTA parsing plus reference-checked variant normalization. No prototype is silently promoted to production.
+- Minimal isolated prototypes for each R1 feasibility question; the app shell now exposes a manual embedded-Python and Rust/C++ JNI smoke-probe action. The Chaquopy source set explicitly includes the repository's `python/` package, and the runtime probe now imports `molecularis` and exercises FASTA parsing plus reference-checked variant normalization. No prototype is silently promoted to production.
 - `docs/third-party.md`: exact dependency versions, source/license review and approval status.
 - A consolidated go/no-go matrix with feasible, infeasible, conditional or untested outcomes.
 
