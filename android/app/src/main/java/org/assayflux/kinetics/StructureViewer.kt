@@ -1,4 +1,4 @@
-package org.assayflux.kinetics
+package org.assayflux.molecularis
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
@@ -304,13 +304,13 @@ internal fun StructureViewerPreview(publicRecord: PublicScientificRecord? = null
                     if (url == VIEWER_URL) {
                         val encoded = JSONObject.quote(activePayload)
                         view.evaluateJavascript(
-                            "window.KineticsStructureViewer.load(JSON.parse($encoded));",
+                            "window.MolecularisStructureViewer.load(JSON.parse($encoded));",
                         ) {
                             val savedState = viewerStateJson
                             if (savedState != null) {
                                 val stateLiteral = JSONObject.quote(savedState)
                                 view.evaluateJavascript(
-                                    "window.KineticsStructureViewer.setState(JSON.parse($stateLiteral));",
+                                    "window.MolecularisStructureViewer.setState(JSON.parse($stateLiteral));",
                                     null,
                                 )
                             }
@@ -358,7 +358,7 @@ internal fun StructureViewerPreview(publicRecord: PublicScientificRecord? = null
                     if (view == null || base == null) {
                         importMessage = "Session export is unavailable until a structure is loaded."
                     } else {
-                        view.evaluateJavascript("window.KineticsStructureViewer.getState()") { rawState ->
+                        view.evaluateJavascript("window.MolecularisStructureViewer.getState()") { rawState ->
                             runCatching {
                                 val state = JSONObject(rawState ?: error("Viewer state is unavailable"))
                                 viewerStateJson = state.toString()
@@ -401,7 +401,7 @@ internal fun StructureViewerPreview(publicRecord: PublicScientificRecord? = null
                     if (view == null) {
                         importMessage = "SVG export is unavailable until the viewer is ready."
                     } else {
-                        view.evaluateJavascript("window.KineticsStructureViewer.exportSvg()") { rawSvg ->
+                        view.evaluateJavascript("window.MolecularisStructureViewer.exportSvg()") { rawSvg ->
                             runCatching {
                                 val raw = rawSvg ?: error("Viewer did not return an SVG snapshot")
                                 val svg = JSONArray("[$raw]").getString(0)
@@ -432,7 +432,7 @@ internal fun StructureViewerPreview(publicRecord: PublicScientificRecord? = null
                     if (view != null && state != null) {
                         val literal = JSONObject.quote(state)
                         view.evaluateJavascript(
-                            "window.KineticsStructureViewer.setState(JSON.parse($literal));",
+                            "window.MolecularisStructureViewer.setState(JSON.parse($literal));",
                             null,
                         )
                     }

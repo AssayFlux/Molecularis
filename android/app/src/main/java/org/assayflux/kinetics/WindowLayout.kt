@@ -1,4 +1,4 @@
-package org.assayflux.kinetics
+package org.assayflux.molecularis
 
 /**
  * Navigation is selected from the current app window, never from a device-name heuristic.
