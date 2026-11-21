@@ -1,31 +1,35 @@
 # Molecularis Work Backlog
 
-Mark an item complete only with a commit SHA and verification evidence. Priority order follows the Master Development Plan. Do not start service A until the Core/MSDE platform gate passes.
+Mark an item complete only with a commit SHA and verification evidence. Do not start service A until the Core/MSDE platform gate passes.
 
-## P0 — Maintain trustworthy baseline
+## P0 — Trustworthy baseline
 
-- [x] Resolve the previously failing baseline CI gates. Evidence: CORE commit a6b5840836a94029acb9a94819b84f6c209ffde5; run #127.
-- [ ] Add dedicated optional-dependency CI profiles so RDKit, Biopython, Biotite, Parasail and pysam tests execute rather than skip.
-- [ ] Add package build/import checks and schema validation coverage.
-- [ ] Inventory Python modules, public imports, tests and service ownership.
+- [x] Baseline CI repaired. Evidence: run #127.
+- [x] Implement local MSDE reference slice. Evidence: commits 5b39b44 and ccae6c1; run #130.
+- [ ] Add dedicated optional-dependency CI profiles for RDKit, Biopython, Biotite, Parasail and pysam.
+- [ ] Add schema validation and package build/import coverage.
+- [ ] Audit Python modules, public imports, tests and service ownership.
 - [ ] Audit dependencies, licenses, data provenance, model/runtime assumptions and security.
-- [ ] Progressively expand Ruff beyond the current E9/F baseline; add type checking where practical.
-- [ ] Establish coverage, reproducibility, scientific reference and performance baselines.
+- [ ] Expand Ruff beyond E9/F; introduce targeted strict typing.
+- [ ] Establish reproducibility, scientific reference and performance baselines.
 
-## P1 — Core and MSDE platform gate
+## P1 — Finish Core/MSDE platform gate
 
-- [ ] Specify and implement service identity/discovery and versioned request/response/error envelopes.
-- [ ] Define artifact/run identity, schema evolution, units and provenance contracts.
-- [ ] Review MSDE threat model, storage consistency, crash recovery and schema evolution.
-- [ ] Implement immutable content-addressed artifact store and catalog.
-- [ ] Implement journal recovery, atomic publication and bounded streaming I/O.
-- [ ] Implement exact-key and ordered/range indexes.
-- [ ] Implement query executor/planner, snapshots, budgets and completeness semantics.
-- [ ] Implement evidence ledger and generic Rulebook DAG execution gates.
-- [ ] Add cross-language contract tests and executable reference service.
-- [ ] Benchmark correctness, throughput, memory, storage growth and recovery.
-
-**Platform exit:** executable reference service discovers, ingests, queries, transforms, validates and publishes immutable artifacts with provenance under bounded budgets.
+- [x] Typed platform budgets, capability and execution-context contracts.
+- [x] Local service lifecycle and JSON capability manifest loader.
+- [x] SHA-256 immutable blob store, SQLite catalog, lineage and atomic publication.
+- [x] Bounded streaming, digest verification and non-destructive integrity audit.
+- [x] Exact scalar and numeric range metadata lookup.
+- [x] Capability registry and acyclic Rulebook DAG execution.
+- [x] Successful run evidence ledger.
+- [ ] Failed/partial run evidence and input artifact lineage.
+- [ ] Snapshot-bound pagination, typed query plan and deterministic planner.
+- [ ] Native sorted-segment indexes, compaction and differential benchmarks.
+- [ ] Crash-boundary fault injection, backup/restore and corruption-recovery matrix.
+- [ ] Full JSON schema validation in CI and compatibility policy tests.
+- [ ] Cross-process service discovery and language-neutral request/response runtime.
+- [ ] C++/Python/Rust conformance suite and executable cross-language reference service.
+- [ ] Threat model, sandboxing and operational resource-isolation controls.
 
 ## P2 — Scientific service sequence
 
@@ -46,7 +50,7 @@ Execute exactly one letter at a time, following [SERVICE_ROADMAP.md](SERVICE_ROA
 - [ ] M — Cohorts
 - [ ] N — Workflows
 
-Each letter requires discovery/audit, Engine, Runtime, Rulebook, schemas/contracts, implementation, integration, mandatory tests, independent scientific evidence, documentation, acceptance and freeze. No next letter until accepted.
+Each letter requires discovery/audit, Engine, Runtime, Rulebook, schemas/contracts, implementation, integration, mandatory tests, independent scientific evidence, documentation, acceptance and freeze.
 
 ## P3 — System integration and release
 
@@ -54,9 +58,9 @@ Each letter requires discovery/audit, Engine, Runtime, Rulebook, schemas/contrac
 - [ ] Deterministic replay, dependency invalidation and failure recovery.
 - [ ] Security, resource limits, backup/restore and supply-chain governance.
 - [ ] System-scale performance and scientific acceptance report.
-- [ ] Release SBOM with resolved artifacts, hashes, native binaries and license evidence.
+- [ ] Complete resolved release SBOM and license evidence.
 - [ ] Device/deployment assessment based on measured requirements.
 
 ## Active task
 
-Phase 1 Core/MSDE platform gate. See [SERVICE_STATUS.md](SERVICE_STATUS.md) for the verified baseline and next exact task.
+Continue Phase 1 Core/MSDE platform gate. See [SERVICE_STATUS.md](SERVICE_STATUS.md) for evidence and next exact work.

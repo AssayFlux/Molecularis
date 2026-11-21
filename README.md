@@ -12,42 +12,30 @@ Build a trustworthy scientific system in which every result can be traced to its
 
 After the shared Core/MSDE foundation passes its platform gate, services are built in this strict order:
 
-A. Molecular  
-B. Sequence  
-C. Structure  
-D. Chemistry  
-E. Protein  
-F. Genomics  
-G. DNA/RNA  
-H. Simulation  
-I. Kinetics  
-J. Omics  
-K. Phylogeny  
-L. Pharmacogenomics  
-M. Cohorts  
-N. Workflows
+A. Molecular · B. Sequence · C. Structure · D. Chemistry · E. Protein · F. Genomics · G. DNA/RNA · H. Simulation · I. Kinetics · J. Omics · K. Phylogeny · L. Pharmacogenomics · M. Cohorts · N. Workflows.
 
-Each step includes discovery, specification, native engine, runtime, Rulebook, schemas/contracts, integration, tests, independent scientific validation, documentation and a freeze review. The next service does not begin until the active service is accepted. Full criteria and rationale: [Service Roadmap](docs/SERVICE_ROADMAP.md).
+Each step includes discovery, specification, native engine, runtime, Rulebook, schemas/contracts, integration, tests, independent scientific validation, documentation and a freeze review. The next service does not begin until the active service is accepted. Full criteria: [Service Roadmap](docs/SERVICE_ROADMAP.md).
 
 ## Architecture
 
-- `CORE/` — shared platform and the Molecularis Scientific Data Engine (MSDE) specifications/implementation.
-- `services/<service>/` — service-owned ENGINE, RUNTIME, RULEBOOK and metadata; source, tests, schemas, data and benchmarks are added as each service is built.
-- `python/molecularis/` and `python/kinetics/` — existing Python implementation; retained and audited before migration.
+- `CORE/` — shared contracts and Molecularis Scientific Data Engine (MSDE).
+- `services/<service>/` — service-owned ENGINE, RUNTIME, RULEBOOK and metadata.
+- `python/molecularis/platform/` — local Core reference runtime, immutable artifact store, catalog, capability registry and Rulebook executor.
+- `python/molecularis/` and `python/kinetics/` — existing scientific implementations; retained pending audit/migration.
 - `api/`, `schemas/` — versioned contracts.
-- `capabilities/registry.yaml` — capability inventory; registration is not proof of implementation or scientific validation.
-- `data/`, `validation/` — reference metadata, fixtures and validation assets.
+- `capabilities/registry.yaml` — capability inventory; registration is not proof of validation.
+- `data/`, `validation/` — reference metadata and validation assets.
 - `remote-node/` — isolated remote execution component.
 - `scripts/`, `tests/` — engineering checks and automated tests.
 - `Assets/` — retained project identity and visual assets.
 
-The **Engine** implements domain operations. The **Runtime** governs execution lifecycle and resources. The **Rulebook** expresses domain rules, generation/selection procedures and acceptance criteria. **Core/MSDE** provides shared contracts, artifact storage/query and provenance; it does not own domain science.
+The **Engine** implements domain operations. The **Runtime** governs lifecycle and resources. The **Rulebook** expresses domain rules and acceptance criteria. **Core/MSDE** provides shared contracts, artifact storage, metadata lookup and provenance; it does not own domain science.
 
 ## Current implementation reality
 
-The repository contains existing Python capabilities and tests, service specification scaffolds, governance documents and an MSDE architecture specification. The MSDE storage/index runtime and the A–N service implementations are not yet complete. Do not infer scientific readiness from a scaffold, capability registry entry or generic CI pass.
+The local Core/MSDE reference slice is implemented and tested: immutable SHA-256 blobs, SQLite WAL catalog, lineage, bounded streaming, integrity audit, exact/numeric metadata lookup, capability registration, Rulebook DAG execution and successful run evidence. It is a local single-catalog reference implementation—not yet the complete platform gate. Native sorted-segment indexes, robust recovery certification, stable snapshot pagination/planning, failed-run evidence, cross-process discovery, C++/Rust interoperability and OS-level sandboxing remain open.
 
-Latest recorded baseline: 557 tests passed, 12 skipped, 0 failed in GitHub Actions run [#127](https://github.com/AssayFlux/Molecularis/actions/runs/44879631802). Skips are associated with optional scientific dependencies (including RDKit, Biopython, pysam, Parasail and Biotite); those capabilities still require execution in dedicated dependency profiles and scientific validation. This is a software baseline, not a scientific accuracy certification.
+Latest verified CI: [run #130](https://github.com/AssayFlux/Molecularis/actions/runs/44880315191) — **568 passed, 12 skipped, 0 failed**. The 12 skips are optional scientific dependencies (including RDKit, Biopython, pysam, Parasail and Biotite). This is software verification, not scientific accuracy certification.
 
 ## Development
 
@@ -60,27 +48,21 @@ pytest
 python scripts/check_registry.py
 ```
 
-Optional scientific dependencies, model weights, large reference databases and licensed runtimes are managed separately. Every dependency and dataset must be reviewed for provenance, licensing, security and reproducibility.
-
 ## Governing documents
 
-- [North Star](docs/NORTH_STAR.md) — mission and non-negotiable principles.
-- [Service Roadmap A–N](docs/SERVICE_ROADMAP.md) — ordered service steps and exit gates.
-- [Master Development Plan](docs/MASTER_DEVELOPMENT_PLAN.md) — platform phases and system completion.
-- [Master Engineering Rulebook](MASTER_ENGINEERING_RULEBOOK.md) — binding engineering policy.
-- [Future Architecture](docs/FUTURE_ARCHITECTURE.md) — long-term design and research register.
-- [Service Status](docs/SERVICE_STATUS.md) — evidence-based implementation status.
-- [Work Backlog](docs/WORK_BACKLOG.md) — next actionable work.
-- [Continuous Work Protocol](docs/CONTINUOUS_WORK_PROTOCOL.md) — repository operating procedure.
-- [Scientific Validation Standard](docs/SCIENTIFIC_VALIDATION_STANDARD.md) — evidence and acceptance.
-- [MSDE Architecture](docs/MSDE_ARCHITECTURE.md) — shared data substrate.
+- [North Star](docs/NORTH_STAR.md)
+- [Service Roadmap A–N](docs/SERVICE_ROADMAP.md)
+- [Master Development Plan](docs/MASTER_DEVELOPMENT_PLAN.md)
+- [Master Engineering Rulebook](MASTER_ENGINEERING_RULEBOOK.md)
+- [Future Architecture](docs/FUTURE_ARCHITECTURE.md)
+- [Service Status](docs/SERVICE_STATUS.md)
+- [Work Backlog](docs/WORK_BACKLOG.md)
+- [Continuous Work Protocol](docs/CONTINUOUS_WORK_PROTOCOL.md)
+- [Scientific Validation Standard](docs/SCIENTIFIC_VALIDATION_STANDARD.md)
+- [MSDE Architecture and Implementation Plan](CORE/data-engine/README.md)
 
 ## Scientific integrity and security
 
-- Implemented does not mean validated; prediction does not mean measurement.
-- Preserve provenance, uncertainty, limitations and failed/intermediate evidence.
-- Use independent validation where scientifically appropriate.
-- Do not commit patient data, identifiable human-subject data, credentials or private datasets.
-- External scientific tools are optional adapters/references, not hidden mandatory execution backends.
+Implemented does not mean validated; prediction does not mean measurement. Preserve provenance, uncertainty, limitations and failed/intermediate evidence. Use independent validation where scientifically appropriate. Do not commit patient data, identifiable human-subject data, credentials or private datasets. External scientific tools are optional adapters/references, not hidden mandatory execution backends.
 
 See [LICENSE](LICENSE) and [SECURITY.md](SECURITY.md).
