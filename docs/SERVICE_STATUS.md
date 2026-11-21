@@ -86,14 +86,14 @@ Update this register only from repository evidence. Every status transition must
 
 **Implemented engineering foundation:** model-agnostic planner callable contract, active A–N capability catalog, strict Workflow v1 parsing/validation, persisted plan artifact with input lineage, explicit approval gate, Core Rulebook execution path and fresh-runtime A–N bootstrap. CI evidence: [run #44901363429](https://github.com/AssayFlux/Molecularis/actions/runs/44901363429), commit `2b6eced852fb049a81f6b087bb94e5e946047750`.
 
-**Not yet accepted:** configured production LLM provider, Sources service, real cross-service scientific artifact handoff, artifact-grounded answer composer, 50+ adversarial evaluation suite, Predictor service, model benchmark, OS-level sandbox/recovery certification, training pipeline, design safety gate and service-wide Proposer → Verifier acceptance. The phase sequence P0–P6 is specified in the master plan and remains unimplemented unless backed by separate commit/CI evidence.
+**Not yet accepted:** configured production LLM provider, Sources service, real cross-service scientific artifact handoff, artifact-grounded answer composer, 50+ adversarial evaluation suite, Predictor service, model benchmark, OS-level sandbox/recovery certification, training pipeline, design safety gate and service-wide Proposer → Verifier acceptance. The governing phase sequence is P0–P7 in the v2.1 Agentics Master Plan; each phase remains unimplemented until its own code, tests and acceptance evidence are recorded.
 
 This is an initial agent foundation, not a finished autonomous research scientist. It is not scientifically validated; university review remains separate.
 
 
 ## Agentics Molecularis — architecture direction update
 
-Governing plan upgraded to v2.0 on 2026-11-21. The current repository evidence above remains the status baseline; this documentation update does not implement the Scientific Knowledge Engine or construction system.
+Governing plan restored and aligned as v2.1 on 2026-11-21. The current repository evidence above remains the status baseline; this documentation update does not implement the Scientific Knowledge Engine or construction system.
 
 **Permanent target across A–N:** Understand → Represent → Reason → Construct → Evaluate → Verify → Learn. Agentics is the orchestrator; the shared Scientific Knowledge Engine provides typed, versioned knowledge/equation/evidence contracts; each service retains domain-owned scientific engines, constraints, construction methods and verification Rulebooks.
 
