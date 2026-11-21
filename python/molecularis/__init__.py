@@ -32,6 +32,9 @@ from .genetic_code_inference import infer_genetic_code_candidates
 from .apo_pockets import apo_pocket_candidates
 from .structure_pockets import ligand_site_candidates
 from .molecular import primer_properties, scan_spcas9_ngg
+from .molecular_model import (
+    Molecule, MolecularAtom, MolecularBond, MolecularChain, MolecularResidue,
+)
 from .omics import (
     negative_binomial_differential_expression,
     clr_transform, cpm, cross_omics_correlation, logistic_growth,
@@ -72,4 +75,5 @@ __all__ = [
     "substructure_match", "tanimoto", "theoretical_pi", "to_newick", "transcribe", "upgma",
     "search_gene_catalog", "validate_gene_catalog", "welch_differential_expression",
     "ReferenceSequence", "normalize_against_reference",
+    "Molecule", "MolecularAtom", "MolecularBond", "MolecularChain", "MolecularResidue",
 ]

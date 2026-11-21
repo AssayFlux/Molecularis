@@ -1,6 +1,6 @@
 # Molecularis Work Backlog
 
-Mark an item complete only with a commit SHA and verification evidence. Do not start service A until the Core/MSDE platform gate passes.
+Mark an item complete only with a commit SHA and verification evidence. Service A implementation is explicitly authorized; the Core/MSDE platform acceptance gate remains open and must not be reported as passed.
 
 ## P0 — Trustworthy baseline
 
@@ -37,7 +37,7 @@ Mark an item complete only with a commit SHA and verification evidence. Do not s
 
 Execute exactly one letter at a time, following [SERVICE_ROADMAP.md](SERVICE_ROADMAP.md).
 
-- [ ] A — Molecular
+- [ ] A — Molecular (implementation in progress; v1 graph model and schema added)
 - [ ] B — Sequence
 - [ ] C — Structure
 - [ ] D — Chemistry
@@ -65,4 +65,4 @@ Each letter requires discovery/audit, Engine, Runtime, Rulebook, schemas/contrac
 
 ## Active task
 
-Finish the integrated Core/MSDE acceptance gate. Do not advance to service A until the acceptance record is green.
+Complete A's v1 implementation and acceptance: model invariants, schema, MSDE artifact integration, independent fixtures, tests, documentation and freeze. Continue the open Core/MSDE hardening gates; do not advance to B until A is accepted.

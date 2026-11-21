@@ -1,7 +1,7 @@
 # Service and Platform Status Register
 
 Last verified: 2026-11-21  
-Current implementation commit: [bf86b3a36d72963d78beb482ae57780b75727a35](https://github.com/AssayFlux/Molecularis/commit/bf86b3a36d72963d78beb482ae57780b75727a35)
+Current implementation commit: pending A implementation commit.
 
 A scaffold or specification does not imply implementation or scientific validation.
 
@@ -15,8 +15,8 @@ A scaffold or specification does not imply implementation or scientific validati
 | Metadata indexes | Implemented | SQLite exact/range B-tree indexes; native sorted-segment engine is not implemented |
 | Query execution | Implemented bounded snapshot pagination | Snapshot-bound offsets, deterministic ordering, result/candidate limits and explicit completeness |
 | Rulebook evidence | Improved baseline | Success/failure records; input artifact lineage is attached to operation outputs |
-| JSON contracts | Validated | Repository-wide JSON Schema validation passed in run #135 |
-| Scientific optional CI | Green | Run #135: chemistry 584/4 skipped; sequence 579/9 skipped; genomics 577/11 skipped |
+| JSON contracts | Validated baseline | Repository-wide JSON Schema validation passed in run #135 |
+| Scientific optional CI | Green baseline | Run #135: chemistry, sequence and genomics optional profiles passed |
 | Native C++ / Rust interoperability | Not implemented | Language-neutral schemas exist; bindings and conformance tests remain required |
 | Recovery certification | Partial | Atomic blob publication and integrity audit; crash-boundary fault injection and backup/restore remain open |
 | Execution isolation | Partial | In-process trusted handlers; no OS-level sandbox or preemptive CPU/memory/GPU isolation |
@@ -27,7 +27,7 @@ A scaffold or specification does not imply implementation or scientific validati
 
 | Step | Service | Existing code | Engine | Runtime | Rulebook | State |
 |---|---|---|---|---|---|---|
-| A | Molecular | Existing modules; audit pending | Not started | Not started | Not operational | Planned |
+| A | Molecular | Native v1 graph model, hierarchy, coordinates and serialization | In progress | Local Python reference model | v1 structural rules; scientific approval pending | Implementation in progress |
 | B | Sequence | Existing modules; audit pending | Not started | Not started | Not operational | Planned |
 | C | Structure | Existing modules; audit pending | Not started | Not started | Not operational | Planned |
 | D | Chemistry | Existing modules; audit pending | Not started | Not started | Not operational | Planned |
@@ -45,16 +45,15 @@ A scaffold or specification does not imply implementation or scientific validati
 ## Verification evidence
 
 - Previous baseline [run #132](https://github.com/AssayFlux/Molecularis/actions/runs/44880497095): 568 passed, 12 skipped.
-- [Run #133](https://github.com/AssayFlux/Molecularis/actions/runs/44880802259): all three optional dependency profiles passed; core job exposed a malformed legacy JSON schema wrapped in literal escape markers. The schema is being corrected and the core job must pass before this baseline is upgraded.
+- [Run #133](https://github.com/AssayFlux/Molecularis/actions/runs/44880802259): optional dependency profiles passed; the core job exposed a malformed legacy JSON schema that was subsequently repaired.
+- A-specific tests and schema checks are being added in this implementation commit; results are pending.
 - Ruff remains limited to E9/F; this is not full style conformance.
 
 ## Active phase and next exact work
 
-**Active phase:** Core/MSDE platform hardening. The local reference implementation has artifact storage, bounded query pagination and success/failure Rulebook evidence. The platform is not yet a distributed, multi-language, OS-isolated production runtime.
+**Active phase:** Service A — Molecular v1 foundational model, while Core/MSDE hardening continues. The platform is not yet a distributed, multi-language, OS-isolated production runtime.
 
-**Next:** complete crash fault injection and backup/restore tests, decide native sorted segments versus SQLite through benchmarks, add process-level service discovery and C++/Rust conformance, and complete security/resource-isolation review.
-
-Do not begin service A until the explicit platform acceptance criteria are met and recorded with passing evidence.
+**Next:** run and repair A-specific and repository-wide tests, integrate the molecular artifact with the MSDE contracts, add independent chemistry/macromolecule reference fixtures, then close A's acceptance gates. Continue platform crash recovery, backup/restore, service discovery, language conformance and isolation work. The platform gate remains open.
 
 ## Reporting rule
 

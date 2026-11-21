@@ -1,0 +1,354 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://molecularis.assayflux.org/schemas/molecule-v1.schema.json",
+  "title": "Molecularis Molecule v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "molecule_id",
+    "name",
+    "coordinate_unit",
+    "coordinate_system",
+    "atoms",
+    "bonds",
+    "residues",
+    "chains"
+  ],
+  "properties": {
+    "schema": {
+      "const": "molecularis.molecule.v1"
+    },
+    "molecule_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "coordinate_unit": {
+      "const": "angstrom"
+    },
+    "coordinate_system": {
+      "const": "cartesian_right_handed"
+    },
+    "atoms": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "atom_id",
+          "element",
+          "formal_charge",
+          "isotope",
+          "name",
+          "residue_id",
+          "chain_id",
+          "position_angstrom"
+        ],
+        "properties": {
+          "atom_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "element": {
+            "type": "string",
+            "enum": [
+              "H",
+              "He",
+              "Li",
+              "Be",
+              "B",
+              "C",
+              "N",
+              "O",
+              "F",
+              "Ne",
+              "Na",
+              "Mg",
+              "Al",
+              "Si",
+              "P",
+              "S",
+              "Cl",
+              "Ar",
+              "K",
+              "Ca",
+              "Sc",
+              "Ti",
+              "V",
+              "Cr",
+              "Mn",
+              "Fe",
+              "Co",
+              "Ni",
+              "Cu",
+              "Zn",
+              "Ga",
+              "Ge",
+              "As",
+              "Se",
+              "Br",
+              "Kr",
+              "Rb",
+              "Sr",
+              "Y",
+              "Zr",
+              "Nb",
+              "Mo",
+              "Tc",
+              "Ru",
+              "Rh",
+              "Pd",
+              "Ag",
+              "Cd",
+              "In",
+              "Sn",
+              "Sb",
+              "Te",
+              "I",
+              "Xe",
+              "Cs",
+              "Ba",
+              "La",
+              "Ce",
+              "Pr",
+              "Nd",
+              "Pm",
+              "Sm",
+              "Eu",
+              "Gd",
+              "Tb",
+              "Dy",
+              "Ho",
+              "Er",
+              "Tm",
+              "Yb",
+              "Lu",
+              "Hf",
+              "Ta",
+              "W",
+              "Re",
+              "Os",
+              "Ir",
+              "Pt",
+              "Au",
+              "Hg",
+              "Tl",
+              "Pb",
+              "Bi",
+              "Po",
+              "At",
+              "Rn",
+              "Fr",
+              "Ra",
+              "Ac",
+              "Th",
+              "Pa",
+              "U",
+              "Np",
+              "Pu",
+              "Am",
+              "Cm",
+              "Bk",
+              "Cf",
+              "Es",
+              "Fm",
+              "Md",
+              "No",
+              "Lr",
+              "Rf",
+              "Db",
+              "Sg",
+              "Bh",
+              "Hs",
+              "Mt",
+              "Ds",
+              "Rg",
+              "Cn",
+              "Nh",
+              "Fl",
+              "Mc",
+              "Lv",
+              "Ts",
+              "Og"
+            ]
+          },
+          "formal_charge": {
+            "type": "integer"
+          },
+          "isotope": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1
+          },
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 128
+          },
+          "residue_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 128
+          },
+          "chain_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 128
+          },
+          "position_angstrom": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "minItems": 3,
+            "maxItems": 3,
+            "items": {
+              "type": "number"
+            }
+          }
+        }
+      }
+    },
+    "bonds": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "bond_id",
+          "atom_1",
+          "atom_2",
+          "order",
+          "stereo"
+        ],
+        "properties": {
+          "bond_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "atom_1": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "atom_2": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "order": {
+            "enum": [
+              "single",
+              "double",
+              "triple",
+              "aromatic",
+              "unspecified"
+            ]
+          },
+          "stereo": {
+            "enum": [
+              "none",
+              "up",
+              "down",
+              "cis",
+              "trans",
+              "E",
+              "Z",
+              "unknown"
+            ]
+          }
+        }
+      }
+    },
+    "residues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "residue_id",
+          "name",
+          "chain_id",
+          "atom_ids"
+        ],
+        "properties": {
+          "residue_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "chain_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "atom_ids": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
+          }
+        }
+      }
+    },
+    "chains": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "chain_id",
+          "name",
+          "residue_ids"
+        ],
+        "properties": {
+          "chain_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "residue_ids": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
+          }
+        }
+      }
+    }
+  }
+}
