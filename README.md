@@ -24,6 +24,7 @@ Each step includes discovery, specification, native engine, runtime, Rulebook, s
 - `python/molecularis/` and `python/kinetics/` — existing scientific implementations; retained pending audit/migration.
 - `api/`, `schemas/` — versioned contracts.
 - `capabilities/registry.yaml` — capability inventory; registration is not proof of validation.
+- `services/kinetics/` — canonical mass-action reaction-network artifacts, bounded RK4 integration, and retained Michaelis–Menten / exploratory PK/PD primitives.
 - `data/`, `validation/` — reference metadata and validation assets.
 - `remote-node/` — isolated remote execution component.
 - `scripts/`, `tests/` — engineering checks and automated tests.
