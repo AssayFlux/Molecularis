@@ -30,7 +30,10 @@ def validate_android_config(root: Path = ROOT) -> list[str]:
         errors.append("public reference retrieval requires the INTERNET permission")
     unexpected_permissions = permissions - {"android.permission.INTERNET"}
     if unexpected_permissions:
-        errors.append(f"unexpected Android permissions are not approved: {sorted(unexpected_permissions)}")
+        errors.append(
+            "unexpected Android permissions are not approved: "
+            f"{sorted(unexpected_permissions)}"
+        )
     application = manifest.find("application")
     if application is None:
         errors.append("Android manifest is missing application")
@@ -46,7 +49,9 @@ def validate_android_config(root: Path = ROOT) -> list[str]:
         errors.append(f"Android Gradle config could not be read: {exc}")
         gradle = ""
     required_gradle = {
-        'srcDir("../../python")': "Chaquopy must package the repository's Molecularis Python modules",
+        'srcDir("../../python")': (
+            "Chaquopy must package the repository's Molecularis Python modules"
+        ),
         'minSdk = 29': "Android minimum SDK must remain API 29",
         'targetSdk = 36': "Android target SDK must remain explicitly pinned to API 36",
         'ndkVersion = "28.2.13676358"': "Android NDK version must match the local build script",
@@ -65,7 +70,10 @@ def validate_android_config(root: Path = ROOT) -> list[str]:
         wrapper = ""
     if "gradle-8.13-bin.zip" not in wrapper:
         errors.append("Gradle wrapper distribution must be pinned to 8.13")
-    if "distributionSha256Sum=20f1b1176237254a6fc204d8434196fa11a4cfb387567519c61556e8710aed78" not in wrapper:
+    gradle_sha256 = (
+        "distributionSha256Sum=20f1b1176237254a6fc204d8434196fa11a4cfb387567519c61556e8710aed78"
+    )
+    if gradle_sha256 not in wrapper:
         errors.append("Gradle wrapper must verify the official Gradle 8.13 SHA-256")
     local_build = root / "scripts/build_android_local.sh"
     try:
@@ -85,7 +93,8 @@ def validate_android_config(root: Path = ROOT) -> list[str]:
 
     rust_toolchain = root / "rust-toolchain.toml"
     cargo_lock = root / "android/native-rust/Cargo.lock"
-    if not rust_toolchain.is_file() or 'channel = "1.88.0"' not in rust_toolchain.read_text(encoding="utf-8"):
+    rust_channel = 'channel = "1.88.0"'
+    if not rust_toolchain.is_file() or rust_channel not in rust_toolchain.read_text(encoding="utf-8"):
         errors.append("Native Rust toolchain must be pinned to 1.88.0")
     if not cargo_lock.is_file():
         errors.append("Native Rust Cargo.lock is required for --locked builds")
@@ -101,8 +110,12 @@ def validate_android_config(root: Path = ROOT) -> list[str]:
     if 'android:usesCleartextTraffic="false"' not in manifest_text:
         errors.append("Android cleartext traffic must remain disabled")
     if "android.permission.INTERNET" not in manifest_text:
-        errors.append("Android manifest must declare INTERNET for explicit public-reference retrieval")
-    client_path = root / "android/app/src/main/java/org/assayflux/molecularis/PublicDatabaseClient.kt"
+        errors.append(
+            "Android manifest must declare INTERNET for explicit public-reference retrieval"
+        )
+    client_path = (
+        root / "android/app/src/main/java/org/assayflux/molecularis/PublicDatabaseClient.kt"
+    )
     card_path = root / "android/app/src/main/java/org/assayflux/molecularis/PublicDatabaseCard.kt"
     try:
         client_source = client_path.read_text(encoding="utf-8")
@@ -124,11 +137,18 @@ def validate_android_config(root: Path = ROOT) -> list[str]:
         'MAX_STRUCTURE_BYTES',
     ):
         if marker not in client_source:
-            errors.append(f"Public database client must retain its HTTPS/host/size boundary: {marker}")
+            errors.append(
+                "Public database client must retain its HTTPS/host/size boundary: "
+                f"{marker}"
+            )
     if "never submit patient sequences" not in client_source:
-        errors.append("Public database client must explicitly prohibit private patient-data submission")
+        errors.append(
+            "Public database client must explicitly prohibit private patient-data submission"
+        )
     if "Imported patient data is never uploaded" not in card_source:
-        errors.append("Public database UI must disclose that imported patient data is never uploaded")
+        errors.append(
+            "Public database UI must disclose that imported patient data is never uploaded"
+        )
 
     package_init = root / "python/molecularis/__init__.py"
     runtime_probe = root / "android/app/src/main/python/molecularis_probe.py"
@@ -156,10 +176,19 @@ def validate_android_config(root: Path = ROOT) -> list[str]:
         errors.append(f"GitHub workflow could not be read: {exc}")
         workflow = ""
     for marker, message in (
-        ("android-arm64-build:", "GitHub Actions must include the authorized arm64 APK/AAB build job"),
-        ("scripts/build_android_local.sh", "Android CI must use the pinned repository build script"),
+        (
+            "android-arm64-build:",
+            "GitHub Actions must include the authorized arm64 APK/AAB build job",
+        ),
+        (
+            "scripts/build_android_local.sh",
+            "Android CI must use the pinned repository build script",
+        ),
         (":app:testDebugUnitTest", "Android CI must run the JVM unit-test task"),
-        ("actions/upload-artifact@v4", "Android CI must retain APK/AAB build evidence as artifacts"),
+        (
+            "actions/upload-artifact@v4",
+            "Android CI must retain APK/AAB build evidence as artifacts",
+        ),
     ):
         if marker not in workflow:
             errors.append(message)
