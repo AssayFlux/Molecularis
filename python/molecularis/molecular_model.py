@@ -86,9 +86,9 @@ class MolecularBond:
         _identifier(self.atom_2, "atom_2")
         if self.atom_1 == self.atom_2:
             raise ValueError("A bond cannot connect an atom to itself")
-        if self.order not in _BOND_ORDERS:
+        if not isinstance(self.order, str) or self.order not in _BOND_ORDERS:
             raise ValueError(f"Unsupported bond order: {self.order!r}")
-        if self.stereo not in _BOND_STEREO:
+        if not isinstance(self.stereo, str) or self.stereo not in _BOND_STEREO:
             raise ValueError(f"Unsupported bond stereo value: {self.stereo!r}")
 
 
