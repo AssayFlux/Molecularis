@@ -3,7 +3,7 @@
 **Date:** 2026-11-21  
 **Canonical implementation authority:** [MASTER_PLAN.md](MASTER_PLAN.md)
 
-The repository accumulated several generations of plans. This reset removes competing execution authority, not the evidence needed for safe migration.
+The repository accumulated several generations of plans. This reset removes competing execution authority, not the evidence needed for safe migration. The original owner specification and R/S/I/P/G/U work packages were reconciled in [REQUIREMENTS_TRACEABILITY.md](REQUIREMENTS_TRACEABILITY.md); do not discard their scientific requirements or implementation history.
 
 ## Active authority after this reset
 
@@ -21,9 +21,9 @@ The following documents are no longer execution authorities. Their useful facts 
 | Existing document | New authority / disposition |
 |---|---|
 | `ROADMAP.md` | Replaced by `docs/MASTER_PLAN.md`; root roadmap becomes a short pointer |
-| `docs/alpha/MASTERPLAN.md` | Historical desktop-first planning draft; consolidated into `docs/MASTER_PLAN.md` |
-| `docs/alpha/BACKLOG.md` | Replaced by capability and phase work breakdown in master plan |
-| `docs/alpha/MIGRATION_PLAN.md` | Replaced by master plan migration gates and capability status |
+| `docs/alpha/MASTERPLAN.md` | Superseded sequencing; useful requirements mapped in `REQUIREMENTS_TRACEABILITY.md` |
+| `docs/alpha/BACKLOG.md` | Superseded as a separate backlog; retain unmigrated tasks via capability/traceability audit |
+| `docs/alpha/MIGRATION_PLAN.md` | Superseded as separate roadmap; retain detailed Android data migration requirements and reconcile them before any code removal |
 | `docs/alpha/BASELINE_AUDIT.md` | Historical branch snapshot; use `docs/REPOSITORY_BASELINE.md` for current snapshot |
 | `docs/alpha/INTEGRATION_CATALOG.md` | Candidate details retained; use third-party register plus capability status |
 | `docs/MASTER_SCIENTIFIC_INTEGRATION_PLAN.md` | Superseded; retain technical notes as historical until reconciled |
@@ -37,6 +37,8 @@ The following documents are no longer execution authorities. Their useful facts 
 
 ## Preserve; do not delete as part of plan cleanup
 
+- `docs/origin/KINETICS_MASTER.md` and all original owner requirements; its Android-first sequence is superseded, not its scientific scope.
+- R0–R10, S1–S10, I, P0–P7, G0–G7 and U0–U6 implementation plans, detailed audit records, open issues and evidence; treat them as traceability/source history, not a competing release roadmap.
 - `DECISIONS.md`, `SESSION_LOG.md`, `CHANGELOG.md`, dated audits and CI evidence.
 - `docs/origin/`, historical track audits and closure records.
 - Scientific rulebooks, schemas, validation protocols, fixtures, SBOMs, security/privacy/ethics records, accessibility specifications and UI/design assets.
