@@ -1,0 +1,3 @@
+{
+ "$schema":"https://json-schema.org/draft/2020-12/schema","$id":"molecularis.protein-artifact-reference.v1","type":"object","additionalProperties":false,"required":["artifact_id"],"properties":{"artifact_id":{"type":"string","minLength":1,"maxLength":256}}
+}

@@ -1,0 +1,4 @@
+{
+ "$schema":"https://json-schema.org/draft/2020-12/schema","$id":"molecularis.protein-operation-report.v1","type":"object","additionalProperties":false,"required":["schema","operation","protein_id","protein_sha256","result","rulebook","rules_checked","limitations"],
+ "properties":{"schema":{"const":"molecularis.protein-operation-report.v1"},"operation":{"enum":["validate","descriptors","motif_scan","design_brief"]},"protein_id":{"type":"string"},"protein_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"},"result":{"type":"object"},"rulebook":{"const":"protein-core-v1"},"rules_checked":{"type":"array","items":{"type":"string"}},"limitations":{"type":"array","items":{"type":"string"}}}
+}

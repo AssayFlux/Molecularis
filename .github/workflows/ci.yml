@@ -38,6 +38,8 @@ jobs:
           PYTHONPATH=python python services/molecular/benchmarks/graph_benchmark.py --atoms 10000
       - name: Structure geometry benchmark smoke
         run: PYTHONPATH=python python services/structure/benchmarks/structure_benchmark.py --atoms 1000
+      - name: Protein sequence benchmark smoke
+        run: PYTHONPATH=python python services/protein/benchmarks/protein_benchmark.py --residues 10000
       - name: Chemistry graph benchmark smoke
         run: PYTHONPATH=python python services/chemistry/benchmarks/chemistry_benchmark.py --atoms 1000
       - name: Sequence streaming benchmark smoke

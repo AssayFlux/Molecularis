@@ -441,6 +441,28 @@ tools:
     evidence_level: none
 
 
+  - id: protein.msde_validate
+    name: MSDE-backed canonical protein artifact validation
+    status: implemented
+    implementation: python/molecularis/protein_service.py
+    evidence_level: none
+  - id: protein.msde_descriptors
+    name: Explicit canonical protein sequence descriptors
+    status: implemented
+    implementation: python/molecularis/protein_service.py
+    evidence_level: none
+  - id: protein.msde_motif_scan
+    name: Hash-pinned caller-supplied fixed-width protein motif scan
+    status: implemented
+    implementation: python/molecularis/protein_service.py
+    evidence_level: none
+  - id: protein.msde_design_brief
+    name: Non-generative protein design brief validation and release gates
+    status: implemented
+    implementation: python/molecularis/protein_service.py
+    evidence_level: none
+
+
 engines: []
 data_packs: []
 domains: []

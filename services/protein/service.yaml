@@ -2,10 +2,11 @@ id: "protein"
 name: "Protein"
 roadmap_step: "E"
 roadmap_order: 5
-depends_on: ["sequence","structure","chemistry"]
-status: "scaffold"
-completion_status: "not_implemented"
-primary_languages: ["cpp", "python", "rust"]
+depends_on: ["sequence", "structure", "chemistry"]
+status: "implemented"
+completion_status: "engineering_implemented_scientific_review_pending"
+primary_languages: ["python"]
+planned_languages: ["cpp", "rust"]
 engine: "ENGINE.md"
 runtime: "RUNTIME.md"
 rulebook: "RULEBOOK.md"
@@ -18,3 +19,7 @@ schema_root: "schemas"
 data_root: "data"
 benchmark_root: "benchmarks"
 external_execution_dependencies: []
+optional_adapters:
+  - "python/molecularis/esm_inference.py"
+  - "python/molecularis/hmmer.py"
+  - "python/molecularis/hmmer_rank.py"

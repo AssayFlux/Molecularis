@@ -1,5 +1,7 @@
-# Protein Runtime
+# Protein Runtime E — v1
 
-Status: scaffold — not yet implemented or validated.
+Protein service registers deterministic versioned operations on the shared MSDE platform. Canonical sequence artifacts are immutable, byte-bounded and SHA-256 verified on load. Parent lineage is retained by the platform. All motif-pack bytes are hash-verified by the existing scanner; caller metadata includes source, version and licence.
 
-Specify runtime lifecycle, initialization, configuration, execution, resource management, cancellation, errors, reproducibility, and shutdown. Define C++/Python/Rust boundaries where needed. Runtime must not silently delegate core work to an external scientific engine.
+Limits: 5,000,000 canonical residues per artifact; 2 MiB motif pack; scanner defaults cap query length, motif count, comparisons and hits. Protein design briefs are bounded by their validator. ESM execution is an explicit separate local operation with verified model-directory digest, CPU/CUDA selection, batch and residue ceilings; PyTorch/Transformers are optional and weights are operator-supplied. No network access or implicit model download is permitted.
+
+Errors fail closed on malformed contracts, artifact mismatch, unsupported residue symbols, missing optional runtime or exceeded resource ceilings. Runtime currently uses trusted in-process Python handlers; OS sandboxing and preemptive cancellation remain Core-level work.

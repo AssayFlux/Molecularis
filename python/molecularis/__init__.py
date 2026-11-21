@@ -49,6 +49,7 @@ from .docking_vina import run_vina_docking
 from .md_openmm import run_openmm_dynamics
 from .pkpd import emax_pd, one_compartment_oral_pk
 from .protein import protein_descriptors, theoretical_pi
+from .protein_service import ProteinDocument, ingest_protein, load_protein, register_protein_service, protein_rulebook
 from .virtual_cohort import (
     simulate_hardy_weinberg_cohort,
     simulate_synthetic_additive_variant_effects,
@@ -68,6 +69,7 @@ from .structure import (
 )
 
 __all__ = [
+    "ProteinDocument", "ingest_protein", "load_protein", "register_protein_service", "protein_rulebook",
     "ChemistryDocument", "ingest_chemistry", "load_chemistry", "register_chemistry_service", "chemistry_rulebook",
     "align_pairwise_biopython", "binary_admet_metrics", "scaffold_group_split", "tanimoto_applicability_domain", "bootstrap_neighbor_joining_from_alignment", "simulate_hardy_weinberg_cohort", "simulate_synthetic_additive_variant_effects", "emax_pd", "one_compartment_oral_pk", "run_vina_docking", "run_openmm_dynamics", "apo_pocket_candidates", "analyze_molblock", "analyze_smiles", "morgan_tanimoto", "rdkit_backend_info", "PharmVarAlleleDefinition", "PharmVarMatch", "PharmVarVariant", "match_pharmvar_haplotype", "parse_pharmvar_tsv", "AlleleMatch", "Atom", "GeneEntry", "StarAlleleDefinition", "VariantKey", "bootstrap_michaelis_menten", "Node", "SamRecord", "SequenceRecord",
     "clr_transform", "contact_pairs", "cpm", "cross_omics_correlation",

@@ -41,7 +41,7 @@ Execute exactly one letter at a time, following [SERVICE_ROADMAP.md](SERVICE_ROA
 - [x] B — Sequence (Python v1 engineering implementation complete; independent scientific review and freeze pending)
 - [x] C — Structure (Python v1 engineering implementation complete; university review deferred until A–N completion)
 - [x] D — Chemistry (native graph v1, MSDE artifacts, five capabilities and CHM-001–CHM-006; scientific review deferred)
-- [ ] E — Protein
+- [x] E — Protein (canonical sequence artifacts, four MSDE capabilities, PRO-001–PRO-006; scientific review deferred)
 - [ ] F — Genomics
 - [ ] G — DNA/RNA
 - [ ] H — Simulation
@@ -65,4 +65,4 @@ Each letter requires discovery/audit, Engine, Runtime, Rulebook, schemas/contrac
 
 ## Active task
 
-A's engineering implementation is complete; independent scientific approval and freeze remain pending. B's Python v1 engineering implementation is complete. C's Python v1 engineering implementation is complete and CI-verified in run #159. D's Chemistry Python v1 engineering implementation is complete and CI-verified in run #44888785327 (core 644 passed/12 skipped; optional chemistry 652 passed/4 skipped; sequence 647 passed/9 skipped; genomics 645 passed/11 skipped). Per owner direction, university scientific review and contract freezes for A–N are deferred until the entire engineering build is complete. Proceed to D after C's engineering commit and CI verification.
+A's engineering implementation is complete; independent scientific approval and freeze remain pending. B's Python v1 engineering implementation is complete. C's Python v1 engineering implementation is complete and CI-verified in run #159. D's Chemistry Python v1 engineering implementation is complete and CI-verified in run #44888785327 (core 644 passed/12 skipped; optional chemistry 652 passed/4 skipped; sequence 647 passed/9 skipped; genomics 645 passed/11 skipped). E Protein implementation is committed; CI verification pending. Per owner direction, university scientific review and contract freezes for A–N are deferred until the entire engineering build is complete. Proceed to F after E's engineering commit and CI verification.

@@ -1,12 +1,18 @@
-# Protein Engine
+# Protein Engine E — v1
 
-Status: scaffold — not yet implemented or validated.
+Status: engineering implementation; university scientific review deferred until A–N completion.
 
-## Scope
-Define the scientific operations owned by this service, including supported inputs, outputs, algorithms, invariants, and explicit exclusions.
+## Canonical data
+ProteinDocument stores a normalized canonical 20-residue amino-acid sequence, identifier and bounded description. Artifacts use deterministic JSON, SHA-256 identity, source lineage and integrity-checked metadata. Ambiguous/rare residues are rejected by this strict v1 artifact contract; standalone ESM inference retains its separately documented broader alphabet.
 
-## Native implementation
-Prefer Molecularis-owned algorithms and data structures. Document source literature, assumptions, numerical methods, and licensing. External tools are optional references only, not required execution engines.
+## Native capabilities
+- Sequence validation and artifact integrity.
+- Composition, average-residue molecular mass, mean hydropathy and theoretical pI using the documented Henderson–Hasselbalch approximation.
+- Hash-pinned caller-supplied fixed-width motif scans with explicit wildcard semantics.
+- Non-generative protein-design brief validation and mandatory human/release gates.
 
-## Acceptance criteria
-Specify observable behavior and measurable correctness criteria before implementation. Add tests and reference comparisons; do not claim completion without evidence.
+## Existing local workflows retained
+ESM embeddings require operator-supplied, hash-verified local Transformers checkpoints; no download or remote code. HMMER parsers/rankers retain caller-supplied profile and threshold provenance. Structure prediction envelopes and exact sequence-to-structure mapping remain owned by Structure until cross-service integration.
+
+## Exclusions
+No native folding, de novo sequence generation, function/activity prediction, homology search, domain discovery, PTM prediction, disulfide inference, toxicity/clinical assessment or biological safety certification. ESM embeddings are representations, not calibrated functional predictions.
