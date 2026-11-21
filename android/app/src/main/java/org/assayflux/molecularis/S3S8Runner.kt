@@ -37,7 +37,7 @@ internal object S3S8Runner {
         require(cutoffAngstrom.isFinite() && cutoffAngstrom > 0.0) {
             "Contact cutoff must be finite and positive."
         }
-        val json = python(context).getModule("kinetics_probe")
+        val json = python(context).getModule("molecularis_probe")
             .callAttr(
                 "analyze_ligand_site",
                 sourceText,
@@ -61,7 +61,7 @@ internal object S3S8Runner {
         require(sourceFormat == "pdb" || sourceFormat == "mmcif") {
             "Select a PDB or mmCIF structure."
         }
-        val json = python(context).getModule("kinetics_probe")
+        val json = python(context).getModule("molecularis_probe")
             .callAttr("analyze_apo_pockets", sourceText, sourceFormat).toString()
         return JSONObject(json)
     }
@@ -75,7 +75,7 @@ internal object S3S8Runner {
         require(fastaText.length <= MAX_FASTA_CHARS) {
             "FASTA input exceeds the 1,000,000-character limit."
         }
-        val json = python(context).getModule("kinetics_probe")
+        val json = python(context).getModule("molecularis_probe")
             .callAttr("infer_genetic_code_from_fasta", fastaText, completeCds).toString()
         return JSONObject(json)
     }
