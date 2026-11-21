@@ -135,7 +135,6 @@
     clear(){atoms=[];selected=-1;projected=[];atomList.replaceChildren();empty.hidden=false;status.textContent="Waiting for structure payload";updateSelection();draw();}
   });
   resize();
-});
   window.MolecularisStructureViewer = structureViewerApi;
   // Backward-compatible global for previously embedded viewer clients.
   window.KineticsStructureViewer = structureViewerApi;
