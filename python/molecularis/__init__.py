@@ -18,6 +18,7 @@ from .chemistry_rdkit import analyze_molblock, analyze_smiles, morgan_tanimoto, 
 from .chemistry import (
     graph_descriptors, iter_sdf_records, parse_sdf_record, path_fingerprint, substructure_match, tanimoto,
 )
+from .alignment_biopython import align_pairwise_biopython
 from .genomics_htslib import iter_alignment_records
 from .genomics import (
     SamRecord, fastq_quality_summary, iter_bam_records, normalize_small_variant, parse_sam, parse_vcf,
@@ -57,7 +58,7 @@ from .structure import (
 )
 
 __all__ = [
-    "binary_admet_metrics", "scaffold_group_split", "tanimoto_applicability_domain", "bootstrap_neighbor_joining_from_alignment", "simulate_hardy_weinberg_cohort", "simulate_synthetic_additive_variant_effects", "emax_pd", "one_compartment_oral_pk", "run_vina_docking", "run_openmm_dynamics", "apo_pocket_candidates", "analyze_molblock", "analyze_smiles", "morgan_tanimoto", "rdkit_backend_info", "PharmVarAlleleDefinition", "PharmVarMatch", "PharmVarVariant", "match_pharmvar_haplotype", "parse_pharmvar_tsv", "AlleleMatch", "Atom", "GeneEntry", "StarAlleleDefinition", "VariantKey", "bootstrap_michaelis_menten", "Node", "SamRecord", "SequenceRecord",
+    "align_pairwise_biopython", "binary_admet_metrics", "scaffold_group_split", "tanimoto_applicability_domain", "bootstrap_neighbor_joining_from_alignment", "simulate_hardy_weinberg_cohort", "simulate_synthetic_additive_variant_effects", "emax_pd", "one_compartment_oral_pk", "run_vina_docking", "run_openmm_dynamics", "apo_pocket_candidates", "analyze_molblock", "analyze_smiles", "morgan_tanimoto", "rdkit_backend_info", "PharmVarAlleleDefinition", "PharmVarMatch", "PharmVarVariant", "match_pharmvar_haplotype", "parse_pharmvar_tsv", "AlleleMatch", "Atom", "GeneEntry", "StarAlleleDefinition", "VariantKey", "bootstrap_michaelis_menten", "Node", "SamRecord", "SequenceRecord",
     "clr_transform", "contact_pairs", "cpm", "cross_omics_correlation",
     "eadie_hofstee", "fastq_quality_summary", "fit_michaelis_menten",
     "graph_descriptors", "hanes_woolf", "inhibition_rate", "infer_genetic_code_candidates", "ligand_site_candidates",
