@@ -390,3 +390,34 @@ claims: []
 clinical_gate:
   enabled: false
   part12_evidence: []
+
+  - id: structure.msde_validate
+    name: MSDE-backed canonical structure artifact validation
+    status: implemented
+    implementation: python/molecularis/structure_service.py
+    evidence_level: none
+  - id: structure.geometry
+    name: Coordinate extents and atom/residue/chain summaries
+    status: implemented
+    implementation: python/molecularis/structure_service.py
+    evidence_level: none
+  - id: structure.contacts
+    name: Bounded inter-residue distance contact screening
+    status: implemented
+    implementation: python/molecularis/structure_service.py
+    evidence_level: none
+  - id: structure.sasa
+    name: Deterministic Shrake-Rupley SASA approximation
+    status: implemented
+    implementation: python/molecularis/structure_service.py
+    evidence_level: none
+  - id: structure.interactions
+    name: Distance-based interaction candidate screening
+    status: implemented
+    implementation: python/molecularis/structure_service.py
+    evidence_level: none
+  - id: structure.rmsd
+    name: Raw and rigid-body-fitted RMSD for caller-matched coordinates
+    status: implemented
+    implementation: python/molecularis/structure_service.py
+    evidence_level: none

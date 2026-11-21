@@ -1,0 +1,36 @@
+{
+  "schema": "molecularis.structure-record.v1",
+  "identifier": "synthetic-fixture",
+  "source_format": "native",
+  "model_number": 1,
+  "coordinate_unit": "angstrom",
+  "coordinate_system": "cartesian_right_handed",
+  "atoms": [
+    {
+      "serial": 1,
+      "name": "CA",
+      "residue": "GLY",
+      "chain": "A",
+      "residue_number": 1,
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "element": "C"
+    },
+    {
+      "serial": 2,
+      "name": "N",
+      "residue": "GLY",
+      "chain": "A",
+      "residue_number": 1,
+      "x": 1.45,
+      "y": 0,
+      "z": 0,
+      "element": "N"
+    }
+  ],
+  "provenance": {
+    "kind": "synthetic_fixture",
+    "biological_reference_claim": false
+  }
+}

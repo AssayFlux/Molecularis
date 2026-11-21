@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "capabilities": [
+    {
+      "id": "structure.validate.v1",
+      "version": "1.0.0",
+      "service": "structure",
+      "operation": "validate",
+      "input_schema": "molecularis.structure-artifact-reference.v1",
+      "output_schema": "molecularis.structure-operation-report.v1",
+      "deterministic": true,
+      "description": "Structure validate operation."
+    },
+    {
+      "id": "structure.geometry.v1",
+      "version": "1.0.0",
+      "service": "structure",
+      "operation": "geometry",
+      "input_schema": "molecularis.structure-artifact-reference.v1",
+      "output_schema": "molecularis.structure-operation-report.v1",
+      "deterministic": true,
+      "description": "Structure geometry operation."
+    },
+    {
+      "id": "structure.contacts.v1",
+      "version": "1.0.0",
+      "service": "structure",
+      "operation": "contacts",
+      "input_schema": "molecularis.structure-artifact-reference.v1",
+      "output_schema": "molecularis.structure-operation-report.v1",
+      "deterministic": true,
+      "description": "Structure contacts operation."
+    },
+    {
+      "id": "structure.sasa.v1",
+      "version": "1.0.0",
+      "service": "structure",
+      "operation": "sasa",
+      "input_schema": "molecularis.structure-artifact-reference.v1",
+      "output_schema": "molecularis.structure-operation-report.v1",
+      "deterministic": true,
+      "description": "Structure sasa operation."
+    },
+    {
+      "id": "structure.interactions.v1",
+      "version": "1.0.0",
+      "service": "structure",
+      "operation": "interactions",
+      "input_schema": "molecularis.structure-artifact-reference.v1",
+      "output_schema": "molecularis.structure-operation-report.v1",
+      "deterministic": true,
+      "description": "Structure interactions operation."
+    },
+    {
+      "id": "structure.rmsd.v1",
+      "version": "1.0.0",
+      "service": "structure",
+      "operation": "rmsd",
+      "input_schema": "molecularis.structure-artifact-reference.v1",
+      "output_schema": "molecularis.structure-operation-report.v1",
+      "deterministic": true,
+      "description": "Structure rmsd operation."
+    }
+  ]
+}

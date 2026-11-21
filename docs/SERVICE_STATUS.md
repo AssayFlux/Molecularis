@@ -1,7 +1,7 @@
 # Service and Platform Status Register
 
 Last verified: 2026-11-21  
-Current implementation commit: [4bb14ab342fbdd5a9c4193393fb607aa0ffb37b2](https://github.com/AssayFlux/Molecularis/commit/4bb14ab342fbdd5a9c4193393fb607aa0ffb37b2).
+Current implementation commit: pending C implementation commit.
 
 A scaffold or specification does not imply implementation or scientific validation.
 
@@ -29,7 +29,7 @@ A scaffold or specification does not imply implementation or scientific validati
 |---|---|---|---|---|---|---|
 | A | Molecular | Native v1 graph model, strict serialization, graph summaries and MSDE integration | Implemented v1 | Python reference runtime and artifact-store capability | Ten executable structural rules; independent scientific approval pending | Implementation complete; scientific acceptance pending |
 | B | Sequence | Existing parser, alignment, reference, GFF3, ORF and translation modules consolidated; new typed artifact service | Python v1 implementation | MSDE artifact lifecycle and five Rulebook capabilities | SEQ-001–SEQ-005 executable; review pending | Engineering implementation complete; scientific acceptance pending |
-| C | Structure | Existing modules; audit pending | Not started | Not started | Not operational | Planned |
+| C | Structure | PDB/mmCIF, geometry, RMSD, contacts, SASA, interactions and related adapters retained | Python v1 canonical service | MSDE artifact lifecycle and six capabilities | STR-001–STR-007 executable; university review deferred | Engineering implementation complete; review deferred until A–N build |
 | D | Chemistry | Existing modules; audit pending | Not started | Not started | Not operational | Planned |
 | E | Protein | Existing modules; audit pending | Not started | Not started | Not operational | Planned |
 | F | Genomics | Existing modules; audit pending | Not started | Not started | Not operational | Planned |
@@ -52,9 +52,9 @@ A scaffold or specification does not imply implementation or scientific validati
 
 ## Active phase and next exact work
 
-**Active phase:** Service B — Python v1 engineering implementation complete; independent scientific review and formal freeze pending. Service A remains implementation-complete but independently unreviewed and unfrozen under authorized sequencing exception DEC-0009. The platform is not yet a distributed, multi-language, OS-isolated production runtime.
+**Active phase:** Service C — Python v1 engineering implementation complete; university review and formal freeze deferred until the complete A–N engineering build per owner direction. A and B engineering implementations remain complete; their university reviews are likewise deferred. The platform is not yet a distributed, multi-language, OS-isolated production runtime.
 
-**Next:** obtain independent scientific review of A's structural Rulebook and fixture provenance, then review B's sequence semantics, genetic-code tables, fixture provenance and adapter evidence. Record approvals and freeze each service contract before advancing. Platform-wide recovery, backup/restore, service discovery, language conformance and isolation gates remain open.
+**Next:** proceed to D — Chemistry. University-level scientific review, cross-reference testing and formal contract freezes will be conducted after the full A–N engineering build, as directed by the owner. Platform-wide recovery, backup/restore, service discovery, language conformance and isolation gates remain open.
 
 ## Reporting rule
 

@@ -2,6 +2,13 @@
 
 Record decisions newest-first. Do not silently rewrite historical decisions; supersede them with a new entry.
 
+## DEC-0010 — Defer university scientific review until A–N engineering completion
+- Status: Authorized by the repository owner on 2026-11-21.
+- Decision: Complete the A–N engineering implementation sequence first. Conduct university-level scientific review, reference comparisons, formal validation and service contract freezes after all fourteen services are engineered.
+- Rationale: Centralized university review is the owner's chosen validation process.
+- Constraints: Engineering completion must be reported separately from scientific acceptance. Preserve limitations, test evidence and provenance records; do not claim scientific validation or production readiness before the university review.
+
+
 ## DEC-0009 — Authorized Sequence implementation before Molecular scientific freeze
 - Status: Authorized by the repository owner in the 2026-11-21 project conversation.
 - Decision: Begin B (Sequence) engineering while A (Molecular) remains implementation-complete but awaits independent scientific review and formal v1 freeze.

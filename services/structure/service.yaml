@@ -2,18 +2,26 @@ id: "structure"
 name: "Structure"
 roadmap_step: "C"
 roadmap_order: 3
-depends_on: ["molecular","sequence"]
-status: "scaffold"
-completion_status: "not_implemented"
-primary_languages: ["cpp", "python", "rust"]
+depends_on: ["molecular", "sequence"]
+status: "implementation_complete"
+completion_status: "engineering_complete_pending_university_review"
+primary_languages: ["python"]
+planned_languages: ["cpp", "rust"]
 engine: "ENGINE.md"
 runtime: "RUNTIME.md"
 rulebook: "RULEBOOK.md"
+capabilities: "capabilities.json"
 source_roots:
-  cpp: "src/cpp"
-  python: "src/python"
-  rust: "src/rust"
-test_root: "tests"
+  python: "python/molecularis"
+test_roots:
+  - "tests/test_structure_service.py"
+  - "tests/test_structure.py"
+  - "tests/test_structure_alignment.py"
+  - "tests/test_structure_biotite.py"
+  - "tests/test_structure_pockets.py"
+  - "tests/test_structure_prediction.py"
+  - "tests/test_structure_quality.py"
+  - "tests/test_structure_view.py"
 schema_root: "schemas"
 data_root: "data"
 benchmark_root: "benchmarks"

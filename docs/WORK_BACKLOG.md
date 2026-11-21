@@ -1,6 +1,6 @@
 # Molecularis Work Backlog
 
-Mark an item complete only with a commit SHA and verification evidence. Services A and B are authorized; the Core/MSDE platform acceptance gate remains open and must not be reported as passed.
+Mark an item complete only with a commit SHA and verification evidence. Services A, B and C are authorized; the Core/MSDE platform acceptance gate remains open and must not be reported as passed.
 
 ## P0 — Trustworthy baseline
 
@@ -39,7 +39,7 @@ Execute exactly one letter at a time, following [SERVICE_ROADMAP.md](SERVICE_ROA
 
 - [ ] A — Molecular (v1 engineering implementation complete; run #150 green with 608 passed/12 skipped and 1k/10k benchmark smoke; independent scientific approval and formal freeze pending)
 - [x] B — Sequence (Python v1 engineering implementation complete; independent scientific review and freeze pending)
-- [ ] C — Structure
+- [x] C — Structure (Python v1 engineering implementation complete; university review deferred until A–N completion)
 - [ ] D — Chemistry
 - [ ] E — Protein
 - [ ] F — Genomics
@@ -65,4 +65,4 @@ Each letter requires discovery/audit, Engine, Runtime, Rulebook, schemas/contrac
 
 ## Active task
 
-A's engineering implementation is complete; independent scientific approval and freeze remain pending. B's Python v1 engineering implementation is complete and CI-verified in run #153 (core 624 passed/12 skipped; sequence profile 627 passed/9 skipped). Independent scientific review and formal freeze remain pending. DEC-0009 records the owner's explicit authorization to begin B before A's scientific freeze. Do not begin C until B is independently reviewed and frozen; retain A's outstanding review gate.
+A's engineering implementation is complete; independent scientific approval and freeze remain pending. B's Python v1 engineering implementation is complete. C's Python v1 engineering implementation is complete pending CI verification. Per owner direction, university scientific review and contract freezes for A–N are deferred until the entire engineering build is complete. Proceed to D after C's engineering commit and CI verification.

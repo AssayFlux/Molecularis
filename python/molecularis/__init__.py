@@ -59,6 +59,9 @@ from .sequence import (
     SequenceRecord, iter_fasta_records, kmer_counts, needleman_wunsch, parse_fasta, parse_fastq,
     reverse_complement, sequence_statistics, transcribe, trim_fastq_ends,
 )
+from .structure_service import (
+    StructureDocument, ingest_structure, load_structure, register_structure_service, structure_rulebook,
+)
 from .structure import (
     Atom, contact_pairs, interaction_candidates, parse_mmcif, parse_pdb, rmsd, solvent_accessible_surface_area,
 )
@@ -80,5 +83,6 @@ __all__ = [
     "ReferenceSequence", "normalize_against_reference",
     "Molecule", "MolecularAtom", "MolecularBond", "MolecularChain", "MolecularResidue",
     "SequenceDocument", "ingest_sequence", "load_sequence", "register_sequence_service", "sequence_rulebook",
+    "StructureDocument", "ingest_structure", "load_structure", "register_structure_service", "structure_rulebook",
     "ingest_molecule", "load_molecule", "molecular_validation_rulebook", "register_molecular_service",
 ]

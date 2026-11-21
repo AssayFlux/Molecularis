@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://molecularis.assayflux.org/schemas/structure-operation-report-v1.schema.json",
+  "title": "Molecularis Structure operation report v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "operation",
+    "structure_id",
+    "structure_sha256",
+    "result",
+    "rulebook",
+    "rules_checked",
+    "limitations"
+  ],
+  "properties": {
+    "schema": {
+      "const": "molecularis.structure-operation-report.v1"
+    },
+    "operation": {
+      "enum": [
+        "validate",
+        "geometry",
+        "contacts",
+        "sasa",
+        "interactions",
+        "rmsd"
+      ]
+    },
+    "structure_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "structure_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "result": {
+      "type": "object"
+    },
+    "rulebook": {
+      "const": "structure-core-v1"
+    },
+    "rules_checked": {
+      "type": "array",
+      "minItems": 7,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^STR-[0-9]{3}$"
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}
