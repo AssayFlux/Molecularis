@@ -1,7 +1,7 @@
-> **ALPHA BRANCH — ALL-DEVICE DIRECTION**  
-> Molecularis is transitioning to an all-device scientific research platform. The responsive web/PWA is the primary client; optional desktop packaging, local Molecularis Node, hosted workers and institutional/HPC connectors provide compute. Android-native product development is retired, but existing scientific code and user data are preserved through a controlled migration. Preferred core languages: **C++, Rust and Python**; TypeScript/JavaScript supports the browser client.  
+> **ALPHA BRANCH — DESKTOP-FIRST CROSS-PLATFORM DIRECTION**  
+> Molecularis is an installed scientific research application. Desktop apps for **Linux, Windows and macOS come first**; Android and Apple iOS/iPadOS apps follow on shared domain logic, contracts and project formats. No website/PWA-first strategy. A web companion is deferred. Preferred core languages: **C++, Rust and Python**; UI framework selection requires a cross-platform feasibility spike.  
 > Start here: [Alpha masterplan](docs/alpha/MASTERPLAN.md) · [North Star](NORTH_STAR.md) · [Roadmap](ROADMAP.md) · [Decisions](DECISIONS.md) · [Migration plan](docs/alpha/MIGRATION_PLAN.md).  
-> This direction applies to branch Alpha; CORE is not changed by this commit.
+
 
 <!-- MOLECULARIS · BY ASSAYFLUX -->
 <h1 align="center">MOLECULARIS</h1>
@@ -16,7 +16,7 @@
 
 <p align="center">
   <img
-src="https://readme-typing-svg.demolab.com?font=Cinzel+Decorative&weight=600&size=28&pause=1500&color=D4AF37&center=true&vCenter=true&width=850&lines=OFFLINE+FIRST+SCIENTIFIC+RESEARCH;REPRODUCIBLE+WORKFLOWS;TRACEABLE+EVIDENCE;ANDROID;PYTHON;KOTLIN;GRADLE;C%2B%2B;RUST;NODE.JS;HTML;CSS;JAVASCRIPT;BASH;LINUX+NATIVE+COMPUTING;FOR+RESEARCH+ONLY;VALIDATION+BEFORE+CLAIMS+IS+THE+KEY"
+src="https://readme-typing-svg.demolab.com?font=Cinzel+Decorative&weight=600&size=28&pause=1500&color=D4AF37&center=true&vCenter=true&width=850&lines=OFFLINE+FIRST+SCIENTIFIC+RESEARCH;REPRODUCIBLE+WORKFLOWS;TRACEABLE+EVIDENCE;LINUX;WINDOWS;MACOS;ANDROID;IOS;PYTHON;C%2B%2B;RUST;NATIVE+COMPUTING;FOR+RESEARCH+ONLY;VALIDATION+BEFORE+CLAIMS+IS+THE+KEY"
     alt="Molecularis tagline"
   />
 </p>
