@@ -4,7 +4,7 @@ roadmap_step: "I"
 roadmap_order: 9
 depends_on: ["molecular","simulation"]
 status: "implemented"
-completion_status: "engineering_implementation_ci_pending"
+completion_status: "engineering_implementation_ci_verified"
 primary_languages: ["python"]
 engine: "ENGINE.md"
 runtime: "RUNTIME.md"
