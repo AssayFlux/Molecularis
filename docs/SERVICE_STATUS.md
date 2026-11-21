@@ -1,7 +1,7 @@
 # Service and Platform Status Register
 
 Last verified: 2026-11-21  
-Current implementation commits: K pending CI; G [bfb3bf8ba807e9f971a38663734d7fb455f7654b](https://github.com/AssayFlux/Molecularis/commit/bfb3bf8ba807e9f971a38663734d7fb455f7654b); H [6e03dcbc7820f26bbda7b666fb005f898f5df487](https://github.com/AssayFlux/Molecularis/commit/6e03dcbc7820f26bbda7b666fb005f898f5df487); I [4992f5ad8c9cac783a977ce0ba409d8b0bf7c5b7](https://github.com/AssayFlux/Molecularis/commit/4992f5ad8c9cac783a977ce0ba409d8b0bf7c5b7); J [67a4d577fd8239f3465ef7eb8ae56d0ab6c193e9](https://github.com/AssayFlux/Molecularis/commit/67a4d577fd8239f3465ef7eb8ae56d0ab6c193e9).
+Current implementation commits: K [cb9479a1e86f9b3130a45cca208ee33e9b9ae1bc](https://github.com/AssayFlux/Molecularis/commit/cb9479a1e86f9b3130a45cca208ee33e9b9ae1bc); G [bfb3bf8ba807e9f971a38663734d7fb455f7654b](https://github.com/AssayFlux/Molecularis/commit/bfb3bf8ba807e9f971a38663734d7fb455f7654b); H [6e03dcbc7820f26bbda7b666fb005f898f5df487](https://github.com/AssayFlux/Molecularis/commit/6e03dcbc7820f26bbda7b666fb005f898f5df487); I [4992f5ad8c9cac783a977ce0ba409d8b0bf7c5b7](https://github.com/AssayFlux/Molecularis/commit/4992f5ad8c9cac783a977ce0ba409d8b0bf7c5b7); J [67a4d577fd8239f3465ef7eb8ae56d0ab6c193e9](https://github.com/AssayFlux/Molecularis/commit/67a4d577fd8239f3465ef7eb8ae56d0ab6c193e9).
 
 A scaffold or specification does not imply implementation or scientific validation.
 
@@ -37,12 +37,14 @@ A scaffold or specification does not imply implementation or scientific validati
 | H | Simulation | Canonical NVT/NPT protocol artifacts, energy-series analysis, hash-pinned GROMACS TPR runner integration and existing OpenMM CPU replica runner | Python v1 | MSDE lifecycle and three capabilities; OpenMM direct trusted-object API | SIM-001–SIM-007 executable | Engineering complete; CI run #44893264385 green; scientific review deferred |
 | I | Kinetics | Existing Michaelis–Menten, inhibition, fitting, bootstrap and PK/PD primitives retained; canonical reaction-network artifacts and mass-action RK4 added | Python v1 | MSDE artifact lifecycle and four capabilities | KIN-001–KIN-006 executable | Engineering complete; CI run #44894304968 green (core 702 passed/12 skipped; Chemistry 710/4; Genomics 703/11; Sequence 705/9); university review deferred |
 | J | Omics | Existing CPM/CLR, Welch/NB2 differential expression, diversity, growth and correlation primitives retained; canonical matrix artifact and MSDE service added | Python v1 | MSDE artifact lifecycle and seven capabilities | OMI-001–OMI-009 executable | Engineering implementation authored; CI verification pending; university review deferred |
-| K | Phylogeny | Existing Newick parser/serializer, patristic distances, JC69, NJ, UPGMA and seeded site-bootstrap algorithms retained and integrated | Python v1 canonical aligned-nucleotide artifact service | MSDE artifact lifecycle and five capabilities | PHY-001–PHY-007 executable | Engineering implementation complete; CI verification pending; scientific review deferred |
+| K | Phylogeny | Existing Newick parser/serializer, patristic distances, JC69, NJ, UPGMA and seeded site-bootstrap algorithms retained and integrated | Python v1 canonical aligned-nucleotide artifact service | MSDE artifact lifecycle and five capabilities | PHY-001–PHY-007 executable | Engineering complete; CI run #44896994652 green; scientific review deferred |
 | L | Pharmacogenomics | Existing modules; audit pending | Not started | Not started | Not operational | Planned |
 | M | Cohorts | Scaffold | Not started | Not started | Not operational | Planned |
 | N | Workflows | Existing workflow code; audit pending | Not started | Not started | Not operational | Planned |
 
 ## Verification evidence
+
+- [Run #201](https://github.com/AssayFlux/Molecularis/actions/runs/44896994652), commit `cb9479a`: Phylogeny K verified; core 721 passed/12 skipped; optional Sequence 724/9 (4 existing warnings), Genomics 722/11, Chemistry 729/4. Registry, 55 JSON Schemas, Ruff E9/F, compilation, Phylogeny benchmark smoke and all profiles passed.
 
 - [Run #197](https://github.com/AssayFlux/Molecularis/actions/runs/44895300775), commit `71f7355`: Omics J verified; core 711 passed/12 skipped; optional Genomics 712/11, Sequence 714/9 (4 existing warnings), Chemistry 719/4. Registry, 53 JSON Schemas, Ruff E9/F, compilation, Omics matrix benchmark smoke and all test profiles passed.
 
@@ -61,9 +63,9 @@ A scaffold or specification does not imply implementation or scientific validati
 
 ## Active phase and next exact work
 
-**Active phase:** Service K — Phylogeny Python v1 implementation authored; CI verification pending. University scientific review, independent reference comparisons and formal freeze deferred until A–N engineering completion per owner direction. The platform is not yet a distributed, multi-language, OS-isolated production runtime.
+**Active phase:** Service K — Phylogeny Python v1 engineering implementation and CI verification complete in run #44896994652 (core 721 passed/12 skipped; Sequence 724/9, Genomics 722/11, Chemistry 729/4). University scientific review and independent reference comparisons remain deferred until A–N engineering completion. University scientific review, independent reference comparisons and formal freeze deferred until A–N engineering completion per owner direction. The platform is not yet a distributed, multi-language, OS-isolated production runtime.
 
-**Next:** proceed to L — Pharmacogenomics after K CI verification. K supports canonical alignments, JC69 distances, neighbor joining, UPGMA and seeded site-bootstrap. university scientific review and formal freeze remain deferred until A–N engineering completion. University-level scientific review, cross-reference testing and formal contract freezes will be conducted after the full A–N engineering build, as directed by the owner. Platform-wide recovery, backup/restore, service discovery, language conformance and isolation gates remain open.
+**Next:** proceed to L — Pharmacogenomics. K supports canonical alignments, JC69 distances, neighbor joining, UPGMA and seeded site-bootstrap. university scientific review and formal freeze remain deferred until A–N engineering completion. University-level scientific review, cross-reference testing and formal contract freezes will be conducted after the full A–N engineering build, as directed by the owner. Platform-wide recovery, backup/restore, service discovery, language conformance and isolation gates remain open.
 
 ## Reporting rule
 
