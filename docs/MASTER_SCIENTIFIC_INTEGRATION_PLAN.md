@@ -1,3 +1,9 @@
+> **Alpha transition notice (2026-11-21):** This document is retained as historical planning material. Its Android-first delivery assumptions and target-branch references are superseded on branch Alpha by [docs/alpha/MASTERPLAN.md](alpha/MASTERPLAN.md), [NORTH_STAR.md](../NORTH_STAR.md) and [ROADMAP.md](../ROADMAP.md). Preserve useful scientific integration details, constraints and evidence; reconcile section-by-section before reuse. This notice does not claim any engine is integrated or validated.
+
+---
+
+
+
 # Molecularis — Master Scientific Integration Plan
 
 **Status:** Planning baseline; implementation and acceptance are separate.  
