@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from kinetics.sequence import iter_fastq_records
+from molecularis.sequence import iter_fastq_records
 
 
 def test_streaming_fastq_handles_wrapped_records_and_limits() -> None:

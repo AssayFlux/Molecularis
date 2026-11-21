@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from kinetics.catalog import iter_ncbi_gene_info, validate_gene_catalog
+from molecularis.catalog import iter_ncbi_gene_info, validate_gene_catalog
 
 
 def test_ncbi_gene_info_preserves_full_annotation_and_release() -> None:
@@ -43,7 +43,7 @@ def test_catalog_import_cannot_mark_gene_validated() -> None:
 
 
 def test_gene_catalog_searches_synonyms_and_nomenclature_with_taxonomy_filter() -> None:
-    from kinetics.catalog import search_gene_catalog
+    from molecularis.catalog import search_gene_catalog
 
     row = "\t".join([
         "9606", "7157", "TP53", "-", "P53|BCC7", "HGNC:11998", "17",
@@ -61,7 +61,7 @@ def test_gene_catalog_searches_synonyms_and_nomenclature_with_taxonomy_filter() 
 def test_pgx_definition_pack_requires_pinned_source_and_matches_only_complete_phase() -> None:
     import json
 
-    from kinetics.pgx import VariantKey, match_phased_haplotype, parse_star_allele_definitions
+    from molecularis.pgx import VariantKey, match_phased_haplotype, parse_star_allele_definitions
 
     pack = {
         "schema_version": 1, "genome_build": "GRCh38",
@@ -90,7 +90,7 @@ def test_pgx_definition_pack_requires_pinned_source_and_matches_only_complete_ph
 def test_pgx_definition_pack_rejects_release_mismatch_and_unphased_call() -> None:
     import json
 
-    from kinetics.pgx import match_phased_haplotype, parse_star_allele_definitions
+    from molecularis.pgx import match_phased_haplotype, parse_star_allele_definitions
 
     pack = {
         "schema_version": 1, "genome_build": "GRCh38",
@@ -112,7 +112,7 @@ def test_pgx_definition_pack_rejects_release_mismatch_and_unphased_call() -> Non
 def test_pharmvar_tsv_import_is_release_and_checksum_pinned() -> None:
     import hashlib
 
-    from kinetics.pharmvar import match_pharmvar_haplotype, parse_pharmvar_tsv
+    from molecularis.pharmvar import match_pharmvar_haplotype, parse_pharmvar_tsv
 
     tsv = (
         "Haplotype Name\tGene Symbol\tdbSNP rsID\tReference Sequence\tVariant Start\t"
@@ -138,7 +138,7 @@ def test_pharmvar_tsv_import_is_release_and_checksum_pinned() -> None:
 
 
 def test_pharmvar_tsv_rejects_checksum_and_incomplete_phase() -> None:
-    from kinetics.pharmvar import parse_pharmvar_tsv
+    from molecularis.pharmvar import parse_pharmvar_tsv
 
     tsv = (
         "Haplotype Name\tGene Symbol\tdbSNP rsID\tReference Sequence\tVariant Start\t"
@@ -154,7 +154,7 @@ def test_pharmvar_tsv_rejects_checksum_and_incomplete_phase() -> None:
 
 
 def test_gene_catalogue_coverage_report_is_descriptive_and_has_no_fake_denominator() -> None:
-    from kinetics.catalog import gene_catalogue_coverage_report
+    from molecularis.catalog import gene_catalogue_coverage_report
 
     rows = [
         "\t".join([
@@ -177,7 +177,7 @@ def test_gene_catalogue_coverage_report_is_descriptive_and_has_no_fake_denominat
 
 
 def test_gene_catalogue_coverage_report_enforces_bounds() -> None:
-    from kinetics.catalog import gene_catalogue_coverage_report
+    from molecularis.catalog import gene_catalogue_coverage_report
 
     entry = next(iter_ncbi_gene_info([
         "\t".join(["9606", "1", "A", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "20250101", "gene"])
@@ -189,7 +189,7 @@ def test_gene_catalogue_coverage_report_enforces_bounds() -> None:
 
 def test_pharmvar_tsv_rejects_duplicate_normalized_headers() -> None:
     import hashlib
-    from kinetics.pharmvar import parse_pharmvar_tsv
+    from molecularis.pharmvar import parse_pharmvar_tsv
 
     tsv = (
         "Haplotype Name\tGene Symbol\tGene-Symbol\tReference Sequence\tVariant Start\t"
@@ -206,7 +206,7 @@ def test_pharmvar_tsv_rejects_duplicate_normalized_headers() -> None:
 
 def test_pharmvar_tsv_rejects_short_and_extra_field_rows() -> None:
     import hashlib
-    from kinetics.pharmvar import parse_pharmvar_tsv
+    from molecularis.pharmvar import parse_pharmvar_tsv
 
     header = (
         "Haplotype Name\tGene Symbol\tdbSNP rsID\tReference Sequence\tVariant Start\t"
@@ -227,7 +227,7 @@ def test_pharmvar_tsv_rejects_short_and_extra_field_rows() -> None:
 
 def test_pharmvar_exact_match_reports_ambiguous_definitions_without_order_bias() -> None:
     import hashlib
-    from kinetics.pharmvar import match_pharmvar_haplotype, parse_pharmvar_tsv
+    from molecularis.pharmvar import match_pharmvar_haplotype, parse_pharmvar_tsv
 
     tsv = (
         "Haplotype Name\tGene Symbol\tdbSNP rsID\tReference Sequence\tVariant Start\t"
@@ -252,7 +252,7 @@ def test_pharmvar_exact_match_reports_ambiguous_definitions_without_order_bias()
 
 def test_pharmvar_matching_requires_complete_phase_and_matching_accession() -> None:
     import hashlib
-    from kinetics.pharmvar import match_pharmvar_haplotype, parse_pharmvar_tsv
+    from molecularis.pharmvar import match_pharmvar_haplotype, parse_pharmvar_tsv
 
     tsv = (
         "Haplotype Name\tGene Symbol\tdbSNP rsID\tReference Sequence\tVariant Start\t"

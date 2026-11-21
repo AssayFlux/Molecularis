@@ -3,7 +3,7 @@ from __future__ import annotations
 import gzip
 from pathlib import Path
 
-from kinetics.catalog import iter_ncbi_gene_info_file
+from molecularis.catalog import iter_ncbi_gene_info_file
 
 
 def test_ncbi_gene_info_file_streams_plain_and_gzip_sources(tmp_path: Path) -> None:

@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 from jsonschema import Draft202012Validator
 
-from kinetics.docking_vina import run_vina_docking
+from molecularis.docking_vina import run_vina_docking
 
 
 RECEPTOR = "ATOM      1  C   ALA A   1       0.000   0.000   0.000  1.00  0.00     0.000 C\n"
