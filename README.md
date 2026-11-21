@@ -1,7 +1,7 @@
 > **MOLECULARIS — REPOSITORY-FIRST, DESKTOP-FIRST DEVELOPMENT**  
 > Molecularis is an installed, offline-capable scientific research application. The first complete product is a desktop application for **Linux, Windows and macOS**, followed by Android and iOS/iPadOS applications on shared scientific contracts, project formats and provenance. A web companion is optional and deferred. The UI framework remains undecided until a measured five-platform feasibility study is complete. Core languages: **Python, Rust and C++**.  
 > **Repository capability baseline:** 130 registry entries — 68 tool declarations marked implemented with source paths present, 62 planned UI/settings/security entries, and **0 scientifically validated entries** in the audited baseline. Source presence is not validation.  
-> **Canonical planning:** [Master Plan](docs/MASTER_PLAN.md) · [Repository Baseline](docs/REPOSITORY_BASELINE.md) · [Capability Status](docs/CAPABILITY_STATUS.md) · [Full Capability Audit](docs/CAPABILITY_AUDIT.md) · [Legacy Requirements Traceability](docs/REQUIREMENTS_TRACEABILITY.md) · [Plan Retirement Map](docs/PLAN_RETIREMENT.md) · [Decisions](DECISIONS.md).
+> **Canonical planning:** [Master Plan](docs/MASTER_PLAN.md) · [Commercialisation Plan](docs/COMMERCIALISATION_PLAN.md) · [Repository Baseline](docs/REPOSITORY_BASELINE.md) · [Capability Status](docs/CAPABILITY_STATUS.md) · [Full Capability Audit](docs/CAPABILITY_AUDIT.md) · [Legacy Requirements Traceability](docs/REQUIREMENTS_TRACEABILITY.md) · [Plan Retirement Map](docs/PLAN_RETIREMENT.md) · [Decisions](DECISIONS.md).
 
 <!-- MOLECULARIS · BY ASSAYFLUX -->
 <h1 align="center">MOLECULARIS</h1>
