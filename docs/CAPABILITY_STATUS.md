@@ -2,7 +2,7 @@
 
 **Baseline:** CORE `dbda3496386edf46270d54296b2204a53d7de573`  
 **Purpose:** Map existing repository assets to the new desktop-first delivery programme.  
-**Status:** Repository source map reconciled with original R/S/I/P/G/U work packages; per-capability runtime and scientific evidence audit remains Phase 0 work. See [REQUIREMENTS_TRACEABILITY.md](REQUIREMENTS_TRACEABILITY.md).
+**Status:** Repository source map reconciled with original R/S/I/P/G/U work packages; per-capability runtime and scientific evidence audit remains Phase 0 work. See [REQUIREMENTS_TRACEABILITY.md](REQUIREMENTS_TRACEABILITY.md) and the [130-entry Capability Audit](CAPABILITY_AUDIT.md).
 
 ## Status vocabulary
 

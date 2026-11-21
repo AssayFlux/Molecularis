@@ -1,6 +1,7 @@
-> **MOLECULARIS — DESKTOP-FIRST SCIENTIFIC RESEARCH PLATFORM**  
-> Installed desktop applications for **Linux, Windows and macOS** are the first product delivery. Android and Apple iOS/iPadOS applications follow on the same scientific foundation, project formats and contracts. A website/PWA is not the first product. Preferred core languages: **C++, Rust and Python**; UI framework selection requires a measured five-platform feasibility spike.  
-> Start here: [Master plan](docs/MASTER_PLAN.md) · [Repository baseline](docs/REPOSITORY_BASELINE.md) · [Capability status](docs/CAPABILITY_STATUS.md) · [North Star](NORTH_STAR.md) · [Decisions](DECISIONS.md).
+> **ALPHA BRANCH — REPOSITORY-AUDITED DESKTOP-FIRST DEVELOPMENT**  
+> Molecularis is an installed scientific research application. Desktop applications for **Linux, Windows and macOS** are the first product delivery; Android and Apple iOS/iPadOS follow on shared scientific logic, project formats and contracts. A website/PWA is not the first product. The UI framework remains undecided pending a measured five-platform feasibility spike. Preferred core languages: **C++, Rust and Python**.  
+> **Current registry audit:** 130 entries — 68 source-present tool declarations, 62 planned UI/settings/security entries, and **0 scientifically validated entries**. Source presence is not validation.  
+> **Canonical planning:** [Master Plan](docs/MASTER_PLAN.md) · [Repository Baseline](docs/REPOSITORY_BASELINE.md) · [Capability Status](docs/CAPABILITY_STATUS.md) · [Full Capability Audit](docs/CAPABILITY_AUDIT.md) · [Legacy Requirements Traceability](docs/REQUIREMENTS_TRACEABILITY.md) · [Plan Retirement Map](docs/PLAN_RETIREMENT.md) · [Decisions](DECISIONS.md).
 
 
 <!-- MOLECULARIS · BY ASSAYFLUX -->

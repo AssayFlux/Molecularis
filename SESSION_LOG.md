@@ -2968,3 +2968,14 @@ Continue U0 token/component integration into actual screens, run exact-branch CI
 - Updated `docs/PLAN_RETIREMENT.md` and documentation index so detailed historical plans remain traceability inputs, not disposable documents or competing roadmaps.
 - No scientific source, schemas, user data, capability IDs, persisted identifiers or validation records were deleted or changed.
 - Pending: exact-head documentation and full CI on this review branch; Phase 0 still requires entry-by-entry audit of all 130 registry entries and persisted Android data identifiers.
+
+
+## 2026-11-21 — Alpha capability audit and README refresh
+
+- Audited all 130 entries in `capabilities/registry.yaml` against the CORE tracked source tree. The same registry blob was present on Alpha at audit time.
+- Confirmed 68 entries marked implemented, all with existing declared source paths; all 68 retain `evidence_level: none`. Confirmed 62 planned entries: 26 UI screens, 22 settings and 14 security features. No entry is marked validated.
+- Reviewed the 68-file Python test inventory and mapped module-level test candidates to each source-backed tool entry. The registry has no per-tool test IDs; candidate mappings are explicitly not claimed as exact one-to-one test coverage.
+- Identified registry model gaps: no structured engine/data-pack/domain/platform/evidence collections; no per-capability test/runtime/platform/provenance mapping. Recommend versioned schema v2 rather than in-place schema v1 mutation.
+- Added `docs/CAPABILITY_AUDIT.md`, brought canonical repository-first plan/baseline/traceability/retirement docs into Alpha, updated `docs/README.md`, and refreshed Alpha `README.md` with correct platform direction and honest capability counts.
+- No scientific implementation, registry status, persisted identifier, schema v1 or user data was changed.
+- Pending: CI on PR head and separate Android persisted-identifier/data-migration audit
