@@ -27,7 +27,7 @@ A scaffold or specification does not imply implementation or scientific validati
 
 | Step | Service | Existing code | Engine | Runtime | Rulebook | State |
 |---|---|---|---|---|---|---|
-| A | Molecular | Native v1 graph model, hierarchy, coordinates and serialization | In progress | Local Python reference model | v1 structural rules; scientific approval pending | Implementation in progress |
+| A | Molecular | Native v1 graph model, strict serialization, graph summaries and MSDE integration | Implemented v1 | Python reference runtime and artifact-store capability | Ten executable structural rules; independent scientific approval pending | v1 implementation pending CI and acceptance review |
 | B | Sequence | Existing modules; audit pending | Not started | Not started | Not operational | Planned |
 | C | Structure | Existing modules; audit pending | Not started | Not started | Not operational | Planned |
 | D | Chemistry | Existing modules; audit pending | Not started | Not started | Not operational | Planned |
@@ -51,9 +51,9 @@ A scaffold or specification does not imply implementation or scientific validati
 
 ## Active phase and next exact work
 
-**Active phase:** Service A — Molecular v1 foundational model, while Core/MSDE hardening continues. The platform is not yet a distributed, multi-language, OS-isolated production runtime.
+**Active phase:** Service A — Molecular v1 implementation and acceptance, while Core/MSDE hardening continues. The platform is not yet a distributed, multi-language, OS-isolated production runtime.
 
-**Next:** run and repair A-specific and repository-wide tests, integrate the molecular artifact with the MSDE contracts, add independent chemistry/macromolecule reference fixtures, then close A's acceptance gates. Continue platform crash recovery, backup/restore, service discovery, language conformance and isolation work. The platform gate remains open.
+**Next:** complete CI verification for the v1 artifact integration, review the molecular fixture provenance and benchmark results, obtain independent scientific Rulebook approval, then freeze A. Platform-wide recovery, backup/restore, service discovery, language conformance and isolation gates remain open. Continue platform crash recovery, backup/restore, service discovery, language conformance and isolation work. The platform gate remains open.
 
 ## Reporting rule
 

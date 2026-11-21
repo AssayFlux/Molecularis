@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "capabilities": [
+    {
+      "id": "molecular.validate.v1",
+      "version": "1.0.0",
+      "service": "molecular",
+      "operation": "validate",
+      "input_schema": "molecularis.molecule-artifact-reference.v1",
+      "output_schema": "molecularis.molecular-validation-report.v1",
+      "deterministic": true,
+      "description": "Integrity-check and structurally validate a stored Molecular v1 artifact."
+    }
+  ]
+}

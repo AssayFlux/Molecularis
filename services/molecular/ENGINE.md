@@ -1,47 +1,31 @@
 # A — Molecular Engine
 
-Status: implementation in progress; v1 graph model and structural validation implemented.
+Status: native v1 graph model and MSDE validation capability implemented; independent scientific approval remains pending.
 
-## Mission and ownership
+## Mission
 
-Service A owns the canonical, tool-independent molecular entity model used by later services. Its primary object is a molecular graph with stable identifiers and optional 3D coordinates. It is the shared foundation for chemistry, structure, protein, DNA/RNA, simulation and workflow services.
+Service A owns the canonical, tool-independent molecular entity model used by chemistry, structure, protein, DNA/RNA, simulation and workflow services. Python reference modules are python/molecularis/molecular_model.py and python/molecularis/molecular_service.py.
 
-The Python reference implementation is `python/molecularis/molecular_model.py`. It is dependency-free and does not delegate graph construction or validation to RDKit, Open Babel, Biotite or another external engine.
+## Domain model
 
-## v1 domain objects
-
-- `MolecularAtom`: stable atom ID, periodic-table element symbol, integer formal charge, optional isotope/name/residue/chain IDs and optional Cartesian position.
-- `MolecularBond`: stable bond ID, two atom endpoints, order and a bounded stereo annotation.
-- `MolecularResidue`: residue ID/name, parent chain and explicit atom membership.
-- `MolecularChain`: chain ID/name and ordered residue membership.
-- `Molecule`: identity, atoms, bonds, hierarchy and coordinate-frame declaration.
-
-## Coordinate and identity contract
-
-- Coordinates are either absent for every atom or present for every atom.
-- Coordinate values are finite Cartesian coordinates in Angstrom.
-- The only v1 frame is `cartesian_right_handed`; no implicit conversion is performed.
-- Atom, bond, residue and chain identifiers are unique within their respective namespaces.
-- Bonds reference existing atoms, cannot be self-edges, and cannot duplicate an undirected edge.
-- Hierarchical atom/residue/chain membership must be internally consistent.
-- Disconnected components are valid and are preserved.
+- MolecularAtom: stable ID, periodic-table element, integer formal charge, optional isotope/name/residue/chain and optional Cartesian position.
+- MolecularBond: stable ID, two atom endpoints, bounded order and stereo annotation.
+- MolecularResidue: ID/name, parent chain and explicit atom membership.
+- MolecularChain: ID/name and ordered residue membership.
+- Molecule: identity, atoms, bonds, hierarchy and coordinate frame.
 
 ## Native operations
 
-- Validate graph references and hierarchy at construction.
-- Derive a simple elemental formula using Hill ordering.
-- Produce deterministic adjacency and connected components.
-- Serialize to the versioned JSON contract and calculate a SHA-256 digest over canonical JSON.
+Structural validation, formula in Hill order, atom/bond counts, net formal charge, adjacency, atom degree, connected components, strict versioned JSON parsing, canonical serialization, SHA-256 identity, MSDE artifact ingestion/loading and executable structural validation Rulebook.
 
-## Explicit exclusions in v1
+## Contract
 
-No inferred valence or chemical sanitization, aromaticity perception, protonation/tautomer assignment, implicit hydrogens, stereochemical inference, bond-order inference, force fields, energy calculations, conformer generation, atom typing, periodic boundary conditions, symmetry expansion or experimental structure parsing. These belong to later scoped work and must not be silently guessed by this model.
+Coordinates are all absent or all present, finite Cartesian Angstrom values in the right-handed frame. IDs are unique. Bonds reference distinct existing atoms and duplicate undirected edges are prohibited. Hierarchy is reciprocal. Disconnected components are preserved.
 
-## Acceptance gates
+## Explicit exclusions
 
-- Unit and graph invariants pass the service-local test suite.
-- JSON schema validates serialized fixtures.
-- Round-trip serialization preserves values and digest.
-- Independent reference fixtures cover common small molecules and hierarchical macromolecule fragments.
-- Package compatibility tests prove existing public imports remain stable.
-- No claim of complete chemical validity is made from structural validation alone.
+No inferred valence, chemical sanitization, aromaticity perception, protonation, tautomer assignment, implicit hydrogens, stereochemical inference, bond-order inference, force fields, energy calculations, conformer generation, atom typing, periodic boundary conditions, symmetry expansion or experimental structure parsing. Existing RDKit functionality remains an optional Chemistry adapter, not the native Molecular model.
+
+## Acceptance evidence
+
+Model tests, schema and fixture checks, artifact round-trip, provenance-preserving Rulebook execution, strict parser tests and a reproducible graph benchmark harness are required. Structural validation is not a claim of chemical validity.

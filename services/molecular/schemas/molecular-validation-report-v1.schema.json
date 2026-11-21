@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://molecularis.assayflux.org/schemas/molecular-validation-report-v1.schema.json",
+  "title": "Molecularis structural validation report v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "valid",
+    "molecule_id",
+    "molecule_sha256",
+    "formula",
+    "atom_count",
+    "bond_count",
+    "net_formal_charge",
+    "connected_component_count",
+    "rulebook",
+    "rules_checked"
+  ],
+  "properties": {
+    "schema": {
+      "const": "molecularis.molecular-validation-report.v1"
+    },
+    "valid": {
+      "const": true
+    },
+    "molecule_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "molecule_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "formula": {
+      "type": "string",
+      "minLength": 1
+    },
+    "atom_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "bond_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "net_formal_charge": {
+      "type": "integer"
+    },
+    "connected_component_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "rulebook": {
+      "const": "molecular-structural-v1"
+    },
+    "rules_checked": {
+      "type": "array",
+      "minItems": 10,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^MOL-[0-9]{3}$"
+      }
+    }
+  }
+}

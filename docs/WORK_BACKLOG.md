@@ -37,7 +37,7 @@ Mark an item complete only with a commit SHA and verification evidence. Service 
 
 Execute exactly one letter at a time, following [SERVICE_ROADMAP.md](SERVICE_ROADMAP.md).
 
-- [ ] A — Molecular (v1 graph model/schema implemented; run #142 passed; independent validation and MSDE integration remain)
+- [ ] A — Molecular (native graph model, strict v1 serialization, artifact-store integration and executable Rulebook implemented; final CI and independent scientific approval pending)
 - [ ] B — Sequence
 - [ ] C — Structure
 - [ ] D — Chemistry
@@ -65,4 +65,4 @@ Each letter requires discovery/audit, Engine, Runtime, Rulebook, schemas/contrac
 
 ## Active task
 
-Complete A's v1 implementation and acceptance: model invariants, schema, MSDE artifact integration, independent fixtures, tests, documentation and freeze. Continue the open Core/MSDE hardening gates; do not advance to B until A is accepted.
+Complete A's v1 verification and freeze: pass CI, confirm fixtures/benchmark, obtain independent scientific approval, and record acceptance evidence. Continue the open Core/MSDE hardening gates; do not advance to B until A is accepted.

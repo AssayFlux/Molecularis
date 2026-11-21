@@ -4,18 +4,22 @@ roadmap_step: "A"
 roadmap_order: 1
 depends_on: []
 status: "implementation_in_progress"
-completion_status: "partial_v1"
+completion_status: "v1_implemented_pending_independent_scientific_approval"
 primary_languages: ["python"]
 planned_languages: ["cpp", "rust"]
 engine: "ENGINE.md"
 runtime: "RUNTIME.md"
 rulebook: "RULEBOOK.md"
+capabilities: "capabilities.json"
 source_roots:
   python: "python/molecularis"
   cpp: "src/cpp"
   rust: "src/rust"
 module: "molecularis.molecular_model"
-test_root: "tests/test_molecular_model.py"
+service_module: "molecularis.molecular_service"
+test_roots:
+  - "tests/test_molecular_model.py"
+  - "tests/test_molecular_service.py"
 schema_root: "schemas"
 data_root: "data"
 benchmark_root: "benchmarks"

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://molecularis.assayflux.org/schemas/molecule-artifact-reference-v1.schema.json",
+  "title": "Molecularis molecule artifact reference v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "artifact_id",
+    "schema"
+  ],
+  "properties": {
+    "artifact_id": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 128
+    },
+    "schema": {
+      "const": "molecularis.molecule-artifact-reference.v1"
+    }
+  }
+}

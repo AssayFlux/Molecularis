@@ -75,5 +75,5 @@ __all__ = [
     "substructure_match", "tanimoto", "theoretical_pi", "to_newick", "transcribe", "upgma",
     "search_gene_catalog", "validate_gene_catalog", "welch_differential_expression",
     "ReferenceSequence", "normalize_against_reference",
-    "Molecule", "MolecularAtom", "MolecularBond", "MolecularChain", "MolecularResidue",
+    "Molecule", "MolecularAtom", "MolecularBond", "MolecularChain", "MolecularResidue",\n    "ingest_molecule", "load_molecule", "molecular_validation_rulebook", "register_molecular_service",
 ]

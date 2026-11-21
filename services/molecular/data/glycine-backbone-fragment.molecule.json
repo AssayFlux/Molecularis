@@ -1,0 +1,110 @@
+{
+  "schema": "molecularis.molecule.v1",
+  "molecule_id": "glycine-backbone-fragment-1",
+  "name": "glycine backbone fragment",
+  "coordinate_unit": "angstrom",
+  "coordinate_system": "cartesian_right_handed",
+  "atoms": [
+    {
+      "atom_id": "N",
+      "element": "N",
+      "formal_charge": 0,
+      "isotope": null,
+      "name": "N",
+      "residue_id": "GLY1",
+      "chain_id": "A",
+      "position_angstrom": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "atom_id": "CA",
+      "element": "C",
+      "formal_charge": 0,
+      "isotope": null,
+      "name": "CA",
+      "residue_id": "GLY1",
+      "chain_id": "A",
+      "position_angstrom": [
+        1.45,
+        0,
+        0
+      ]
+    },
+    {
+      "atom_id": "C",
+      "element": "C",
+      "formal_charge": 0,
+      "isotope": null,
+      "name": "C",
+      "residue_id": "GLY1",
+      "chain_id": "A",
+      "position_angstrom": [
+        2.02,
+        1.42,
+        0
+      ]
+    },
+    {
+      "atom_id": "O",
+      "element": "O",
+      "formal_charge": 0,
+      "isotope": null,
+      "name": "O",
+      "residue_id": "GLY1",
+      "chain_id": "A",
+      "position_angstrom": [
+        1.35,
+        2.43,
+        0
+      ]
+    }
+  ],
+  "bonds": [
+    {
+      "bond_id": "N-CA",
+      "atom_1": "N",
+      "atom_2": "CA",
+      "order": "single",
+      "stereo": "none"
+    },
+    {
+      "bond_id": "CA-C",
+      "atom_1": "CA",
+      "atom_2": "C",
+      "order": "single",
+      "stereo": "none"
+    },
+    {
+      "bond_id": "C-O",
+      "atom_1": "C",
+      "atom_2": "O",
+      "order": "double",
+      "stereo": "none"
+    }
+  ],
+  "residues": [
+    {
+      "residue_id": "GLY1",
+      "name": "GLY",
+      "chain_id": "A",
+      "atom_ids": [
+        "N",
+        "CA",
+        "C",
+        "O"
+      ]
+    }
+  ],
+  "chains": [
+    {
+      "chain_id": "A",
+      "name": "Chain A",
+      "residue_ids": [
+        "GLY1"
+      ]
+    }
+  ]
+}

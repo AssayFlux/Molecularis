@@ -103,12 +103,12 @@ class MolecularResidue:
         _identifier(self.residue_id, "residue_id")
         _identifier(self.name, "residue name")
         _identifier(self.chain_id, "chain_id")
-        if not self.atom_ids:
-            raise ValueError("A residue must reference at least one atom")
-        if len(set(self.atom_ids)) != len(self.atom_ids):
-            raise ValueError("Residue atom_ids must be unique")
+        if not isinstance(self.atom_ids, tuple) or not self.atom_ids:
+            raise ValueError("A residue must reference at least one atom as a tuple")
         for atom_id in self.atom_ids:
             _identifier(atom_id, "residue atom_id")
+        if len(set(self.atom_ids)) != len(self.atom_ids):
+            raise ValueError("Residue atom_ids must be unique")
 
 
 @dataclass(frozen=True, slots=True)
@@ -120,10 +120,12 @@ class MolecularChain:
     def __post_init__(self) -> None:
         _identifier(self.chain_id, "chain_id")
         _identifier(self.name, "chain name")
-        if len(set(self.residue_ids)) != len(self.residue_ids):
-            raise ValueError("Chain residue_ids must be unique")
+        if not isinstance(self.residue_ids, tuple):
+            raise ValueError("Chain residue_ids must be a tuple")
         for residue_id in self.residue_ids:
             _identifier(residue_id, "chain residue_id")
+        if len(set(self.residue_ids)) != len(self.residue_ids):
+            raise ValueError("Chain residue_ids must be unique")
 
 
 @dataclass(frozen=True, slots=True)
@@ -139,8 +141,18 @@ class Molecule:
     def __post_init__(self) -> None:
         _identifier(self.molecule_id, "molecule_id")
         _identifier(self.name, "molecule name")
-        if not self.atoms:
-            raise ValueError("A molecule must contain at least one atom")
+        if not isinstance(self.atoms, tuple) or not self.atoms:
+            raise ValueError("A molecule must contain at least one atom as a tuple")
+        if not isinstance(self.bonds, tuple) or not isinstance(self.residues, tuple) or not isinstance(self.chains, tuple):
+            raise ValueError("Molecule bonds, residues and chains must be tuples")
+        if any(not isinstance(atom, MolecularAtom) for atom in self.atoms):
+            raise ValueError("atoms must contain MolecularAtom values")
+        if any(not isinstance(bond, MolecularBond) for bond in self.bonds):
+            raise ValueError("bonds must contain MolecularBond values")
+        if any(not isinstance(residue, MolecularResidue) for residue in self.residues):
+            raise ValueError("residues must contain MolecularResidue values")
+        if any(not isinstance(chain, MolecularChain) for chain in self.chains):
+            raise ValueError("chains must contain MolecularChain values")
         if self.coordinate_system != COORDINATE_SYSTEM:
             raise ValueError(f"coordinate_system must be {COORDINATE_SYSTEM!r}")
         atom_ids = [atom.atom_id for atom in self.atoms]
@@ -209,6 +221,18 @@ class Molecule:
         return COORDINATE_UNIT
 
     @property
+    def atom_count(self) -> int:
+        return len(self.atoms)
+
+    @property
+    def bond_count(self) -> int:
+        return len(self.bonds)
+
+    @property
+    def net_formal_charge(self) -> int:
+        return sum(atom.formal_charge for atom in self.atoms)
+
+    @property
     def formula(self) -> str:
         counts: dict[str, int] = {}
         for atom in self.atoms:
@@ -225,6 +249,12 @@ class Molecule:
             neighbours[bond.atom_1].append(bond.atom_2)
             neighbours[bond.atom_2].append(bond.atom_1)
         return {atom_id: tuple(values) for atom_id, values in neighbours.items()}
+
+    def degree(self, atom_id: str) -> int:
+        try:
+            return len(self.adjacency[atom_id])
+        except KeyError as exc:
+            raise ValueError(f"Unknown atom identifier: {atom_id!r}") from exc
 
     def connected_components(self) -> tuple[tuple[str, ...], ...]:
         adjacency = self.adjacency
@@ -279,67 +309,110 @@ class Molecule:
 
     @property
     def sha256(self) -> str:
-        encoded = json.dumps(self.to_dict(), sort_keys=True, separators=(",", ":"),
-                             ensure_ascii=False, allow_nan=False).encode("utf-8")
-        return hashlib.sha256(encoded).hexdigest()
+        return hashlib.sha256(self.to_json()).hexdigest()
 
     @classmethod
     def from_dict(cls, value: Mapping[str, Any]) -> "Molecule":
         if not isinstance(value, Mapping):
             raise ValueError("Molecule document must be an object")
-        if value.get("schema") != SCHEMA_VERSION:
-            raise ValueError(f"Unsupported molecule schema: {value.get('schema')!r}")
-        if value.get("coordinate_unit") != COORDINATE_UNIT:
+        required = {"schema", "molecule_id", "name", "coordinate_unit",
+                    "coordinate_system", "atoms", "bonds", "residues", "chains"}
+        if set(value) != required:
+            missing, extra = sorted(required - set(value)), sorted(set(value) - required)
+            raise ValueError(f"Molecule document fields mismatch; missing={missing}, extra={extra}")
+        if value["schema"] != SCHEMA_VERSION:
+            raise ValueError(f"Unsupported molecule schema: {value['schema']!r}")
+        if value["coordinate_unit"] != COORDINATE_UNIT:
             raise ValueError("Molecule coordinate_unit must be 'angstrom'")
+        if value["coordinate_system"] != COORDINATE_SYSTEM:
+            raise ValueError(f"coordinate_system must be {COORDINATE_SYSTEM!r}")
 
         def sequence(key: str) -> list[Any]:
-            result = value.get(key, [])
+            result = value[key]
             if not isinstance(result, list):
                 raise ValueError(f"{key} must be an array")
             return result
 
+        def object_fields(item: Any, expected: set[str], label: str) -> Mapping[str, Any]:
+            if not isinstance(item, Mapping) or set(item) != expected:
+                raise ValueError(f"Each {label} must contain exactly {sorted(expected)}")
+            return item
+
         atoms = []
-        for item in sequence("atoms"):
-            if not isinstance(item, Mapping):
-                raise ValueError("Each atom must be an object")
-            position = item.get("position_angstrom")
+        atom_fields = {"atom_id", "element", "formal_charge", "isotope", "name",
+                       "residue_id", "chain_id", "position_angstrom"}
+        for raw in sequence("atoms"):
+            item = object_fields(raw, atom_fields, "atom object")
+            position = item["position_angstrom"]
             if position is not None:
                 if not isinstance(position, (list, tuple)) or len(position) != 3:
                     raise ValueError("position_angstrom must contain three coordinates")
                 position = tuple(position)
             atoms.append(MolecularAtom(
-                atom_id=item.get("atom_id"), element=item.get("element"),
-                formal_charge=item.get("formal_charge", 0), isotope=item.get("isotope"),
-                name=item.get("name"), residue_id=item.get("residue_id"),
-                chain_id=item.get("chain_id"), position_angstrom=position,
+                atom_id=item["atom_id"], element=item["element"],
+                formal_charge=item["formal_charge"], isotope=item["isotope"],
+                name=item["name"], residue_id=item["residue_id"],
+                chain_id=item["chain_id"], position_angstrom=position,
             ))
+
         bonds = []
-        for item in sequence("bonds"):
-            if not isinstance(item, Mapping):
-                raise ValueError("Each bond must be an object")
+        bond_fields = {"bond_id", "atom_1", "atom_2", "order", "stereo"}
+        for raw in sequence("bonds"):
+            item = object_fields(raw, bond_fields, "bond object")
             bonds.append(MolecularBond(
-                bond_id=item.get("bond_id"), atom_1=item.get("atom_1"),
-                atom_2=item.get("atom_2"), order=item.get("order", "single"),
-                stereo=item.get("stereo", "none"),
+                bond_id=item["bond_id"], atom_1=item["atom_1"], atom_2=item["atom_2"],
+                order=item["order"], stereo=item["stereo"],
             ))
+
         residues = []
-        for item in sequence("residues"):
-            if not isinstance(item, Mapping):
-                raise ValueError("Each residue must be an object")
+        residue_fields = {"residue_id", "name", "chain_id", "atom_ids"}
+        for raw in sequence("residues"):
+            item = object_fields(raw, residue_fields, "residue object")
+            if not isinstance(item["atom_ids"], list):
+                raise ValueError("residue atom_ids must be an array")
             residues.append(MolecularResidue(
-                residue_id=item.get("residue_id"), name=item.get("name"),
-                chain_id=item.get("chain_id"), atom_ids=tuple(item.get("atom_ids", ())),
+                residue_id=item["residue_id"], name=item["name"],
+                chain_id=item["chain_id"], atom_ids=tuple(item["atom_ids"]),
             ))
+
         chains = []
-        for item in sequence("chains"):
-            if not isinstance(item, Mapping):
-                raise ValueError("Each chain must be an object")
+        chain_fields = {"chain_id", "name", "residue_ids"}
+        for raw in sequence("chains"):
+            item = object_fields(raw, chain_fields, "chain object")
+            if not isinstance(item["residue_ids"], list):
+                raise ValueError("chain residue_ids must be an array")
             chains.append(MolecularChain(
-                chain_id=item.get("chain_id"), name=item.get("name"),
-                residue_ids=tuple(item.get("residue_ids", ())),
+                chain_id=item["chain_id"], name=item["name"],
+                residue_ids=tuple(item["residue_ids"]),
             ))
         return cls(
-            molecule_id=value.get("molecule_id"), name=value.get("name"),
+            molecule_id=value["molecule_id"], name=value["name"],
             atoms=tuple(atoms), bonds=tuple(bonds), residues=tuple(residues),
-            chains=tuple(chains), coordinate_system=value.get("coordinate_system", COORDINATE_SYSTEM),
+            chains=tuple(chains), coordinate_system=value["coordinate_system"],
         )
+
+    @classmethod
+    def from_json(cls, document: str | bytes) -> "Molecule":
+        """Parse strict JSON, rejecting duplicate keys and NaN/Infinity."""
+        def unique_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+            result: dict[str, Any] = {}
+            for key, item in pairs:
+                if key in result:
+                    raise ValueError(f"Duplicate JSON object key: {key!r}")
+                result[key] = item
+            return result
+
+        def reject_constant(value: str) -> None:
+            raise ValueError(f"Non-finite JSON number is not permitted: {value}")
+
+        try:
+            payload = json.loads(document, object_pairs_hook=unique_object,
+                                 parse_constant=reject_constant)
+        except (json.JSONDecodeError, UnicodeDecodeError) as exc:
+            raise ValueError(f"Invalid molecule JSON: {exc}") from exc
+        return cls.from_dict(payload)
+
+    def to_json(self) -> bytes:
+        """Return canonical UTF-8 JSON suitable for immutable artifact storage."""
+        return json.dumps(self.to_dict(), sort_keys=True, separators=(",", ":"),
+                          ensure_ascii=False, allow_nan=False).encode("utf-8")
