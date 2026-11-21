@@ -1,2 +1,2 @@
 """Compatibility re-export; canonical implementation is molecularis.genetic_code."""
-from molecularis.genetic_code import *
+from molecularis.genetic_code import *  # noqa: F403
