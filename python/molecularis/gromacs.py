@@ -8,11 +8,9 @@ returned in a Molecularis result envelope; execution is not scientific validatio
 from __future__ import annotations
 
 import hashlib
-import json
 import os
 import re
 import subprocess
-import tempfile
 from pathlib import Path
 from typing import Sequence
 
@@ -110,7 +108,7 @@ def run_gromacs(
     try:
         completed = subprocess.run(
             argv, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
-            stderr=subprocess.PIPE, cwd=destination, env=env,
+            stderr=subprocess.DEVNULL, cwd=destination, env=env,
             timeout=timeout_seconds, check=False, shell=False,
         )
     except subprocess.TimeoutExpired as exc:
