@@ -56,3 +56,11 @@ This is a prioritized backlog, not a claim that tasks are underway or complete. 
 - G4 Cross-device accessibility and performance evidence.
 - G5 Backup/restore, incident and rollback exercises.
 - G6 Owner acceptance and versioned release notes.
+
+## EPIC X — Desktop-first cross-platform application
+- X1 Framework feasibility spike on Linux, Windows, macOS, Android and iOS/iPadOS; publish scored evidence and licensing review.
+- X2 Desktop shell, local projects, settings and offline workflow on Linux/Windows/macOS.
+- X3 Shared domain contracts, scientific runtime boundary and local job supervisor.
+- X4 Desktop packaging, signing, update/rollback, accessibility and GPU/3D validation.
+- X5 Android and iOS/iPadOS application adapters and lifecycle parity.
+- X6 Optional web companion only after installed-app foundations and owner decision.
