@@ -218,16 +218,16 @@ jobs:
       - name: Run Android JVM unit-test task
         working-directory: android
         run: >-
-          "$HOME/.cache/kinetics/gradle-8.13/gradle-8.13/bin/gradle" --no-daemon --stacktrace :app:testDebugUnitTest
+          "$HOME/.cache/molecularis/gradle-8.13/gradle-8.13/bin/gradle" --no-daemon --stacktrace :app:testDebugUnitTest
       - name: Capture resolved dependency graphs and artifact hashes
         working-directory: android
         run: |
-          "$HOME/.cache/kinetics/gradle-8.13/gradle-8.13/bin/gradle" --no-daemon :app:dependencies --configuration debugRuntimeClasspath > ../gradle-debug-runtime-dependencies.txt
-          "$HOME/.cache/kinetics/gradle-8.13/gradle-8.13/bin/gradle" --no-daemon :app:buildEnvironment > ../gradle-build-environment.txt
+          "$HOME/.cache/molecularis/gradle-8.13/gradle-8.13/bin/gradle" --no-daemon :app:dependencies --configuration debugRuntimeClasspath > ../gradle-debug-runtime-dependencies.txt
+          "$HOME/.cache/molecularis/gradle-8.13/gradle-8.13/bin/gradle" --no-daemon :app:buildEnvironment > ../gradle-build-environment.txt
           cargo tree --locked --all-features --manifest-path native-rust/Cargo.toml > ../cargo-dependency-tree.txt
           cargo metadata --locked --format-version 1 --manifest-path native-rust/Cargo.toml > ../cargo-metadata.json
           sha256sum native-rust/Cargo.lock > ../cargo-lock-sha256.txt
-          { find app/libs/python-wheels -type f -name '*.whl' -print0; find "$HOME/.cache/kinetics/chaquopy-17.2.0/server/pypi/dist/numpy" -type f -name '*.whl' -print0; } | sort -z | xargs -0 -r sha256sum > ../android-python-wheel-sha256.txt
+          { find app/libs/python-wheels -type f -name '*.whl' -print0; find "$HOME/.cache/molecularis/chaquopy-17.2.0/server/pypi/dist/numpy" -type f -name '*.whl' -print0; } | sort -z | xargs -0 -r sha256sum > ../android-python-wheel-sha256.txt
           find "$HOME/.gradle/caches/modules-2/files-2.1" -type f \( -name '*.jar' -o -name '*.aar' -o -name '*.pom' -o -name '*.module' \) -print0 | sort -z | xargs -0 -r sha256sum > ../gradle-resolved-artifact-sha256.txt
       - name: Verify APK/AAB artifacts and record hashes
         run: python scripts/check_android_artifacts.py
