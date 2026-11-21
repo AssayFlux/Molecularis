@@ -131,8 +131,8 @@ class GalaxyClient:
         chunks = [
             f"--{boundary}\r\nContent-Disposition: form-data; name=\"history_id\"\r\n\r\n{history}\r\n".encode(),
             f"--{boundary}\r\nContent-Disposition: form-data; name=\"tool_id\"\r\n\r\nupload1\r\n".encode(),
-            f"--{boundary}\r\nContent-Disposition: form-data; name=\\"files_0|type\\"\r\n\r\nupload_dataset\r\n".encode(),
-            f"--{boundary}\r\nContent-Disposition: form-data; name=\\"files_0|file_type\\"\r\n\r\n{file_type}\r\n".encode(),
+            f'--{boundary}\r\nContent-Disposition: form-data; name="files_0|type"\r\n\r\nupload_dataset\r\n'.encode(),
+            f'--{boundary}\r\nContent-Disposition: form-data; name="files_0|file_type"\r\n\r\n{file_type}\r\n'.encode(),
             f"--{boundary}\r\nContent-Disposition: form-data; name=\"files_0|file_data\"; filename=\"{filename}\"\r\nContent-Type: application/octet-stream\r\n\r\n".encode(),
         ]
         with path.open("rb") as stream:
