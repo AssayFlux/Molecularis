@@ -27,7 +27,7 @@ REQUIRED = [
     "docs/alpha/adr/0001-all-device-architecture.md",
 ]
 REQUIRED_PHRASES = {
-    "NORTH_STAR.md": ["all-device", "C++", "Rust", "Python"],
+    "NORTH_STAR.md": ["desktop-first", "Linux", "Windows", "macOS", "Android", "iOS/iPadOS", "C++", "Rust", "Python"],
     "docs/alpha/MASTERPLAN.md": ["Alpha", "Mol*", "Galaxy", "Molecularis Node"],
     "docs/alpha/INTEGRATION_CATALOG.md": ["Biotite", "AlphaFold", "OpenMM", "NUAD", "SciREPL"],
 }
