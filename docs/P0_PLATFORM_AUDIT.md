@@ -119,7 +119,7 @@ Unknown classification defaults to **Restricted**. CI fixtures must be synthetic
 
 ## 6. P0 engineering changes in this delivery
 
-The following code changes are included in this P0 step; they require the linked CI run to pass before being treated as verified:
+The following code changes are included in this P0 step and were verified by [CI #44909367708](https://github.com/AssayFlux/Molecularis/actions/runs/44909367708), commit `62e55cb` (core 758 passed/12 skipped; optional Chemistry 766/4, Genomics 759/11, Sequence 761/9 with 4 existing warnings):
 
 1. **Artifact-store backup:** SQLite's backup API creates a consistent catalog snapshot; only catalog-referenced objects are copied; catalog and object hashes are verified; the backup is atomically published to a new destination and does not overwrite an existing backup.
 2. **Restore:** validates manifest/catalog consistency, SQLite integrity, every object digest and a post-restore artifact audit; restores only to a new directory and refuses damaged backup content.

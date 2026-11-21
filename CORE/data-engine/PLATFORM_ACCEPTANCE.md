@@ -12,7 +12,7 @@ Status: local reference implementation v0.2; full production platform acceptance
 - Streamed ingestion and reads with byte/chunk limits.
 - Digest verification, catalog audit and non-destructive orphan/dangling-lineage/temporary-file reporting.
 - Consistent SQLite catalog backup plus verified referenced-object copy, manifest and atomic non-overwriting publication.
-- Restore into a new store directory with catalog/object hash checks and post-restore audit (new regression tests; CI pending).
+- Restore into a new store directory with catalog/object hash checks and post-restore audit (regression tests passed in [CI #44909367708](https://github.com/AssayFlux/Molecularis/actions/runs/44909367708); core 758 passed/12 skipped and all optional profiles green).
 - Exact/range query pagination bound to an explicit catalog row-ID snapshot, with stable ordering and explicit completeness.
 - Capability registry and acyclic bounded Rulebook DAG validation.
 - Success and failure run evidence, including failed operation identity and error category.

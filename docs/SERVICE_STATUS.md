@@ -44,6 +44,8 @@ A scaffold or specification does not imply implementation or scientific validati
 
 ## Verification evidence
 
+- [P0 platform integrity run #44909367708](https://github.com/AssayFlux/Molecularis/actions/runs/44909367708), commit `62e55cb`: core 758 passed/12 skipped; optional Chemistry 766/4, Genomics 759/11, Sequence 761/9 (4 existing warnings). Registry, 64 JSON Schemas, Ruff E9/F, compilation, platform backup/restore and Agentics input-binding regression tests passed. This verifies the delivered code/tests, not OS isolation, recovery certification or scientific validity.
+
 - [Run #44900460557](https://github.com/AssayFlux/Molecularis/actions/runs/44900460557), commit `220dd2a`: Workflows N verified; core 746 passed/12 skipped; optional Chemistry 754/4, Genomics 747/11, Sequence 749/9 (4 existing warnings). Registry, 64 JSON Schemas, Ruff E9/F, compilation, Workflows DAG benchmark smoke and all test profiles passed.
 
 
