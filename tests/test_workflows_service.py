@@ -55,8 +55,8 @@ def test_registered_validate_and_plan_capabilities(tmp_path):
     p=platform_fixture(tmp_path)
     try:
         a=ingest_workflow(p,fixture()); initial={"workflow_artifact_id":a.artifact_id}
-        assert p.execute(workflows_rulebook("validate"),initial)["workflows_result"]["result"]["valid"]
-        assert p.execute(workflows_rulebook("plan"),initial)["workflows_result"]["result"]["execution_order"]==["first","second"]
+        assert p.execute(workflows_rulebook("validate"),initial)["workflows_result"]["valid"]
+        assert p.execute(workflows_rulebook("plan"),initial)["workflows_result"]["execution_order"]==["first","second"]
     finally: p.close()
 
 def test_exact_initial_inputs_required(tmp_path):
