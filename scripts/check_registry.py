@@ -19,9 +19,6 @@ COLLECTIONS = (
     "domains",
     "device_logs",
     "validation_records",
-    "ui_screens",
-    "ui_settings",
-    "security_features",
 )
 STATUSES = {"planned", "implemented", "validated"}
 EVIDENCE = {"none", "benchmark", "reference-concordance", "clinical-study"}
@@ -138,51 +135,6 @@ def validate_registry(data: Any) -> list[str]:
             elif not gate.get("part12_evidence"):
                 errors.append(f"tool {tid}: clinical capability requires Part 12 evidence")
 
-
-    # UI/security inventories are explicit registry records. Planned entries
-    # are not executable until implementation and tests are recorded.
-    for collection in ("ui_screens", "ui_settings", "security_features"):
-        for item in data.get(collection, []):
-            if not isinstance(item, dict):
-                continue
-            identifier = str(item.get("id", "<unknown>"))
-            if item.get("track") not in {"UI", "G"}:
-                errors.append(f"{collection} {identifier}: track must be UI or G")
-            status = item.get("status", "planned")
-            if status not in STATUSES:
-                errors.append(f"{collection} {identifier}: invalid status {status!r}")
-            tests = item.get("tests", [])
-            if not isinstance(tests, list):
-                errors.append(f"{collection} {identifier}: tests must be a list")
-            if status == "implemented" and not tests:
-                errors.append(f"{collection} {identifier}: implemented requires test references")
-            if collection == "ui_screens" and status == "implemented":
-                if item.get("accessibility_check") != "passed":
-                    errors.append(
-                        f"{collection} {identifier}: implemented requires a passed "
-                        "accessibility check"
-                    )
-                matrix = item.get("device_matrix")
-                if not isinstance(matrix, list) or not matrix:
-                    errors.append(
-                        f"{collection} {identifier}: implemented requires device-matrix evidence"
-                    )
-
-    settings_path = ROOT / "design" / "settings-schema.yaml"
-    try:
-        settings_doc = yaml.safe_load(settings_path.read_text(encoding="utf-8"))
-        schema_keys = {
-            item.get("key") for item in settings_doc.get("settings", [])
-            if isinstance(item, dict)
-        }
-    except (OSError, yaml.YAMLError, AttributeError):
-        schema_keys = set()
-    for item in data.get("ui_settings", []):
-        if isinstance(item, dict) and item.get("schema_key") not in schema_keys:
-            errors.append(
-                f"ui_settings {item.get('id')}: missing settings schema key "
-                f"{item.get('schema_key')!r}"
-            )
 
     claims = data.get("claims", [])
     if not isinstance(claims, list):

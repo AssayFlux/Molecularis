@@ -108,3 +108,19 @@ def test_implementation_path_cannot_escape_repository() -> None:
     data = base_registry()
     data["tools"] = [{"id": "tool-a", "status": "implemented", "implementation": "../outside.py"}]
     assert any("must stay inside the repository" in error for error in validate_registry(data))
+
+
+def test_duplicate_collection_ids_are_rejected() -> None:
+    data = base_registry()
+    data["engines"] = [{"id": "same"}, {"id": "same"}]
+    assert any("duplicate engines id: same" in error for error in validate_registry(data))
+
+
+def test_non_mapping_registry_is_rejected() -> None:
+    assert validate_registry([]) == ["registry root must be a mapping"]
+
+
+def test_unknown_registry_collection_is_not_required() -> None:
+    # UI inventories were retired with the UI product surface; engine registry
+    # validation must not depend on removed UI settings schemas.
+    assert validate_registry(base_registry()) == []
