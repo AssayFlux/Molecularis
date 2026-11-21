@@ -1,3 +1,9 @@
+> **Alpha transition notice (2026-11-21):** Apply this standard together with [docs/alpha/LANGUAGE_STRATEGY.md](alpha/LANGUAGE_STRATEGY.md) and [docs/alpha/MASTERPLAN.md](alpha/MASTERPLAN.md). Android-specific assumptions are migration context, not the target product architecture. Preserve its useful contract, testing, provenance and review requirements; reconcile any conflicts with the all-device North Star before implementation.
+
+---
+
+
+
 # Molecularis — Engineering & Integration Standard
 
 **Status:** Owner-directed engineering standard  
