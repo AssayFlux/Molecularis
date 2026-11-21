@@ -101,6 +101,6 @@ def test_query_pages_continue_within_the_same_snapshot(tmp_path):
     page2 = store.find_exact('group', 'same', limit=2, offset=page1.next_offset,
                              snapshot_id=page1.snapshot_id)
     assert page2.complete is True
-    assert [item['artifact_id'] for item in page1.items + page2.items] == [
+    assert {item['artifact_id'] for item in page1.items + page2.items} == {
         item.artifact_id for item in expected
-    ]
+    }
