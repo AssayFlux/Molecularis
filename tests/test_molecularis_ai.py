@@ -46,7 +46,7 @@ def test_ai_plans_and_requires_approval_before_execution(tmp_path):
     platform = MolecularisPlatform(tmp_path)
     platform.start()
     platform.register(Capability("test.echo.v1", "1", "molecular", "echo", "input", "output"))
-    platform.bind("test.echo.v1", lambda inputs, parameters, context: {"echo": inputs["source"]})
+    platform.bind("test.echo.v1", lambda inputs, parameters, context: {"echo": b"".join(platform.store.read(inputs["source"])).decode("utf-8")})
     source = platform.ingest(b"synthetic", media_type="text/plain", schema_id="test.input")
     model = lambda request, catalog, available: _workflow("test.echo.v1", tuple(available))
     agent = MolecularisAI(platform, model, planner_id="test-model")
