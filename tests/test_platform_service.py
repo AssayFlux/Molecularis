@@ -4,7 +4,7 @@ import json
 
 import pytest
 
-from molecularis.platform import Capability, MolecularisPlatform, RuntimeState
+from molecularis.platform import MolecularisPlatform, RuntimeState
 from molecularis.platform.contracts import ValidationError
 
 
