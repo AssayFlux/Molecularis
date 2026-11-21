@@ -3,18 +3,24 @@ name: "Genomics"
 roadmap_step: "F"
 roadmap_order: 6
 depends_on: ["sequence"]
-status: "scaffold"
-completion_status: "not_implemented"
-primary_languages: ["cpp", "python", "rust"]
+status: "implemented"
+completion_status: "engineering_complete_scientific_review_deferred"
+primary_languages: ["python"]
 engine: "ENGINE.md"
 runtime: "RUNTIME.md"
 rulebook: "RULEBOOK.md"
+acceptance: "ACCEPTANCE.md"
 source_roots:
-  cpp: "src/cpp"
-  python: "src/python"
-  rust: "src/rust"
+  python: "python/molecularis"
 test_root: "tests"
-schema_root: "schemas"
-data_root: "data"
-benchmark_root: "benchmarks"
-external_execution_dependencies: []
+schema_root: "services/genomics/schemas"
+data_root: "services/genomics/data"
+benchmark_root: "services/genomics/benchmarks"
+external_execution_dependencies:
+  - "pysam/HTSlib optional host profile for BAM/CRAM and Samtools/BCFtools adapters"
+operations:
+  - "genomics.validate.v1"
+  - "genomics.assembly-qc.v1"
+  - "genomics.orf-scan.v1"
+  - "genomics.annotation-validate.v1"
+  - "genomics.variant-qc.v1"
