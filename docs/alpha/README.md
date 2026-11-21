@@ -2,6 +2,7 @@
 
 ## Product direction and architecture
 - [North Star](../../NORTH_STAR.md) — all-device mission and language preference.
+- [Baseline Audit](BASELINE_AUDIT.md) — verified repository facts and M0 audit gaps.
 - [Masterplan](MASTERPLAN.md) — product scope, architecture, twelve integrations and milestones.
 - [Architecture ADR](adr/0001-all-device-architecture.md) — accepted Alpha architecture decision.
 - [Language Strategy](LANGUAGE_STRATEGY.md) — C++, Rust, Python and web language ownership.
