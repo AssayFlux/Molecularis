@@ -1,0 +1,17 @@
+id: "omics"
+name: "Omics"
+status: "scaffold"
+completion_status: "not_implemented"
+primary_languages: ["cpp", "python", "rust"]
+engine: "ENGINE.md"
+runtime: "RUNTIME.md"
+rulebook: "RULEBOOK.md"
+source_roots:
+  cpp: "src/cpp"
+  python: "src/python"
+  rust: "src/rust"
+test_root: "tests"
+schema_root: "schemas"
+data_root: "data"
+benchmark_root: "benchmarks"
+external_execution_dependencies: []
