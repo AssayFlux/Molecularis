@@ -28,6 +28,7 @@ Each step includes discovery, specification, native engine, runtime, Rulebook, s
 - `services/omics/` — canonical feature-by-sample artifacts, CPM/CLR, exploratory differential analysis, diversity and cross-omics correlation.
 - `services/phylogeny/` — canonical aligned nucleotide artifacts, Jukes-Cantor distance matrices, neighbor joining, UPGMA and seeded site-bootstrap split support.
 - `services/pharmacogenomics/` — provenance-pinned star-allele definition packs and conservative matching of already-phased synthetic haplotypes; no phenotype or treatment advice.
+- `services/cohorts/` — canonical synthetic non-patient cohort artifacts, longitudinal descriptive summaries, stratification with minimum-cell suppression and pseudonymous membership overlap.
 - `data/`, `validation/` — reference metadata and validation assets.
 - `remote-node/` — isolated remote execution component.
 - `scripts/`, `tests/` — engineering checks and automated tests.

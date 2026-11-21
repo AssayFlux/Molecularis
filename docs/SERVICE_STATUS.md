@@ -65,9 +65,9 @@ A scaffold or specification does not imply implementation or scientific validati
 
 ## Active phase and next exact work
 
-**Active phase:** Service L — Pharmacogenomics Python v1 engineering implementation and CI verification complete in run #44898692562 (core 728 passed/12 skipped; Genomics 729/11, Chemistry 736/4, Sequence 731/9). The service performs conservative, source-pinned matching of caller-phased complete synthetic haplotypes only. Independent scientific/clinical review remains deferred until A–N engineering completion. The platform is not yet a distributed, multi-language, OS-isolated production runtime.
+**Active phase:** Service M — Cohorts implementation committed in `40f08c7`; CI verification is pending. The service accepts synthetic non-patient cohorts only and provides aggregate descriptive summaries, stratification with small-cell suppression and pseudonymous membership overlap. Independent scientific/clinical review remains deferred until A–N engineering completion. The platform is not yet a distributed, multi-language, OS-isolated production runtime.
 
-**Next:** proceed to M — Cohorts. L supports release-pinned star-allele definition ingestion and exact matching of already-phased complete haplotypes. It does not infer phenotype, medication, dose or treatment. University-level scientific review, independent PharmVar/CPIC/DPWG comparisons and formal contract freezes will be conducted after the full A–N engineering build, as directed by the owner. Platform-wide recovery, backup/restore, service discovery, language conformance and isolation gates remain open.
+**Next:** proceed to N — Workflows. M supports release-pinned star-allele definition ingestion and exact matching of already-phased complete haplotypes. It does not infer phenotype, medication, dose or treatment. University-level scientific review, independent PharmVar/CPIC/DPWG comparisons and formal contract freezes will be conducted after the full A–N engineering build, as directed by the owner. Platform-wide recovery, backup/restore, service discovery, language conformance and isolation gates remain open.
 
 ## Reporting rule
 

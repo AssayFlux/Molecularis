@@ -52,6 +52,8 @@ jobs:
         run: PYTHONPATH=python python services/phylogeny/benchmarks/phylogeny_benchmark.py --taxa 20 --sites 1000
       - name: Pharmacogenomics matching benchmark smoke
         run: PYTHONPATH=python python services/pharmacogenomics/benchmarks/pharmacogenomics_benchmark.py --calls 100
+      - name: Cohorts aggregate benchmark smoke
+        run: PYTHONPATH=python python services/cohorts/benchmarks/cohorts_benchmark.py --members 10000
       - name: Protein sequence benchmark smoke
         run: PYTHONPATH=python python services/protein/benchmarks/protein_benchmark.py --residues 10000
       - name: Chemistry graph benchmark smoke
