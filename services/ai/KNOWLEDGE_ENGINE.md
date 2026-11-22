@@ -11,10 +11,11 @@ The SKE is the domain-neutral, versioned knowledge substrate shared by Agentics 
 - **Concepts:** identifiers, labels, domain namespaces, definitions, synonyms and parent concepts.
 - **Entities:** typed domain objects, concept links, external identifiers and structured properties.
 - **Relations:** directed subject-predicate-object links, qualifiers and evidence references.
-- **Equations:** inert expression text, typed variables, dimensions, assumptions, applicability, source references, version and review state. Expressions are never evaluated with `eval` or `exec`.
+- **Equations and laws:** inert expression text, typed variables, dimensions, assumptions, applicability, source references, kind, version and review state. Expressions are never evaluated with `eval` or `exec`.
+- **Mechanisms:** ordered, typed steps with actor/input/output entity references, conditions, evidence, assumptions, applicability and source provenance.
 - **Evidence:** observed, established, derived, inferred, predicted, simulated, constructed, hypothesized and validated classes; active, disputed, superseded and retracted states; source links, assumptions, uncertainty and explicit contradiction links.
 - **Sources:** locator, title, publisher/version, content digest, license identifier and explicit permission state. Unknown permission is not training permission.
-- **Quantities:** finite numeric values, SI base-dimension algebra, explicit units, safe compound-unit composition and conversion.
+- **Quantities:** finite numeric values, SI base-dimension algebra, explicit units, safe compound-unit composition, conversion and JSON round-trip serialization.
 - **Coordinate references:** frame, axes, handedness and per-axis units.
 - **Packages:** immutable package identity/version, deterministic canonical serialization and SHA-256 content identity.
 - **Queries:** deterministic package, concept, entity, relation, equation, source and evidence lookup.
@@ -56,7 +57,7 @@ This map is a boundary contract, not a claim that each domain ontology has alrea
 1. A source's `unknown` permission state never authorizes redistribution or model training.
 2. Evidence classes are labels, not an automatic confidence ranking.
 3. Conflicting or disputed evidence is retained; the engine does not silently select a winner.
-4. Equation expressions are inert data. A later symbolic adapter must parse them through a constrained grammar.
+4. Equation expressions are inert data. A later symbolic adapter must parse them through a constrained grammar. Law records reuse the equation contract; mechanisms use explicit ordered steps.
 5. Unit conversion rejects incompatible dimensions and non-finite values.
 6. Package versions are immutable: the same package ID/version cannot be overwritten with different content.
 7. The in-memory engine is a reference query/index layer. Durable storage is delegated explicitly to Core ArtifactStore.
