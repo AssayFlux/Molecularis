@@ -492,6 +492,78 @@ class KnowledgePackage:
     def to_dict(self) -> dict[str, Any]:
         return _jsonable(asdict(self))
 
+    @classmethod
+    def from_dict(cls, payload: Mapping[str, Any]) -> "KnowledgePackage":
+        def as_dimension(raw: Mapping[str, Any]) -> Dimension:
+            return Dimension(tuple((str(name), int(power))
+                                   for name, power in raw.get("powers", ())))
+
+        concepts = tuple(ScientificConcept(
+            concept_id=item["concept_id"], label=item["label"], domain=item["domain"],
+            definition=item["definition"], synonyms=tuple(item.get("synonyms", ())),
+            parent_concept_ids=tuple(item.get("parent_concept_ids", ())),
+            metadata=item.get("metadata", {}),
+        ) for item in payload.get("concepts", ()))
+        entities = tuple(ScientificEntity(
+            entity_id=item["entity_id"], entity_type=item["entity_type"],
+            domain=item["domain"], label=item["label"],
+            concept_ids=tuple(item.get("concept_ids", ())),
+            external_identifiers=item.get("external_identifiers", {}),
+            properties=item.get("properties", {}),
+        ) for item in payload.get("entities", ()))
+        relations = tuple(ScientificRelation(
+            relation_id=item["relation_id"], subject_id=item["subject_id"],
+            predicate=item["predicate"], object_id=item["object_id"],
+            domain=item["domain"], evidence_ids=tuple(item.get("evidence_ids", ())),
+            qualifiers=item.get("qualifiers", {}),
+        ) for item in payload.get("relations", ()))
+        equations = tuple(ScientificEquation(
+            equation_id=item["equation_id"], label=item["label"], domain=item["domain"],
+            expression=item["expression"],
+            variables=tuple(EquationVariable(
+                symbol=v["symbol"], description=v["description"],
+                dimension=as_dimension(v["dimension"]), unit=v.get("unit"),
+                required=v.get("required", True),
+            ) for v in item.get("variables", ())),
+            assumptions=tuple(item.get("assumptions", ())),
+            applicability=item.get("applicability", "unspecified"),
+            source_ids=tuple(item.get("source_ids", ())),
+            version=item.get("version", "1.0.0"), status=item.get("status", "proposed"),
+        ) for item in payload.get("equations", ()))
+        sources = tuple(ScientificSource(
+            source_id=item["source_id"], source_type=item["source_type"],
+            locator=item["locator"], title=item["title"],
+            publisher=item.get("publisher"), version=item.get("version"),
+            published_at=item.get("published_at"), accessed_at=item.get("accessed_at"),
+            content_sha256=item.get("content_sha256"), license_id=item.get("license_id"),
+            permission=SourcePermission(item.get("permission", "unknown")),
+            notes=item.get("notes"),
+        ) for item in payload.get("sources", ()))
+        evidence = tuple(EvidenceRecord(
+            evidence_id=item["evidence_id"], claim=item["claim"],
+            evidence_class=EvidenceClass(item["evidence_class"]),
+            status=EvidenceStatus(item["status"]),
+            source_ids=tuple(item.get("source_ids", ())),
+            subject_ids=tuple(item.get("subject_ids", ())),
+            contradicts_evidence_ids=tuple(item.get("contradicts_evidence_ids", ())),
+            method=item.get("method"), assumptions=tuple(item.get("assumptions", ())),
+            uncertainty=item.get("uncertainty", {}),
+            applicability=item.get("applicability", "unspecified"),
+            reviewer=item.get("reviewer"), created_at=item["created_at"],
+        ) for item in payload.get("evidence", ()))
+        coordinate_references = tuple(CoordinateReference(
+            reference_id=item["reference_id"], frame=item["frame"],
+            axes=tuple(item["axes"]), handedness=item.get("handedness", "right"),
+            units=tuple(item.get("units", ())),
+        ) for item in payload.get("coordinate_references", ()))
+        return cls(
+            package_id=payload["package_id"], version=payload["version"],
+            domain=payload["domain"], concepts=concepts, entities=entities,
+            relations=relations, equations=equations, sources=sources,
+            evidence=evidence, coordinate_references=coordinate_references,
+            metadata=payload.get("metadata", {}),
+        )
+
     @property
     def content_sha256(self) -> str:
         return _digest(self.to_dict())
@@ -636,6 +708,18 @@ class ScientificKnowledgeEngine:
         )
         self.ingest(package)
         return artifact
+
+    def load_artifact(self, artifact_store: Any, artifact_id: str) -> KnowledgePackage:
+        """Load and verify a package from Core ArtifactStore."""
+        artifact = artifact_store.get(artifact_id)
+        if artifact.schema_id != "urn:molecularis:scientific-knowledge-package:1":
+            raise ValueError("artifact is not a Molecularis knowledge package")
+        raw = b"".join(artifact_store.read(artifact_id))
+        package = KnowledgePackage.from_dict(json.loads(raw.decode("utf-8")))
+        if artifact.metadata.get("knowledge_sha256") != package.content_sha256:
+            raise ValueError("knowledge package digest does not match artifact metadata")
+        self.ingest(package)
+        return package
 
 
 __all__ = [
