@@ -516,7 +516,7 @@ class KnowledgePackage:
             _text(getattr(self, name), name)
         _canonical(dict(self.metadata))
         for collection_name in ("concepts", "entities", "relations", "equations",
-                                "sources", "evidence", "coordinate_references"):
+                                "mechanisms", "sources", "evidence", "coordinate_references"):
             records = getattr(self, collection_name)
             ids = [getattr(record, {
                 "concepts": "concept_id", "entities": "entity_id",
@@ -545,6 +545,16 @@ class KnowledgePackage:
         for equation in self.equations:
             if set(equation.source_ids) - source_ids:
                 raise ValueError(f"equation {equation.equation_id} references unknown sources")
+        for mechanism in self.mechanisms:
+            if set(mechanism.source_ids) - source_ids:
+                raise ValueError(f"mechanism {mechanism.mechanism_id} references unknown sources")
+            if set(mechanism.evidence_ids) - evidence_ids:
+                raise ValueError(f"mechanism {mechanism.mechanism_id} references unknown evidence")
+            for step in mechanism.steps:
+                if set(step.actor_entity_ids + step.input_entity_ids + step.output_entity_ids) - entity_ids:
+                    raise ValueError(f"mechanism step {step.step_id} references unknown entities")
+                if set(step.evidence_ids) - evidence_ids:
+                    raise ValueError(f"mechanism step {step.step_id} references unknown evidence")
         for record in self.evidence:
             if set(record.source_ids) - source_ids:
                 raise ValueError(f"evidence {record.evidence_id} references unknown sources")
@@ -593,7 +603,25 @@ class KnowledgePackage:
             applicability=item.get("applicability", "unspecified"),
             source_ids=tuple(item.get("source_ids", ())),
             version=item.get("version", "1.0.0"), status=item.get("status", "proposed"),
+            kind=item.get("kind", "equation"),
         ) for item in payload.get("equations", ()))
+        mechanisms = tuple(ScientificMechanism(
+            mechanism_id=item["mechanism_id"], label=item["label"], domain=item["domain"],
+            description=item["description"],
+            steps=tuple(MechanismStep(
+                step_id=step["step_id"], order=step["order"], description=step["description"],
+                actor_entity_ids=tuple(step.get("actor_entity_ids", ())),
+                input_entity_ids=tuple(step.get("input_entity_ids", ())),
+                output_entity_ids=tuple(step.get("output_entity_ids", ())),
+                conditions=tuple(step.get("conditions", ())),
+                evidence_ids=tuple(step.get("evidence_ids", ())),
+            ) for step in item.get("steps", ())),
+            assumptions=tuple(item.get("assumptions", ())),
+            applicability=item.get("applicability", "unspecified"),
+            source_ids=tuple(item.get("source_ids", ())),
+            evidence_ids=tuple(item.get("evidence_ids", ())),
+            version=item.get("version", "1.0.0"), status=item.get("status", "proposed"),
+        ) for item in payload.get("mechanisms", ()))
         sources = tuple(ScientificSource(
             source_id=item["source_id"], source_type=item["source_type"],
             locator=item["locator"], title=item["title"],
@@ -623,8 +651,8 @@ class KnowledgePackage:
         return cls(
             package_id=payload["package_id"], version=payload["version"],
             domain=payload["domain"], concepts=concepts, entities=entities,
-            relations=relations, equations=equations, sources=sources,
-            evidence=evidence, coordinate_references=coordinate_references,
+            relations=relations, equations=equations, mechanisms=mechanisms,
+            sources=sources, evidence=evidence, coordinate_references=coordinate_references,
             metadata=payload.get("metadata", {}),
         )
 
@@ -727,6 +755,14 @@ class ScientificKnowledgeEngine:
                  if (domain is None or equation.domain == domain)
                  and (status is None or equation.status == status)]
         return tuple(sorted(found, key=lambda item: (item.domain, item.equation_id)))
+
+    def query_mechanisms(self, *, domain: str | None = None,
+                         status: str | None = None) -> tuple[ScientificMechanism, ...]:
+        found = [mechanism for package in self._packages.values()
+                 for mechanism in package.mechanisms
+                 if (domain is None or mechanism.domain == domain)
+                 and (status is None or mechanism.status == status)]
+        return tuple(sorted(found, key=lambda item: (item.domain, item.mechanism_id)))
 
     def query_sources(self, *, permission: SourcePermission | None = None) -> tuple[ScientificSource, ...]:
         found = [source for package in self._packages.values()
