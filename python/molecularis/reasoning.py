@@ -64,6 +64,9 @@ class SymbolicExpression:
             elif isinstance(node, ast.BinOp):
                 if not isinstance(node.op, _ALLOWED_BINARY):
                     raise ValueError("Unsupported arithmetic operator")
+                if isinstance(node.op, ast.Pow) and isinstance(node.right, ast.Constant):
+                    if abs(_finite(node.right.value, "exponent")) > 12:
+                        raise ValueError("Exponent magnitude exceeds 12")
             elif isinstance(node, ast.UnaryOp):
                 if not isinstance(node.op, _ALLOWED_UNARY):
                     raise ValueError("Unsupported unary operator")
@@ -286,7 +289,7 @@ def pearson_correlation(x: Sequence[float], y: Sequence[float]) -> float:
     sy = math.sqrt(math.fsum(v * v for v in dy))
     if sx == 0 or sy == 0:
         raise ValueError("Correlation is undefined for a constant vector")
-    return _finite(math.fsum(a * b for a, b in zip(dx, dy)) / (sx * sy))
+    return _finite(math.fsum(a * b for a, b in zip(dx, dy, strict=True)) / (sx * sy))
 
 
 @dataclass(frozen=True, slots=True)
