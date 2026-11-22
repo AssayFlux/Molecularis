@@ -1,6 +1,6 @@
 # Molecularis Work Backlog
 
-**Current position (2026-11-21):** Engineering implementation for services A–N is recorded complete. The shared Core/MSDE platform is a local reference implementation, not a fully accepted production platform. The next work is platform-wide integration, safety, recovery and Agentics P0. University scientific/privacy review and formal service freezes remain separate gates.
+**Current position (2026-11-22):** Engineering implementation for services A–N is recorded complete. P1 Scientific Knowledge Engine reference implementation is merged and passes CI. The shared Core/MSDE platform remains a local reference implementation, not a fully accepted production platform. P0 platform safety, integration and recovery residuals remain open; P0 is still a prerequisite for progression into P2/P3/P4 and model training. University scientific/privacy review and formal service freezes remain separate gates.
 
 The [Agentics Molecularis Master Plan](AGENTICS_MOLECULARIS_MASTER_PLAN.md) is the single authority for Agentics architecture and phases. This backlog records actionable work only. Mark an item complete only with a commit and the relevant verification evidence.
 
@@ -22,13 +22,14 @@ See [P0 Platform Trust, Safety and Reliability Audit](P0_PLATFORM_AUDIT.md) for 
 
 ## P1 — Universal Scientific Knowledge Engine
 
-- [ ] Define typed concepts, entities, relations and domain knowledge packages.
-- [ ] Represent quantities, dimensions, units, coordinate/reference systems and conversions.
-- [ ] Represent equations, laws and mechanisms with variables, assumptions, applicability domains and uncertainty.
-- [ ] Preserve evidence class, source/version, provenance, conflicting claims and knowledge history.
-- [ ] Add deterministic knowledge artifacts, query interfaces and type/unit/provenance tests.
+- [x] Define typed concepts, entities, relations and domain knowledge packages.
+- [x] Represent quantities, dimensions, units, coordinate/reference systems and conversions.
+- [x] Represent equations/law records with typed variables, assumptions, applicability domains and source links; expressions remain inert data.
+- [x] Preserve evidence class, source/version, provenance, uncertainty, explicit contradictory claims and immutable package history.
+- [x] Add versioned knowledge schemas, deterministic query interfaces, Core ArtifactStore persistence/lineage and type/unit/provenance round-trip tests.
+- [x] Define A–N knowledge ownership boundaries.
 
-**P1 gate:** an executable, versioned scientific knowledge substrate preserves semantics and provenance without claiming comprehensive scientific knowledge.
+**P1 engineering gate:** passed by CI #45045807328 on tested commit `25b3e47f0eab45a9ac70defe96090e34b1ebfde5` (769 passed, 12 skipped, 0 failed; 66 JSON schemas validated). This is a domain-neutral reference substrate, not comprehensive scientific knowledge or independent scientific validation. P0 remains open, so P1 completion does not authorize progression to model training.
 
 ## P2 — Shared reasoning and construction primitives
 
