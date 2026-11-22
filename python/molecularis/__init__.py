@@ -137,26 +137,30 @@ __all__ += [
 # Shared scientific reasoning and construction primitives (P2).
 from .reasoning import (
     BootstrapInterval, CalibrationBin, CalibrationMetrics, SensitivityResult,
+    HypothesisTestResult, RegressionResult, MultipleTestingResult, SampleSizeResult,
     GraphEdge, ScientificGraph, Vector3, IntegrationResult, LinearSystemResult,
     ConstructionCandidate, ConstructionTask, ConstraintSpec, DerivationStep,
     DerivationTrace, DescriptiveStatistics, FeasibilityReport, NumericalResult,
     ObjectiveSpec, OptimizationResult, SolverDiagnostics, SymbolicExpression,
     UncertaintyResult, audit_candidate, bisect_root, bounded_grid_search,
     bootstrap_mean_interval, calibration_metrics, check_constraints, describe,
-    integrate_simpson, solve_linear_system,
+    integrate_simpson, solve_linear_system, welch_t_test, simple_linear_regression,
+    benjamini_hochberg, normal_two_group_sample_size,
     local_sensitivity, monte_carlo_uncertainty, pearson_correlation,
     propagate_independent_uncertainty,
 )
 
 __all__ += [
     "BootstrapInterval", "CalibrationBin", "CalibrationMetrics", "SensitivityResult",
+    "HypothesisTestResult", "RegressionResult", "MultipleTestingResult", "SampleSizeResult",
     "GraphEdge", "ScientificGraph", "Vector3", "IntegrationResult", "LinearSystemResult",
     "ConstructionCandidate", "ConstructionTask", "ConstraintSpec", "DerivationStep",
     "DerivationTrace", "DescriptiveStatistics", "FeasibilityReport", "NumericalResult",
     "ObjectiveSpec", "OptimizationResult", "SolverDiagnostics", "SymbolicExpression",
     "UncertaintyResult", "audit_candidate", "bisect_root", "bounded_grid_search",
     "bootstrap_mean_interval", "calibration_metrics", "check_constraints", "describe",
-    "integrate_simpson", "solve_linear_system",
+    "integrate_simpson", "solve_linear_system", "welch_t_test", "simple_linear_regression",
+    "benjamini_hochberg", "normal_two_group_sample_size",
     "local_sensitivity", "monte_carlo_uncertainty", "pearson_correlation",
     "propagate_independent_uncertainty",
 ]
