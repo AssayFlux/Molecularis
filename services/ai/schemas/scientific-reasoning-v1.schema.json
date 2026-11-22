@@ -31,7 +31,8 @@
         "multiple_testing_result",
         "sample_size_result",
         "independent_verification",
-        "construction_audit_result"
+        "construction_audit_result",
+        "beta_binomial_posterior"
       ]
     },
     "payload": {
@@ -808,6 +809,95 @@
               },
               "independent_verification": {
                 "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "beta_binomial_posterior"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "prior_alpha",
+              "prior_beta",
+              "successes",
+              "failures",
+              "posterior_alpha",
+              "posterior_beta",
+              "posterior_mean",
+              "credible_interval",
+              "credible_level",
+              "method",
+              "assumptions"
+            ],
+            "properties": {
+              "prior_alpha": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "prior_beta": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "successes": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "failures": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "posterior_alpha": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "posterior_beta": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "posterior_mean": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "credible_interval": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "items": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              },
+              "credible_level": {
+                "type": "number",
+                "exclusiveMinimum": 0,
+                "exclusiveMaximum": 1
+              },
+              "method": {
+                "type": "string"
+              },
+              "assumptions": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "string"
+                }
               }
             }
           }
