@@ -168,8 +168,9 @@ def test_deterministic_queries_and_disputed_evidence_are_preserved() -> None:
     assert results[0].status == EvidenceStatus.ACTIVE
     conflicts = engine.conflicting_evidence(subject_id="entity:body")
     assert len(conflicts) == 2
-    assert conflicts[1].status == EvidenceStatus.DISPUTED
-    assert conflicts[1].contradicts_evidence_ids == ("evidence:velocity",)
+    counter = next(item for item in conflicts if item.evidence_id == "evidence:counter")
+    assert counter.status == EvidenceStatus.DISPUTED
+    assert counter.contradicts_evidence_ids == ("evidence:velocity",)
     assert engine.query_entities(domain="physics", entity_type="physical_system")
     assert engine.query_relations(predicate="has_property")
     assert engine.query_equations(domain="physics")
