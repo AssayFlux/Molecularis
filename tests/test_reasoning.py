@@ -314,3 +314,49 @@ def test_student_t_distribution_reference_quantile() -> None:
     assert _student_t_cdf(0, 10) == 0.5
     assert _student_t_cdf(2.22813885, 10) == pytest.approx(0.975, abs=1e-7)
     assert _student_t_quantile(0.975, 10) == pytest.approx(2.22813885, abs=1e-7)
+
+
+
+def test_independent_verifier_contract_requires_separate_identity_method_and_evidence() -> None:
+    from molecularis.reasoning import (
+        IndependentVerification, VerificationCheck, audit_and_verify_candidate,
+    )
+
+    task = ConstructionTask("task-v", "sequence", "reconstruction", "valid sequence", ("alphabet ACGT",))
+    candidate = ConstructionCandidate("candidate-v", "sequence", {"length": 4}, ("input fixed",), ("source:ref-1",))
+    def verifier(item):
+        assert item.digest == candidate.digest
+        return IndependentVerification(
+            "verifier-2", "independent alphabet scan",
+            (VerificationCheck("alphabet", True, "Only A/C/G/T symbols"),),
+            ("validation:sequence-rulebook-v1",),
+        )
+    result = audit_and_verify_candidate(
+        task, candidate, proposer_id="proposer-1", proposer_method="candidate sampler",
+        verifier_id="verifier-2", verifier_method="independent alphabet scan", verifier=verifier,
+    )
+    assert result.publishable
+    assert result.candidate_digest == candidate.digest
+    assert result.independent_verification.passed
+    with pytest.raises(ValueError, match="identities must differ"):
+        audit_and_verify_candidate(
+            task, candidate, proposer_id="same", proposer_method="generator",
+            verifier_id="same", verifier_method="checker", verifier=verifier,
+        )
+
+
+def test_independent_verification_failure_blocks_publication() -> None:
+    from molecularis.reasoning import IndependentVerification, VerificationCheck, audit_and_verify_candidate
+
+    task = ConstructionTask("task-v2", "chemistry", "exploration", "formula valid", ("integer atom counts",))
+    candidate = ConstructionCandidate("candidate-v2", "chemistry", {"C": 2, "H": 6}, ("neutral formula",))
+    result = audit_and_verify_candidate(
+        task, candidate, proposer_id="generator", proposer_method="formula builder",
+        verifier_id="checker", verifier_method="element count parser",
+        verifier=lambda _: IndependentVerification(
+            "checker", "element count parser",
+            (VerificationCheck("valence", False, "Valence model check", "not evaluated"),),
+            ("rulebook:chemistry-v1",),
+        ),
+    )
+    assert not result.publishable
