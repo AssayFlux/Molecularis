@@ -8,12 +8,11 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import json
-import math
 from typing import Any, Mapping
 
 from .knowledge import EvidenceClass, KnowledgePackage, ScientificKnowledgeEngine
 from .platform import Budget, MolecularisPlatform
-from .platform.contracts import ArtifactNotFound, ValidationError
+from .platform.contracts import ValidationError
 
 
 @dataclass(frozen=True, slots=True)
@@ -29,7 +28,7 @@ class DomainProfile:
 
 
 DOMAIN_PROFILES: tuple[DomainProfile, ...] = (
-    DomainProfile("A", "molecular", "Molecular", "molecular-validation-v1",
+    DomainProfile("A", "molecular", "Molecular", "molecular-structural-validation",
         ("molecularis.molecule.v1",), ("application/vnd.molecularis.molecule+json",),
         "Explicit atom, bond, residue and coordinate molecular representations.",
         ("Graph validity is not experimental structure or energetic stability.",)),
@@ -216,6 +215,7 @@ def create_domain_handoff(
     evidence_class: EvidenceClass | str,
     assumptions: tuple[str, ...],
     verification_artifact_id: str,
+    target_metadata: Mapping[str, Any] | None = None,
     budget: Budget | None = None,
 ) -> Any:
     """Persist an explicit domain conversion with source and verifier lineage.
@@ -273,7 +273,11 @@ def create_domain_handoff(
         if reference not in parents:
             parents.append(reference)
     payload = _canonical_json(target_payload)
-    metadata = {
+    service_metadata = dict(target_metadata or {})
+    reserved = {"domain_handoff"}
+    if reserved.intersection(service_metadata):
+        raise ValidationError("target_metadata contains a reserved P3 key")
+    metadata = {**service_metadata, "domain_handoff": {
         "integration_version": "p3-domain-handoff-v1",
         "source_domain": source_profile.service,
         "target_domain": target.service,
@@ -291,7 +295,7 @@ def create_domain_handoff(
         "verification_status": status,
         "evidence_refs": list(evidence_refs),
         "semantic_conversion_is_caller_owned": True,
-    }
+    }}
     return platform.ingest(payload, media_type=target_media_type, schema_id=target_schema_id,
                            metadata=metadata, parents=tuple(parents), budget=budget)
 
