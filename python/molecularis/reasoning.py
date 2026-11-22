@@ -413,6 +413,9 @@ class FeasibilityReport:
 
 
 def check_constraints(constraints: Sequence[ConstraintSpec], variables: Mapping[str, float]) -> FeasibilityReport:
+    identifiers = [constraint.constraint_id for constraint in constraints]
+    if len(identifiers) != len(set(identifiers)):
+        raise ValueError("Constraint IDs must be unique within an evaluation")
     passed, failed, soft = [], [], []
     for constraint in constraints:
         valid = constraint.evaluate(variables)
@@ -444,9 +447,14 @@ def bounded_grid_search(
     """Deterministic bounded grid search for low-dimensional reference problems."""
     if not bounds or not objectives:
         raise ValueError("At least one bounded variable and objective are required")
-    if len(bounds) > 8 or isinstance(points_per_dimension, bool) or not 2 <= points_per_dimension <= 1000:
-        raise ValueError("Grid search supports 1–8 dimensions and 2–1000 points per dimension")
-    if isinstance(max_evaluations, bool) or not 1 <= max_evaluations <= 1_000_000:
+    if any(not isinstance(name, str) or not name.strip() for name in bounds):
+        raise ValueError("Optimization variable names must be non-empty strings")
+    objective_ids = [objective.objective_id for objective in objectives]
+    if len(objective_ids) != len(set(objective_ids)):
+        raise ValueError("Objective IDs must be unique")
+    if len(bounds) > 8 or isinstance(points_per_dimension, bool) or not isinstance(points_per_dimension, int) or not 2 <= points_per_dimension <= 1000:
+        raise ValueError("Grid search supports 1–8 dimensions and 2–1000 integer points per dimension")
+    if isinstance(max_evaluations, bool) or not isinstance(max_evaluations, int) or not 1 <= max_evaluations <= 1_000_000:
         raise ValueError("max_evaluations must be between 1 and 1,000,000")
     names = tuple(sorted(bounds))
     axes = []
@@ -798,7 +806,11 @@ class ScientificGraph:
         return {node: len(adjacency[node]) for node in self.nodes}
 
     def connected_components(self) -> tuple[tuple[str, ...], ...]:
-        adjacency = self.adjacency()
+        """Return ordinary components for undirected graphs and weak components for directed graphs."""
+        adjacency: dict[str, set[str]] = {node: set() for node in self.nodes}
+        for edge in self.edges:
+            adjacency[edge.source].add(edge.target)
+            adjacency[edge.target].add(edge.source)
         unseen = set(self.nodes)
         components = []
         while unseen:
