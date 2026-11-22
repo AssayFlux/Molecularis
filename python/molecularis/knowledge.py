@@ -13,7 +13,7 @@ import re
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Any, Iterable, Mapping, Sequence
+from typing import Any, Iterable, Mapping
 
 
 class EvidenceClass(str, Enum):
@@ -139,7 +139,7 @@ class UnitRegistry:
 
     def __init__(self, definitions: Iterable[UnitDefinition] | None = None) -> None:
         self._units: dict[str, UnitDefinition] = {}
-        defaults = definitions if definitions is not None else (
+        defaults = (UnitDefinition("1", DIMENSIONLESS),) + tuple(definitions) if definitions is not None else (
             UnitDefinition("1", DIMENSIONLESS),
             UnitDefinition("m", LENGTH), UnitDefinition("cm", LENGTH, 0.01),
             UnitDefinition("mm", LENGTH, 0.001), UnitDefinition("um", LENGTH, 1e-6),
