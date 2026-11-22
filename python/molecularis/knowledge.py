@@ -622,6 +622,23 @@ class KnowledgePackage:
             evidence_ids=tuple(item.get("evidence_ids", ())),
             version=item.get("version", "1.0.0"), status=item.get("status", "proposed"),
         ) for item in payload.get("mechanisms", ()))
+        mechanisms = tuple(ScientificMechanism(
+            mechanism_id=item["mechanism_id"], label=item["label"], domain=item["domain"],
+            description=item["description"],
+            steps=tuple(MechanismStep(
+                step_id=step["step_id"], order=step["order"], description=step["description"],
+                actor_entity_ids=tuple(step.get("actor_entity_ids", ())),
+                input_entity_ids=tuple(step.get("input_entity_ids", ())),
+                output_entity_ids=tuple(step.get("output_entity_ids", ())),
+                conditions=tuple(step.get("conditions", ())),
+                evidence_ids=tuple(step.get("evidence_ids", ())),
+            ) for step in item.get("steps", ())),
+            assumptions=tuple(item.get("assumptions", ())),
+            applicability=item.get("applicability", "unspecified"),
+            source_ids=tuple(item.get("source_ids", ())),
+            evidence_ids=tuple(item.get("evidence_ids", ())),
+            version=item.get("version", "1.0.0"), status=item.get("status", "proposed"),
+        ) for item in payload.get("mechanisms", ()))
         sources = tuple(ScientificSource(
             source_id=item["source_id"], source_type=item["source_type"],
             locator=item["locator"], title=item["title"],
