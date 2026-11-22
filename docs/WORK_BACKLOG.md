@@ -26,10 +26,10 @@ P1 was implemented on the owner's explicit request while these P0 tasks remain o
 - [x] Represent quantities, dimensions, units, coordinate/reference systems and conversions.
 - [x] Represent equations/law records with typed variables, assumptions, applicability domains and source links; expressions remain inert data.
 - [x] Preserve evidence class, source/version, provenance, uncertainty, explicit contradictory claims and immutable package history.
-- [x] Add versioned knowledge schemas, deterministic query interfaces, Core ArtifactStore persistence/lineage and type/unit/provenance round-trip tests.
+- [x] Add versioned knowledge schemas, deterministic query interfaces, Core ArtifactStore persistence/lineage and type/unit/provenance round-trip tests, including quantity serialization and Core artifact round-trip.
 - [x] Define A–N knowledge ownership boundaries.
 
-**P1 engineering gate:** passed by CI #45045807328 on tested commit `25b3e47f0eab45a9ac70defe96090e34b1ebfde5` (769 passed, 12 skipped, 0 failed; 66 JSON schemas validated). This is a domain-neutral reference substrate, not comprehensive scientific knowledge or independent scientific validation. P0 remains open, so P1 completion does not authorize progression to model training.
+**P1 engineering gate:** passed by CI #45046306359 on tested commit `819eb1fff6785fa49530ab5bf8b30e5280111712` (769 passed, 12 skipped, 0 failed; 66 JSON schemas validated). This is a domain-neutral reference substrate, not comprehensive scientific knowledge or independent scientific validation. P0 remains open, so P1 completion does not authorize progression to model training.
 
 ## P2 — Shared reasoning and construction primitives
 
