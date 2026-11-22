@@ -35,7 +35,7 @@ P1 and P2 were implemented on the owner's explicit requests while these P0 tasks
 
 - [x] Add a restricted symbolic arithmetic AST, deterministic expression evaluation, variable discovery, derivation traces and dimensional inference using P1 dimensions.
 - [x] Add bounded numerical root solving, dense linear-system solving with partial pivoting, and composite Simpson integration with error estimates and convergence diagnostics.
-- [x] Add descriptive statistics, Pearson correlation, Welch hypothesis tests, OLS regression with confidence intervals, Benjamini–Hochberg FDR correction, deterministic bootstrap intervals, first-order uncertainty propagation and seeded Monte Carlo.
+- [x] Add descriptive statistics, Pearson correlation, Welch hypothesis tests, OLS regression with confidence intervals, Benjamini–Hochberg FDR correction, explicit-prior Beta–Binomial Bayesian posterior, deterministic bootstrap intervals, first-order uncertainty propagation and seeded Monte Carlo.
 - [x] Add local finite-difference sensitivity, binary probability calibration and two-group power/sample-size planning with explicit assumptions.
 - [x] Add deterministic graph topology/path primitives, coordinate-frame/unit-safe 3D vector geometry, hard/soft constraints, weighted bounded multi-objective grid search, and explicit infeasible/budget-exhausted states.
 - [x] Define reconstruction/generalization/exploration tasks, bounded candidate contracts, pre-publication audit, independent verifier identity/method/check/evidence contract and versioned JSON Schema.
