@@ -306,6 +306,7 @@ class ScientificSource:
     def __post_init__(self) -> None:
         for name in ("source_id", "source_type", "locator", "title"):
             _text(getattr(self, name), name)
+        object.__setattr__(self, "permission", SourcePermission(self.permission))
         if self.content_sha256 and not re.fullmatch(r"[0-9a-f]{64}", self.content_sha256):
             raise ValueError("content_sha256 must be a lowercase SHA-256 digest")
 
@@ -423,6 +424,8 @@ class EvidenceRecord:
         _text(self.evidence_id, "evidence_id")
         _text(self.claim, "claim")
         _text(self.applicability, "applicability")
+        object.__setattr__(self, "evidence_class", EvidenceClass(self.evidence_class))
+        object.__setattr__(self, "status", EvidenceStatus(self.status))
         _canonical(dict(self.uncertainty))
         try:
             datetime.fromisoformat(self.created_at.replace("Z", "+00:00"))
