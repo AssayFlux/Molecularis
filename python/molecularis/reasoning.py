@@ -679,7 +679,7 @@ def solve_linear_system(
             b[row] -= factor * b[column]
     solution = [0.0] * n
     for row in range(n - 1, -1, -1):
-        solution[row] = (b[row] - math.fsum(a[row][j] * solution[j] for j in range(row + 1, n))) / a[row][row]
+        solution[row] = _finite((b[row] - math.fsum(a[row][j] * solution[j] for j in range(row + 1, n))) / a[row][row], "linear solution")
     residual = max(
         abs(math.fsum(_finite(matrix[i][j]) * solution[j] for j in range(n)) - _finite(vector[i]))
         for i in range(n)
@@ -704,10 +704,12 @@ def integrate_simpson(
     """Composite Simpson integration with doubled-grid Richardson error estimate."""
     a, b = _finite(lower, "lower"), _finite(upper, "upper")
     tol = _finite(tolerance, "tolerance")
-    if a == b or tol <= 0 or isinstance(intervals, bool) or intervals < 2 or intervals % 2:
-        raise ValueError("Bounds must differ, tolerance be positive and intervals be positive/even")
-    if isinstance(max_intervals, bool) or max_intervals < 2 or max_intervals > 1_000_000:
-        raise ValueError("max_intervals must be between 2 and 1,000,000")
+    if tol <= 0 or isinstance(intervals, bool) or not isinstance(intervals, int) or intervals < 2 or intervals % 2:
+        raise ValueError("Tolerance must be positive and intervals must be a positive even integer")
+    if isinstance(max_intervals, bool) or not isinstance(max_intervals, int) or max_intervals > 1_000_000 or max_intervals < intervals * 2:
+        raise ValueError("max_intervals must allow at least one refinement and be at most 1,000,000")
+    if a == b:
+        return IntegrationResult(0.0, 0.0, intervals, tol, True)
     n = intervals
 
     def simpson(count: int) -> float:
@@ -745,7 +747,7 @@ class ScientificGraph:
     def __post_init__(self) -> None:
         if not self.nodes or len(self.nodes) > 100000:
             raise ValueError("Graph must contain 1 to 100,000 nodes")
-        if len(set(self.nodes)) != len(self.nodes) or any(not n.strip() for n in self.nodes):
+        if any(not isinstance(n, str) or not n.strip() for n in self.nodes) or len(set(self.nodes)) != len(self.nodes):
             raise ValueError("Graph node IDs must be unique non-empty strings")
         if len(self.edges) > 1_000_000:
             raise ValueError("Graph exceeds one million edges")
