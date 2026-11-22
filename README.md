@@ -235,7 +235,7 @@ The P2 reasoning foundation is implemented on the current development branch. It
 - [P2 contract schema](services/ai/schemas/scientific-reasoning-v1.schema.json)
 - [P2 tests](tests/test_reasoning.py)
 
-The P2 examples exercise proposer/verifier separation in sequence and chemical-formula representation tasks. They are engineering fixtures, not evidence of chemical validity, molecular stability, experimental realizability or scientific acceptance. P2 engineering CI passed: [run #45047445495](https://github.com/AssayFlux/Molecularis/actions/runs/45047445495) — 788 passed, 12 skipped, 0 failed. P0 platform safety, integration and recovery gates remain open.
+The P2 examples exercise proposer/verifier separation in sequence and chemical-formula representation tasks. They are engineering fixtures, not evidence of chemical validity, molecular stability, experimental realizability or scientific acceptance. P2 engineering CI passed: [run #45047793858](https://github.com/AssayFlux/Molecularis/actions/runs/45047793858) — 792 passed, 12 skipped, 0 failed. P0 platform safety, integration and recovery gates remain open.
 
 ## Agentics Molecularis
 
