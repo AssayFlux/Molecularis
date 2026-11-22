@@ -216,6 +216,17 @@ DAG orchestration, registered capabilities and reproducible workflow execution.
 
 Service registration and implementation do not, by themselves, establish scientific validity. Optional engines, models, reference datasets and their licenses must be checked in the target environment.
 
+## Scientific Knowledge Engine
+
+The initial P1 Scientific Knowledge Engine reference implementation is now part of the `CORE` branch. It provides typed scientific concepts, entities and relations; versioned knowledge packages; equations with variables and applicability metadata; evidence/provenance and source-permission records; SI dimensions and unit conversion; coordinate references; deterministic queries; and persistence through the Core ArtifactStore with parent lineage.
+
+- [Knowledge Engine contracts and usage](services/ai/KNOWLEDGE_ENGINE.md)
+- [Scientific Knowledge Package schema](services/ai/schemas/scientific-knowledge-package-v1.schema.json)
+- [Scientific Quantity schema](services/ai/schemas/scientific-quantity-v1.schema.json)
+- [P1 acceptance evidence](services/ai/ACCEPTANCE.md)
+
+P1 engineering CI: [run #45045807328](https://github.com/AssayFlux/Molecularis/actions/runs/45045807328) — 769 passed, 12 skipped, 0 failed. This is not a claim of comprehensive scientific knowledge or independent scientific validation. P0 platform safety, integration and recovery work remains open; model training is not yet authorized by the phase gates.
+
 ## Agentics Molecularis
 
 <table>
