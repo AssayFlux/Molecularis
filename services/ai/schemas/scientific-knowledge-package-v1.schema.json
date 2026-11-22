@@ -11,6 +11,7 @@
     "entities",
     "relations",
     "equations",
+    "mechanisms",
     "sources",
     "evidence",
     "coordinate_references",
@@ -73,6 +74,12 @@
       "type": "array",
       "items": {
         "$ref": "#/$defs/coordinateReference"
+      }
+    },
+    "mechanisms": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/mechanism"
       }
     }
   },
@@ -277,7 +284,8 @@
         "applicability",
         "source_ids",
         "version",
-        "status"
+        "status",
+        "kind"
       ],
       "properties": {
         "equation_id": {
@@ -323,6 +331,12 @@
             "reviewed",
             "approved",
             "retired"
+          ]
+        },
+        "kind": {
+          "enum": [
+            "equation",
+            "law"
           ]
         }
       },
@@ -541,6 +555,139 @@
           "items": {
             "type": "string"
           }
+        }
+      },
+      "additionalProperties": false
+    },
+    "mechanismStep": {
+      "type": "object",
+      "required": [
+        "step_id",
+        "order",
+        "description",
+        "actor_entity_ids",
+        "input_entity_ids",
+        "output_entity_ids",
+        "conditions",
+        "evidence_ids"
+      ],
+      "properties": {
+        "step_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "order": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "actor_entity_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "input_entity_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "output_entity_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "conditions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "mechanism": {
+      "type": "object",
+      "required": [
+        "mechanism_id",
+        "label",
+        "domain",
+        "description",
+        "steps",
+        "assumptions",
+        "applicability",
+        "source_ids",
+        "evidence_ids",
+        "version",
+        "status"
+      ],
+      "properties": {
+        "mechanism_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "domain": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "steps": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/mechanismStep"
+          }
+        },
+        "assumptions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "applicability": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "version": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "proposed",
+            "reviewed",
+            "approved",
+            "retired"
+          ]
         }
       },
       "additionalProperties": false
