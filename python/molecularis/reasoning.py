@@ -636,3 +636,250 @@ def calibration_metrics(
         ece += len(group) / len(probs) * abs(mean_p - observed)
         summaries.append(CalibrationBin(len(group), mean_p, observed))
     return CalibrationMetrics(brier, ece, tuple(summaries), len(probs))
+
+
+
+@dataclass(frozen=True, slots=True)
+class LinearSystemResult:
+    solution: tuple[float, ...]
+    residual_inf_norm: float
+    minimum_pivot: float
+    converged: bool
+    method: str = "gaussian-elimination-partial-pivoting-v1"
+
+
+def solve_linear_system(
+    matrix: Sequence[Sequence[float]], vector: Sequence[float], *, pivot_tolerance: float = 1e-12,
+) -> LinearSystemResult:
+    """Solve a small dense square system using Gaussian elimination and partial pivoting."""
+    n = len(vector)
+    if n == 0 or len(matrix) != n or any(len(row) != n for row in matrix):
+        raise ValueError("Matrix must be non-empty, square and match the vector length")
+    a = [[_finite(value, "matrix value") for value in row] for row in matrix]
+    b = [_finite(value, "vector value") for value in vector]
+    tolerance = _finite(pivot_tolerance)
+    if tolerance <= 0:
+        raise ValueError("pivot_tolerance must be positive")
+    min_pivot = math.inf
+    for column in range(n):
+        pivot_row = max(range(column, n), key=lambda row: abs(a[row][column]))
+        pivot = abs(a[pivot_row][column])
+        if pivot <= tolerance:
+            raise ValueError("Matrix is singular or numerically rank deficient at the selected tolerance")
+        min_pivot = min(min_pivot, pivot)
+        if pivot_row != column:
+            a[column], a[pivot_row] = a[pivot_row], a[column]
+            b[column], b[pivot_row] = b[pivot_row], b[column]
+        diagonal = a[column][column]
+        for row in range(column + 1, n):
+            factor = a[row][column] / diagonal
+            a[row][column] = 0.0
+            for j in range(column + 1, n):
+                a[row][j] -= factor * a[column][j]
+            b[row] -= factor * b[column]
+    solution = [0.0] * n
+    for row in range(n - 1, -1, -1):
+        solution[row] = (b[row] - math.fsum(a[row][j] * solution[j] for j in range(row + 1, n))) / a[row][row]
+    residual = max(
+        abs(math.fsum(_finite(matrix[i][j]) * solution[j] for j in range(n)) - _finite(vector[i]))
+        for i in range(n)
+    )
+    return LinearSystemResult(tuple(solution), residual, min_pivot, math.isfinite(residual))
+
+
+@dataclass(frozen=True, slots=True)
+class IntegrationResult:
+    value: float
+    estimated_absolute_error: float
+    intervals: int
+    tolerance: float
+    converged: bool
+    method: str = "composite-simpson-richardson-v1"
+
+
+def integrate_simpson(
+    function, lower: float, upper: float, *, tolerance: float = 1e-8,
+    intervals: int = 16, max_intervals: int = 1_000_000,
+) -> IntegrationResult:
+    """Composite Simpson integration with doubled-grid Richardson error estimate."""
+    a, b = _finite(lower, "lower"), _finite(upper, "upper")
+    tol = _finite(tolerance, "tolerance")
+    if a == b or tol <= 0 or isinstance(intervals, bool) or intervals < 2 or intervals % 2:
+        raise ValueError("Bounds must differ, tolerance be positive and intervals be positive/even")
+    if isinstance(max_intervals, bool) or max_intervals < 2 or max_intervals > 1_000_000:
+        raise ValueError("max_intervals must be between 2 and 1,000,000")
+    n = intervals
+
+    def simpson(count: int) -> float:
+        width = (b - a) / count
+        total = _finite(function(a)) + _finite(function(b))
+        total += 4 * math.fsum(_finite(function(a + i * width)) for i in range(1, count, 2))
+        total += 2 * math.fsum(_finite(function(a + i * width)) for i in range(2, count, 2))
+        return _finite(total * width / 3, "integral")
+
+    coarse = simpson(n)
+    while n * 2 <= max_intervals:
+        n *= 2
+        refined = simpson(n)
+        error = abs(refined - coarse) / 15
+        if error <= tol:
+            return IntegrationResult(refined, error, n, tol, True)
+        coarse = refined
+    return IntegrationResult(coarse, error if n > intervals else math.inf, n, tol, False)
+
+
+@dataclass(frozen=True, slots=True)
+class GraphEdge:
+    source: str
+    target: str
+
+
+@dataclass(frozen=True, slots=True)
+class ScientificGraph:
+    """Deterministic simple graph with bounded, explicit node and edge identities."""
+
+    nodes: tuple[str, ...]
+    edges: tuple[GraphEdge, ...]
+    directed: bool = False
+
+    def __post_init__(self) -> None:
+        if not self.nodes or len(self.nodes) > 100000:
+            raise ValueError("Graph must contain 1 to 100,000 nodes")
+        if len(set(self.nodes)) != len(self.nodes) or any(not n.strip() for n in self.nodes):
+            raise ValueError("Graph node IDs must be unique non-empty strings")
+        if len(self.edges) > 1_000_000:
+            raise ValueError("Graph exceeds one million edges")
+        known = set(self.nodes)
+        seen = set()
+        for edge in self.edges:
+            if edge.source not in known or edge.target not in known:
+                raise ValueError("Graph edge references an unknown node")
+            if edge.source == edge.target:
+                raise ValueError("Self-loops are not supported by this simple graph contract")
+            key = (edge.source, edge.target) if self.directed else tuple(sorted((edge.source, edge.target)))
+            if key in seen:
+                raise ValueError("Duplicate graph edge")
+            seen.add(key)
+
+    def adjacency(self) -> dict[str, tuple[str, ...]]:
+        links: dict[str, set[str]] = {node: set() for node in self.nodes}
+        for edge in self.edges:
+            links[edge.source].add(edge.target)
+            if not self.directed:
+                links[edge.target].add(edge.source)
+        return {node: tuple(sorted(neighbors)) for node, neighbors in links.items()}
+
+    def degrees(self) -> dict[str, int]:
+        adjacency = self.adjacency()
+        return {node: len(adjacency[node]) for node in self.nodes}
+
+    def connected_components(self) -> tuple[tuple[str, ...], ...]:
+        adjacency = self.adjacency()
+        unseen = set(self.nodes)
+        components = []
+        while unseen:
+            start = min(unseen)
+            stack, found = [start], []
+            unseen.remove(start)
+            while stack:
+                node = stack.pop()
+                found.append(node)
+                for neighbor in adjacency[node]:
+                    if neighbor in unseen:
+                        unseen.remove(neighbor)
+                        stack.append(neighbor)
+            components.append(tuple(sorted(found)))
+        return tuple(components)
+
+    def shortest_path(self, source: str, target: str) -> tuple[str, ...] | None:
+        if source not in self.nodes or target not in self.nodes:
+            raise ValueError("Path endpoints must exist in graph")
+        adjacency = self.adjacency()
+        queue = [source]
+        parents: dict[str, str | None] = {source: None}
+        cursor = 0
+        while cursor < len(queue):
+            node = queue[cursor]
+            cursor += 1
+            if node == target:
+                path = []
+                current: str | None = target
+                while current is not None:
+                    path.append(current)
+                    current = parents[current]
+                return tuple(reversed(path))
+            for neighbor in adjacency[node]:
+                if neighbor not in parents:
+                    parents[neighbor] = node
+                    queue.append(neighbor)
+        return None
+
+    def cycle_rank(self) -> int:
+        if self.directed:
+            raise ValueError("Cycle rank is defined here only for undirected graphs")
+        return len(self.edges) - len(self.nodes) + len(self.connected_components())
+
+
+@dataclass(frozen=True, slots=True)
+class Vector3:
+    x: float
+    y: float
+    z: float
+    unit: str = "m"
+    coordinate_system: str = "cartesian"
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "x", _finite(self.x, "x"))
+        object.__setattr__(self, "y", _finite(self.y, "y"))
+        object.__setattr__(self, "z", _finite(self.z, "z"))
+        if not self.unit.strip() or not self.coordinate_system.strip():
+            raise ValueError("Vector unit and coordinate system must be non-empty")
+
+    def _compatible(self, other: "Vector3") -> None:
+        if self.unit != other.unit or self.coordinate_system != other.coordinate_system:
+            raise ValueError("Vector operations require matching units and coordinate systems")
+
+    def norm(self) -> float:
+        return math.sqrt(self.x * self.x + self.y * self.y + self.z * self.z)
+
+    def dot(self, other: "Vector3") -> float:
+        self._compatible(other)
+        return self.x * other.x + self.y * other.y + self.z * other.z
+
+    def cross(self, other: "Vector3") -> "Vector3":
+        self._compatible(other)
+        return Vector3(
+            self.y * other.z - self.z * other.y,
+            self.z * other.x - self.x * other.z,
+            self.x * other.y - self.y * other.x,
+            self.unit, self.coordinate_system,
+        )
+
+    def distance(self, other: "Vector3") -> float:
+        self._compatible(other)
+        return Vector3(
+            self.x - other.x, self.y - other.y, self.z - other.z,
+            self.unit, self.coordinate_system,
+        ).norm()
+
+    def angle_degrees(self, other: "Vector3") -> float:
+        denominator = self.norm() * other.norm()
+        if denominator == 0:
+            raise ValueError("Angle is undefined for a zero-length vector")
+        cosine = max(-1.0, min(1.0, self.dot(other) / denominator))
+        return math.degrees(math.acos(cosine))
+
+    @classmethod
+    def centroid(cls, points: Sequence["Vector3"]) -> "Vector3":
+        if not points:
+            raise ValueError("Centroid requires at least one point")
+        first = points[0]
+        for point in points[1:]:
+            first._compatible(point)
+        n = len(points)
+        return cls(
+            math.fsum(p.x for p in points) / n,
+            math.fsum(p.y for p in points) / n,
+            math.fsum(p.z for p in points) / n,
+            first.unit, first.coordinate_system,
+        )
