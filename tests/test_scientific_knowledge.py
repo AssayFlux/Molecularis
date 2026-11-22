@@ -111,7 +111,6 @@ def test_package_validates_references_and_exports_deterministically() -> None:
 
 
 def test_package_rejects_dangling_relation_and_evidence_references() -> None:
-    package = _package()
     with pytest.raises(ValueError, match="unknown endpoints"):
         KnowledgePackage(
             package_id="bad", version="1", domain="physics",
