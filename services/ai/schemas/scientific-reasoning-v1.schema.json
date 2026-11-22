@@ -25,7 +25,11 @@
         "graph",
         "vector3",
         "linear_system_result",
-        "integration_result"
+        "integration_result",
+        "hypothesis_test_result",
+        "regression_result",
+        "multiple_testing_result",
+        "sample_size_result"
       ]
     },
     "payload": {
@@ -437,6 +441,259 @@
               },
               "converged": {
                 "type": "boolean"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "hypothesis_test_result"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "method",
+              "statistic",
+              "degrees_of_freedom",
+              "p_value",
+              "alternative",
+              "sample_sizes",
+              "assumptions"
+            ],
+            "properties": {
+              "method": {
+                "type": "string"
+              },
+              "statistic": {
+                "type": "number"
+              },
+              "degrees_of_freedom": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "p_value": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "alternative": {
+                "enum": [
+                  "two-sided",
+                  "less",
+                  "greater"
+                ]
+              },
+              "sample_sizes": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "items": {
+                  "type": "integer",
+                  "minimum": 2
+                }
+              },
+              "assumptions": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "regression_result"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "intercept",
+              "slope",
+              "r_squared",
+              "slope_standard_error",
+              "slope_ci",
+              "slope_p_value",
+              "degrees_of_freedom",
+              "sample_count",
+              "assumptions"
+            ],
+            "properties": {
+              "intercept": {
+                "type": "number"
+              },
+              "slope": {
+                "type": "number"
+              },
+              "r_squared": {
+                "type": "number"
+              },
+              "slope_standard_error": {
+                "type": "number",
+                "minimum": 0
+              },
+              "slope_ci": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "items": {
+                  "type": "number"
+                }
+              },
+              "slope_p_value": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "degrees_of_freedom": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "sample_count": {
+                "type": "integer",
+                "minimum": 3
+              },
+              "assumptions": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "multiple_testing_result"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "method",
+              "adjusted_p_values",
+              "rejected",
+              "alpha"
+            ],
+            "properties": {
+              "method": {
+                "type": "string"
+              },
+              "adjusted_p_values": {
+                "type": "array",
+                "items": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              },
+              "rejected": {
+                "type": "array",
+                "items": {
+                  "type": "boolean"
+                }
+              },
+              "alpha": {
+                "type": "number",
+                "exclusiveMinimum": 0,
+                "exclusiveMaximum": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "sample_size_result"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "method",
+              "per_group",
+              "total",
+              "alpha",
+              "power",
+              "standardized_effect",
+              "assumptions"
+            ],
+            "properties": {
+              "method": {
+                "type": "string"
+              },
+              "per_group": {
+                "type": "integer",
+                "minimum": 2
+              },
+              "total": {
+                "type": "integer",
+                "minimum": 4
+              },
+              "alpha": {
+                "type": "number",
+                "exclusiveMinimum": 0,
+                "exclusiveMaximum": 1
+              },
+              "power": {
+                "type": "number",
+                "exclusiveMinimum": 0,
+                "exclusiveMaximum": 1
+              },
+              "standardized_effect": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "assumptions": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
               }
             }
           }
