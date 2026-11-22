@@ -166,10 +166,28 @@ class UnitRegistry:
         self._units[definition.symbol] = definition
 
     def get(self, symbol: str) -> UnitDefinition:
-        try:
+        if symbol in self._units:
             return self._units[symbol]
-        except KeyError as exc:
-            raise KeyError(f"Unknown unit: {symbol}") from exc
+        if not re.fullmatch(r"(?:[A-Za-z]+|1)(?:\^-?\d+)?(?:[*/](?:[A-Za-z]+|1)(?:\^-?\d+)?)*", symbol):
+            raise KeyError(f"Unknown unit: {symbol}")
+        tokens = re.findall(r"([A-Za-z]+|1)(?:\^(-?\d+))?", symbol)
+        operators = re.findall(r"[*/]", symbol)
+        if len(tokens) != len(operators) + 1:
+            raise KeyError(f"Unknown unit: {symbol}")
+        dimension = DIMENSIONLESS
+        scale = 1.0
+        for index, (name, exponent_text) in enumerate(tokens):
+            definition = self._units.get(name)
+            if definition is None or definition.offset_to_si:
+                raise KeyError(f"Unknown or non-composable unit: {name}")
+            exponent = int(exponent_text) if exponent_text else 1
+            if index and operators[index - 1] == "/":
+                exponent = -exponent
+            dimension = dimension * (definition.dimension ** exponent)
+            scale *= definition.scale_to_si ** exponent
+        derived = UnitDefinition(symbol, dimension, scale)
+        self._units[symbol] = derived
+        return derived
 
     def quantity(self, value: float, unit: str) -> "Quantity":
         definition = self.get(unit)
@@ -222,6 +240,14 @@ class Quantity:
                             self.dimension * other.dimension, self.registry)._with_si_unit()
         scalar = _finite(other, "multiplier")
         return Quantity(self.value * scalar, self.unit, self.dimension, self.registry)
+
+    def __pow__(self, exponent: int) -> "Quantity":
+        if isinstance(exponent, bool) or not isinstance(exponent, int):
+            raise TypeError("quantity exponent must be an integer")
+        if self.value == 0 and exponent < 0:
+            raise ZeroDivisionError("zero quantity cannot have a negative power")
+        return Quantity(self.si_value ** exponent, "1", self.dimension ** exponent,
+                        self.registry)
 
     def __truediv__(self, other: float | "Quantity") -> "Quantity":
         if isinstance(other, Quantity):
