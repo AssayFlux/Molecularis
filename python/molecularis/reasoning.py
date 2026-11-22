@@ -506,6 +506,8 @@ class ConstructionTask:
             raise ValueError("Task identity, domain and objective are required")
         if self.mode not in {"reconstruction", "generalization", "exploration"}:
             raise ValueError("Unsupported construction mode")
+        if not self.assumptions or any(not isinstance(item, str) or not item.strip() for item in self.assumptions):
+            raise ValueError("Task assumptions must be explicit non-empty strings")
         if isinstance(self.max_candidates, bool) or not isinstance(self.max_candidates, int) or not 1 <= self.max_candidates <= 1000:
             raise ValueError("max_candidates must be an integer between 1 and 1000")
         if isinstance(self.seed, bool) or not isinstance(self.seed, int) or not 0 <= self.seed <= 2**32 - 1:
