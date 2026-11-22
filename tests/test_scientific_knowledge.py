@@ -116,10 +116,14 @@ def test_package_rejects_dangling_relation_and_evidence_references() -> None:
                 "r", "missing", "related_to", "also-missing", "physics"
             ),),
         )
+    bad_equation = ScientificEquation(
+        "eq", "bad equation", "physics", "x = 1", (),
+        source_ids=("missing-source",),
+    )
     with pytest.raises(ValueError, match="unknown sources"):
-        ScientificEquation(
-            "eq", "bad equation", "physics", "x = 1", (),
-            source_ids=("missing-source",),
+        KnowledgePackage(
+            package_id="bad-equation", version="1", domain="physics",
+            equations=(bad_equation,),
         )
 
 
