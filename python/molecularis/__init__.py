@@ -166,3 +166,17 @@ __all__ += [
     "local_sensitivity", "monte_carlo_uncertainty", "pearson_correlation",
     "propagate_independent_uncertainty",
 ]
+
+
+# P3 A–N scientific domain integration and typed provenance handoffs.
+from .domain_integration import (
+    DOMAIN_PROFILES, DomainProfile, create_domain_handoff, domain_profile,
+    register_scientific_domains, seed_domain_knowledge_packages,
+    validate_scientific_domains,
+)
+
+__all__ += [
+    "DOMAIN_PROFILES", "DomainProfile", "create_domain_handoff", "domain_profile",
+    "register_scientific_domains", "seed_domain_knowledge_packages",
+    "validate_scientific_domains",
+]
