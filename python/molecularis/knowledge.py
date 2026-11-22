@@ -560,6 +560,44 @@ class ScientificKnowledgeEngine:
                     found.append(concept)
         return tuple(sorted(found, key=lambda item: (item.domain, item.concept_id)))
 
+    def query_entities(self, *, domain: str | None = None,
+                       entity_type: str | None = None,
+                       text: str | None = None) -> tuple[ScientificEntity, ...]:
+        needle = text.casefold() if text else None
+        found = []
+        for package in self._packages.values():
+            for entity in package.entities:
+                if domain is not None and entity.domain != domain:
+                    continue
+                if entity_type is not None and entity.entity_type != entity_type:
+                    continue
+                if needle is not None and needle not in entity.label.casefold():
+                    continue
+                found.append(entity)
+        return tuple(sorted(found, key=lambda item: (item.domain, item.entity_id)))
+
+    def query_relations(self, *, subject_id: str | None = None,
+                        predicate: str | None = None) -> tuple[ScientificRelation, ...]:
+        found = [relation for package in self._packages.values()
+                 for relation in package.relations
+                 if (subject_id is None or relation.subject_id == subject_id)
+                 and (predicate is None or relation.predicate == predicate)]
+        return tuple(sorted(found, key=lambda item: item.relation_id))
+
+    def query_equations(self, *, domain: str | None = None,
+                        status: str | None = None) -> tuple[ScientificEquation, ...]:
+        found = [equation for package in self._packages.values()
+                 for equation in package.equations
+                 if (domain is None or equation.domain == domain)
+                 and (status is None or equation.status == status)]
+        return tuple(sorted(found, key=lambda item: (item.domain, item.equation_id)))
+
+    def query_sources(self, *, permission: SourcePermission | None = None) -> tuple[ScientificSource, ...]:
+        found = [source for package in self._packages.values()
+                 for source in package.sources
+                 if permission is None or source.permission == permission]
+        return tuple(sorted(found, key=lambda item: item.source_id))
+
     def query_evidence(self, *, subject_id: str | None = None,
                        evidence_class: EvidenceClass | None = None,
                        status: EvidenceStatus | None = None) -> tuple[EvidenceRecord, ...]:
