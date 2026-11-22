@@ -39,15 +39,16 @@ This evidence does not prove the new knowledge-to-construction architecture is i
 
 ## P2 — Shared reasoning and construction primitives
 
-- [ ] Symbolic expressions, derivation traces and dimensional checks.
-- [ ] Constraint/feasibility and optimization contracts.
-- [ ] Candidate, objective, uncertainty and evaluation artifacts.
-- [ ] Reconstruction/generalization/exploration task contracts.
-- [ ] Proposer–Verifier separation and non-circular verification.
-- [ ] Reproducible examples in at least two distinct service domains.
-- [ ] Explicit accepted/rejected/indeterminate/failure behavior.
+- [x] Restricted symbolic expressions, safe AST evaluation, derivation traces and dimensional inference.
+- [x] Bounded bisection solver with bracket, tolerance, residual, iteration and termination diagnostics.
+- [x] Descriptive statistics, correlation, deterministic bootstrap, first-order uncertainty propagation and seeded Monte Carlo.
+- [x] Local sensitivity and binary probability calibration metrics.
+- [x] Hard/soft constraints, bounded weighted grid optimization and explicit infeasible/budget-exhausted states.
+- [x] Reconstruction/generalization/exploration task and candidate contracts, pre-generation audit and versioned schema.
+- [x] Distinct proposer/verifier examples in sequence and chemical formula representation domains.
+- [x] Negative, boundary, determinism, dimensional, solver, uncertainty and optimization tests.
 
-**Gate:** candidates are generated and independently evaluated with reproducible evidence.
+**Engineering gate:** pending CI on the P2 branch. Domain fixtures demonstrate software contract behavior and verifier separation; they are not independent scientific validation. P0 safety, integration and recovery gates remain open and are not waived.
 
 ## P3 — A–N Knowledge-to-Construction integration
 

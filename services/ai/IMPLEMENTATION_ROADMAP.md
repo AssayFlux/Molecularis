@@ -206,3 +206,23 @@ Implemented in `python/molecularis/knowledge.py` and integrated with Core Artifa
 **Verification:** GitHub Actions [run #45045807328](https://github.com/AssayFlux/Molecularis/actions/runs/45045807328), tested commit `819eb1fff6785fa49530ab5bf8b30e5280111712`: 769 passed, 12 skipped, 0 failed; schema validation, Ruff, compilation, benchmark smoke tests and optional Chemistry/Genomics/Sequence profiles passed.
 
 **Boundary:** SF1–SF2 establish a knowledge representation substrate, not a symbolic math engine, general reasoning system, comprehensive ontology, scientific truth oracle or trained model. SF3–SF9 remain future work. P0 platform safety/integration/recovery gates remain open and must be addressed before training or progression into later Agentics phases.
+
+
+## P2 implementation record — shared reasoning and construction
+
+**Implementation branch:** agentics/p2-reasoning-construction
+
+Implemented in python/molecularis/reasoning.py and exported from python/molecularis/__init__.py:
+
+- Safe arithmetic expression AST; no Python eval/exec, function calls, attribute access, indexing or arbitrary code execution.
+- Deterministic derivation trace construction with explicit variables, assumptions, source references and P1 SI-dimension inference.
+- Bisection root solver with bracket checks, finite values, tolerance, iteration budget, residual and termination state.
+- Descriptive statistics, Pearson correlation, seeded percentile bootstrap, first-order independent uncertainty propagation, deterministic-seed Monte Carlo, local sensitivity and binary probability calibration.
+- Hard/soft constraints, weighted multi-objective bounded grid search, deterministic enumeration and explicit no-feasible/budget-exhausted states.
+- Reconstruction/generalization/exploration task contracts, bounded candidate contracts and pre-publication constraint audit.
+- Versioned contract schema at services/ai/schemas/scientific-reasoning-v1.schema.json.
+- Two contract-level proposer/verifier fixtures: sequence alphabet checking and chemical-formula element-count consistency.
+
+**Scientific boundary:** the expression language is intentionally small and is not a general CAS; bisection requires a continuous function with a sign-changing bracket; grid search is for bounded low-dimensional reference problems and does not guarantee a global optimum beyond enumerated grid points; uncertainty routines rely on stated independence/distribution/local-linearity assumptions; calibration metrics require representative labelled binary outcomes. The two domain fixtures establish engineering separation only, not physical/chemical validity or experimental confirmation.
+
+**Gate state:** implementation is awaiting CI evidence. P0 remains open; this P2 implementation does not certify platform isolation, full cross-service integration, recovery or production readiness.

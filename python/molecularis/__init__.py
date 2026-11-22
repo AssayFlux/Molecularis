@@ -132,3 +132,27 @@ __all__ += [
     "ScientificKnowledgeEngine", "ScientificMechanism", "ScientificRelation", "ScientificSource",
     "SourcePermission", "UnitDefinition", "UnitRegistry",
 ]
+
+
+# Shared scientific reasoning and construction primitives (P2).
+from .reasoning import (
+    BootstrapInterval, CalibrationBin, CalibrationMetrics, SensitivityResult,
+    ConstructionCandidate, ConstructionTask, ConstraintSpec, DerivationStep,
+    DerivationTrace, DescriptiveStatistics, FeasibilityReport, NumericalResult,
+    ObjectiveSpec, OptimizationResult, SolverDiagnostics, SymbolicExpression,
+    UncertaintyResult, audit_candidate, bisect_root, bounded_grid_search,
+    bootstrap_mean_interval, calibration_metrics, check_constraints, describe,
+    local_sensitivity, monte_carlo_uncertainty, pearson_correlation,
+    propagate_independent_uncertainty,
+)
+
+__all__ += [
+    "BootstrapInterval", "CalibrationBin", "CalibrationMetrics", "SensitivityResult",
+    "ConstructionCandidate", "ConstructionTask", "ConstraintSpec", "DerivationStep",
+    "DerivationTrace", "DescriptiveStatistics", "FeasibilityReport", "NumericalResult",
+    "ObjectiveSpec", "OptimizationResult", "SolverDiagnostics", "SymbolicExpression",
+    "UncertaintyResult", "audit_candidate", "bisect_root", "bounded_grid_search",
+    "bootstrap_mean_interval", "calibration_metrics", "check_constraints", "describe",
+    "local_sensitivity", "monte_carlo_uncertainty", "pearson_correlation",
+    "propagate_independent_uncertainty",
+]

@@ -33,15 +33,18 @@ P1 was implemented on the owner's explicit request while these P0 tasks remain o
 
 ## P2 — Shared reasoning and construction primitives
 
-- [ ] Add symbolic expressions, derivation traces and dimensional checks.
-- [ ] Add numerical calculation, solver diagnostics, precision and convergence reporting.
-- [ ] Add probability, statistics, uncertainty propagation, sensitivity and calibration.
-- [ ] Add constraint/feasibility checks, optimization objectives and bounded search.
-- [ ] Define reconstruction, generalization and exploration task/candidate contracts.
-- [ ] Separate proposer and verifier implementations; add non-circular independent checks.
-- [ ] Demonstrate reproducible construction and verification in at least two distinct scientific domains.
+- [x] Add a restricted symbolic arithmetic AST, deterministic expression evaluation, variable discovery, derivation traces and dimensional inference using P1 dimensions.
+- [x] Add bounded numerical root solving with bracket validation, finite-value checks, tolerances, iteration budgets, residuals and termination diagnostics.
+- [x] Add descriptive statistics, Pearson correlation, deterministic bootstrap intervals, first-order uncertainty propagation and seeded Monte Carlo uncertainty.
+- [x] Add local finite-difference sensitivity and binary probability calibration (Brier score and equal-width expected calibration error).
+- [x] Add hard/soft constraint evaluation, weighted bounded multi-objective grid search, explicit infeasible/budget-exhausted states and deterministic ordering.
+- [x] Define reconstruction/generalization/exploration tasks, bounded candidate contracts, pre-publication audit and a versioned JSON Schema.
+- [x] Reuse the existing ScientificCore proposer/verifier boundary; demonstrate separate proposer and verifier implementations for sequence and chemical-formula representation fixtures.
+- [x] Add positive, negative, boundary, determinism, unit/dimension, solver, uncertainty, optimization and two-domain construction tests.
 
-**P2 gate:** candidate artifacts are generated under explicit assumptions and independently evaluated with reproducible evidence.
+**P2 engineering status:** implementation recorded on branch agentics/p2-reasoning-construction; CI and merge evidence will be added after verification. Two-domain fixtures validate contract separation and representation consistency only; they do not establish chemical validity, molecular stability or experimental realizability. P0 remains open and its platform acceptance gate is not waived.
+
+**P2 gate:** implementation evidence is pending CI; production progression remains blocked by unresolved P0 platform safety, integration and recovery gates.
 
 ## P3 — A–N knowledge-to-construction integration
 
