@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://molecularis.dev/schemas/domain-integration-report-v1.schema.json",
+  "title": "Molecularis A–N Domain Integration Report v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "domain_count",
+    "domains",
+    "capability_count",
+    "unregistered_capabilities",
+    "limitations"
+  ],
+  "properties": {
+    "schema": {
+      "const": "molecularis.domain-integration-report.v1"
+    },
+    "domain_count": {
+      "const": 14
+    },
+    "domains": {
+      "type": "array",
+      "minItems": 14,
+      "maxItems": 14,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "code",
+          "service",
+          "title",
+          "rulebook_id",
+          "artifact_schema_ids",
+          "capabilities",
+          "scope",
+          "non_claims"
+        ],
+        "properties": {
+          "code": {
+            "enum": [
+              "A",
+              "B",
+              "C",
+              "D",
+              "E",
+              "F",
+              "G",
+              "H",
+              "I",
+              "J",
+              "K",
+              "L",
+              "M",
+              "N"
+            ]
+          },
+          "service": {
+            "type": "string",
+            "minLength": 1
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "rulebook_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "artifact_schema_ids": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "capabilities": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "version",
+                "operation",
+                "input_schema",
+                "output_schema",
+                "deterministic"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "version": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "operation": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "input_schema": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "output_schema": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "deterministic": {
+                  "type": "boolean"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "scope": {
+            "type": "string",
+            "minLength": 1
+          },
+          "non_claims": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    },
+    "capability_count": {
+      "type": "integer",
+      "minimum": 14
+    },
+    "unregistered_capabilities": {
+      "type": "array",
+      "maxItems": 0
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  }
+}
