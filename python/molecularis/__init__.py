@@ -138,6 +138,7 @@ __all__ += [
 from .reasoning import (
     BootstrapInterval, CalibrationBin, CalibrationMetrics, SensitivityResult,
     HypothesisTestResult, RegressionResult, MultipleTestingResult, SampleSizeResult,
+    VerificationCheck, IndependentVerification, ConstructionAuditResult,
     GraphEdge, ScientificGraph, Vector3, IntegrationResult, LinearSystemResult,
     ConstructionCandidate, ConstructionTask, ConstraintSpec, DerivationStep,
     DerivationTrace, DescriptiveStatistics, FeasibilityReport, NumericalResult,
@@ -145,7 +146,7 @@ from .reasoning import (
     UncertaintyResult, audit_candidate, bisect_root, bounded_grid_search,
     bootstrap_mean_interval, calibration_metrics, check_constraints, describe,
     integrate_simpson, solve_linear_system, welch_t_test, simple_linear_regression,
-    benjamini_hochberg, normal_two_group_sample_size,
+    benjamini_hochberg, normal_two_group_sample_size, audit_and_verify_candidate,
     local_sensitivity, monte_carlo_uncertainty, pearson_correlation,
     propagate_independent_uncertainty,
 )
@@ -153,6 +154,7 @@ from .reasoning import (
 __all__ += [
     "BootstrapInterval", "CalibrationBin", "CalibrationMetrics", "SensitivityResult",
     "HypothesisTestResult", "RegressionResult", "MultipleTestingResult", "SampleSizeResult",
+    "VerificationCheck", "IndependentVerification", "ConstructionAuditResult",
     "GraphEdge", "ScientificGraph", "Vector3", "IntegrationResult", "LinearSystemResult",
     "ConstructionCandidate", "ConstructionTask", "ConstraintSpec", "DerivationStep",
     "DerivationTrace", "DescriptiveStatistics", "FeasibilityReport", "NumericalResult",
@@ -160,7 +162,7 @@ __all__ += [
     "UncertaintyResult", "audit_candidate", "bisect_root", "bounded_grid_search",
     "bootstrap_mean_interval", "calibration_metrics", "check_constraints", "describe",
     "integrate_simpson", "solve_linear_system", "welch_t_test", "simple_linear_regression",
-    "benjamini_hochberg", "normal_two_group_sample_size",
+    "benjamini_hochberg", "normal_two_group_sample_size", "audit_and_verify_candidate",
     "local_sensitivity", "monte_carlo_uncertainty", "pearson_correlation",
     "propagate_independent_uncertainty",
 ]
