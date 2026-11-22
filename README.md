@@ -227,6 +227,16 @@ The initial P1 Scientific Knowledge Engine reference implementation is now part 
 
 P1 engineering CI: [run #45046306359](https://github.com/AssayFlux/Molecularis/actions/runs/45045807328) — 769 passed, 12 skipped, 0 failed (including mechanism, law, quantity and artifact round-trip coverage). This is not a claim of comprehensive scientific knowledge or independent scientific validation. P0 platform safety, integration and recovery work remains open; model training is not yet authorized by the phase gates.
 
+## Shared scientific reasoning and construction (P2)
+
+The P2 reasoning foundation is implemented on the current development branch. It adds safe symbolic arithmetic and dimensional derivations, numerical root solving with convergence diagnostics, statistical summaries and correlation, bootstrap and uncertainty propagation, sensitivity and probability calibration, bounded constraints/optimization, and construction task/candidate contracts with pre-publication auditing.
+
+- [P2 reasoning implementation](python/molecularis/reasoning.py)
+- [P2 contract schema](services/ai/schemas/scientific-reasoning-v1.schema.json)
+- [P2 tests](tests/test_reasoning.py)
+
+The P2 examples exercise proposer/verifier separation in sequence and chemical-formula representation tasks. They are engineering fixtures, not evidence of chemical validity, molecular stability, experimental realizability or scientific acceptance. P2 CI evidence is pending; P0 platform safety, integration and recovery gates remain open.
+
 ## Agentics Molecularis
 
 <table>
