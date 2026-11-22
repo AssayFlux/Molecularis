@@ -24,7 +24,7 @@ P1 was implemented on the owner's explicit request while these P0 tasks remain o
 
 - [x] Define typed concepts, entities, relations and domain knowledge packages.
 - [x] Represent quantities, dimensions, units, coordinate/reference systems and conversions.
-- [x] Represent equations/law records with typed variables, assumptions, applicability domains and source links; expressions remain inert data.
+- [x] Represent equations/laws with typed variables and mechanisms with ordered typed steps, assumptions, applicability domains and source/evidence links; expressions remain inert data.
 - [x] Preserve evidence class, source/version, provenance, uncertainty, explicit contradictory claims and immutable package history.
 - [x] Add versioned knowledge schemas, deterministic query interfaces, Core ArtifactStore persistence/lineage and type/unit/provenance round-trip tests, including quantity serialization and Core artifact round-trip.
 - [x] Define A–N knowledge ownership boundaries.
