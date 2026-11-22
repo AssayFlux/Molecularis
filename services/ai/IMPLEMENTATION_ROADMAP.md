@@ -180,3 +180,29 @@ This document is a subordinate implementation breakdown, not a second roadmap. T
 - **SF9** maps to governing **P4** (Agentics orchestration); it must not jump ahead of P0–P3.
 
 The implementation baseline is Python. Do not create speculative C++, Rust or other-language packages. Candidate scientific tools remain optional until the audit proves a need and license/version/security/verification requirements are satisfied.
+
+
+## Implementation status — 2026-11-22
+
+### SF1 — Scientific type system and units: engineering complete
+
+Implemented in `python/molecularis/knowledge.py`:
+- Canonical SI dimension algebra and finite typed quantities.
+- Built-in base/common units, safe compound-unit parsing, conversion and incompatible-dimension rejection.
+- Coordinate reference metadata.
+- Versioned scientific package serialization and JSON Schema contracts.
+- Positive/negative unit and round-trip tests.
+
+### SF2 — Knowledge and evidence substrate: engineering complete
+
+Implemented in `python/molecularis/knowledge.py` and integrated with Core ArtifactStore:
+- Concepts, entities, relations and domain namespaces.
+- Equation records with typed variables, assumptions, applicability and source references.
+- Evidence classes/statuses, uncertainty, source/license/permission metadata and explicit contradiction links.
+- Immutable package identity/version and deterministic query interfaces.
+- ArtifactStore persistence, caller-supplied parent lineage and verified artifact loading.
+- A–N domain ownership map.
+
+**Verification:** GitHub Actions [run #45045807328](https://github.com/AssayFlux/Molecularis/actions/runs/45045807328), tested commit `25b3e47f0eab45a9ac70defe96090e34b1ebfde5`: 769 passed, 12 skipped, 0 failed; schema validation, Ruff, compilation, benchmark smoke tests and optional Chemistry/Genomics/Sequence profiles passed.
+
+**Boundary:** SF1–SF2 establish a knowledge representation substrate, not a symbolic math engine, general reasoning system, comprehensive ontology, scientific truth oracle or trained model. SF3–SF9 remain future work. P0 platform safety/integration/recovery gates remain open and must be addressed before training or progression into later Agentics phases.
