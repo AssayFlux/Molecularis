@@ -6,7 +6,7 @@ from molecularis.platform.store import ArtifactStore
 
 from molecularis.knowledge import (
     LENGTH, MASS, TIME, CoordinateReference, Dimension, EquationVariable,
-    EvidenceClass, EvidenceRecord, EvidenceStatus, KnowledgePackage,
+    EvidenceClass, EvidenceRecord, EvidenceStatus, KnowledgePackage, Quantity,
     ScientificConcept, ScientificEntity, ScientificEquation,
     MechanismStep, ScientificKnowledgeEngine, ScientificMechanism,
     ScientificRelation, ScientificSource,
@@ -28,7 +28,7 @@ def test_unit_conversion_and_compatible_arithmetic() -> None:
     assert units.quantity(1000, "g").to("kg").value == pytest.approx(1)
     assert units.quantity(0, "degC").to("K").value == pytest.approx(273.15)
     quantity = units.quantity(2.5, "cm")
-    assert type(quantity).from_dict(quantity.to_dict(), units).to("m").value == pytest.approx(0.025)
+    assert Quantity.from_dict(quantity.to_dict(), units).to("m").value == pytest.approx(0.025)
 
 
 def test_incompatible_units_and_non_finite_values_are_rejected() -> None:
