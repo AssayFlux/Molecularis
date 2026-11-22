@@ -40,13 +40,13 @@ This evidence does not prove the new knowledge-to-construction architecture is i
 ## P2 — Shared reasoning and construction primitives
 
 - [x] Restricted symbolic expressions, safe AST evaluation, derivation traces and dimensional inference.
-- [x] Bounded bisection solver with bracket, tolerance, residual, iteration and termination diagnostics.
+- [x] Bounded bisection solver, partial-pivot dense linear-system solver and composite Simpson integration with residual/error and convergence diagnostics.
 - [x] Descriptive statistics, correlation, deterministic bootstrap, first-order uncertainty propagation and seeded Monte Carlo.
 - [x] Local sensitivity and binary probability calibration metrics.
-- [x] Hard/soft constraints, bounded weighted grid optimization and explicit infeasible/budget-exhausted states.
+- [x] Deterministic graph topology/path operations, unit/reference-frame-safe 3D vector geometry, hard/soft constraints, bounded weighted grid optimization and explicit infeasible/budget-exhausted states.
 - [x] Reconstruction/generalization/exploration task and candidate contracts, pre-generation audit and versioned schema.
 - [x] Distinct proposer/verifier examples in sequence and chemical formula representation domains.
-- [x] Negative, boundary, determinism, dimensional, solver, uncertainty and optimization tests.
+- [x] Negative, boundary, determinism, dimensional, linear algebra, integration, graph, geometry, solver, uncertainty and optimization tests.
 
 **Engineering gate: PASSED.** GitHub Actions [run #45047445495](https://github.com/AssayFlux/Molecularis/actions/runs/45047445495), tested commit `b55efdaaae8e276c17c22b272fec94b0131f316e`: 788 passed, 12 skipped, 0 failed; 67 JSON schemas validated; Ruff, compilation, benchmark smoke tests and all optional scientific profiles passed. Domain fixtures demonstrate software contract behavior and verifier separation; they are not independent scientific validation. P0 safety, integration and recovery gates remain open and are not waived.
 
