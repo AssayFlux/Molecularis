@@ -399,3 +399,19 @@ def test_duplicate_constraint_ids_are_rejected() -> None:
     constraint = ConstraintSpec("same", SymbolicExpression("x"), "<=", 1)
     with pytest.raises(ValueError, match="unique"):
         check_constraints((constraint, constraint), {"x": 0})
+
+
+
+def test_beta_binomial_posterior_uses_explicit_prior_and_reference_case() -> None:
+    from molecularis.reasoning import beta_binomial_posterior
+
+    result = beta_binomial_posterior(5, 10, prior_alpha=1, prior_beta=1)
+    assert result.posterior_alpha == 6
+    assert result.posterior_beta == 6
+    assert result.posterior_mean == pytest.approx(0.5)
+    assert result.credible_interval[0] == pytest.approx(1 - result.credible_interval[1], abs=1e-10)
+    assert 0.2 < result.credible_interval[0] < 0.4
+    assert 0.6 < result.credible_interval[1] < 0.8
+    assert result.assumptions[2] == "Beta prior parameters explicitly supplied"
+    with pytest.raises(ValueError):
+        beta_binomial_posterior(3, 2, prior_alpha=1, prior_beta=1)
