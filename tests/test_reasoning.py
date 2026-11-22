@@ -4,7 +4,7 @@ import math
 
 import pytest
 
-from molecularis.knowledge import DIMENSIONLESS, LENGTH, TIME
+from molecularis.knowledge import LENGTH, TIME
 from molecularis.reasoning import (
     ConstructionCandidate, ConstructionTask, ConstraintSpec, DerivationTrace,
     ObjectiveSpec, SymbolicExpression, audit_candidate, bisect_root,
