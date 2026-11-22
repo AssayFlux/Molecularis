@@ -383,3 +383,19 @@ def test_independent_publication_requires_candidate_provenance() -> None:
             task, candidate, proposer_id="proposer", proposer_method="sampler",
             verifier_id="verifier", verifier_method="independent check", verifier=verifier,
         )
+
+
+
+def test_directed_graph_reports_weak_components_but_respects_direction_for_paths() -> None:
+    from molecularis.reasoning import GraphEdge, ScientificGraph
+
+    graph = ScientificGraph(("a", "b", "c"), (GraphEdge("a", "b"),), directed=True)
+    assert graph.connected_components() == (("a", "b"), ("c",))
+    assert graph.shortest_path("a", "b") == ("a", "b")
+    assert graph.shortest_path("b", "a") is None
+
+
+def test_duplicate_constraint_ids_are_rejected() -> None:
+    constraint = ConstraintSpec("same", SymbolicExpression("x"), "<=", 1)
+    with pytest.raises(ValueError, match="unique"):
+        check_constraints((constraint, constraint), {"x": 0})
