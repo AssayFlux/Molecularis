@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://molecularis.assayflux.org/schemas/scientific-reasoning-v1.schema.json",
+  "title": "Molecularis Scientific Reasoning and Construction Contracts",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "kind", "payload"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "kind": {"enum": ["derivation_trace", "construction_task", "construction_candidate", "constraint", "objective", "solver_diagnostics", "optimization_result"]},
+    "payload": {"type": "object"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"kind": {"const": "derivation_trace"}}, "required": ["kind"]},
+      "then": {"properties": {"payload": {
+        "type": "object", "required": ["trace_id", "steps", "method"],
+        "properties": {
+          "trace_id": {"type": "string", "minLength": 16},
+          "method": {"type": "string", "minLength": 1},
+          "source_refs": {"type": "array", "items": {"type": "string"}},
+          "steps": {"type": "array", "minItems": 1, "maxItems": 128, "items": {
+            "type": "object", "required": ["expression", "variables", "result", "dimension", "assumptions"],
+            "properties": {
+              "expression": {"type": "string", "maxLength": 2048},
+              "variables": {"type": "object", "additionalProperties": {"type": "number"}},
+              "result": {"type": "number"},
+              "dimension": {"type": "array", "items": {"type": "array", "prefixItems": [{"type": "string"}, {"type": "integer"}], "minItems": 2, "maxItems": 2}},
+              "assumptions": {"type": "array", "items": {"type": "string"}}
+            }
+          }}
+        }
+      }}}
+    },
+    {
+      "if": {"properties": {"kind": {"const": "construction_task"}}, "required": ["kind"]},
+      "then": {"properties": {"payload": {
+        "type": "object", "required": ["task_id", "domain", "mode", "objective", "assumptions", "max_candidates", "seed"],
+        "properties": {
+          "task_id": {"type": "string", "minLength": 1},
+          "domain": {"type": "string", "minLength": 1},
+          "mode": {"enum": ["reconstruction", "generalization", "exploration"]},
+          "objective": {"type": "string", "minLength": 1},
+          "assumptions": {"type": "array", "items": {"type": "string"}},
+          "max_candidates": {"type": "integer", "minimum": 1, "maximum": 1000},
+          "seed": {"type": "integer", "minimum": 0, "maximum": 4294967295}
+        }
+      }}}
+    },
+    {
+      "if": {"properties": {"kind": {"const": "construction_candidate"}}, "required": ["kind"]},
+      "then": {"properties": {"payload": {
+        "type": "object", "required": ["candidate_id", "domain", "representation", "assumptions"],
+        "properties": {
+          "candidate_id": {"type": "string", "minLength": 1},
+          "domain": {"type": "string", "minLength": 1},
+          "representation": {"type": "object"},
+          "assumptions": {"type": "array", "items": {"type": "string"}},
+          "evidence_refs": {"type": "array", "items": {"type": "string"}},
+          "uncertainty": {"type": "object", "additionalProperties": {"type": "number", "minimum": 0}}
+        }
+      }}}
+    }
+  ]
+}
