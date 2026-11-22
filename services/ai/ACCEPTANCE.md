@@ -48,7 +48,7 @@ This evidence does not prove the new knowledge-to-construction architecture is i
 - [x] Distinct proposer/verifier examples in sequence and chemical formula representation domains, plus an explicit independent-verification contract requiring separate identities, methods, checks and evidence before publication.
 - [x] Negative, boundary, determinism, dimensional, linear algebra, integration, graph, geometry, solver, hypothesis-test, regression, FDR, power-analysis, uncertainty, optimization and independent-verification tests.
 
-**Engineering gate: PASSED.** GitHub Actions [run #45047793858](https://github.com/AssayFlux/Molecularis/actions/runs/45047793858), tested commit `eb31df447b6d8205a5c53eb17e1145e27ed1f219`: 792 passed, 12 skipped, 0 failed; 67 JSON schemas validated; Ruff, compilation, benchmark smoke tests and all optional scientific profiles passed. Domain fixtures demonstrate software contract behavior and verifier separation; they are not independent scientific validation. P0 safety, integration and recovery gates remain open and are not waived.
+**Engineering gate: PASSED.** GitHub Actions [run #45049060320](https://github.com/AssayFlux/Molecularis/actions/runs/45049060320), tested code commit `fc8b83d1328c83201a14c0828a27fe240eca1a51`: 804 passed, 12 skipped, 0 failed; 67 JSON schemas validated; Ruff error/F checks, benchmark smoke tests and all Chemistry/Genomics/Sequence optional profiles passed. Domain fixtures demonstrate software contract behavior and verifier separation; they are not independent scientific validation. P0 safety, integration and recovery gates remain open and are not waived.
 
 ## P3 — A–N Knowledge-to-Construction integration
 
