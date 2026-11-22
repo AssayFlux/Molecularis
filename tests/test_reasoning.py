@@ -260,3 +260,57 @@ def test_vector_geometry_enforces_coordinate_and_unit_compatibility() -> None:
     assert Vector3.centroid([x_axis, y_axis]) == Vector3(0.5, 0.5, 0, "nm", "cartesian")
     with pytest.raises(ValueError, match="matching units"):
         x_axis.distance(Vector3(1, 0, 0, "angstrom", "cartesian"))
+
+
+
+def test_welch_t_test_reference_case_and_alternatives() -> None:
+    from molecularis.reasoning import welch_t_test
+
+    result = welch_t_test([10, 11, 12, 13, 14], [1, 2, 3, 4, 5])
+    assert result.statistic == pytest.approx(9.0)
+    assert result.degrees_of_freedom == pytest.approx(8.0)
+    assert result.p_value == pytest.approx(1.528e-5, rel=0.02)
+    assert result.alternative == "two-sided"
+    assert welch_t_test([1, 2, 3], [4, 5, 6], alternative="less").p_value < 0.1
+    with pytest.raises(ValueError):
+        welch_t_test([1], [2, 3])
+
+
+def test_simple_linear_regression_reference_and_constant_predictor() -> None:
+    from molecularis.reasoning import simple_linear_regression
+
+    result = simple_linear_regression([1, 2, 3, 4, 5], [3.1, 4.9, 7.2, 8.8, 11.1])
+    assert result.slope == pytest.approx(2.0, abs=0.1)
+    assert result.intercept == pytest.approx(1.0, abs=0.3)
+    assert result.r_squared > 0.99
+    assert result.slope_ci[0] < result.slope < result.slope_ci[1]
+    assert result.slope_p_value < 0.001
+    with pytest.raises(ValueError, match="variance"):
+        simple_linear_regression([1, 1, 1], [1, 2, 3])
+
+
+def test_benjamini_hochberg_controls_fdr_and_preserves_input_order() -> None:
+    from molecularis.reasoning import benjamini_hochberg
+
+    result = benjamini_hochberg([0.01, 0.04, 0.03, 0.2], alpha=0.05)
+    assert result.adjusted_p_values == pytest.approx((0.04, 0.0533333333, 0.0533333333, 0.2))
+    assert result.rejected == (True, False, False, False)
+    with pytest.raises(ValueError):
+        benjamini_hochberg([0.01, 1.2])
+
+
+def test_experiment_design_sample_size_reference_case() -> None:
+    from molecularis.reasoning import normal_two_group_sample_size
+
+    result = normal_two_group_sample_size(0.5, alpha=0.05, power=0.8)
+    assert result.per_group == 63
+    assert result.total == 126
+    assert "Normal approximation; no attrition adjustment" in result.assumptions
+
+
+def test_student_t_distribution_reference_quantile() -> None:
+    from molecularis.reasoning import _student_t_cdf, _student_t_quantile
+
+    assert _student_t_cdf(0, 10) == 0.5
+    assert _student_t_cdf(2.22813885, 10) == pytest.approx(0.975, abs=1e-7)
+    assert _student_t_quantile(0.975, 10) == pytest.approx(2.22813885, abs=1e-7)
