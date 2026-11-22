@@ -411,6 +411,7 @@ class EvidenceRecord:
     status: EvidenceStatus
     source_ids: tuple[str, ...] = ()
     subject_ids: tuple[str, ...] = ()
+    contradicts_evidence_ids: tuple[str, ...] = ()
     method: str | None = None
     assumptions: tuple[str, ...] = ()
     uncertainty: Mapping[str, Any] = field(default_factory=dict)
@@ -480,6 +481,10 @@ class KnowledgePackage:
         for record in self.evidence:
             if set(record.source_ids) - source_ids:
                 raise ValueError(f"evidence {record.evidence_id} references unknown sources")
+            if set(record.contradicts_evidence_ids) - evidence_ids:
+                raise ValueError(f"evidence {record.evidence_id} references unknown contradictory evidence")
+            if record.evidence_id in record.contradicts_evidence_ids:
+                raise ValueError("evidence cannot contradict itself")
 
     def to_dict(self) -> dict[str, Any]:
         return _jsonable(asdict(self))
