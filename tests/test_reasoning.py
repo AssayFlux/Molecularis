@@ -269,7 +269,7 @@ def test_welch_t_test_reference_case_and_alternatives() -> None:
     result = welch_t_test([10, 11, 12, 13, 14], [1, 2, 3, 4, 5])
     assert result.statistic == pytest.approx(9.0)
     assert result.degrees_of_freedom == pytest.approx(8.0)
-    assert result.p_value == pytest.approx(1.528e-5, rel=0.02)
+    assert result.p_value == pytest.approx(1.85311843e-5, rel=1e-6)
     assert result.alternative == "two-sided"
     assert welch_t_test([1, 2, 3], [4, 5, 6], alternative="less").p_value < 0.1
     with pytest.raises(ValueError):
