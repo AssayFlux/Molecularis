@@ -229,7 +229,7 @@ P1 engineering CI: [run #45046306359](https://github.com/AssayFlux/Molecularis/a
 
 ## Shared scientific reasoning and construction (P2)
 
-The P2 reasoning foundation is implemented on the current development branch. It adds safe symbolic arithmetic and dimensional derivations, numerical root and linear-system solving, Simpson integration with error estimates, statistical summaries and correlation, bootstrap and uncertainty propagation, sensitivity and probability calibration, graph topology and unit/frame-safe 3D geometry, bounded constraints/optimization, and construction task/candidate contracts with pre-publication auditing.
+The P2 reasoning foundation is implemented on the current development branch. It adds safe symbolic arithmetic and dimensional derivations, numerical root and linear-system solving, Simpson integration with error estimates, statistical summaries, Welch tests, regression, multiple-testing correction, power/sample-size planning, bootstrap and uncertainty propagation, sensitivity and probability calibration, graph topology and unit/frame-safe 3D geometry, bounded constraints/optimization, and construction task/candidate contracts with pre-publication auditing and an evidence-bearing independent-verifier contract.
 
 - [P2 reasoning implementation](python/molecularis/reasoning.py)
 - [P2 contract schema](services/ai/schemas/scientific-reasoning-v1.schema.json)
