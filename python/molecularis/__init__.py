@@ -112,3 +112,23 @@ __all__ = [
     "StructureDocument", "ingest_structure", "load_structure", "register_structure_service", "structure_rulebook",
     "ingest_molecule", "load_molecule", "molecular_validation_rulebook", "register_molecular_service",
 ]
+
+
+# Domain-neutral Scientific Knowledge Engine (P1).
+from .knowledge import (
+    AMOUNT, CURRENT, DIMENSIONLESS, LENGTH, MASS, TEMPERATURE, TIME,
+    CoordinateReference, Dimension, EquationVariable, EvidenceClass,
+    EvidenceRecord, EvidenceStatus, KnowledgePackage, Quantity,
+    ScientificConcept, ScientificEntity, ScientificEquation,
+    ScientificKnowledgeEngine, ScientificRelation, ScientificSource,
+    SourcePermission, UnitDefinition, UnitRegistry,
+)
+
+__all__ += [
+    "AMOUNT", "CURRENT", "DIMENSIONLESS", "LENGTH", "MASS", "TEMPERATURE", "TIME",
+    "CoordinateReference", "Dimension", "EquationVariable", "EvidenceClass",
+    "EvidenceRecord", "EvidenceStatus", "KnowledgePackage", "Quantity",
+    "ScientificConcept", "ScientificEntity", "ScientificEquation",
+    "ScientificKnowledgeEngine", "ScientificRelation", "ScientificSource",
+    "SourcePermission", "UnitDefinition", "UnitRegistry",
+]
