@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import pytest
 
-from molecularis.platform.store import ArtifactStore\n\nfrom molecularis.knowledge import (
+from molecularis.platform.store import ArtifactStore
+
+from molecularis.knowledge import (
     LENGTH, MASS, TIME, CoordinateReference, Dimension, EquationVariable,
     EvidenceClass, EvidenceRecord, EvidenceStatus, KnowledgePackage, Quantity,
     ScientificConcept, ScientificEntity, ScientificEquation,
