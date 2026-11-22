@@ -1,6 +1,6 @@
 # Scientific Knowledge Engine (P1)
 
-**Status:** Initial P1 reference implementation committed on the Agentics P1 branch. The phase remains subject to CI and acceptance review.
+**Status:** P1 reference implementation merged into `CORE`; engineering acceptance passed in [CI #45046306359](https://github.com/AssayFlux/Molecularis/actions/runs/45046306359) (769 passed, 12 skipped, 0 failed). Independent scientific validation remains separate.
 
 ## Purpose
 
