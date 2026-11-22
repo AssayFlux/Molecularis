@@ -8,7 +8,8 @@ from molecularis.knowledge import (
     LENGTH, MASS, TIME, CoordinateReference, Dimension, EquationVariable,
     EvidenceClass, EvidenceRecord, EvidenceStatus, KnowledgePackage,
     ScientificConcept, ScientificEntity, ScientificEquation,
-    ScientificKnowledgeEngine, ScientificRelation, ScientificSource,
+    MechanismStep, ScientificKnowledgeEngine, ScientificMechanism,
+    ScientificRelation, ScientificSource,
     SourcePermission, UnitRegistry,
 )
 
@@ -26,6 +27,8 @@ def test_unit_conversion_and_compatible_arithmetic() -> None:
     assert (units.quantity(1, "m") + units.quantity(25, "cm")).value == pytest.approx(1.25)
     assert units.quantity(1000, "g").to("kg").value == pytest.approx(1)
     assert units.quantity(0, "degC").to("K").value == pytest.approx(273.15)
+    quantity = units.quantity(2.5, "cm")
+    assert type(quantity).from_dict(quantity.to_dict(), units).to("m").value == pytest.approx(0.025)
 
 
 def test_incompatible_units_and_non_finite_values_are_rejected() -> None:
@@ -96,10 +99,37 @@ def _package() -> KnowledgePackage:
         assumptions=("elapsed_time > 0",), applicability="classical mechanics",
         source_ids=(source.source_id,),
     )
+    mechanism = ScientificMechanism(
+        mechanism_id="mechanism:measure-displacement",
+        label="Displacement measurement", domain="physics",
+        description="Measure an object's initial and final positions.",
+        steps=(MechanismStep(
+            step_id="step:measure", order=0, description="Record both positions.",
+            actor_entity_ids=(body.entity_id,), output_entity_ids=(body.entity_id,),
+            conditions=("reference frame is fixed",),
+            evidence_ids=(evidence.evidence_id,),
+        ),),
+        assumptions=("measurement uncertainty is recorded",),
+        applicability="classical mechanics", source_ids=(source.source_id,),
+        evidence_ids=(evidence.evidence_id,),
+    )
+    law = ScientificEquation(
+        equation_id="law:newton-second", label="Newton's second law",
+        domain="physics", expression="F = m * a",
+        variables=(
+            EquationVariable("F", "Net force", MASS * LENGTH / TIME**2, "N"),
+            EquationVariable("m", "Mass", MASS, "kg"),
+            EquationVariable("a", "Acceleration", LENGTH / TIME**2, "m/s^2"),
+        ),
+        assumptions=("inertial reference frame",),
+        applicability="classical mechanics at non-relativistic speeds",
+        source_ids=(source.source_id,), kind="law",
+    )
     return KnowledgePackage(
         package_id="physics:kinematics", version="1.0.0", domain="physics",
         concepts=(concept,), entities=(body,), relations=(relation,),
-        equations=(equation,), sources=(source,), evidence=(evidence, counter_evidence),
+        equations=(equation, law), mechanisms=(mechanism,),
+        sources=(source,), evidence=(evidence, counter_evidence),
         coordinate_references=(CoordinateReference(
             "frame:cartesian-3d", "Cartesian", ("x", "y", "z"),
             units=("m", "m", "m"),
@@ -116,6 +146,8 @@ def test_package_validates_references_and_exports_deterministically() -> None:
     assert exported["evidence"][0]["evidence_class"] == "established"
     assert exported["equations"][0]["expression"].startswith("v =")
     assert "powers" in exported["equations"][0]["variables"][0]["dimension"]
+    assert exported["equations"][1]["kind"] == "law"
+    assert exported["mechanisms"][0]["steps"][0]["step_id"] == "step:measure"
 
 
 def test_package_rejects_dangling_relation_and_evidence_references() -> None:
@@ -173,7 +205,8 @@ def test_deterministic_queries_and_disputed_evidence_are_preserved() -> None:
     assert counter.contradicts_evidence_ids == ("evidence:velocity",)
     assert engine.query_entities(domain="physics", entity_type="physical_system")
     assert engine.query_relations(predicate="has_property")
-    assert engine.query_equations(domain="physics")
+    assert engine.query_equations(domain="physics", status="proposed")
+    assert engine.query_mechanisms(domain="physics")
     assert engine.query_sources(permission=SourcePermission.RESEARCH_ONLY)
 
 
