@@ -20,7 +20,10 @@ from .knowledge import DIMENSIONLESS, Dimension
 def _finite(value: float, name: str = "value") -> float:
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         raise TypeError(f"{name} must be numeric")
-    result = float(value)
+    try:
+        result = float(value)
+    except OverflowError as exc:
+        raise ValueError(f"{name} is outside the finite floating-point range") from exc
     if not math.isfinite(result):
         raise ValueError(f"{name} must be finite")
     return result
@@ -372,7 +375,7 @@ class ConstraintSpec:
     hard: bool = True
 
     def __post_init__(self) -> None:
-        if not self.constraint_id.strip() or self.operator not in {"<=", ">=", "=="}:
+        if not isinstance(self.constraint_id, str) or not self.constraint_id.strip() or self.operator not in {"<=", ">=", "=="}:
             raise ValueError("Constraint needs an id and operator <=, >= or ==")
         _finite(self.bound, "constraint bound")
         if _finite(self.tolerance) < 0:
@@ -395,7 +398,7 @@ class ObjectiveSpec:
     weight: float = 1.0
 
     def __post_init__(self) -> None:
-        if not self.objective_id.strip() or self.direction not in {"minimize", "maximize"}:
+        if not isinstance(self.objective_id, str) or not self.objective_id.strip() or self.direction not in {"minimize", "maximize"}:
             raise ValueError("Objective needs an id and direction")
         if _finite(self.weight) <= 0:
             raise ValueError("Objective weight must be positive")
@@ -495,9 +498,9 @@ class ConstructionTask:
             raise ValueError("Task identity, domain and objective are required")
         if self.mode not in {"reconstruction", "generalization", "exploration"}:
             raise ValueError("Unsupported construction mode")
-        if not 1 <= self.max_candidates <= 1000:
-            raise ValueError("max_candidates must be between 1 and 1000")
-        if not 0 <= self.seed <= 2**32 - 1:
+        if isinstance(self.max_candidates, bool) or not isinstance(self.max_candidates, int) or not 1 <= self.max_candidates <= 1000:
+            raise ValueError("max_candidates must be an integer between 1 and 1000")
+        if isinstance(self.seed, bool) or not isinstance(self.seed, int) or not 0 <= self.seed <= 2**32 - 1:
             raise ValueError("seed must be an unsigned 32-bit integer")
 
 
@@ -509,6 +512,22 @@ class ConstructionCandidate:
     assumptions: tuple[str, ...]
     evidence_refs: tuple[str, ...] = ()
     uncertainty: Mapping[str, float] = field(default_factory=dict)
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.candidate_id, str) or not self.candidate_id.strip():
+            raise ValueError("Candidate identity is required")
+        if not isinstance(self.domain, str) or not self.domain.strip():
+            raise ValueError("Candidate domain is required")
+        if not isinstance(self.representation, Mapping) or not self.representation:
+            raise ValueError("Candidate representation must be a non-empty mapping")
+        if not self.assumptions or any(not isinstance(item, str) or not item.strip() for item in self.assumptions):
+            raise ValueError("Candidate assumptions must be explicit non-empty strings")
+        if any(not isinstance(ref, str) or not ref.strip() for ref in self.evidence_refs):
+            raise ValueError("Candidate evidence references must be non-empty strings")
+        if any(not isinstance(key, str) or not key.strip() or _finite(value, key) < 0 for key, value in self.uncertainty.items()):
+            raise ValueError("Candidate uncertainty values must be finite and non-negative")
+        # Canonical JSON validation rejects non-serializable objects and NaN/Infinity.
+        self.digest
 
     @property
     def digest(self) -> str:
@@ -653,8 +672,8 @@ def solve_linear_system(
 ) -> LinearSystemResult:
     """Solve a small dense square system using Gaussian elimination and partial pivoting."""
     n = len(vector)
-    if n == 0 or len(matrix) != n or any(len(row) != n for row in matrix):
-        raise ValueError("Matrix must be non-empty, square and match the vector length")
+    if n == 0 or n > 2048 or len(matrix) != n or any(len(row) != n for row in matrix):
+        raise ValueError("Matrix must be square, match the vector length and contain 1 to 2048 rows")
     a = [[_finite(value, "matrix value") for value in row] for row in matrix]
     b = [_finite(value, "vector value") for value in vector]
     tolerance = _finite(pivot_tolerance)
@@ -1171,6 +1190,8 @@ def audit_and_verify_candidate(
         raise ValueError("Verifier must declare a distinct method")
     if not callable(verifier):
         raise TypeError("An independent verifier callable is required")
+    if not candidate.evidence_refs:
+        raise ValueError("Candidate source/evidence references are required for publication")
     precheck = audit_candidate(task, candidate)
     if not precheck.feasible:
         raise ValueError("Candidate failed pre-publication hard constraints")
