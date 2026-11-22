@@ -1103,3 +1103,82 @@ def normal_two_group_sample_size(
         "normal_two_independent_groups_v1", n, 2 * n, level, target_power, effect,
         ("Equal allocation", "Independent observations", "Continuous outcome", "Normal approximation; no attrition adjustment"),
     )
+
+
+
+@dataclass(frozen=True, slots=True)
+class VerificationCheck:
+    check_id: str
+    passed: bool
+    claim: str
+    details: str = ""
+
+    def __post_init__(self) -> None:
+        if not self.check_id.strip() or not self.claim.strip():
+            raise ValueError("Verification checks require an ID and claim")
+        if not isinstance(self.passed, bool):
+            raise TypeError("Verification outcome must be boolean")
+
+
+@dataclass(frozen=True, slots=True)
+class IndependentVerification:
+    verifier_id: str
+    method: str
+    checks: tuple[VerificationCheck, ...]
+    evidence_refs: tuple[str, ...]
+
+    def __post_init__(self) -> None:
+        if not self.verifier_id.strip() or not self.method.strip():
+            raise ValueError("Independent verifier identity and method are required")
+        if not self.checks:
+            raise ValueError("At least one independent verification check is required")
+        if not self.evidence_refs or any(not ref.strip() for ref in self.evidence_refs):
+            raise ValueError("Independent verification requires evidence references")
+
+    @property
+    def passed(self) -> bool:
+        return all(check.passed for check in self.checks)
+
+
+@dataclass(frozen=True, slots=True)
+class ConstructionAuditResult:
+    candidate_digest: str
+    prepublication: FeasibilityReport
+    independent_verification: IndependentVerification
+    publishable: bool
+
+
+def audit_and_verify_candidate(
+    task: ConstructionTask,
+    candidate: ConstructionCandidate,
+    *,
+    proposer_id: str,
+    proposer_method: str,
+    verifier_id: str,
+    verifier_method: str,
+    verifier,
+) -> ConstructionAuditResult:
+    """Run prechecks and a separately identified verifier before declaring a candidate publishable.
+
+    Distinct identities/method labels are a contract-level separation, not proof of institutional
+    independence. Deployments must enforce process, credential and implementation separation.
+    """
+    if not proposer_id.strip() or not proposer_method.strip():
+        raise ValueError("Proposer identity and method are required")
+    if verifier_id.strip() == proposer_id.strip():
+        raise ValueError("Proposer and verifier identities must differ")
+    if not verifier_method.strip() or verifier_method.strip() == proposer_method.strip():
+        raise ValueError("Verifier must declare a distinct method")
+    if not callable(verifier):
+        raise TypeError("An independent verifier callable is required")
+    precheck = audit_candidate(task, candidate)
+    if not precheck.feasible:
+        raise ValueError("Candidate failed pre-publication hard constraints")
+    result = verifier(candidate)
+    if not isinstance(result, IndependentVerification):
+        raise TypeError("Verifier must return an IndependentVerification result")
+    if result.verifier_id != verifier_id or result.method != verifier_method:
+        raise ValueError("Verifier result identity/method does not match the declared verifier")
+    return ConstructionAuditResult(
+        candidate.digest, precheck, result, precheck.feasible and result.passed,
+    )
