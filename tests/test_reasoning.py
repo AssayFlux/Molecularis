@@ -349,7 +349,7 @@ def test_independent_verification_failure_blocks_publication() -> None:
     from molecularis.reasoning import IndependentVerification, VerificationCheck, audit_and_verify_candidate
 
     task = ConstructionTask("task-v2", "chemistry", "exploration", "formula valid", ("integer atom counts",))
-    candidate = ConstructionCandidate("candidate-v2", "chemistry", {"C": 2, "H": 6}, ("neutral formula",))
+    candidate = ConstructionCandidate("candidate-v2", "chemistry", {"C": 2, "H": 6}, ("neutral formula",), ("source:formula-input",))
     result = audit_and_verify_candidate(
         task, candidate, proposer_id="generator", proposer_method="formula builder",
         verifier_id="checker", verifier_method="element count parser",
@@ -360,3 +360,26 @@ def test_independent_verification_failure_blocks_publication() -> None:
         ),
     )
     assert not result.publishable
+
+
+
+def test_candidate_rejects_nonfinite_or_unserializable_representation() -> None:
+    with pytest.raises(ValueError):
+        ConstructionCandidate("bad", "sequence", {"score": math.nan}, ("exploratory assumption",))
+    with pytest.raises(ValueError):
+        ConstructionCandidate("bad2", "sequence", {"value": object()}, ("exploratory assumption",))
+
+
+def test_independent_publication_requires_candidate_provenance() -> None:
+    from molecularis.reasoning import IndependentVerification, VerificationCheck, audit_and_verify_candidate
+
+    task = ConstructionTask("task-prov", "sequence", "exploration", "candidate validity", ("explicit search bounds",))
+    candidate = ConstructionCandidate("candidate-prov", "sequence", {"length": 3}, ("exploratory hypothesis",))
+    verifier = lambda _: IndependentVerification(
+        "verifier", "independent check", (VerificationCheck("check", True, "candidate structure"),), ("audit:1",)
+    )
+    with pytest.raises(ValueError, match="source/evidence references"):
+        audit_and_verify_candidate(
+            task, candidate, proposer_id="proposer", proposer_method="sampler",
+            verifier_id="verifier", verifier_method="independent check", verifier=verifier,
+        )
