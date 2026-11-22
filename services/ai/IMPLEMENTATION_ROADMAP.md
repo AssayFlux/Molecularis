@@ -210,7 +210,7 @@ Implemented in `python/molecularis/knowledge.py` and integrated with Core Artifa
 
 ## P2 implementation record — shared reasoning and construction
 
-**Implementation branch:** agentics/p2-reasoning-construction
+**Integration record:** initial P2 implementation merged through PR #17; expanded statistical, verification and schema hardening committed to CORE.
 
 Implemented in python/molecularis/reasoning.py and exported from python/molecularis/__init__.py:
 
@@ -225,4 +225,4 @@ Implemented in python/molecularis/reasoning.py and exported from python/molecula
 
 **Scientific boundary:** the expression language is intentionally small and is not a general CAS; bisection requires a continuous function with a sign-changing bracket; grid search is for bounded low-dimensional reference problems and does not guarantee a global optimum beyond enumerated grid points; uncertainty routines rely on stated independence/distribution/local-linearity assumptions; calibration metrics require representative labelled binary outcomes. The statistical routines document their sampling/model assumptions and are not substitutes for design-specific review; the normal-approximation power method is not appropriate for every endpoint or design; the Beta–Binomial method is limited to exchangeable Bernoulli outcomes and a declared conjugate prior. Verifier identity/method separation is a software contract, not proof of organizational independence. The two domain fixtures establish engineering separation only, not physical/chemical validity or experimental confirmation.
 
-**Gate state: ENGINEERING PASSED.** GitHub Actions [run #45049060320](https://github.com/AssayFlux/Molecularis/actions/runs/45049060320) on tested code commit `fc8b83d1328c83201a14c0828a27fe240eca1a51`: 804 passed, 12 skipped, 0 failed; 67 JSON schemas validated; Ruff error/F checks, benchmark smoke tests and Chemistry/Genomics/Sequence optional profiles passed. P0 remains open; this P2 implementation does not certify platform isolation, full cross-service integration, recovery or production readiness.
+**Gate state: ENGINEERING PASSED.** GitHub Actions [run #45049236046](https://github.com/AssayFlux/Molecularis/actions/runs/45049236046) on tested commit `f926e263484e8c45d4ee9218c52012b53f70eed2`: 804 passed, 12 skipped, 0 failed; 67 JSON schemas validated; Ruff error/F checks, benchmark smoke tests and Chemistry/Genomics/Sequence optional profiles passed. P0 remains open; this P2 implementation does not certify platform isolation, full cross-service integration, recovery or production readiness.
