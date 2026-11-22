@@ -527,7 +527,10 @@ class ConstructionCandidate:
         if any(not isinstance(key, str) or not key.strip() or _finite(value, key) < 0 for key, value in self.uncertainty.items()):
             raise ValueError("Candidate uncertainty values must be finite and non-negative")
         # Canonical JSON validation rejects non-serializable objects and NaN/Infinity.
-        self.digest
+        try:
+            self.digest
+        except (TypeError, ValueError) as exc:
+            raise ValueError("Candidate representation must be finite JSON-compatible data") from exc
 
     @property
     def digest(self) -> str:
