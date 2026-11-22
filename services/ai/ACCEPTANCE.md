@@ -41,14 +41,14 @@ This evidence does not prove the new knowledge-to-construction architecture is i
 
 - [x] Restricted symbolic expressions, safe AST evaluation, derivation traces and dimensional inference.
 - [x] Bounded bisection solver, partial-pivot dense linear-system solver and composite Simpson integration with residual/error and convergence diagnostics.
-- [x] Descriptive statistics, correlation, Welch hypothesis testing, OLS regression with confidence interval, Benjamini–Hochberg FDR correction, deterministic bootstrap, first-order uncertainty propagation and seeded Monte Carlo.
+- [x] Descriptive statistics, correlation, Welch hypothesis testing, OLS regression with confidence interval, Benjamini–Hochberg FDR correction, explicit-prior Beta–Binomial Bayesian posterior, deterministic bootstrap, first-order uncertainty propagation and seeded Monte Carlo.
 - [x] Local sensitivity, binary probability calibration and two-group power/sample-size planning with explicit assumptions.
 - [x] Deterministic graph topology/path operations, unit/reference-frame-safe 3D vector geometry, hard/soft constraints, bounded weighted grid optimization and explicit infeasible/budget-exhausted states.
-- [x] Reconstruction/generalization/exploration task and candidate contracts, pre-generation audit and versioned schema.
+- [x] Reconstruction/generalization/exploration task and candidate contracts, finite JSON-compatible candidate validation, source/evidence provenance requirements for publication, pre-generation audit and versioned schema.
 - [x] Distinct proposer/verifier examples in sequence and chemical formula representation domains, plus an explicit independent-verification contract requiring separate identities, methods, checks and evidence before publication.
 - [x] Negative, boundary, determinism, dimensional, linear algebra, integration, graph, geometry, solver, hypothesis-test, regression, FDR, power-analysis, uncertainty, optimization and independent-verification tests.
 
-**Engineering gate: PASSED.** GitHub Actions [run #45049060320](https://github.com/AssayFlux/Molecularis/actions/runs/45049060320), tested code commit `fc8b83d1328c83201a14c0828a27fe240eca1a51`: 804 passed, 12 skipped, 0 failed; 67 JSON schemas validated; Ruff error/F checks, benchmark smoke tests and all Chemistry/Genomics/Sequence optional profiles passed. Domain fixtures demonstrate software contract behavior and verifier separation; they are not independent scientific validation. P0 safety, integration and recovery gates remain open and are not waived.
+**Engineering gate: PASSED.** GitHub Actions [run #45049236046](https://github.com/AssayFlux/Molecularis/actions/runs/45049236046), tested commit `f926e263484e8c45d4ee9218c52012b53f70eed2`: 804 passed, 12 skipped, 0 failed; 67 JSON schemas validated; Ruff error/F checks, benchmark smoke tests and all Chemistry/Genomics/Sequence optional profiles passed. Domain fixtures demonstrate software contract behavior and verifier separation; they are not independent scientific validation. P0 safety, integration and recovery gates remain open and are not waived.
 
 ## P3 — A–N Knowledge-to-Construction integration
 
