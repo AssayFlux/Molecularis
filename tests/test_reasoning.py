@@ -208,5 +208,5 @@ def test_sensitivity_and_probability_calibration_reference_cases() -> None:
     calibration = calibration_metrics([0.1, 0.2, 0.8, 0.9], [0, 0, 1, 1], bins=2)
     assert calibration.brier_score == pytest.approx(0.025)
     assert calibration.expected_calibration_error == pytest.approx(0.15)
-    with pytest.raises(ValueError, match="\[0, 1\]"):
+    with pytest.raises(ValueError, match=r"\[0, 1\]"):
         calibration_metrics([1.1], [1])
