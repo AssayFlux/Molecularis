@@ -118,17 +118,17 @@ __all__ = [
 from .knowledge import (
     AMOUNT, CURRENT, DIMENSIONLESS, LENGTH, MASS, TEMPERATURE, TIME,
     CoordinateReference, Dimension, EquationVariable, EvidenceClass,
-    EvidenceRecord, EvidenceStatus, KnowledgePackage, Quantity,
+    EvidenceRecord, EvidenceStatus, KnowledgePackage, MechanismStep, Quantity,
     ScientificConcept, ScientificEntity, ScientificEquation,
-    ScientificKnowledgeEngine, ScientificRelation, ScientificSource,
+    ScientificKnowledgeEngine, ScientificMechanism, ScientificRelation, ScientificSource,
     SourcePermission, UnitDefinition, UnitRegistry,
 )
 
 __all__ += [
     "AMOUNT", "CURRENT", "DIMENSIONLESS", "LENGTH", "MASS", "TEMPERATURE", "TIME",
     "CoordinateReference", "Dimension", "EquationVariable", "EvidenceClass",
-    "EvidenceRecord", "EvidenceStatus", "KnowledgePackage", "Quantity",
+    "EvidenceRecord", "EvidenceStatus", "KnowledgePackage", "MechanismStep", "Quantity",
     "ScientificConcept", "ScientificEntity", "ScientificEquation",
-    "ScientificKnowledgeEngine", "ScientificRelation", "ScientificSource",
+    "ScientificKnowledgeEngine", "ScientificMechanism", "ScientificRelation", "ScientificSource",
     "SourcePermission", "UnitDefinition", "UnitRegistry",
 ]
