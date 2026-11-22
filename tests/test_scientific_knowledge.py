@@ -41,6 +41,7 @@ def test_quantity_products_preserve_derived_dimensions() -> None:
     velocity = units.quantity(10, "m") / units.quantity(2, "s")
     assert velocity.dimension == Dimension.of(L=1, T=-1)
     assert velocity.si_value == pytest.approx(5)
+    assert units.quantity(36, "km/h").to("m/s").value == pytest.approx(10)
     force = units.quantity(2, "kg") * units.quantity(3, "m") / units.quantity(1, "s")**2
     assert force.dimension == Dimension.of(M=1, L=1, T=-2)
     assert force.si_value == pytest.approx(6)
