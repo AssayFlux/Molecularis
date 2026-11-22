@@ -12,11 +12,11 @@ import math
 import re
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
-from enum import StrEnum
+from enum import Enum
 from typing import Any, Iterable, Mapping, Sequence
 
 
-class EvidenceClass(StrEnum):
+class EvidenceClass(str, Enum):
     OBSERVED = "observed"
     ESTABLISHED = "established"
     DERIVED = "derived"
@@ -28,14 +28,14 @@ class EvidenceClass(StrEnum):
     VALIDATED = "validated"
 
 
-class EvidenceStatus(StrEnum):
+class EvidenceStatus(str, Enum):
     ACTIVE = "active"
     DISPUTED = "disputed"
     SUPERSEDED = "superseded"
     RETRACTED = "retracted"
 
 
-class SourcePermission(StrEnum):
+class SourcePermission(str, Enum):
     UNKNOWN = "unknown"
     RESEARCH_ONLY = "research_only"
     REDISTRIBUTION_ALLOWED = "redistribution_allowed"
@@ -464,7 +464,7 @@ class KnowledgePackage:
 
 
 def _jsonable(value: Any) -> Any:
-    if isinstance(value, StrEnum):
+    if isinstance(value, Enum):
         return value.value
     if isinstance(value, Dimension):
         return {k: v for k, v in value.powers}
