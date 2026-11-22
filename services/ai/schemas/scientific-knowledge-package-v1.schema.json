@@ -421,6 +421,7 @@
         "status",
         "source_ids",
         "subject_ids",
+        "contradicts_evidence_ids",
         "method",
         "assumptions",
         "uncertainty",
@@ -495,6 +496,12 @@
         "created_at": {
           "type": "string",
           "format": "date-time"
+        },
+        "contradicts_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       },
       "additionalProperties": false
