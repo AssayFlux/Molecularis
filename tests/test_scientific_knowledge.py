@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from molecularis.knowledge import (
+from molecularis.platform.store import ArtifactStore\n\nfrom molecularis.knowledge import (
     LENGTH, MASS, TIME, CoordinateReference, Dimension, EquationVariable,
     EvidenceClass, EvidenceRecord, EvidenceStatus, KnowledgePackage, Quantity,
     ScientificConcept, ScientificEntity, ScientificEquation,
@@ -99,6 +99,7 @@ def _package() -> KnowledgePackage:
 
 def test_package_validates_references_and_exports_deterministically() -> None:
     package = _package()
+    assert KnowledgePackage.from_dict(package.to_dict()) == package
     assert package.content_sha256 == _package().content_sha256
     exported = package.to_dict()
     assert exported["domain"] == "physics"
@@ -174,3 +175,16 @@ def test_package_version_collision_does_not_overwrite_prior_content() -> None:
 def test_coordinate_reference_rejects_axis_unit_mismatch() -> None:
     with pytest.raises(ValueError, match="match the number of axes"):
         CoordinateReference("frame", "Cartesian", ("x", "y", "z"), units=("m", "m"))
+
+
+def test_core_artifact_store_round_trip_preserves_package_and_lineage(tmp_path) -> None:
+    store = ArtifactStore(tmp_path / "artifacts")
+    parent = store.ingest(b"upstream research source")
+    package = _package()
+    writer = ScientificKnowledgeEngine()
+    artifact = writer.persist(package, store, parent_artifact_ids=(parent.artifact_id,))
+    assert artifact.parents == (parent.artifact_id,)
+    reader = ScientificKnowledgeEngine()
+    loaded = reader.load_artifact(store, artifact.artifact_id)
+    assert loaded == package
+    assert reader.get(package.package_id, package.version).content_sha256 == package.content_sha256
