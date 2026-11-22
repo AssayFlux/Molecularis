@@ -883,3 +883,221 @@ class Vector3:
             math.fsum(p.z for p in points) / n,
             first.unit, first.coordinate_system,
         )
+
+
+# Reference statistical inference primitives (P2). Assumptions are explicit in result records.
+@dataclass(frozen=True, slots=True)
+class HypothesisTestResult:
+    method: str
+    statistic: float
+    degrees_of_freedom: float
+    p_value: float
+    alternative: str
+    sample_sizes: tuple[int, int]
+    assumptions: tuple[str, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class RegressionResult:
+    intercept: float
+    slope: float
+    r_squared: float
+    slope_standard_error: float
+    slope_ci: tuple[float, float]
+    slope_p_value: float
+    degrees_of_freedom: int
+    sample_count: int
+    assumptions: tuple[str, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class MultipleTestingResult:
+    method: str
+    adjusted_p_values: tuple[float, ...]
+    rejected: tuple[bool, ...]
+    alpha: float
+
+
+@dataclass(frozen=True, slots=True)
+class SampleSizeResult:
+    method: str
+    per_group: int
+    total: int
+    alpha: float
+    power: float
+    standardized_effect: float
+    assumptions: tuple[str, ...]
+
+
+def _beta_continued_fraction(a: float, b: float, x: float) -> float:
+    """Modified Lentz continued fraction for the incomplete beta function."""
+    qab, qap, qam = a + b, a + 1.0, a - 1.0
+    c, d = 1.0, 1.0 - qab * x / qap
+    tiny = 1e-300
+    if abs(d) < tiny:
+        d = tiny
+    d = 1.0 / d
+    h = d
+    for m in range(1, 201):
+        m2 = 2 * m
+        aa = m * (b - m) * x / ((qam + m2) * (a + m2))
+        d = 1.0 + aa * d
+        if abs(d) < tiny: d = tiny
+        c = 1.0 + aa / c
+        if abs(c) < tiny: c = tiny
+        d = 1.0 / d
+        h *= d * c
+        aa = -(a + m) * (qab + m) * x / ((a + m2) * (qap + m2))
+        d = 1.0 + aa * d
+        if abs(d) < tiny: d = tiny
+        c = 1.0 + aa / c
+        if abs(c) < tiny: c = tiny
+        d = 1.0 / d
+        delta = d * c
+        h *= delta
+        if abs(delta - 1.0) <= 3e-14:
+            return h
+    raise ArithmeticError("Incomplete beta continued fraction did not converge")
+
+
+def _regularized_beta(x: float, a: float, b: float) -> float:
+    if not (a > 0 and b > 0 and 0 <= x <= 1):
+        raise ValueError("Invalid regularized beta arguments")
+    if x == 0: return 0.0
+    if x == 1: return 1.0
+    front = math.exp(math.lgamma(a + b) - math.lgamma(a) - math.lgamma(b) + a * math.log(x) + b * math.log1p(-x))
+    if x < (a + 1) / (a + b + 2):
+        return front * _beta_continued_fraction(a, b, x) / a
+    return 1.0 - front * _beta_continued_fraction(b, a, 1 - x) / b
+
+
+def _student_t_cdf(value: float, degrees: float) -> float:
+    if degrees <= 0:
+        raise ValueError("Degrees of freedom must be positive")
+    if value == 0: return 0.5
+    tail = 0.5 * _regularized_beta(degrees / (degrees + value * value), degrees / 2, 0.5)
+    return 1 - tail if value > 0 else tail
+
+
+def _student_t_quantile(probability: float, degrees: float) -> float:
+    if not 0 < probability < 1 or degrees <= 0:
+        raise ValueError("Invalid Student-t quantile arguments")
+    if probability == 0.5: return 0.0
+    sign = 1.0 if probability > 0.5 else -1.0
+    target = max(probability, 1 - probability)
+    lo, hi = 0.0, 1.0
+    while _student_t_cdf(hi, degrees) < target and hi < 1e8:
+        hi *= 2
+    for _ in range(160):
+        mid = (lo + hi) / 2
+        if _student_t_cdf(mid, degrees) < target: lo = mid
+        else: hi = mid
+    return sign * (lo + hi) / 2
+
+
+def welch_t_test(
+    first: Sequence[float], second: Sequence[float], *, alternative: str = "two-sided",
+) -> HypothesisTestResult:
+    """Welch independent-samples t-test; unequal variances are not pooled."""
+    if alternative not in {"two-sided", "less", "greater"}:
+        raise ValueError("alternative must be two-sided, less or greater")
+    x, y = [_finite(v) for v in first], [_finite(v) for v in second]
+    if len(x) < 2 or len(y) < 2:
+        raise ValueError("Welch test requires at least two observations per group")
+    mx, my = math.fsum(x) / len(x), math.fsum(y) / len(y)
+    vx = math.fsum((v - mx) ** 2 for v in x) / (len(x) - 1)
+    vy = math.fsum((v - my) ** 2 for v in y) / (len(y) - 1)
+    ax, by = vx / len(x), vy / len(y)
+    se2 = ax + by
+    if se2 == 0:
+        raise ValueError("Welch test is undefined when both groups have zero variance")
+    statistic = (mx - my) / math.sqrt(se2)
+    df = se2 * se2 / (ax * ax / (len(x) - 1) + by * by / (len(y) - 1))
+    cdf = _student_t_cdf(statistic, df)
+    p = 2 * min(cdf, 1 - cdf) if alternative == "two-sided" else (cdf if alternative == "less" else 1 - cdf)
+    return HypothesisTestResult(
+        "welch_two_sample_t_v1", statistic, df, min(1.0, max(0.0, p)), alternative,
+        (len(x), len(y)),
+        ("Independent observations", "Approximately normal sampling distribution or adequate sample sizes", "Unequal group variances allowed"),
+    )
+
+
+def simple_linear_regression(
+    x: Sequence[float], y: Sequence[float], *, confidence: float = 0.95,
+) -> RegressionResult:
+    """Ordinary least squares for one predictor with classical homoskedastic SE."""
+    if len(x) != len(y) or len(x) < 3:
+        raise ValueError("Regression requires equal-length vectors and at least three observations")
+    level = _finite(confidence)
+    if not 0 < level < 1: raise ValueError("confidence must lie in (0, 1)")
+    xs, ys = [_finite(v) for v in x], [_finite(v) for v in y]
+    mx, my = math.fsum(xs) / len(xs), math.fsum(ys) / len(ys)
+    sxx = math.fsum((v - mx) ** 2 for v in xs)
+    if sxx == 0: raise ValueError("Predictor must have non-zero variance")
+    slope = math.fsum((a - mx) * (b - my) for a, b in zip(xs, ys, strict=True)) / sxx
+    intercept = my - slope * mx
+    residuals = [b - (intercept + slope * a) for a, b in zip(xs, ys, strict=True)]
+    sse = math.fsum(v * v for v in residuals)
+    sst = math.fsum((v - my) ** 2 for v in ys)
+    df = len(xs) - 2
+    se = math.sqrt((sse / df) / sxx)
+    if se == 0:
+        p = 0.0 if slope != 0 else 1.0
+        critical = 0.0
+    else:
+        statistic = slope / se
+        p = 2 * min(_student_t_cdf(statistic, df), 1 - _student_t_cdf(statistic, df))
+        critical = _student_t_quantile((1 + level) / 2, df)
+    return RegressionResult(
+        intercept, slope, 1.0 if sst == 0 and sse == 0 else (1 - sse / sst if sst else 0.0),
+        se, (slope - critical * se, slope + critical * se), p, df, len(xs),
+        ("Independent errors", "Linear conditional mean", "Homoskedastic errors for classical standard error and interval", "No influential unmodelled dependence"),
+    )
+
+
+def benjamini_hochberg(p_values: Sequence[float], *, alpha: float = 0.05) -> MultipleTestingResult:
+    """Benjamini-Hochberg step-up FDR control under independence/positive dependence."""
+    values = [_finite(p, "p-value") for p in p_values]
+    level = _finite(alpha)
+    if not values or not 0 < level < 1 or any(p < 0 or p > 1 for p in values):
+        raise ValueError("Require p-values in [0,1] and alpha in (0,1)")
+    order = sorted(range(len(values)), key=lambda i: (values[i], i))
+    m = len(values)
+    adjusted = [1.0] * m
+    running = 1.0
+    for rank_index in range(m - 1, -1, -1):
+        index = order[rank_index]
+        running = min(running, values[index] * m / (rank_index + 1))
+        adjusted[index] = min(1.0, running)
+    rejected = [False] * m
+    last = -1
+    for rank_index, index in enumerate(order):
+        if values[index] <= level * (rank_index + 1) / m:
+            last = rank_index
+    for rank_index in range(last + 1):
+        rejected[order[rank_index]] = True
+    return MultipleTestingResult("benjamini_hochberg_fdr_v1", tuple(adjusted), tuple(rejected), level)
+
+
+def normal_two_group_sample_size(
+    standardized_effect: float, *, alpha: float = 0.05, power: float = 0.8,
+) -> SampleSizeResult:
+    """Normal-approximation sample size for equal-sized, two-sided independent groups."""
+    effect, level, target_power = _finite(standardized_effect), _finite(alpha), _finite(power)
+    if effect <= 0 or not 0 < level < 1 or not 0 < target_power < 1:
+        raise ValueError("Effect must be positive; alpha and power must lie in (0,1)")
+    def normal_quantile(p: float) -> float:
+        lo, hi = -10.0, 10.0
+        for _ in range(120):
+            mid = (lo + hi) / 2
+            cdf = 0.5 * (1 + math.erf(mid / math.sqrt(2)))
+            if cdf < p: lo = mid
+            else: hi = mid
+        return (lo + hi) / 2
+    z_alpha = normal_quantile(1 - level / 2)
+    z_power = normal_quantile(target_power)
+    n = math.ceil(2 * (z_alpha + z_power) ** 2 / (effect * effect))
+    return SampleSizeResult(
+        "normal_two_independent_groups_v1", n, 2 * n, level, target_power, effect,
+        ("Equal allocation", "Independent observations", "Continuous outcome", "Normal approximation; no attrition adjustment"),
+    )
