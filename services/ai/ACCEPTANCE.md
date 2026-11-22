@@ -35,7 +35,7 @@ This evidence does not prove the new knowledge-to-construction architecture is i
 - [x] A–N domain knowledge boundary map.
 - [x] Deterministic fixtures and round-trip/type/unit/provenance tests.
 
-**Gate:** <badge>ENGINEERING PASSED</badge> CI #45045807328 on `25b3e47f0eab45a9ac70defe96090e34b1ebfde5`: 769 passed, 12 skipped, 0 failed; 66 JSON Schemas validated; Ruff, compilation, benchmark smoke tests and optional Chemistry/Genomics/Sequence profiles passed. The gate covers the reference implementation only; it does not claim comprehensive knowledge or independent scientific validation. P0 remains open and blocks progression to later phases and model training.
+**Gate: ENGINEERING PASSED.** CI #45045807328 on `25b3e47f0eab45a9ac70defe96090e34b1ebfde5`: 769 passed, 12 skipped, 0 failed; 66 JSON Schemas validated; Ruff, compilation, benchmark smoke tests and optional Chemistry/Genomics/Sequence profiles passed. The gate covers the reference implementation only; it does not claim comprehensive knowledge or independent scientific validation. P0 remains open and blocks progression to later phases and model training.
 
 ## P2 — Shared reasoning and construction primitives
 
