@@ -210,3 +210,53 @@ def test_sensitivity_and_probability_calibration_reference_cases() -> None:
     assert calibration.expected_calibration_error == pytest.approx(0.15)
     with pytest.raises(ValueError, match=r"\[0, 1\]"):
         calibration_metrics([1.1], [1])
+
+
+
+def test_linear_system_solver_and_singularity_diagnostics() -> None:
+    from molecularis.reasoning import solve_linear_system
+
+    result = solve_linear_system([[3, 2], [1, 2]], [5, 5])
+    assert result.solution == pytest.approx((0, 2.5))
+    assert result.residual_inf_norm < 1e-12
+    with pytest.raises(ValueError, match="singular"):
+        solve_linear_system([[1, 2], [2, 4]], [3, 6])
+
+
+def test_simpson_integration_reports_error_and_convergence() -> None:
+    from molecularis.reasoning import integrate_simpson
+
+    result = integrate_simpson(lambda x: x**3, 0, 1, tolerance=1e-10, intervals=4)
+    assert result.converged
+    assert result.value == pytest.approx(0.25, abs=1e-12)
+    assert result.estimated_absolute_error <= result.tolerance
+
+
+def test_graph_topology_primitives_are_deterministic() -> None:
+    from molecularis.reasoning import GraphEdge, ScientificGraph
+
+    graph = ScientificGraph(
+        ("a", "b", "c", "d"),
+        (GraphEdge("a", "b"), GraphEdge("b", "c"), GraphEdge("c", "a")),
+    )
+    assert graph.degrees() == {"a": 2, "b": 2, "c": 2, "d": 0}
+    assert graph.connected_components() == (("a", "b", "c"), ("d",))
+    assert graph.shortest_path("a", "c") == ("a", "c")
+    assert graph.cycle_rank() == 1
+    with pytest.raises(ValueError, match="Duplicate"):
+        ScientificGraph(("a", "b"), (GraphEdge("a", "b"), GraphEdge("b", "a")))
+
+
+def test_vector_geometry_enforces_coordinate_and_unit_compatibility() -> None:
+    from molecularis.reasoning import Vector3
+
+    x_axis = Vector3(1, 0, 0, "nm", "cartesian")
+    y_axis = Vector3(0, 1, 0, "nm", "cartesian")
+    assert x_axis.norm() == 1
+    assert x_axis.dot(y_axis) == 0
+    assert x_axis.cross(y_axis) == Vector3(0, 0, 1, "nm", "cartesian")
+    assert x_axis.angle_degrees(y_axis) == pytest.approx(90)
+    assert x_axis.distance(y_axis) == pytest.approx(math.sqrt(2))
+    assert Vector3.centroid([x_axis, y_axis]) == Vector3(0.5, 0.5, 0, "nm", "cartesian")
+    with pytest.raises(ValueError, match="matching units"):
+        x_axis.distance(Vector3(1, 0, 0, "angstrom", "cartesian"))
