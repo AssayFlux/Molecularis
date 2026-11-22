@@ -530,3 +530,109 @@ def audit_candidate(task: ConstructionTask, candidate: ConstructionCandidate) ->
             raise ValueError("Candidate uncertainty cannot be negative")
     numeric = {k: _finite(v, k) for k, v in candidate.representation.items() if isinstance(v, (int, float)) and not isinstance(v, bool)}
     return check_constraints(task.constraints, numeric)
+
+
+
+@dataclass(frozen=True, slots=True)
+class BootstrapInterval:
+    estimate: float
+    lower: float
+    upper: float
+    confidence: float
+    resamples: int
+    seed: int
+
+
+def bootstrap_mean_interval(
+    values: Sequence[float], *, confidence: float = 0.95,
+    resamples: int = 2000, seed: int = 0,
+) -> BootstrapInterval:
+    """Percentile bootstrap interval for a sample mean; resampling unit is one observation."""
+    data = [_finite(v, "sample") for v in values]
+    level = _finite(confidence, "confidence")
+    if len(data) < 2 or not 0 < level < 1:
+        raise ValueError("At least two observations and confidence in (0, 1) are required")
+    if isinstance(resamples, bool) or not 100 <= resamples <= 100000:
+        raise ValueError("resamples must be between 100 and 100,000")
+    if isinstance(seed, bool) or not isinstance(seed, int) or not 0 <= seed <= 2**32 - 1:
+        raise ValueError("seed must be an unsigned 32-bit integer")
+    rng = random.Random(seed)
+    n = len(data)
+    means = sorted(math.fsum(data[rng.randrange(n)] for _ in range(n)) / n for _ in range(resamples))
+    tail = (1 - level) / 2
+    lower = means[int(tail * (resamples - 1))]
+    upper = means[int((1 - tail) * (resamples - 1))]
+    return BootstrapInterval(math.fsum(data) / n, lower, upper, level, resamples, seed)
+
+
+@dataclass(frozen=True, slots=True)
+class SensitivityResult:
+    parameter: str
+    derivative: float
+    normalized_sensitivity: float | None
+
+
+def local_sensitivity(function, values: Mapping[str, float], *, relative_step: float = 1e-5) -> tuple[SensitivityResult, ...]:
+    """Central finite-difference local sensitivities, including dimensionless normalized values."""
+    if not values:
+        raise ValueError("At least one parameter is required")
+    center = {k: _finite(v) for k, v in values.items()}
+    step = _finite(relative_step)
+    if step <= 0:
+        raise ValueError("relative_step must be positive")
+    baseline = _finite(function(center))
+    results = []
+    for key, value in center.items():
+        h = step * max(1.0, abs(value))
+        plus, minus = dict(center), dict(center)
+        plus[key] += h
+        minus[key] -= h
+        derivative = (_finite(function(plus)) - _finite(function(minus))) / (2 * h)
+        normalized = derivative * value / baseline if baseline != 0 else None
+        results.append(SensitivityResult(key, derivative, normalized))
+    return tuple(results)
+
+
+@dataclass(frozen=True, slots=True)
+class CalibrationBin:
+    count: int
+    mean_probability: float
+    observed_frequency: float
+
+
+@dataclass(frozen=True, slots=True)
+class CalibrationMetrics:
+    brier_score: float
+    expected_calibration_error: float
+    bins: tuple[CalibrationBin, ...]
+    sample_count: int
+
+
+def calibration_metrics(
+    probabilities: Sequence[float], outcomes: Sequence[int], *, bins: int = 10,
+) -> CalibrationMetrics:
+    """Binary probability calibration via Brier score and equal-width expected calibration error."""
+    if len(probabilities) != len(outcomes) or not probabilities:
+        raise ValueError("Probabilities and outcomes must have equal non-zero length")
+    if isinstance(bins, bool) or not 1 <= bins <= 100:
+        raise ValueError("bins must be between 1 and 100")
+    probs = [_finite(p, "probability") for p in probabilities]
+    if any(p < 0 or p > 1 for p in probs):
+        raise ValueError("Probabilities must lie in [0, 1]")
+    if any(isinstance(y, bool) or y not in (0, 1) for y in outcomes):
+        raise ValueError("Binary outcomes must be integer 0 or 1")
+    brier = math.fsum((p - y) ** 2 for p, y in zip(probs, outcomes, strict=True)) / len(probs)
+    grouped: list[list[tuple[float, int]]] = [[] for _ in range(bins)]
+    for probability, outcome in zip(probs, outcomes, strict=True):
+        index = min(bins - 1, int(probability * bins))
+        grouped[index].append((probability, outcome))
+    summaries = []
+    ece = 0.0
+    for group in grouped:
+        if not group:
+            continue
+        mean_p = math.fsum(p for p, _ in group) / len(group)
+        observed = math.fsum(y for _, y in group) / len(group)
+        ece += len(group) / len(probs) * abs(mean_p - observed)
+        summaries.append(CalibrationBin(len(group), mean_p, observed))
+    return CalibrationMetrics(brier, ece, tuple(summaries), len(probs))
