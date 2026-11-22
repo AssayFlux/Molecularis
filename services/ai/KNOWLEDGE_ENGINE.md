@@ -28,6 +28,29 @@ The SKE is the domain-neutral, versioned knowledge substrate shared by Agentics 
 - Quantity schema: `services/ai/schemas/scientific-quantity-v1.schema.json`
 - Tests: `tests/test_scientific_knowledge.py`
 
+## A–N knowledge boundary map
+
+The SKE owns shared identifiers, evidence/provenance envelopes, unit and reference-system semantics, package versioning and cross-domain query contracts. Each domain service owns its detailed ontology, domain rules, methods and acceptance criteria.
+
+| Service | Domain knowledge boundary |
+|---|---|
+| A — Molecular | Molecular species, atoms, bonds, residues, stereochemistry, charge and molecular graph semantics |
+| B — Sequence | Nucleotide/protein alphabets, sequence records, genetic codes, annotations and sequence coordinates |
+| C — Structure | Atoms, residues, chains, conformations, spatial coordinates, geometric measurements and structure evidence |
+| D — Chemistry | Compounds, chemical species, reactions, stoichiometry, bond semantics and chemical properties |
+| E — Protein | Protein families, domains, motifs, residue properties, folding and protein-specific evidence |
+| F — Genomics | Reference assemblies, contigs, variants, genotypes, genomic annotations and coordinate conventions |
+| G — DNA/RNA | Oligonucleotides, duplexes, secondary structures, pairing constraints and nucleic-acid thermodynamics |
+| H — Simulation | Simulated systems, force fields, topology, state variables, trajectories, ensembles and simulation conditions |
+| I — Kinetics | Chemical species, reactions, rate laws, kinetic parameters, ODE models and parameter units |
+| J — Omics | Features, samples, assays, expression matrices, normalization, statistical tests and uncertainty |
+| K — Phylogeny | Taxa, alignments, trees, clades, evolutionary distances and model assumptions |
+| L — Pharmacogenomics | Genes, haplotypes, star alleles, diplotypes, phenotype translation and guideline evidence |
+| M — Cohorts | Cohorts, subjects, visits, exposures, outcomes, population descriptors and privacy metadata |
+| N — Workflows | Workflow definitions, operations, capabilities, typed inputs/outputs, run evidence and artifact lineage |
+
+This map is a boundary contract, not a claim that each domain ontology has already been populated. Domain packages must be curated and versioned by the owning service.
+
 ## Safety and epistemic rules
 
 1. A source's `unknown` permission state never authorizes redistribution or model training.
