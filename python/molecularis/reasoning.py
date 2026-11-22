@@ -1220,3 +1220,58 @@ def audit_and_verify_candidate(
     return ConstructionAuditResult(
         candidate.digest, precheck, result, precheck.feasible and result.passed,
     )
+
+
+
+@dataclass(frozen=True, slots=True)
+class BetaBinomialPosterior:
+    prior_alpha: float
+    prior_beta: float
+    successes: int
+    failures: int
+    posterior_alpha: float
+    posterior_beta: float
+    posterior_mean: float
+    credible_interval: tuple[float, float]
+    credible_level: float
+    method: str = "beta_binomial_conjugate_v1"
+    assumptions: tuple[str, ...] = (
+        "Binary exchangeable outcomes",
+        "Conditional Bernoulli likelihood",
+        "Beta prior parameters explicitly supplied",
+    )
+
+
+def _beta_quantile(probability: float, alpha: float, beta: float) -> float:
+    if not 0 < probability < 1:
+        raise ValueError("Beta quantile probability must lie in (0,1)")
+    lo, hi = 0.0, 1.0
+    for _ in range(160):
+        mid = (lo + hi) / 2
+        if _regularized_beta(mid, alpha, beta) < probability:
+            lo = mid
+        else:
+            hi = mid
+    return (lo + hi) / 2
+
+
+def beta_binomial_posterior(
+    successes: int, trials: int, *, prior_alpha: float, prior_beta: float,
+    credible_level: float = 0.95,
+) -> BetaBinomialPosterior:
+    """Conjugate Bayesian inference for a Bernoulli rate with an explicit Beta prior."""
+    if isinstance(successes, bool) or not isinstance(successes, int):
+        raise ValueError("successes must be an integer")
+    if isinstance(trials, bool) or not isinstance(trials, int) or trials < 0 or not 0 <= successes <= trials:
+        raise ValueError("trials must be non-negative and successes must lie between zero and trials")
+    a, b = _finite(prior_alpha, "prior_alpha"), _finite(prior_beta, "prior_beta")
+    level = _finite(credible_level, "credible_level")
+    if a <= 0 or b <= 0 or not 0 < level < 1:
+        raise ValueError("Beta prior parameters must be positive and credible level in (0,1)")
+    post_a, post_b = a + successes, b + trials - successes
+    tail = (1 - level) / 2
+    interval = (_beta_quantile(tail, post_a, post_b), _beta_quantile(1 - tail, post_a, post_b))
+    return BetaBinomialPosterior(
+        a, b, successes, trials - successes, post_a, post_b,
+        post_a / (post_a + post_b), interval, level,
+    )
