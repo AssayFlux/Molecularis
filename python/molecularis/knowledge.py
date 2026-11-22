@@ -577,6 +577,20 @@ class ScientificKnowledgeEngine:
     def export_package(self, package_id: str, version: str) -> str:
         return _canonical(self.get(package_id, version).to_dict())
 
+    def persist(self, package: KnowledgePackage, artifact_store: Any, *,
+                parent_artifact_ids: Iterable[str] = ()) -> Any:
+        """Persist through Core ArtifactStore and preserve supplied parent lineage."""
+        payload = _canonical(package.to_dict()).encode("utf-8")
+        artifact = artifact_store.ingest(
+            payload, media_type="application/vnd.molecularis.knowledge+json",
+            schema_id="urn:molecularis:scientific-knowledge-package:1",
+            metadata={"package_id": package.package_id, "package_version": package.version,
+                      "domain": package.domain, "knowledge_sha256": package.content_sha256},
+            parents=tuple(parent_artifact_ids),
+        )
+        self.ingest(package)
+        return artifact
+
 
 __all__ = [
     "AMOUNT", "CURRENT", "DIMENSIONLESS", "LENGTH", "MASS", "TEMPERATURE", "TIME",
