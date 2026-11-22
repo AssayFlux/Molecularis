@@ -187,3 +187,26 @@ def test_two_domain_construction_has_separate_verification(domain, generator, ve
     assert run.state == "validated"
     assert run.reports[0].passed
     assert run.provenance["generator"]["id"] != run.provenance["validators"][0]["id"]
+
+
+
+def test_bootstrap_interval_is_reproducible_and_contains_sample_mean() -> None:
+    from molecularis.reasoning import bootstrap_mean_interval
+
+    one = bootstrap_mean_interval([1, 2, 3, 4, 5], resamples=1000, seed=23)
+    two = bootstrap_mean_interval([1, 2, 3, 4, 5], resamples=1000, seed=23)
+    assert one == two
+    assert one.lower <= one.estimate <= one.upper
+
+
+def test_sensitivity_and_probability_calibration_reference_cases() -> None:
+    from molecularis.reasoning import calibration_metrics, local_sensitivity
+
+    sensitivity = local_sensitivity(lambda p: p["x"] ** 2, {"x": 3})[0]
+    assert sensitivity.derivative == pytest.approx(6, rel=1e-5)
+    assert sensitivity.normalized_sensitivity == pytest.approx(2)
+    calibration = calibration_metrics([0.1, 0.2, 0.8, 0.9], [0, 0, 1, 1], bins=2)
+    assert calibration.brier_score == pytest.approx(0.025)
+    assert calibration.expected_calibration_error == pytest.approx(0.15)
+    with pytest.raises(ValueError, match="\[0, 1\]"):
+        calibration_metrics([1.1], [1])
