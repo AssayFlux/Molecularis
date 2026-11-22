@@ -118,7 +118,7 @@ def test_construction_task_pre_audit_enforces_domain_and_constraints() -> None:
     )
     candidate = ConstructionCandidate("c1", "sequence", {"length": 4, "gc": 0.5}, ("synthetic",))
     assert audit_candidate(task, candidate).feasible
-    wrong = ConstructionCandidate("c2", "chemistry", {"length": 4}, ())
+    wrong = ConstructionCandidate("c2", "chemistry", {"length": 4}, ("wrong-domain candidate",))
     with pytest.raises(ValueError, match="domain"):
         audit_candidate(task, wrong)
 
