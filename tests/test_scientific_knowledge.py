@@ -6,10 +6,10 @@ from molecularis.platform.store import ArtifactStore
 
 from molecularis.knowledge import (
     LENGTH, MASS, TIME, CoordinateReference, Dimension, EquationVariable,
-    EvidenceClass, EvidenceRecord, EvidenceStatus, KnowledgePackage, Quantity,
+    EvidenceClass, EvidenceRecord, EvidenceStatus, KnowledgePackage,
     ScientificConcept, ScientificEntity, ScientificEquation,
     ScientificKnowledgeEngine, ScientificRelation, ScientificSource,
-    SourcePermission, UnitDefinition, UnitRegistry,
+    SourcePermission, UnitRegistry,
 )
 
 
