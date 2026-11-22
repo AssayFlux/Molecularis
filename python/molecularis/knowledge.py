@@ -219,6 +219,19 @@ class Quantity:
         return Quantity((self.si_value - target.offset_to_si) / target.scale_to_si,
                         unit, self.dimension, self.registry)
 
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "value": self.value,
+            "unit": self.unit,
+            "dimension": {"powers": [[name, power] for name, power in self.dimension.powers]},
+        }
+
+    @classmethod
+    def from_dict(cls, payload: Mapping[str, Any], registry: UnitRegistry) -> "Quantity":
+        powers = payload["dimension"]["powers"]
+        dimension = Dimension(tuple((str(name), int(power)) for name, power in powers))
+        return cls(payload["value"], payload["unit"], dimension, registry)
+
     def _coerce_add(self, other: "Quantity") -> float:
         if not isinstance(other, Quantity) or other.dimension != self.dimension:
             raise ValueError("Addition/subtraction requires compatible dimensions")
@@ -389,6 +402,7 @@ class ScientificEquation:
     source_ids: tuple[str, ...] = ()
     version: str = "1.0.0"
     status: str = "proposed"
+    kind: str = "equation"
 
     def __post_init__(self) -> None:
         for name in ("equation_id", "label", "domain", "expression", "version"):
@@ -396,12 +410,61 @@ class ScientificEquation:
         _text(self.applicability, "applicability")
         if self.status not in {"proposed", "reviewed", "approved", "retired"}:
             raise ValueError("invalid equation status")
+        if self.kind not in {"equation", "law"}:
+            raise ValueError("equation kind must be equation or law")
         symbols = [v.symbol for v in self.variables]
         if len(symbols) != len(set(symbols)):
             raise ValueError("equation variable symbols must be unique")
         # Expression is inert text: never eval/exec it in the SKE.
         if len(self.expression) > 4096:
             raise ValueError("equation expression exceeds 4096 characters")
+
+
+
+
+@dataclass(frozen=True, slots=True)
+class MechanismStep:
+    step_id: str
+    order: int
+    description: str
+    actor_entity_ids: tuple[str, ...] = ()
+    input_entity_ids: tuple[str, ...] = ()
+    output_entity_ids: tuple[str, ...] = ()
+    conditions: tuple[str, ...] = ()
+    evidence_ids: tuple[str, ...] = ()
+
+    def __post_init__(self) -> None:
+        _text(self.step_id, "mechanism step_id")
+        _text(self.description, "mechanism step description")
+        if isinstance(self.order, bool) or not isinstance(self.order, int) or self.order < 0:
+            raise ValueError("mechanism step order must be a non-negative integer")
+
+
+@dataclass(frozen=True, slots=True)
+class ScientificMechanism:
+    mechanism_id: str
+    label: str
+    domain: str
+    description: str
+    steps: tuple[MechanismStep, ...]
+    assumptions: tuple[str, ...] = ()
+    applicability: str = "unspecified"
+    source_ids: tuple[str, ...] = ()
+    evidence_ids: tuple[str, ...] = ()
+    version: str = "1.0.0"
+    status: str = "proposed"
+
+    def __post_init__(self) -> None:
+        for name in ("mechanism_id", "label", "domain", "description", "version", "applicability"):
+            _text(getattr(self, name), name)
+        if not self.steps:
+            raise ValueError("a mechanism must contain at least one step")
+        orders = [step.order for step in self.steps]
+        step_ids = [step.step_id for step in self.steps]
+        if len(orders) != len(set(orders)) or len(step_ids) != len(set(step_ids)):
+            raise ValueError("mechanism step orders and identifiers must be unique")
+        if self.status not in {"proposed", "reviewed", "approved", "retired"}:
+            raise ValueError("invalid mechanism status")
 
 
 @dataclass(frozen=True, slots=True)
@@ -442,6 +505,7 @@ class KnowledgePackage:
     entities: tuple[ScientificEntity, ...] = ()
     relations: tuple[ScientificRelation, ...] = ()
     equations: tuple[ScientificEquation, ...] = ()
+    mechanisms: tuple[ScientificMechanism, ...] = ()
     sources: tuple[ScientificSource, ...] = ()
     evidence: tuple[EvidenceRecord, ...] = ()
     coordinate_references: tuple[CoordinateReference, ...] = ()
@@ -457,7 +521,7 @@ class KnowledgePackage:
             ids = [getattr(record, {
                 "concepts": "concept_id", "entities": "entity_id",
                 "relations": "relation_id", "equations": "equation_id",
-                "sources": "source_id", "evidence": "evidence_id",
+                "mechanisms": "mechanism_id", "sources": "source_id", "evidence": "evidence_id",
                 "coordinate_references": "reference_id",
             }[collection_name]) for record in records]
             if len(ids) != len(set(ids)):
