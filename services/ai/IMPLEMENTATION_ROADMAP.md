@@ -205,7 +205,7 @@ Implemented in `python/molecularis/knowledge.py` and integrated with Core Artifa
 
 **Verification:** GitHub Actions [run #45045807328](https://github.com/AssayFlux/Molecularis/actions/runs/45045807328), tested commit `819eb1fff6785fa49530ab5bf8b30e5280111712`: 769 passed, 12 skipped, 0 failed; schema validation, Ruff, compilation, benchmark smoke tests and optional Chemistry/Genomics/Sequence profiles passed.
 
-**Boundary:** SF1–SF2 establish a knowledge representation substrate, not a symbolic math engine, general reasoning system, comprehensive ontology, scientific truth oracle or trained model. SF3–SF9 remain future work. P0 platform safety/integration/recovery gates remain open and must be addressed before training or progression into later Agentics phases.
+**Boundary:** SF1–SF2 establish a knowledge representation substrate, not a symbolic math engine, general reasoning system, comprehensive ontology, scientific truth oracle or trained model. P2 has now implemented reference-level SF3 (symbolic/numerical mathematics), SF4 (statistics and uncertainty), and SF6 (constraints, optimization and construction contracts); see the P2 implementation record below. SF5 domain solver adapters, SF7 A–N integration, SF8 learning/model governance and SF9 Agentics orchestration remain future work. P0 platform safety/integration/recovery gates remain open and must be addressed before progression into P3/P4 or model training.
 
 
 ## P2 implementation record — shared reasoning and construction
