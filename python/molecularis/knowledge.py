@@ -826,7 +826,7 @@ __all__ = [
     "AMOUNT", "CURRENT", "DIMENSIONLESS", "LENGTH", "MASS", "TEMPERATURE", "TIME",
     "CoordinateReference", "Dimension", "EquationVariable", "EvidenceClass",
     "EvidenceRecord", "EvidenceStatus", "KnowledgePackage", "Quantity",
-    "ScientificConcept", "ScientificEntity", "ScientificEquation",
-    "ScientificKnowledgeEngine", "ScientificRelation", "ScientificSource",
+    "MechanismStep", "ScientificConcept", "ScientificEntity", "ScientificEquation",
+    "ScientificKnowledgeEngine", "ScientificMechanism", "ScientificRelation", "ScientificSource",
     "SourcePermission", "UnitDefinition", "UnitRegistry",
 ]
