@@ -27,15 +27,15 @@ This evidence does not prove the new knowledge-to-construction architecture is i
 
 ## P1 — Universal Scientific Knowledge Engine
 
-- [ ] Typed concepts/entities/relations and domain packages.
-- [ ] Quantities, dimensions, units and reference systems.
-- [ ] Equations/laws/mechanisms with variables, assumptions and applicability domains.
-- [ ] Evidence class, provenance, uncertainty, versioning and conflicting-claim representation.
-- [ ] Knowledge artifact schemas and query/reasoning interfaces.
-- [ ] A–N domain knowledge boundary map.
-- [ ] Deterministic fixtures and round-trip/type/unit/provenance tests.
+- [x] Typed concepts/entities/relations and versioned domain knowledge packages.
+- [x] Quantities, SI dimensions, units, safe compound-unit conversion and coordinate/reference systems.
+- [x] Equation/law records with typed variables, assumptions, applicability domains and source references; equation expressions are inert text.
+- [x] Evidence classes/statuses, provenance/source/license metadata, uncertainty and explicit contradictory-evidence links.
+- [x] Versioned JSON knowledge/quantity schemas, deterministic query interfaces and Core ArtifactStore persistence with parent lineage.
+- [x] A–N domain knowledge boundary map.
+- [x] Deterministic fixtures and round-trip/type/unit/provenance tests.
 
-**Gate:** executable reference implementation preserves scientific semantics and provenance. No claim of comprehensive knowledge.
+**Gate:** <badge>ENGINEERING PASSED</badge> CI #45045807328 on `25b3e47f0eab45a9ac70defe96090e34b1ebfde5`: 769 passed, 12 skipped, 0 failed; 66 JSON Schemas validated; Ruff, compilation, benchmark smoke tests and optional Chemistry/Genomics/Sequence profiles passed. The gate covers the reference implementation only; it does not claim comprehensive knowledge or independent scientific validation. P0 remains open and blocks progression to later phases and model training.
 
 ## P2 — Shared reasoning and construction primitives
 
