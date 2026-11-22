@@ -34,13 +34,13 @@ P1 and P2 were implemented on the owner's explicit requests while these P0 tasks
 ## P2 — Shared reasoning and construction primitives
 
 - [x] Add a restricted symbolic arithmetic AST, deterministic expression evaluation, variable discovery, derivation traces and dimensional inference using P1 dimensions.
-- [x] Add bounded numerical root solving with bracket validation, finite-value checks, tolerances, iteration budgets, residuals and termination diagnostics.
+- [x] Add bounded numerical root solving, dense linear-system solving with partial pivoting, and composite Simpson integration with error estimates and convergence diagnostics.
 - [x] Add descriptive statistics, Pearson correlation, deterministic bootstrap intervals, first-order uncertainty propagation and seeded Monte Carlo uncertainty.
 - [x] Add local finite-difference sensitivity and binary probability calibration (Brier score and equal-width expected calibration error).
-- [x] Add hard/soft constraint evaluation, weighted bounded multi-objective grid search, explicit infeasible/budget-exhausted states and deterministic ordering.
+- [x] Add deterministic graph topology/path primitives, coordinate-frame/unit-safe 3D vector geometry, hard/soft constraints, weighted bounded multi-objective grid search, and explicit infeasible/budget-exhausted states.
 - [x] Define reconstruction/generalization/exploration tasks, bounded candidate contracts, pre-publication audit and a versioned JSON Schema.
 - [x] Reuse the existing ScientificCore proposer/verifier boundary; demonstrate separate proposer and verifier implementations for sequence and chemical-formula representation fixtures.
-- [x] Add positive, negative, boundary, determinism, unit/dimension, solver, uncertainty, optimization and two-domain construction tests.
+- [x] Add positive, negative, boundary, determinism, unit/dimension, linear algebra, integration, graph, geometry, solver, uncertainty, optimization and two-domain construction tests.
 
 **P2 engineering gate: PASSED.** GitHub Actions [run #45047445495](https://github.com/AssayFlux/Molecularis/actions/runs/45047445495) on tested commit `b55efdaaae8e276c17c22b272fec94b0131f316e`: 788 passed, 12 skipped, 0 failed; 67 JSON schemas validated; Ruff, Python compilation, benchmark smoke tests and optional Chemistry/Genomics/Sequence profiles passed. Two-domain fixtures validate contract separation and representation consistency only; they do not establish chemical validity, molecular stability or experimental realizability. P0 remains open and its platform acceptance gate is not waived.
 
