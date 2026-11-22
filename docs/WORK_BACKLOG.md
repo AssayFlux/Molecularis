@@ -1,6 +1,6 @@
 # Molecularis Work Backlog
 
-**Current position (2026-11-22):** Engineering implementation for services A–N is recorded complete. P1 Scientific Knowledge Engine reference implementation is merged and passes CI. The shared Core/MSDE platform remains a local reference implementation, not a fully accepted production platform. P0 platform safety, integration and recovery residuals remain open; P0 is still a prerequisite for progression into P2/P3/P4 and model training. University scientific/privacy review and formal service freezes remain separate gates.
+**Current position (2026-11-22):** Engineering implementation for services A–N is recorded complete. P1 Scientific Knowledge Engine and P2 shared reasoning/construction reference implementations are merged and pass CI. The shared Core/MSDE platform remains a local reference implementation, not a fully accepted production platform. P0 platform safety, integration and recovery residuals remain open; P0 is still a prerequisite for progression into P2/P3/P4 and model training. University scientific/privacy review and formal service freezes remain separate gates.
 
 The [Agentics Molecularis Master Plan](AGENTICS_MOLECULARIS_MASTER_PLAN.md) is the single authority for Agentics architecture and phases. This backlog records actionable work only. Mark an item complete only with a commit and the relevant verification evidence.
 
@@ -18,7 +18,7 @@ The [Agentics Molecularis Master Plan](AGENTICS_MOLECULARIS_MASTER_PLAN.md) is t
 
 **P0 gate:** repository truth is reconciled; representative cross-service workflows preserve typed meaning and provenance; security, isolation, recovery and failure behavior have reproducible evidence or explicitly accepted blockers. Do not start P1 until this gate passes.
 
-P1 was implemented on the owner's explicit request while these P0 tasks remain open. This does not waive the P0 gate: no P2/P3/P4 progression or model training until the P0 blockers are resolved or formally accepted.\n\nSee [P0 Platform Trust, Safety and Reliability Audit](P0_PLATFORM_AUDIT.md) for the evidence-backed baseline, threat model, data classifications, dependency inventory and exact P0 residual gates.
+P1 and P2 were implemented on the owner's explicit requests while these P0 tasks remain open. This records engineering work only and does not waive the P0 gate: no P3/P4 progression or model training until the P0 blockers are resolved or formally accepted. P2 implementation does not authorize production deployment.\n\nSee [P0 Platform Trust, Safety and Reliability Audit](P0_PLATFORM_AUDIT.md) for the evidence-backed baseline, threat model, data classifications, dependency inventory and exact P0 residual gates.
 
 ## P1 — Universal Scientific Knowledge Engine
 
@@ -42,9 +42,9 @@ P1 was implemented on the owner's explicit request while these P0 tasks remain o
 - [x] Reuse the existing ScientificCore proposer/verifier boundary; demonstrate separate proposer and verifier implementations for sequence and chemical-formula representation fixtures.
 - [x] Add positive, negative, boundary, determinism, unit/dimension, solver, uncertainty, optimization and two-domain construction tests.
 
-**P2 engineering status:** implementation recorded on branch agentics/p2-reasoning-construction; CI and merge evidence will be added after verification. Two-domain fixtures validate contract separation and representation consistency only; they do not establish chemical validity, molecular stability or experimental realizability. P0 remains open and its platform acceptance gate is not waived.
+**P2 engineering gate: PASSED.** GitHub Actions [run #45047445495](https://github.com/AssayFlux/Molecularis/actions/runs/45047445495) on tested commit `b55efdaaae8e276c17c22b272fec94b0131f316e`: 788 passed, 12 skipped, 0 failed; 67 JSON schemas validated; Ruff, Python compilation, benchmark smoke tests and optional Chemistry/Genomics/Sequence profiles passed. Two-domain fixtures validate contract separation and representation consistency only; they do not establish chemical validity, molecular stability or experimental realizability. P0 remains open and its platform acceptance gate is not waived.
 
-**P2 gate:** implementation evidence is pending CI; production progression remains blocked by unresolved P0 platform safety, integration and recovery gates.
+**P2 gate:** engineering implementation and CI passed; progression into P3/P4 and production use remains blocked by unresolved P0 platform safety, integration and recovery gates.
 
 ## P3 — A–N knowledge-to-construction integration
 
