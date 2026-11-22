@@ -72,6 +72,14 @@ def _package() -> KnowledgePackage:
         method="textbook derivation", applicability="classical mechanics",
         created_at="2026-01-01T00:00:00+00:00",
     )
+    counter_evidence = EvidenceRecord(
+        evidence_id="evidence:counter", claim="A disputed alternative interpretation.",
+        evidence_class=EvidenceClass.INFERRED, status=EvidenceStatus.DISPUTED,
+        source_ids=(source.source_id,), subject_ids=(body.entity_id,),
+        contradicts_evidence_ids=("evidence:velocity",),
+        method="alternative interpretation", applicability="classical mechanics",
+        created_at="2026-01-02T00:00:00+00:00",
+    )
     relation = ScientificRelation(
         relation_id="relation:has-velocity", subject_id=body.entity_id,
         predicate="has_property", object_id=body.entity_id, domain="physics",
@@ -91,7 +99,7 @@ def _package() -> KnowledgePackage:
     return KnowledgePackage(
         package_id="physics:kinematics", version="1.0.0", domain="physics",
         concepts=(concept,), entities=(body,), relations=(relation,),
-        equations=(equation,), sources=(source,), evidence=(evidence,),
+        equations=(equation,), sources=(source,), evidence=(evidence, counter_evidence),
         coordinate_references=(CoordinateReference(
             "frame:cartesian-3d", "Cartesian", ("x", "y", "z"),
             units=("m", "m", "m"),
@@ -158,7 +166,14 @@ def test_deterministic_queries_and_disputed_evidence_are_preserved() -> None:
     )
     assert len(results) == 1
     assert results[0].status == EvidenceStatus.ACTIVE
-    assert engine.conflicting_evidence(subject_id="entity:body") == results
+    conflicts = engine.conflicting_evidence(subject_id="entity:body")
+    assert len(conflicts) == 2
+    assert conflicts[1].status == EvidenceStatus.DISPUTED
+    assert conflicts[1].contradicts_evidence_ids == ("evidence:velocity",)
+    assert engine.query_entities(domain="physics", entity_type="physical_system")
+    assert engine.query_relations(predicate="has_property")
+    assert engine.query_equations(domain="physics")
+    assert engine.query_sources(permission=SourcePermission.RESEARCH_ONLY)
 
 
 def test_package_version_collision_does_not_overwrite_prior_content() -> None:
