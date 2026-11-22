@@ -42,9 +42,9 @@ P1 and P2 were implemented on the owner's explicit requests while these P0 tasks
 - [x] Reuse the existing ScientificCore proposer/verifier boundary; demonstrate separate proposer and verifier implementations for sequence and chemical-formula representation fixtures, with failed independent checks blocking publication.
 - [x] Add positive, negative, boundary, determinism, unit/dimension, linear algebra, integration, graph, geometry, solver, inference, regression, FDR, power-analysis, uncertainty, optimization and independent-verification tests.
 
-**P2 engineering gate: pending expanded-scope CI.** Earlier P2 CI passed on the initial implementation, but subsequent additions (hypothesis testing, regression, FDR, power planning and explicit evidence-bearing independent verification) require a fresh full-suite run. Two-domain fixtures validate contract separation and representation consistency only; they do not establish chemical validity, molecular stability or experimental realizability. P0 remains open and its platform acceptance gate is not waived.
+**P2 engineering gate: PASSED.** GitHub Actions [run #45049060320](https://github.com/AssayFlux/Molecularis/actions/runs/45049060320) on code commit `fc8b83d1328c83201a14c0828a27fe240eca1a51`: 804 passed, 12 skipped, 0 failed; 67 JSON schemas validated; Ruff error/F checks, benchmark smoke tests and Chemistry/Genomics/Sequence optional profiles passed. Two-domain fixtures validate contract separation and representation consistency only; they do not establish chemical validity, molecular stability or experimental realizability. P0 remains open and its platform acceptance gate is not waived.
 
-**P2 gate:** implementation scope expanded beyond the earlier passing CI; final acceptance awaits fresh CI. P0 platform safety, integration and recovery gates remain open and are not waived.
+**P2 gate:** engineering implementation and CI passed on the exact code commit above. P0 platform safety, integration and recovery gates remain open and are not waived.
 
 ## P3 — A–N knowledge-to-construction integration
 
