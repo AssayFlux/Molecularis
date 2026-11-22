@@ -204,7 +204,7 @@ class Quantity:
     def __post_init__(self) -> None:
         object.__setattr__(self, "value", _finite(self.value))
         definition = self.registry.get(self.unit)
-        if definition.dimension != self.dimension:
+        if definition.dimension != self.dimension and self.unit != "1":
             raise ValueError("Quantity dimension does not match its unit")
 
     @property
