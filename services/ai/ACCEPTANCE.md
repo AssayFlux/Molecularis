@@ -25,7 +25,7 @@ This evidence does not prove the new knowledge-to-construction architecture is i
 - [ ] Artifact backup/restore, corruption and crash-boundary tests.
 - [x] Generate and publish an SPDX 2.3 inventory of installed Python distributions and observed dependency edges in CI.\n- [ ] Add package hashes/publisher attestations, OS/native binary inventory, vulnerability scanning and reviewed license-policy report.\n- [ ] Reproducibility and documentation baseline.
 
-**Gate:** engineering safety/recovery evidence is complete; blockers are explicit.
+**P0 engineering status:** initial backup/restore tests, scope-bound approval contract, opt-in OCI sandbox adapter, recovery runbook and installed-Python SPDX inventory are implemented and CI-tested. **P0 acceptance remains BLOCKED** on real identity/egress/sandbox integration, adversarial runtime tests, crash/recovery drills, package/license/security review and institutional sign-off.
 
 ## P1 — Universal Scientific Knowledge Engine
 

@@ -154,3 +154,10 @@ These additions do **not** provide backup encryption/signing, OS sandboxing, har
 - [ ] Platform acceptance record updated with evidence and explicit residual risks.
 
 **P0 is not complete until every mandatory exit item is supported by reproducible evidence and reviewed.** University scientific validation remains a separate later gate.
+
+
+## 10. P0 engineering hardening verification — 2026-11-23
+
+GitHub Actions [run #45088241792](https://github.com/AssayFlux/Molecularis/actions/runs/45088241792) on exact commit `2c9ae812ec7ecf213ca8fbc4303132e5e34b43a3`: core 817 passed/12 skipped; Genomics 818/11; Chemistry 825/4; Sequence 820/9 (4 existing warnings); 69 JSON schemas validated; installed-environment SPDX 2.3 inventory generated (43 Python distributions); Ruff, compilation and benchmark smoke steps passed.
+
+The passing CI run includes signed/scope-bound approval contract tests, the opt-in OCI sandbox command-contract tests, the all-pairs synthetic A–N handoff envelope matrix, environment SBOM generation/structure tests, all core regression tests and optional scientific profiles. The SBOM is a Python installed-distribution inventory, not a native OS image SBOM or a license/security attestation. Passing CI does not close institutional, deployment or scientific review gates.

@@ -239,3 +239,14 @@ Implemented in python/molecularis/reasoning.py and exported from python/molecula
 **Important boundary:** verifier metadata is a traceability/software contract, not proof of independent organizational verification. The framework packages contain zero scientific assertions until licensed, permission-checked and source-attributed knowledge is curated. Cross-domain engineering tests do not establish scientific correctness. P0 platform safety, integration and recovery remain open; independent university/domain review is separate.
 
 **P3 engineering gate: PASSED.** GitHub Actions [run #45086735252](https://github.com/AssayFlux/Molecularis/actions/runs/45086735252) on exact integration commit `c71d05aaec26d93915e03e54d3e8227865fa0ad7`: core 810 passed/12 skipped; Genomics 811/11; Chemistry 818/4; Sequence 813/9 (4 existing warnings); 68 schemas validated; Ruff error/F checks and Python compilation passed. This is an engineering gate only; source-backed knowledge population, independent scientific review and P0 platform safety/integration/recovery remain open.
+
+
+## P0 follow-on engineering record — 2026-11-23
+
+- Added mandatory externally verified execution approvals bound to approval ID, principal, exact workflow/plan, input artifact identities, active capability catalog, execution policy and resource budget. A Boolean approval flag is no longer accepted.
+- Added opt-in OCI sandbox invocation for digest-pinned images with network disabled, read-only root, dropped capabilities, no-new-privileges, non-root UID/GID and CPU/memory/PID/tmpfs/time bounds. Not yet integrated into ordinary capability dispatch.
+- Added a synthetic 182 ordered-pair A–N transport/provenance matrix. It does not prove scientific semantic conversion.
+- Added SPDX 2.3 inventory of installed Python distributions and declared dependency edges, published as a CI artifact.
+- Added operator runbook for audit, backup, restore drills and corruption response.
+
+**Verification:** GitHub Actions [run #45088241792](https://github.com/AssayFlux/Molecularis/actions/runs/45088241792) on exact commit `2c9ae812ec7ecf213ca8fbc4303132e5e34b43a3`: core 817 passed/12 skipped; Genomics 818/11; Chemistry 825/4; Sequence 820/9 (4 existing warnings); 69 JSON schemas validated; installed-environment SPDX 2.3 inventory generated (43 Python distributions); Ruff, compilation and benchmark smoke steps passed. External identity, egress, real container-runtime, recovery and scientific/institutional acceptance remain open.
