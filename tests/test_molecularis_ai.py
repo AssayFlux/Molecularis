@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+import json
+
 import pytest
 
-from molecularis.ai import MolecularisAI
+from molecularis.ai import ExecutionApproval, MolecularisAI
 from molecularis.domain_integration import validate_scientific_domains
 from molecularis.bootstrap import create_full_platform, register_all_services
 from molecularis.platform import Capability, ExecutionContext, MolecularisPlatform
@@ -60,8 +62,28 @@ def test_ai_plans_and_requires_approval_before_execution(tmp_path):
         with pytest.raises(ValidationError, match="approval"):
             agent.execute(plan, input_artifacts={"source": source.artifact_id})
         context = ExecutionContext(service_id="molecularis-ai")
-        result = agent.execute(plan, input_artifacts={"source": source.artifact_id},
-                               approved=True, context=context)
+        payload = agent.approval_payload(
+            plan, input_artifacts={"source": source.artifact_id}, context=context
+        )
+        approval_data = json.loads(payload)
+        approval = ExecutionApproval(
+            approval_id="approval-test-001",
+            principal_id="university-reviewer",
+            plan_artifact_id=plan.artifact_id,
+            input_artifact_ids=tuple(approval_data["input_artifact_ids"]),
+            capability_catalog_sha256=approval_data["capability_catalog_sha256"],
+            budget_sha256=approval_data["budget_sha256"],
+            policy_sha256=approval_data["policy_sha256"],
+            signature="signed-test-payload",
+        )
+        verifier = lambda signed, signature, principal: (
+            signed == payload and signature == "signed-test-payload"
+            and principal == "university-reviewer"
+        )
+        result = agent.execute(
+            plan, input_artifacts={"source": source.artifact_id},
+            approval=approval, approval_verifier=verifier, context=context,
+        )
         assert result["result"]["validation_report"] == {"echo": "synthetic"}
         assert platform.store.get_run(context.run_id)["status"] == "succeeded"
     finally:
@@ -111,8 +133,8 @@ def test_ai_execution_rejects_replaced_input_artifact_after_planning(tmp_path):
     try:
         plan = agent.plan("process the approved input", input_artifacts={"source": original.artifact_id})
         with pytest.raises(ValidationError, match="identities"):
-            agent.execute(
-                plan, input_artifacts={"source": replacement.artifact_id}, approved=True
+            agent.approval_payload(
+                plan, input_artifacts={"source": replacement.artifact_id}
             )
     finally:
         platform.close()
