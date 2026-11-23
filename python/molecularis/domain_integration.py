@@ -267,8 +267,12 @@ def create_domain_handoff(
     evidence_refs = verification_meta.get("evidence_refs")
     if status != "passed" or not isinstance(verifier, str) or not verifier.strip() or not isinstance(method, str) or not method.strip():
         raise ValidationError("handoff requires a passed verification artifact with verifier identity and method")
-    if not isinstance(evidence_refs, list) or not 1 <= len(evidence_refs) <= 256 or len(set(evidence_refs)) != len(evidence_refs):
-        raise ValidationError("verification artifact must cite 1..256 unique evidence_refs")
+    if not isinstance(evidence_refs, list) or not 1 <= len(evidence_refs) <= 256:
+        raise ValidationError("verification artifact must cite 1..256 evidence_refs")
+    if any(not isinstance(reference, str) or not reference.strip() for reference in evidence_refs):
+        raise ValidationError("verification evidence references must be non-empty artifact IDs")
+    if len(set(evidence_refs)) != len(evidence_refs):
+        raise ValidationError("verification evidence references must be unique")
     parents = [source_artifact_id, verification_artifact_id]
     for reference in evidence_refs:
         if not isinstance(reference, str) or not reference.strip():
