@@ -415,7 +415,7 @@ Lifecycle management and bounded execution in the local reference platform.
 
 **Current engineering position:** P1 Scientific Knowledge Engine and P2 shared reasoning/construction foundations are implemented; P3 A–N service registration, domain manifests and typed provenance-bound handoffs have passed engineering CI. Platform-wide P0 safety, integration, recovery/security acceptance and independent university scientific/privacy review remain open. Agentics currently has its initial planner and approval-gated workflow foundation; full orchestration maturity and governed model training remain future phases.
 
-**Latest P3 integration CI:** [GitHub Actions run #45086735252](https://github.com/AssayFlux/Molecularis/actions/runs/45086735252) completed successfully on exact integration commit `c71d05aaec26d93915e03e54d3e8227865fa0ad7`. This is engineering evidence, not independent scientific validation.
+**Latest P3/P0 engineering CI:** [GitHub Actions run #45088241792](https://github.com/AssayFlux/Molecularis/actions/runs/45088241792) on tested commit `2c9ae812ec7ecf213ca8fbc4303132e5e34b43a3`: core 817 passed/12 skipped; Genomics 818/11; Chemistry 825/4; Sequence 820/9 (4 existing warnings); 69 schemas validated; SPDX inventory generated for 43 installed Python distributions. The 182-pair synthetic handoff matrix verifies transport/provenance only. This is engineering evidence, not independent scientific validation.
 
 ### Explicit non-claims
 
