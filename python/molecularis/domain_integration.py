@@ -215,7 +215,7 @@ def create_domain_handoff(
     evidence_class: EvidenceClass | str,
     assumptions: tuple[str, ...],
     verification_artifact_id: str,
-    target_metadata: Mapping[str, Any] | None = None,
+    target_metadata: Mapping[str, Any],
     budget: Budget | None = None,
 ) -> Any:
     """Persist an explicit domain conversion with source and verifier lineage.
@@ -249,10 +249,10 @@ def create_domain_handoff(
                         ("transformation_version", transformation_version)):
         if not isinstance(value, str) or not value.strip() or len(value) > 128:
             raise ValidationError(f"{name} must be bounded non-empty text")
-    if not isinstance(assumptions, tuple) or not assumptions or any(
+    if not isinstance(assumptions, tuple) or not 1 <= len(assumptions) <= 64 or any(
         not isinstance(item, str) or not item.strip() or len(item) > 2048 for item in assumptions
     ):
-        raise ValidationError("handoff assumptions must be explicit non-empty strings")
+        raise ValidationError("handoff assumptions must contain 1..64 explicit non-empty strings")
     try:
         label = EvidenceClass(evidence_class).value
     except (TypeError, ValueError) as exc:
@@ -280,8 +280,12 @@ def create_domain_handoff(
         platform.store.get(reference)
         if reference not in parents:
             parents.append(reference)
-    payload = _canonical_json(target_payload)
-    service_metadata = dict(target_metadata or {})
+    if not isinstance(target_payload, Mapping):
+        raise ValidationError("target_payload must be a mapping matching the target service schema")
+    payload = _canonical_json(dict(target_payload))
+    if not isinstance(target_metadata, Mapping) or not target_metadata:
+        raise ValidationError("target_metadata must contain the target service integrity metadata")
+    service_metadata = dict(target_metadata)
     reserved = {"domain_handoff"}
     if reserved.intersection(service_metadata):
         raise ValidationError("target_metadata contains a reserved P3 key")
