@@ -62,7 +62,7 @@ This evidence does not prove the new knowledge-to-construction architecture is i
 - [ ] Complete independent university/domain-expert review and reference comparisons for cross-domain scientific transformations.
 - [ ] Extend verified handoff coverage to every domain pair required by approved research workflows.
 
-**P3 engineering gate: PASSED.** GitHub Actions [run #45086320810](https://github.com/AssayFlux/Molecularis/actions/runs/45086320810) on exact integration commit `9ccb625a4ac9e07af61d54d2a3e02be86f56f6ee`: core 810 passed/12 skipped; Genomics 811/11; Chemistry 818/4; Sequence 813/9 (4 existing warnings); 68 JSON schemas validated; Ruff error/F checks and Python compilation passed. Engineering fixtures establish software contracts and lineage only. Scientific knowledge population, independent scientific acceptance and P0 platform safety/integration/recovery remain separate open gates.
+**P3 engineering gate: PASSED.** GitHub Actions [run #45086735252](https://github.com/AssayFlux/Molecularis/actions/runs/45086735252) on exact integration commit `c71d05aaec26d93915e03e54d3e8227865fa0ad7`: core 810 passed/12 skipped; Genomics 811/11; Chemistry 818/4; Sequence 813/9 (4 existing warnings); 68 JSON schemas validated; Ruff error/F checks and Python compilation passed. Engineering fixtures establish software contracts and lineage only. Scientific knowledge population, independent scientific acceptance and P0 platform safety/integration/recovery remain separate open gates.
 
 ## P4 — Agentics orchestration maturity
 
