@@ -63,7 +63,8 @@ def test_ai_plans_and_requires_approval_before_execution(tmp_path):
             agent.execute(plan, input_artifacts={"source": source.artifact_id})
         context = ExecutionContext(service_id="molecularis-ai")
         payload = agent.approval_payload(
-            plan, input_artifacts={"source": source.artifact_id}, context=context
+            plan, input_artifacts={"source": source.artifact_id},
+            approval_id="approval-test-001", principal_id="university-reviewer", context=context
         )
         approval_data = json.loads(payload)
         approval = ExecutionApproval(
@@ -134,7 +135,8 @@ def test_ai_execution_rejects_replaced_input_artifact_after_planning(tmp_path):
         plan = agent.plan("process the approved input", input_artifacts={"source": original.artifact_id})
         with pytest.raises(ValidationError, match="identities"):
             agent.approval_payload(
-                plan, input_artifacts={"source": replacement.artifact_id}
+                plan, input_artifacts={"source": replacement.artifact_id},
+                approval_id="approval-test-002", principal_id="university-reviewer"
             )
     finally:
         platform.close()
