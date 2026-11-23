@@ -180,3 +180,9 @@ __all__ += [
     "register_scientific_domains", "seed_domain_knowledge_packages",
     "validate_scientific_domains",
 ]
+
+
+# Model-assisted planning with externally authenticated execution approval.
+from .ai import ExecutionApproval, MolecularisAI
+
+__all__ += ["ExecutionApproval", "MolecularisAI"]
