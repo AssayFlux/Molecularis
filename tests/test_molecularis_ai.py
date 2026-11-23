@@ -3,6 +3,7 @@ from __future__ import annotations
 import pytest
 
 from molecularis.ai import MolecularisAI
+from molecularis.domain_integration import validate_scientific_domains
 from molecularis.bootstrap import create_full_platform, register_all_services
 from molecularis.platform import Capability, ExecutionContext, MolecularisPlatform
 from molecularis.platform.contracts import ValidationError
@@ -24,7 +25,8 @@ def _workflow(capability_id: str, input_keys: tuple[str, ...]) -> dict:
 def test_bootstrap_registers_complete_a_to_n_runtime(tmp_path):
     platform = create_full_platform(str(tmp_path))
     try:
-        assert len(platform.registry.list()) >= 14
+        assert len(platform.registry.list()) >= 50
+        assert validate_scientific_domains(platform)["domain_count"] == 14
         assert platform.registry.get("molecular.validate.v1").service == "molecular"
         assert platform.registry.get("workflows.validate.v1").service == "workflows"
     finally:
