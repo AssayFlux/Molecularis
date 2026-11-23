@@ -16,6 +16,7 @@ from .phylogeny_service import register_phylogeny_service
 from .pharmacogenomics_service import register_pharmacogenomics_service
 from .cohorts_service import register_cohorts_service
 from .workflows_service import register_workflows_service
+from .domain_integration import validate_scientific_domains
 
 SERVICE_REGISTRARS = (
     ("A", "molecular", register_molecular_service),
@@ -52,8 +53,10 @@ def register_all_services(platform: MolecularisPlatform) -> dict[str, int | list
             f"A–N bootstrap failed while registering {letter} ({name}); "
             f"registered services before failure: {registered}"
         ) from exc
+    integration = validate_scientific_domains(platform)
     return {
         "service_count": len(registered),
+        "domain_count": integration["domain_count"],
         "capability_count": len(platform.registry.list()),
         "services": registered,
     }
