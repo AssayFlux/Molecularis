@@ -62,7 +62,8 @@ P1 and P2 were implemented on the owner's explicit requests while these P0 tasks
 - [ ] Obtain independent scientific review/reference replication for cross-domain conversions.
 - [ ] Add domain-semantic adapters and independently reviewed reference fixtures for every cross-domain pair required by approved research workflows. The 182-pair synthetic matrix covers transport/provenance only.
 
-**P3 engineering gate: PASSED.** GitHub Actions [run #45086735252](https://github.com/AssayFlux/Molecularis/actions/runs/45086735252) on tested commit `c71d05aaec26d93915e03e54d3e8227865fa0ad7`: core 810 passed/12 skipped; Genomics 811/11; Chemistry 818/4; Sequence 813/9 (4 existing warnings); 68 schemas validated; Ruff error/F checks and compilation passed. Engineering tests establish software behavior and provenance contracts, not scientific truth. Scientific knowledge population/review and P0 platform safety, integration and recovery remain open.
+**P3 engineering gate: PASSED.** GitHub Actions [run #45088241792](https://github.com/AssayFlux/Molecularis/actions/runs/45088241792) on exact tested commit `2c9ae812ec7ecf213ca8fbc4303132e5e34b43a3`: core 817 passed/12 skipped; Genomics 818/11; Chemistry 825/4; Sequence 820/9 (4 existing warnings); 69 JSON schemas validated; SPDX 2.3 inventory generated for 43 installed Python distributions; Ruff, compilation and benchmark smoke steps passed. The 182-pair synthetic matrix establishes transport/provenance contracts only, not scientific semantic conversion. Source-backed knowledge population and independent scientific acceptance remain open.
+
 
 ## P4 — Agentics orchestration maturity
 
