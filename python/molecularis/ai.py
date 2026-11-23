@@ -129,12 +129,16 @@ class MolecularisAI:
 
     def approval_payload(
         self, plan: AIPlan | str, *, input_artifacts: Mapping[str, str],
-        context: ExecutionContext | None = None,
+        approval_id: str, principal_id: str, context: ExecutionContext | None = None,
     ) -> bytes:
         """Canonical bytes an external identity/approval service must sign."""
         artifact_id = plan.artifact_id if isinstance(plan, AIPlan) else plan
         if not isinstance(artifact_id, str) or not artifact_id:
             raise ValidationError("plan must be an AIPlan or workflow artifact ID")
+        if not isinstance(approval_id, str) or not approval_id.strip() or len(approval_id) > 256:
+            raise ValidationError("approval_id must be non-empty bounded text")
+        if not isinstance(principal_id, str) or not principal_id.strip() or len(principal_id) > 256:
+            raise ValidationError("principal_id must be non-empty bounded text")
         workflow = load_workflow(self.platform, artifact_id, budget=self.budget)
         supplied = dict(input_artifacts)
         if set(supplied) != set(workflow.input_keys):
@@ -150,6 +154,8 @@ class MolecularisAI:
         payload = {
             "schema": "molecularis.execution-approval.v1",
             "approval_scope": "single-execution",
+            "approval_id": approval_id,
+            "principal_id": principal_id,
             "plan_artifact_id": artifact_id,
             "workflow_sha256": workflow.sha256,
             "input_artifact_ids": sorted(supplied.values()),
@@ -196,7 +202,10 @@ class MolecularisAI:
         artifact_id = plan.artifact_id if isinstance(plan, AIPlan) else plan
         if approval.plan_artifact_id != artifact_id:
             raise ValidationError("approval is bound to a different plan artifact")
-        payload = self.approval_payload(plan, input_artifacts=input_artifacts, context=context)
+        payload = self.approval_payload(
+            plan, input_artifacts=input_artifacts, approval_id=approval.approval_id,
+            principal_id=approval.principal_id, context=context,
+        )
         parsed = json.loads(payload)
         expected_inputs = tuple(parsed["input_artifact_ids"])
         if approval.input_artifact_ids != expected_inputs:
