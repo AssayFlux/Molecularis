@@ -17,7 +17,7 @@ The [Agentics Molecularis Master Plan](AGENTICS_MOLECULARIS_MASTER_PLAN.md) is t
 - [ ] Integrate institutional identity/signature verification and atomic one-use approval consumption.
 - [x] Implement verified catalog/object backup and restore with non-overwrite semantics and corruption checks; verified in [CI #44909367708](https://github.com/AssayFlux/Molecularis/actions/runs/44909367708) (core 758 passed/12 skipped; optional Chemistry 766/4, Genomics 759/11, Sequence 761/9 with 4 existing warnings).
 - [ ] Add filesystem crash-boundary fault injection, restore drills, encryption/signing and a reviewed corruption-recovery matrix.
-- [ ] Publish a reviewed platform acceptance report with exact supported and unsupported operating conditions.
+- [x] Generate SPDX 2.3 inventory of installed Python distributions and observed dependency edges as a CI artifact.\n- [ ] Add resolved package hashes, publisher attestations, OS/native binary SBOM, vulnerability scanning and reviewed license report.\n- [ ] Publish a reviewed platform acceptance report with exact supported and unsupported operating conditions.
 
 **P0 gate:** repository truth is reconciled; representative cross-service workflows preserve typed meaning and provenance; security, isolation, recovery and failure behavior have reproducible evidence or explicitly accepted blockers. Do not start P1 until this gate passes.
 
