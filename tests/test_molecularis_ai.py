@@ -140,3 +140,59 @@ def test_ai_execution_rejects_replaced_input_artifact_after_planning(tmp_path):
             )
     finally:
         platform.close()
+
+
+
+def test_ai_execution_rejects_unverified_or_stale_approval(tmp_path):
+    platform = MolecularisPlatform(tmp_path)
+    platform.start()
+    platform.register(Capability("test.echo.v1", "1", "molecular", "echo", "input", "output"))
+    platform.bind("test.echo.v1", lambda inputs, parameters, context: {"ok": True})
+    source = platform.ingest(b"synthetic", media_type="text/plain", schema_id="test.input")
+    agent = MolecularisAI(
+        platform,
+        lambda request, catalog, available: _workflow("test.echo.v1", tuple(available)),
+    )
+    try:
+        plan = agent.plan("run safely", input_artifacts={"source": source.artifact_id})
+        context = ExecutionContext(service_id="molecularis-ai")
+        payload = agent.approval_payload(
+            plan, input_artifacts={"source": source.artifact_id},
+            approval_id="nonce-001", principal_id="reviewer-A", context=context,
+        )
+        data = json.loads(payload)
+        approval = ExecutionApproval(
+            approval_id="nonce-001", principal_id="reviewer-A",
+            plan_artifact_id=plan.artifact_id,
+            input_artifact_ids=tuple(data["input_artifact_ids"]),
+            capability_catalog_sha256=data["capability_catalog_sha256"],
+            budget_sha256=data["budget_sha256"], policy_sha256=data["policy_sha256"],
+            signature="not-a-valid-signature",
+        )
+        with pytest.raises(ValidationError, match="authentication"):
+            agent.execute(
+                plan, input_artifacts={"source": source.artifact_id},
+                approval=approval, approval_verifier=lambda payload, signature, principal: False,
+                context=context,
+            )
+
+        platform.register(Capability("test.extra.v1", "1", "molecular", "extra", "input", "output"))
+        with pytest.raises(ValidationError, match="catalog fingerprint"):
+            agent.execute(
+                plan, input_artifacts={"source": source.artifact_id},
+                approval=approval, approval_verifier=lambda payload, signature, principal: True,
+                context=context,
+            )
+
+        changed_nonce = agent.approval_payload(
+            plan, input_artifacts={"source": source.artifact_id},
+            approval_id="nonce-002", principal_id="reviewer-A", context=context,
+        )
+        changed_principal = agent.approval_payload(
+            plan, input_artifacts={"source": source.artifact_id},
+            approval_id="nonce-001", principal_id="reviewer-B", context=context,
+        )
+        assert changed_nonce != payload
+        assert changed_principal != payload
+    finally:
+        platform.close()
