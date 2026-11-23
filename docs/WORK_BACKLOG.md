@@ -48,13 +48,17 @@ P1 and P2 were implemented on the owner's explicit requests while these P0 tasks
 
 ## P3 — A–N knowledge-to-construction integration
 
-- [ ] Map each A–N service to shared contracts while preserving domain-owned engines, laws, algorithms and Rulebooks.
-- [ ] Add service-specific construction, evaluation and verification methods only where scientifically justified.
-- [ ] Add known, edge, negative, constructed and out-of-domain fixtures.
-- [ ] Demonstrate typed cross-service handoffs and continuous provenance.
-- [ ] Label observations, established facts, derivations, inferences, predictions, simulations, constructions, hypotheses and validations distinctly.
+- [x] Add a single-runtime bootstrap for all fourteen existing native domain services and their capability registrations.
+- [x] Add a machine-readable A–N catalog: domain ownership, native Rulebook, accepted artifact schemas/media types, capability contracts, scope and non-claims.
+- [x] Add immutable, assertion-free framework KnowledgePackages for A–N; factual content remains gated on source/license/permission review.
+- [x] Add explicit, caller-owned typed handoffs with target schema/media validation, transformation/version, assumptions, evidence class, passed-verification record and source/verifier/evidence artifact lineage.
+- [x] Add positive sequence→protein and DNA/RNA→sequence handoff tests; reject failed verification, unknown schemas and duplicate bootstrap.
+- [x] Preserve existing domain-specific algorithms, schemas, Rulebooks, service tests and scientific limitations.
+- [ ] Populate domain knowledge packages with reviewed, source-attributed facts, equations and mechanisms.
+- [ ] Obtain independent scientific review/reference replication for cross-domain conversions.
+- [ ] Add verified integration fixtures for every cross-domain pair that approved workflows require.
 
-**P3 gate:** every service demonstrates the lifecycle stages it claims to support; cross-domain workflows preserve scientific meaning and lineage.
+**P3 engineering gate:** implementation complete pending exact-commit CI. Engineering tests establish software behavior and provenance contracts, not scientific truth. Scientific knowledge population/review and P0 platform safety, integration and recovery remain open.
 
 ## P4 — Agentics orchestration maturity
 
