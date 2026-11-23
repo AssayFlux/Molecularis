@@ -59,6 +59,7 @@ This evidence does not prove the new knowledge-to-construction architecture is i
 - [x] Seed fourteen immutable domain framework packages in the P1 Knowledge Engine. These are deliberately assertion-free manifests; no scientific laws or facts are fabricated.
 - [x] Add explicit typed cross-domain handoff envelopes. Conversion is caller-owned, schema/media types are checked, source and verifier artifacts remain lineage parents, and assumptions/transformation/version/evidence class are recorded.
 - [x] Add positive sequence→protein and DNA/RNA→sequence handoff fixtures, plus failed-verification, schema-mismatch and duplicate-registration tests.
+- [x] Add synthetic typed-envelope contract tests for all 182 ordered A–N domain pairs; these validate schema/media ownership and source/verifier/evidence lineage only, not scientific conversion.
 - [x] Retain each domain's existing native Rulebook, algorithm, schema, tests and limitations rather than replacing them with generic behavior.
 - [ ] Populate each domain knowledge package with curated, source-attributed scientific facts, equations and mechanisms after source/license/permission review.
 - [ ] Complete independent university/domain-expert review and reference comparisons for cross-domain scientific transformations.
