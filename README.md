@@ -243,7 +243,7 @@ The P3 integration layer is implemented in `python/molecularis/domain_integratio
 
 Cross-domain handoffs are explicit and typed: the caller supplies the converted target representation, declared transformation/version and assumptions; Molecularis validates the target domain schema/media type and requires a passed verification artifact with evidence references. Source, verifier and cited evidence artifacts remain in the target artifact's lineage. Native target-service metadata is preserved so the target service loader can validate its own artifact.
 
-Engineering fixtures cover sequence→protein and DNA/RNA→sequence handoffs, plus rejection of failed verification and mismatched schemas. These fixtures establish software contracts, not scientific validity. Domain knowledge packages intentionally contain zero scientific assertions until source/license/permission review and scientific curation are completed. P0 platform safety, integration and recovery and independent university scientific review remain open.
+Engineering fixtures cover sequence→protein and DNA/RNA→sequence handoffs, plus rejection of failed verification and mismatched schemas. P3 engineering CI passed: [run #45086320810](https://github.com/AssayFlux/Molecularis/actions/runs/45086320810) — core 810 passed/12 skipped; Genomics 811/11; Chemistry 818/4; Sequence 813/9 (4 existing warnings); 68 schemas validated. These fixtures establish software contracts, not scientific validity. Domain knowledge packages intentionally contain zero scientific assertions until source/license/permission review and scientific curation are completed. P0 platform safety, integration and recovery and independent university scientific review remain open.
 
 - [P3 integration implementation](python/molecularis/domain_integration.py)
 - [P3 integration tests](tests/test_domain_integration.py)
@@ -413,16 +413,16 @@ Lifecycle management and bounded execution in the local reference platform.
 </tr>
 </table>
 
-**Current engineering position:** A–N service engineering is recorded complete. Platform-wide integration, recovery/security acceptance and independent university scientific/privacy review remain open. Agentics currently has its initial planner and approval-gated workflow foundation; the shared Scientific Knowledge Engine and general construction/verifier system are roadmap work, not implemented capabilities.
+**Current engineering position:** P1 Scientific Knowledge Engine and P2 shared reasoning/construction foundations are implemented; P3 A–N service registration, domain manifests and typed provenance-bound handoffs have passed engineering CI. Platform-wide P0 safety, integration, recovery/security acceptance and independent university scientific/privacy review remain open. Agentics currently has its initial planner and approval-gated workflow foundation; full orchestration maturity and governed model training remain future phases.
 
-**Latest observed CI:** [GitHub Actions run #44901363429](https://github.com/AssayFlux/Molecularis/actions/runs/44901363429) completed successfully on commit `2b6eced852fb049a81f6b087bb94e5e946047750`. This is engineering evidence, not independent scientific validation.
+**Latest P3 integration CI:** [GitHub Actions run #45086320810](https://github.com/AssayFlux/Molecularis/actions/runs/45086320810) completed successfully on exact integration commit `9ccb625a4ac9e07af61d54d2a3e02be86f56f6ee`. This is engineering evidence, not independent scientific validation.
 
 ### Explicit non-claims
 
 | Area | Current position |
 |---|---|
 | Scientific correctness | Requires independent domain validation. |
-| Cross-service integration | Full real scientific chains still need demonstration. |
+| Cross-service integration | Two typed handoff fixtures pass; broader scientific chains and independent validation remain open. |
 | Agentics provider | No configured hosted provider is included. |
 | Production deployment | Local reference runtime; not certified as distributed production infrastructure. |
 | Clinical use | No diagnostic or treatment capability is claimed. |
