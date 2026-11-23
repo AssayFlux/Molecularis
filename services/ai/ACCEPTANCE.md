@@ -52,14 +52,17 @@ This evidence does not prove the new knowledge-to-construction architecture is i
 
 ## P3 — A–N Knowledge-to-Construction integration
 
-- [ ] Service-specific knowledge packages and governing principles.
-- [ ] Construction/evaluation interfaces adapted to existing service engines.
-- [ ] Domain Rulebooks and independent checks.
-- [ ] Known, edge, negative, constructed and out-of-domain test cases.
-- [ ] Cross-service typed artifact handoff and provenance continuity.
-- [ ] Evidence and epistemic labels on all scientific outputs.
+- [x] Register all fourteen existing domain-owned services and their native capabilities on one shared Core/MSDE runtime.
+- [x] Publish an A–N integration catalog with native Rulebook IDs, artifact schema identities, capability contracts, scope and explicit non-claims.
+- [x] Seed fourteen immutable domain framework packages in the P1 Knowledge Engine. These are deliberately assertion-free manifests; no scientific laws or facts are fabricated.
+- [x] Add explicit typed cross-domain handoff envelopes. Conversion is caller-owned, schema/media types are checked, source and verifier artifacts remain lineage parents, and assumptions/transformation/version/evidence class are recorded.
+- [x] Add positive sequence→protein and DNA/RNA→sequence handoff fixtures, plus failed-verification, schema-mismatch and duplicate-registration tests.
+- [x] Retain each domain's existing native Rulebook, algorithm, schema, tests and limitations rather than replacing them with generic behavior.
+- [ ] Populate each domain knowledge package with curated, source-attributed scientific facts, equations and mechanisms after source/license/permission review.
+- [ ] Complete independent university/domain-expert review and reference comparisons for cross-domain scientific transformations.
+- [ ] Extend verified handoff coverage to every domain pair required by approved research workflows.
 
-**Gate:** each service demonstrates its own lifecycle; cross-domain workflows pass engineering and applicable scientific review gates.
+**P3 engineering gate:** implementation is present; final CI must pass on the exact integration commit. Engineering fixtures establish software contracts and lineage only. Scientific knowledge population, independent scientific acceptance and P0 platform safety/integration/recovery remain separate open gates.
 
 ## P4 — Agentics orchestration maturity
 
