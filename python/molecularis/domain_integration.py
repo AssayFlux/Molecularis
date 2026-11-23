@@ -235,13 +235,15 @@ def create_domain_handoff(
         raise ValidationError("target_domain must identify one of A–N")
     source = platform.store.get(source_artifact_id)
     source_profile = _PROFILE_BY_SCHEMA.get(source.schema_id)
-    if source_profile is None:
-        raise ValidationError("source artifact schema is not owned by an integrated domain",
-                              details={"schema_id": source.schema_id})
+    if source_profile is None or (source.schema_id, source.media_type) not in zip(
+        source_profile.artifact_schema_ids, source_profile.artifact_media_types
+    ):
+        raise ValidationError("source artifact schema/media type is not owned by an integrated domain",
+                              details={"schema_id": source.schema_id, "media_type": source.media_type})
     if source_profile.service == target.service:
         raise ValidationError("domain handoff must cross distinct scientific domains")
-    if target_schema_id not in target.artifact_schema_ids or target_media_type not in target.artifact_media_types:
-        raise ValidationError("target schema/media type is not registered for the target domain",
+    if (target_schema_id, target_media_type) not in zip(target.artifact_schema_ids, target.artifact_media_types):
+        raise ValidationError("target schema/media type pair is not registered for the target domain",
                               details={"target_domain": target.service})
     for name, value in (("transformation_id", transformation_id),
                         ("transformation_version", transformation_version)):
@@ -256,6 +258,8 @@ def create_domain_handoff(
     except (TypeError, ValueError) as exc:
         raise ValidationError("evidence_class is not a supported epistemic label") from exc
     verification = platform.store.get(verification_artifact_id)
+    if verification.schema_id != "molecularis.verification-report.v1":
+        raise ValidationError("verification artifact must use molecularis.verification-report.v1")
     verification_meta = verification.metadata
     verifier = verification_meta.get("verifier_id")
     method = verification_meta.get("verification_method")
@@ -263,8 +267,8 @@ def create_domain_handoff(
     evidence_refs = verification_meta.get("evidence_refs")
     if status != "passed" or not isinstance(verifier, str) or not verifier.strip() or not isinstance(method, str) or not method.strip():
         raise ValidationError("handoff requires a passed verification artifact with verifier identity and method")
-    if not isinstance(evidence_refs, list) or not evidence_refs:
-        raise ValidationError("verification artifact must cite evidence_refs")
+    if not isinstance(evidence_refs, list) or not 1 <= len(evidence_refs) <= 256 or len(set(evidence_refs)) != len(evidence_refs):
+        raise ValidationError("verification artifact must cite 1..256 unique evidence_refs")
     parents = [source_artifact_id, verification_artifact_id]
     for reference in evidence_refs:
         if not isinstance(reference, str) or not reference.strip():
