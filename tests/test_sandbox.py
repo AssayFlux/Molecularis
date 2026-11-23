@@ -4,7 +4,7 @@ import subprocess
 
 import pytest
 
-from molecularis.platform.contracts import ResourceLimitError, ValidationError
+from molecularis.platform.contracts import ValidationError
 from molecularis.sandbox import OCIContainerRunner, SandboxPolicy
 
 
