@@ -151,6 +151,7 @@ def test_domain_handoff_rejects_unverified_or_mismatched_conversion(tmp_path):
             evidence_class="constructed",
             assumptions=("test assumption",),
             verification_artifact_id=bad_verification.artifact_id,
+            target_metadata={"identifier": "x", "protein_sha256": "0" * 64, "length": 1, "sequence_sha256": "0" * 64},
         )
         with pytest.raises(ValidationError, match="passed verification"):
             create_domain_handoff(platform, **common)
