@@ -17,9 +17,11 @@ This evidence does not prove the new knowledge-to-construction architecture is i
 ## P0 — Repository truth, safety and reliability
 
 - [ ] Reconcile docs, code, branch and CI.
-- [ ] Threat model, trust boundaries, privacy and egress policy.
-- [ ] OS-level sandbox, resource isolation and process-tree termination.
-- [ ] Failure, cancellation, timeout and partial-run evidence.
+- [ ] Threat model, trust boundaries, privacy and enforceable data-egress policy reviewed by the institution.
+- [x] Add opt-in OCI sandbox command builder/runner for digest-pinned images with network disabled, read-only root, dropped capabilities, no-new-privileges, non-root UID/GID and bounded CPU/memory/PIDs/tmpfs/time; unit tests validate restrictive invocation.
+- [ ] Integrate OCI sandbox into approved tool capabilities; test with real rootless Docker/Podman, enforce output-volume quotas and prove process-tree termination/failure recovery.
+- [x] Replace Boolean Agentics approval with a canonical signed-approval envelope bound to principal, one-execution nonce, exact plan/inputs, capability catalog, policy and resource budget; require an external verifier callback.
+- [ ] Integrate institutional identity, cryptographic key management, authorization roles and atomic one-use nonce consumption.
 - [ ] Artifact backup/restore, corruption and crash-boundary tests.
 - [ ] Reproducibility and documentation baseline.
 
