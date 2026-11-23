@@ -14,7 +14,7 @@ from molecularis.domain_integration import (
 from molecularis.knowledge import EvidenceClass, ScientificKnowledgeEngine
 from molecularis.platform import MolecularisPlatform
 from molecularis.platform.contracts import ValidationError
-from molecularis.protein_service import (
+from molecularis.dna_rna_service import NucleicAcidDocument, ingest_nucleic_acid\nfrom molecularis.sequence_service import SEQUENCE_MEDIA_TYPE, SEQUENCE_SCHEMA_ID, SequenceDocument, ingest_sequence, load_sequence\nfrom molecularis.protein_service import (
     PROTEIN_MEDIA_TYPE,
     PROTEIN_SCHEMA_ID,
     ProteinDocument,
@@ -150,5 +150,52 @@ def test_domain_handoff_rejects_unverified_or_mismatched_conversion(tmp_path):
             create_domain_handoff(platform, **common)
         with pytest.raises(ValidationError, match="not registered"):
             create_domain_handoff(platform, **{**common, "target_schema_id": "unrelated.schema.v1"})
+    finally:
+        platform.close()
+
+
+def test_dna_rna_to_sequence_handoff_preserves_nucleotide_semantics(tmp_path):
+    platform = MolecularisPlatform(tmp_path)
+    platform.start()
+    try:
+        register_scientific_domains(platform)
+        nucleic_acid = NucleicAcidDocument("dna-record", "ATGGCT", "DNA")
+        source = ingest_nucleic_acid(platform, nucleic_acid)
+        sequence = SequenceDocument("sequence-record", "ATGGCT", "DNA")
+        verification = platform.ingest(
+            b'{"status":"passed"}',
+            media_type="application/vnd.molecularis.verification-report+json",
+            schema_id="molecularis.verification-report.v1",
+            metadata={
+                "verification_status": "passed",
+                "verifier_id": "nucleotide-adapter-verifier",
+                "verification_method": "exact-normalized-sequence-equality-v1",
+                "evidence_refs": [source.artifact_id],
+            },
+        )
+        target = create_domain_handoff(
+            platform,
+            source_artifact_id=source.artifact_id,
+            target_domain="B",
+            target_payload=sequence.to_dict(),
+            target_schema_id=SEQUENCE_SCHEMA_ID,
+            target_media_type=SEQUENCE_MEDIA_TYPE,
+            transformation_id="dna-rna-to-sequence-normalization",
+            transformation_version="1.0.0",
+            evidence_class=EvidenceClass.DERIVED,
+            assumptions=("The source is a single-strand DNA record; no strand inference is performed.",),
+            verification_artifact_id=verification.artifact_id,
+            target_metadata={
+                "identifier": sequence.identifier,
+                "sequence_type": sequence.sequence_type,
+                "length": len(sequence.sequence),
+                "sequence_sha256": sequence.sha256,
+            },
+        )
+        assert load_sequence(platform, target.artifact_id) == sequence
+        assert source.artifact_id in target.parents
+        assert verification.artifact_id in target.parents
+        assert target.metadata["domain_handoff"]["source_domain"] == "dna-rna"
+        assert target.metadata["domain_handoff"]["target_domain"] == "sequence"
     finally:
         platform.close()
