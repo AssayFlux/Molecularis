@@ -56,6 +56,7 @@ P1 and P2 were implemented on the owner's explicit requests while these P0 tasks
 - [x] Add immutable, assertion-free framework KnowledgePackages for A–N; factual content remains gated on source/license/permission review.
 - [x] Add explicit, caller-owned typed handoffs with target schema/media validation, transformation/version, assumptions, evidence class, passed-verification record and source/verifier/evidence artifact lineage.
 - [x] Add positive sequence→protein and DNA/RNA→sequence handoff tests; reject failed verification, unknown schemas and duplicate bootstrap.
+- [x] Add a synthetic contract-only test matrix for all 182 ordered A–N handoff pairs.
 - [x] Preserve existing domain-specific algorithms, schemas, Rulebooks, service tests and scientific limitations.
 - [ ] Populate domain knowledge packages with reviewed, source-attributed facts, equations and mechanisms.
 - [ ] Obtain independent scientific review/reference replication for cross-domain conversions.
