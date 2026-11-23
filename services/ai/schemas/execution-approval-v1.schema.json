@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://molecularis.dev/schemas/execution-approval-v1.schema.json",
+  "title": "Molecularis externally authenticated execution approval v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "approval_id",
+    "principal_id",
+    "plan_artifact_id",
+    "input_artifact_ids",
+    "capability_catalog_sha256",
+    "budget_sha256",
+    "policy_sha256",
+    "signature"
+  ],
+  "properties": {
+    "approval_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "principal_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "plan_artifact_id": {
+      "type": "string",
+      "pattern": "^art_[A-Za-z0-9_-]+$"
+    },
+    "input_artifact_ids": {
+      "type": "array",
+      "maxItems": 256,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^art_[A-Za-z0-9_-]+$"
+      }
+    },
+    "capability_catalog_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "budget_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "policy_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "signature": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 8192
+    }
+  }
+}
