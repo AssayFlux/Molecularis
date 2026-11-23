@@ -1,8 +1,8 @@
 # P0 Platform Trust, Safety and Reliability Audit
 
-**Snapshot:** 2026-11-21, branch `CORE`  
+**Snapshot:** 2026-11-23, branch `CORE`  
 **Scope:** repository inventory, dependency declarations, current execution/data trust boundaries, recovery baseline and P0 residual risk.  
-**Status:** baseline audit prepared; P0 is **not passed**. This document records repository evidence and actionable limits, not a security certification.
+**Status:** baseline audit extended with scope-bound signed approval contracts; P0 remains **not passed** pending external identity, OS isolation, enforceable egress, resolved SBOM, institutional review and recovery operations. This document records repository evidence and actionable limits, not a security certification.
 
 ## Executive result
 
@@ -130,7 +130,7 @@ The following code changes are included in this P0 step and were verified by [CI
 
 These additions do **not** provide backup encryption/signing, OS sandboxing, hard cancellation, distributed recovery or security certification.
 
-## 7. Operating rules until P0 passes
+## 7. P0 hardening additions — 2026-11-23\n\nThe Agentics execution API no longer accepts a Boolean `approved=True` as authorization. It now requires an `ExecutionApproval` envelope and a caller-supplied external `approval_verifier`. The canonical bytes returned by `MolecularisAI.approval_payload` bind: one-execution scope, unique approval ID, principal ID, exact workflow artifact and hash, sorted input artifact IDs, current capability catalog fingerprint, execution budget fingerprint, execution policy fingerprint and execution-context parameters. The approval envelope has a JSON Schema. The verifier must authenticate the principal, verify a signature over these exact bytes and atomically consume the approval ID to prevent replay. Core cannot authenticate institutional users or guarantee one-use semantics without that external verifier; tests use a synthetic verifier only.\n\nThis closes the prior application-level Boolean approval weakness at the API contract level. It does not implement institutional identity, key management, cryptographic signing, role-based access control, or an OS sandbox.\n\n## 8. Operating rules until P0 passes
 
 - Run only reviewed repository handlers in a controlled local environment.
 - Do not execute model-generated code, arbitrary scripts, shell strings or unreviewed plugin/tool binaries.
@@ -141,11 +141,11 @@ These additions do **not** provide backup encryption/signing, OS sandboxing, har
 - Preserve source artifacts and provenance; never auto-delete orphans based only on an audit report.
 - Treat passing CI as engineering evidence only, not scientific validation or operational certification.
 
-## 8. P0 exit checklist
+## 9. P0 exit checklist
 
 - [ ] Repository/dependency inventory reviewed by maintainers; exact deployed package versions, licenses and data permissions recorded.
 - [ ] Representative A–N cross-service artifact handoffs tested with typed contracts and continuous provenance.
-- [ ] Approval bound to principal, exact plan, inputs, knowledge/tool versions, data-egress policy and resource envelope.
+- [x] Core approval payload binds principal, nonce, exact plan, inputs, capability catalog, policy and resource budget.\n- [ ] External identity provider, signature verification and atomic replay prevention are integrated and adversarially tested.
 - [ ] Threat model and data classification reviewed by the institution.
 - [ ] Enforceable data-egress policy and secret handling implemented for every external adapter.
 - [ ] OS-level isolation, resource quotas, process termination and filesystem/network policy implemented and adversarially tested.
