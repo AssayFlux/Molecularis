@@ -21,7 +21,7 @@ The [Agentics Molecularis Master Plan](AGENTICS_MOLECULARIS_MASTER_PLAN.md) is t
 
 **P0 gate:** repository truth is reconciled; representative cross-service workflows preserve typed meaning and provenance; security, isolation, recovery and failure behavior have reproducible evidence or explicitly accepted blockers. Do not start P1 until this gate passes.
 
-P1 and P2 were implemented on the owner's explicit requests while these P0 tasks remain open. This records engineering work only and does not waive the P0 gate: no P3/P4 progression or model training until the P0 blockers are resolved or formally accepted. P2 implementation does not authorize production deployment.\n\nSee [P0 Platform Trust, Safety and Reliability Audit](P0_PLATFORM_AUDIT.md) for the evidence-backed baseline, threat model, data classifications, dependency inventory and exact P0 residual gates.
+P1, P2 and the P3 A–N integration implementation were delivered on the owner's explicit requests while P0 tasks remain open. This records engineering implementation only and does not waive the P0 gate. P4 orchestration expansion, model training, production deployment and restricted-data processing remain blocked until the applicable P0 controls are integrated, tested and formally accepted by the institution.\n\nSee [P0 Platform Trust, Safety and Reliability Audit](P0_PLATFORM_AUDIT.md) for the evidence-backed baseline, threat model, data classifications, dependency inventory and exact P0 residual gates.
 
 ## P1 — Universal Scientific Knowledge Engine
 
