@@ -58,7 +58,7 @@ P1 and P2 were implemented on the owner's explicit requests while these P0 tasks
 - [ ] Obtain independent scientific review/reference replication for cross-domain conversions.
 - [ ] Add verified integration fixtures for every cross-domain pair that approved workflows require.
 
-**P3 engineering gate: PASSED.** GitHub Actions [run #45086320810](https://github.com/AssayFlux/Molecularis/actions/runs/45086320810) on tested commit `9ccb625a4ac9e07af61d54d2a3e02be86f56f6ee`: core 810 passed/12 skipped; Genomics 811/11; Chemistry 818/4; Sequence 813/9 (4 existing warnings); 68 schemas validated; Ruff error/F checks and compilation passed. Engineering tests establish software behavior and provenance contracts, not scientific truth. Scientific knowledge population/review and P0 platform safety, integration and recovery remain open.
+**P3 engineering gate: PASSED.** GitHub Actions [run #45086735252](https://github.com/AssayFlux/Molecularis/actions/runs/45086735252) on tested commit `c71d05aaec26d93915e03e54d3e8227865fa0ad7`: core 810 passed/12 skipped; Genomics 811/11; Chemistry 818/4; Sequence 813/9 (4 existing warnings); 68 schemas validated; Ruff error/F checks and compilation passed. Engineering tests establish software behavior and provenance contracts, not scientific truth. Scientific knowledge population/review and P0 platform safety, integration and recovery remain open.
 
 ## P4 — Agentics orchestration maturity
 
