@@ -38,3 +38,8 @@ This policy is not a security certification, response-time guarantee or authoriz
 - Retrieval/index updates, curated knowledge changes, Rulebook changes and model-weight training are distinct operations with separate authorization and provenance.
 
 These controls describe required safeguards; they do not claim that OS-level sandboxing, provider isolation or a complete threat model is already implemented.
+
+
+## Execution approval contract (P0)
+
+The legacy Boolean approval flag is not an authorization mechanism and is not accepted by the Agentics execution API. Integrations must obtain an `ExecutionApproval` from an institutional identity/approval service, sign the exact canonical bytes returned by `MolecularisAI.approval_payload`, and provide a verifier that authenticates the principal, validates the signature and atomically consumes the approval ID. The signed payload binds the exact workflow, inputs, active capability catalog, policy and resource budget. A local test verifier is not suitable for production. Until an institutional verifier and process isolation are deployed, execute only reviewed handlers with synthetic/public data in a controlled local environment.
