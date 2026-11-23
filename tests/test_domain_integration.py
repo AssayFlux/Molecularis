@@ -11,17 +11,23 @@ from molecularis.domain_integration import (
     seed_domain_knowledge_packages,
     validate_scientific_domains,
 )
+from molecularis.dna_rna_service import NucleicAcidDocument, ingest_nucleic_acid
 from molecularis.knowledge import EvidenceClass, ScientificKnowledgeEngine
 from molecularis.platform import MolecularisPlatform
 from molecularis.platform.contracts import ValidationError
-from molecularis.dna_rna_service import NucleicAcidDocument, ingest_nucleic_acid\nfrom molecularis.sequence_service import SEQUENCE_MEDIA_TYPE, SEQUENCE_SCHEMA_ID, SequenceDocument, ingest_sequence, load_sequence\nfrom molecularis.protein_service import (
+from molecularis.protein_service import (
     PROTEIN_MEDIA_TYPE,
     PROTEIN_SCHEMA_ID,
     ProteinDocument,
     load_protein,
 )
-from molecularis.sequence_service import SequenceDocument, ingest_sequence
-
+from molecularis.sequence_service import (
+    SEQUENCE_MEDIA_TYPE,
+    SEQUENCE_SCHEMA_ID,
+    SequenceDocument,
+    ingest_sequence,
+    load_sequence,
+)
 
 def test_all_fourteen_native_domain_services_register_on_one_platform(tmp_path):
     platform = MolecularisPlatform(tmp_path)
