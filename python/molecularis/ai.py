@@ -25,6 +25,21 @@ _MAX_REQUEST_BYTES = 32_768
 # A planner receives only the user request, active capability contracts and
 # caller-supplied input artifact references. Provider SDKs stay outside Core.
 Planner = Callable[[str, list[dict[str, Any]], dict[str, str]], Mapping[str, Any]]
+ApprovalVerifier = Callable[[bytes, str, str], bool]
+
+
+@dataclass(frozen=True, slots=True)
+class ExecutionApproval:
+    """Externally authenticated approval bound to exact plan, inputs and runtime policy."""
+
+    approval_id: str
+    principal_id: str
+    plan_artifact_id: str
+    input_artifact_ids: tuple[str, ...]
+    capability_catalog_sha256: str
+    budget_sha256: str
+    policy_sha256: str
+    signature: str
 
 
 @dataclass(frozen=True, slots=True)
@@ -43,6 +58,7 @@ class MolecularisAI:
         self, platform: MolecularisPlatform, planner: Planner, *,
         planner_id: str = "external-model-adapter", budget: Budget | None = None,
         max_operations: int = 50,
+        execution_policy_id: str = "local-reviewed-handlers-no-egress",
     ) -> None:
         if not callable(planner):
             raise TypeError("planner must be a callable model adapter")
@@ -57,6 +73,9 @@ class MolecularisAI:
         self.planner_id = planner_id
         self.budget = budget or Budget()
         self.max_operations = max_operations
+        if not isinstance(execution_policy_id, str) or not execution_policy_id.strip() or len(execution_policy_id) > 256:
+            raise ValueError("execution_policy_id must be non-empty bounded text")
+        self.execution_policy_id = execution_policy_id
 
     def capability_catalog(self) -> list[dict[str, Any]]:
         """Return the active executable surface; never infer tools from prose."""
@@ -108,19 +127,92 @@ class MolecularisAI:
         )
         return AIPlan(artifact.artifact_id, workflow, report, request_digest, self.planner_id)
 
+    def approval_payload(
+        self, plan: AIPlan | str, *, input_artifacts: Mapping[str, str],
+        context: ExecutionContext | None = None,
+    ) -> bytes:
+        """Canonical bytes an external identity/approval service must sign."""
+        artifact_id = plan.artifact_id if isinstance(plan, AIPlan) else plan
+        if not isinstance(artifact_id, str) or not artifact_id:
+            raise ValidationError("plan must be an AIPlan or workflow artifact ID")
+        workflow = load_workflow(self.platform, artifact_id, budget=self.budget)
+        supplied = dict(input_artifacts)
+        if set(supplied) != set(workflow.input_keys):
+            raise ValidationError("approval inputs must exactly match the validated plan")
+        plan_artifact = self.platform.store.get(artifact_id)
+        if tuple(sorted(supplied.values())) != tuple(sorted(plan_artifact.parents)):
+            raise ValidationError("approval input identities differ from the plan lineage")
+        for artifact_id_value in supplied.values():
+            self.platform.store.get(artifact_id_value)
+        execution_context = context or ExecutionContext(
+            service_id="molecularis-ai", budget=self.budget
+        )
+        payload = {
+            "schema": "molecularis.execution-approval.v1",
+            "approval_scope": "single-execution",
+            "plan_artifact_id": artifact_id,
+            "workflow_sha256": workflow.sha256,
+            "input_artifact_ids": sorted(supplied.values()),
+            "capability_catalog_sha256": hashlib.sha256(json.dumps(
+                self.capability_catalog(), sort_keys=True, separators=(",", ":"),
+                ensure_ascii=False, allow_nan=False,
+            ).encode("utf-8")).hexdigest(),
+            "budget_sha256": hashlib.sha256(json.dumps({
+                "max_bytes": execution_context.budget.max_bytes,
+                "max_candidates": execution_context.budget.max_candidates,
+                "max_results": execution_context.budget.max_results,
+                "max_wall_seconds": execution_context.budget.max_wall_seconds,
+                "chunk_bytes": execution_context.budget.chunk_bytes,
+            }, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest(),
+            "policy_sha256": hashlib.sha256(self.execution_policy_id.encode("utf-8")).hexdigest(),
+            "execution_context": {
+                "service_id": execution_context.service_id,
+                "engine_version": execution_context.engine_version,
+                "schema_version": execution_context.schema_version,
+                "rulebook_version": execution_context.rulebook_version,
+                "parameters": execution_context.parameters,
+            },
+        }
+        return json.dumps(
+            payload, sort_keys=True, separators=(",", ":"),
+            ensure_ascii=False, allow_nan=False,
+        ).encode("utf-8")
+
     def execute(
         self, plan: AIPlan | str, *, input_artifacts: Mapping[str, str],
-        approved: bool = False, context: ExecutionContext | None = None,
+        approval: ExecutionApproval | None = None,
+        approval_verifier: ApprovalVerifier | None = None,
+        context: ExecutionContext | None = None,
     ) -> dict[str, Any]:
-        """Execute only a previously validated plan after explicit approval."""
-        if approved is not True:
-            raise ValidationError("explicit approval is required before scientific execution")
-        if isinstance(plan, AIPlan):
-            artifact_id = plan.artifact_id
-        elif isinstance(plan, str):
-            artifact_id = plan
-        else:
-            raise ValidationError("plan must be an AIPlan or workflow artifact ID")
+        """Execute only with externally authenticated, scope-bound approval."""
+        if not isinstance(approval, ExecutionApproval) or not callable(approval_verifier):
+            raise ValidationError(
+                "an externally authenticated ExecutionApproval and verifier are required"
+            )
+        if any(not isinstance(value, str) or not value.strip() for value in (
+            approval.approval_id, approval.principal_id, approval.signature
+        )):
+            raise ValidationError("approval identity and signature fields must be non-empty")
+        artifact_id = plan.artifact_id if isinstance(plan, AIPlan) else plan
+        if approval.plan_artifact_id != artifact_id:
+            raise ValidationError("approval is bound to a different plan artifact")
+        payload = self.approval_payload(plan, input_artifacts=input_artifacts, context=context)
+        parsed = json.loads(payload)
+        expected_inputs = tuple(parsed["input_artifact_ids"])
+        if approval.input_artifact_ids != expected_inputs:
+            raise ValidationError("approval is bound to different input artifact identities")
+        if approval.capability_catalog_sha256 != parsed["capability_catalog_sha256"]:
+            raise ValidationError("approval capability catalog fingerprint is stale")
+        if approval.budget_sha256 != parsed["budget_sha256"]:
+            raise ValidationError("approval resource budget fingerprint is stale")
+        if approval.policy_sha256 != parsed["policy_sha256"]:
+            raise ValidationError("approval execution policy fingerprint is stale")
+        try:
+            verified = approval_verifier(payload, approval.signature, approval.principal_id)
+        except Exception as exc:
+            raise ValidationError("approval verifier rejected the approval") from exc
+        if verified is not True:
+            raise ValidationError("approval signature or principal authentication failed")
         workflow = load_workflow(self.platform, artifact_id, budget=self.budget)
         if workflow.source != "molecularis_ai":
             raise ValidationError("workflow artifact was not generated by Molecularis AI")
@@ -138,9 +230,10 @@ class MolecularisAI:
             "schema": AI_REPORT_SCHEMA, "workflow_id": workflow.workflow_id,
             "workflow_sha256": workflow.sha256, "plan_artifact_id": artifact_id,
             "planner_id": self.planner_id, "result": result, "run_id": context.run_id,
+            "approval_id": approval.approval_id, "approved_by": approval.principal_id,
             "limitations": [
                 "Model-generated plans are proposals, not scientific conclusions.",
-                "Execution requires explicit approval and registered service handlers.",
+                "Execution requires a one-use externally authenticated approval bound to this exact plan, inputs, capability catalog, resource budget and policy.",
                 "Scientific correctness and external-engine validity require independent validation.",
             ],
         }
