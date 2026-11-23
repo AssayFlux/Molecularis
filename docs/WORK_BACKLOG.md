@@ -10,8 +10,11 @@ The [Agentics Molecularis Master Plan](AGENTICS_MOLECULARIS_MASTER_PLAN.md) is t
 - [ ] Reconcile capability contracts and demonstrate real typed artifact handoff across representative services.
 - [ ] Verify provenance continuity from source artifacts through multi-service workflows and final reports.
 - [ ] Add deterministic replay, dependency invalidation, cancellation, timeout and failure-propagation evidence.
-- [ ] Complete threat model, trust boundaries, privacy classification, secret handling and data-egress policy.
-- [ ] Implement and test OS-level process isolation, resource enforcement and reliable termination before untrusted tools/models execute.
+- [ ] Complete threat model, trust boundaries, privacy classification, secret handling and enforceable data-egress policy with institutional review.
+- [x] Add an opt-in OCI runner for digest-pinned tools with network disabled, read-only root, dropped capabilities, no-new-privileges, non-root execution, bounded CPU/memory/PIDs/tmpfs/time and explicit mounts.
+- [ ] Integrate the OCI runner into approved capability execution; test against a real rootless runtime, enforce output disk quotas and verify process-tree termination.
+- [x] Replace Boolean AI approval with canonical approval payload bound to principal, nonce, plan/workflow hash, input artifacts, capability catalog, execution policy and resource budget.
+- [ ] Integrate institutional identity/signature verification and atomic one-use approval consumption.
 - [x] Implement verified catalog/object backup and restore with non-overwrite semantics and corruption checks; verified in [CI #44909367708](https://github.com/AssayFlux/Molecularis/actions/runs/44909367708) (core 758 passed/12 skipped; optional Chemistry 766/4, Genomics 759/11, Sequence 761/9 with 4 existing warnings).
 - [ ] Add filesystem crash-boundary fault injection, restore drills, encryption/signing and a reviewed corruption-recovery matrix.
 - [ ] Publish a reviewed platform acceptance report with exact supported and unsupported operating conditions.
