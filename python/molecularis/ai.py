@@ -193,7 +193,7 @@ class MolecularisAI:
         """Execute only with externally authenticated, scope-bound approval."""
         if not isinstance(approval, ExecutionApproval) or not callable(approval_verifier):
             raise ValidationError(
-                "an externally authenticated ExecutionApproval and verifier are required"
+                "an externally authenticated execution approval and verifier are required"
             )
         if any(not isinstance(value, str) or not value.strip() for value in (
             approval.approval_id, approval.principal_id, approval.signature
