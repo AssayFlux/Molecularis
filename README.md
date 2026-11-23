@@ -237,6 +237,18 @@ The P2 reasoning foundation is implemented on the current development branch. It
 
 The P2 examples exercise proposer/verifier separation in sequence and chemical-formula representation tasks. They are engineering fixtures, not evidence of chemical validity, molecular stability, experimental realizability or scientific acceptance. P2 engineering CI passed: [run #45049391363](https://github.com/AssayFlux/Molecularis/actions/runs/45049391363) — 804 passed, 12 skipped, 0 failed. P0 platform safety, integration and recovery gates remain open.
 
+## A–N scientific domain integration (P3)
+
+The P3 integration layer is implemented in `python/molecularis/domain_integration.py`. It registers all fourteen native A–N services on one Core/MSDE runtime, publishes their capability/schema/Rulebook catalog, and creates immutable assertion-free domain framework packages in the Scientific Knowledge Engine.
+
+Cross-domain handoffs are explicit and typed: the caller supplies the converted target representation, declared transformation/version and assumptions; Molecularis validates the target domain schema/media type and requires a passed verification artifact with evidence references. Source, verifier and cited evidence artifacts remain in the target artifact's lineage. Native target-service metadata is preserved so the target service loader can validate its own artifact.
+
+Engineering fixtures cover sequence→protein and DNA/RNA→sequence handoffs, plus rejection of failed verification and mismatched schemas. These fixtures establish software contracts, not scientific validity. Domain knowledge packages intentionally contain zero scientific assertions until source/license/permission review and scientific curation are completed. P0 platform safety, integration and recovery and independent university scientific review remain open.
+
+- [P3 integration implementation](python/molecularis/domain_integration.py)
+- [P3 integration tests](tests/test_domain_integration.py)
+- [P3 integration report schema](services/ai/schemas/domain-integration-report-v1.schema.json)
+
 ## Agentics Molecularis
 
 <table>
