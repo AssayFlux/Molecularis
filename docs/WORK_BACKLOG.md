@@ -60,7 +60,7 @@ P1 and P2 were implemented on the owner's explicit requests while these P0 tasks
 - [x] Preserve existing domain-specific algorithms, schemas, Rulebooks, service tests and scientific limitations.
 - [ ] Populate domain knowledge packages with reviewed, source-attributed facts, equations and mechanisms.
 - [ ] Obtain independent scientific review/reference replication for cross-domain conversions.
-- [ ] Add verified integration fixtures for every cross-domain pair that approved workflows require.
+- [ ] Add domain-semantic adapters and independently reviewed reference fixtures for every cross-domain pair required by approved research workflows. The 182-pair synthetic matrix covers transport/provenance only.
 
 **P3 engineering gate: PASSED.** GitHub Actions [run #45086735252](https://github.com/AssayFlux/Molecularis/actions/runs/45086735252) on tested commit `c71d05aaec26d93915e03e54d3e8227865fa0ad7`: core 810 passed/12 skipped; Genomics 811/11; Chemistry 818/4; Sequence 813/9 (4 existing warnings); 68 schemas validated; Ruff error/F checks and compilation passed. Engineering tests establish software behavior and provenance contracts, not scientific truth. Scientific knowledge population/review and P0 platform safety, integration and recovery remain open.
 
