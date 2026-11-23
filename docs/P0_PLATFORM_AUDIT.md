@@ -59,7 +59,7 @@ Declared optional scientific profiles:
 
 Development declarations include jsonschema, mypy, pytest, PyYAML, Ruff, types-PyYAML and tomli; `requirements-dev.txt` additionally declares pre-commit. These are declared ranges, not a report of the exact packages installed in a particular deployment.
 
-The existing `scripts/generate_source_sbom.py` produces a **declared-dependency** SPDX inventory. It does not resolve the complete transitive dependency graph, package hashes, native binaries or file-level licenses. A release-grade resolved SBOM and automated vulnerability/license review remain open. Do not infer that a dependency is installed merely because it appears in an optional extra.
+`scripts/generate_source_sbom.py` produces a declared-dependency SPDX inventory. New `scripts/generate_environment_sbom.py` records installed Python distributions and observed `Requires-Dist` edges as SPDX 2.3; CI publishes it as the `molecularis-python-environment-sbom` artifact. This is a resolved Python-environment inventory, not a complete OS/native binary SBOM: package hashes, publisher attestations, file-level licenses, license-policy review and vulnerability scanning remain open. Do not infer that a dependency is installed merely because it appears in an optional extra.
 
 ## 3. Data and execution flow
 
