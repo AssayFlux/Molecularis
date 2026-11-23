@@ -74,7 +74,7 @@ def test_sandbox_runner_invokes_runtime_without_shell(tmp_path, monkeypatch):
     )
     assert result.exit_code == 0
     assert observed["command"][0] == "/usr/bin/docker"
-    assert observed["kwargs"]["shell"] if "shell" in observed["kwargs"] else True
+    assert "shell" not in observed["kwargs"]
     assert observed["kwargs"]["stdin"] == subprocess.DEVNULL
     assert observed["kwargs"]["stdout"] == subprocess.DEVNULL
     assert observed["kwargs"]["stderr"] == subprocess.DEVNULL
