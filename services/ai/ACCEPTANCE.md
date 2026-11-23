@@ -23,7 +23,7 @@ This evidence does not prove the new knowledge-to-construction architecture is i
 - [x] Replace Boolean Agentics approval with a canonical signed-approval envelope bound to principal, one-execution nonce, exact plan/inputs, capability catalog, policy and resource budget; require an external verifier callback.
 - [ ] Integrate institutional identity, cryptographic key management, authorization roles and atomic one-use nonce consumption.
 - [ ] Artifact backup/restore, corruption and crash-boundary tests.
-- [ ] Reproducibility and documentation baseline.
+- [x] Generate and publish an SPDX 2.3 inventory of installed Python distributions and observed dependency edges in CI.\n- [ ] Add package hashes/publisher attestations, OS/native binary inventory, vulnerability scanning and reviewed license-policy report.\n- [ ] Reproducibility and documentation baseline.
 
 **Gate:** engineering safety/recovery evidence is complete; blockers are explicit.
 
