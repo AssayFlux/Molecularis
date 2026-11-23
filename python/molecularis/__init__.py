@@ -186,3 +186,9 @@ __all__ += [
 from .ai import ExecutionApproval, MolecularisAI
 
 __all__ += ["ExecutionApproval", "MolecularisAI"]
+
+
+# Opt-in process-isolated execution adapter for pinned OCI tool images.
+from .sandbox import OCIContainerRunner, SandboxPolicy, SandboxResult
+
+__all__ += ["OCIContainerRunner", "SandboxPolicy", "SandboxResult"]
