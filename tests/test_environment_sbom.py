@@ -1,0 +1,18 @@
+from __future__ import annotations
+
+import runpy
+
+
+def test_environment_sbom_describes_installed_packages_and_valid_relationships():
+    module = runpy.run_path("scripts/generate_environment_sbom.py")
+    document = module["build_environment_sbom"]()
+    assert document["spdxVersion"] == "SPDX-2.3"
+    assert document["packages"]
+    package_ids = {package["SPDXID"] for package in document["packages"]}
+    assert len(package_ids) == len(document["packages"])
+    assert all(package["licenseDeclared"] == "NOASSERTION" for package in document["packages"])
+    for relationship in document["relationships"]:
+        assert relationship["spdxElementId"] == "SPDXRef-DOCUMENT" or (
+            relationship["spdxElementId"] in package_ids
+        )
+        assert relationship["relatedSpdxElement"] in package_ids
