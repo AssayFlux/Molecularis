@@ -461,6 +461,7 @@ The candidate package/engine catalogue is not an installation list. Each integra
 ## Project documentation
 
 - [P0 Platform Trust, Safety and Reliability Audit](docs/P0_PLATFORM_AUDIT.md)
+- [Operations, Backup and Recovery Runbook](docs/OPERATIONS_AND_RECOVERY.md)
 
 <table>
 <tr>
