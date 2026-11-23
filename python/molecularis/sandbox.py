@@ -77,6 +77,8 @@ class OCIContainerRunner:
         target = output_dir.resolve(strict=True)
         if not source.is_dir() or not target.is_dir() or source == target:
             raise ValidationError("sandbox input/output mounts must be distinct existing directories")
+        if "," in str(source) or "," in str(target):
+            raise ValidationError("sandbox mount paths must not contain commas")
         if source in target.parents or target in source.parents:
             raise ValidationError("sandbox input and output directories must not be nested")
         policy = self.policy
