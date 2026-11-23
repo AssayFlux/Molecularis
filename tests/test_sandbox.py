@@ -46,10 +46,12 @@ def test_sandbox_rejects_mutable_images_and_shell_strings(tmp_path):
             "registry.example/tool@sha256:" + "b" * 64,
             (), source, target, tmp_path / "cid",
         )
+    nested = source / "nested"
+    nested.mkdir()
     with pytest.raises(ValidationError, match="nested"):
         runner._command(
             "registry.example/tool@sha256:" + "b" * 64,
-            ("tool",), source, source / "nested", tmp_path / "cid",
+            ("tool",), source, nested, tmp_path / "cid",
         )
 
 
