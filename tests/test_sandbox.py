@@ -112,7 +112,7 @@ def test_sandbox_policy_rejects_unbounded_limits():
     with pytest.raises(ValueError):
         SandboxPolicy(pids=0)
     with pytest.raises(ValueError):
-        SandboxPolicy(output_mb=32, memory_mb=64, tmpfs_mb=32)
+        SandboxPolicy(output_mb=65, memory_mb=64, tmpfs_mb=32)
 
 
 def test_sandbox_timeout_kills_client_process_group_and_removes_container(tmp_path, monkeypatch):
