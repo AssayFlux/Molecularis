@@ -2,7 +2,7 @@
 
 **Current position (2026-11-26):** Engineering implementation for services A–N and the P1–P3 reference implementations is recorded complete on their respective tested commits. SF0 repository/dependency inventory is complete for audited HEAD `e36e32705045ab6311d20713d8f2a47b8c5af715`; see [SF0 Repository Truth Audit](SF0_REPOSITORY_TRUTH_AUDIT.md). The shared Core/MSDE platform remains a local reference implementation, not a fully accepted production platform. P0 security, integration, exact-HEAD CI, dependency/license and recovery residuals remain open. P0 acceptance and university scientific/privacy review remain prerequisites for production use, restricted-data processing and model training.
 
-The [Agentics Molecularis Master Plan](AGENTICS_MOLECULARIS_MASTER_PLAN.md) is the single authority for Agentics architecture and phases. This backlog records actionable work only. Mark an item complete only with a commit and the relevant verification evidence.
+The [P0 Acceptance Report](P0_ACCEPTANCE_REPORT.md) consolidates current evidence and outstanding engineering/institutional gates; it is explicitly NOT ACCEPTED. The [Agentics Molecularis Master Plan](AGENTICS_MOLECULARIS_MASTER_PLAN.md) is the single authority for Agentics architecture and phases. This backlog records actionable work only. Mark an item complete only with a commit and the relevant verification evidence.
 
 ## P0 — Repository truth, platform safety and reliability
 
@@ -26,7 +26,7 @@ The [Agentics Molecularis Master Plan](AGENTICS_MOLECULARIS_MASTER_PLAN.md) is t
 - [ ] Wire egress policy into every external adapter and enforce destination controls at the network boundary. `GalaxyClient` now requires explicit grants for REST calls and dataset transfers, disables environment-derived proxies in its default opener and rejects redirects; DNS pinning, host/network firewall enforcement, native-tool egress and other future adapters remain open. OCI tool containers run with `--network=none`.
 - [ ] Publish a reviewed platform acceptance report with exact supported and unsupported operating conditions.
 
-**P0 gate:** repository truth is reconciled; representative cross-service workflows preserve typed meaning and provenance; security, isolation, recovery and failure behavior have reproducible evidence or explicitly accepted blockers. Do not start P1 until this gate passes.
+**P0 gate:** repository truth is reconciled; representative cross-service workflows preserve typed meaning and provenance; security, isolation, recovery and failure behavior have reproducible evidence or explicitly accepted blockers. Do not advance to P4/P5 or training until this gate passes and the university acceptance record is signed.
 
 P1, P2 and the P3 A–N integration implementation were delivered on the owner's explicit requests while P0 tasks remain open. This records engineering implementation only and does not waive the P0 gate. P4 orchestration expansion, model training, production deployment and restricted-data processing remain blocked until the applicable P0 controls are integrated, tested and formally accepted by the institution.
 
