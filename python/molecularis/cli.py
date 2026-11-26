@@ -204,7 +204,11 @@ def build_parser() -> argparse.ArgumentParser:
                         help="per-operation wall-time budget (default: 30)")
     sub = parser.add_subparsers(dest="command")
     sub.add_parser("doctor", help="check service and handler registration")
-    sub.add_parser("services", help="list registered scientific services")\n    testlab_parser = sub.add_parser("testlab", help="run deterministic fixture-backed capability smoke tests")\n    testlab_parser.add_argument("--service", help="limit tests to one service")
+    sub.add_parser("services", help="list registered scientific services")
+    testlab_parser = sub.add_parser(
+        "testlab", help="run deterministic fixture-backed capability smoke tests"
+    )
+    testlab_parser.add_argument("--service", help="limit tests to one service")
     list_parser = sub.add_parser("list", help="list registered capabilities")
     list_parser.add_argument("--service", help="filter by service name")
     show_parser = sub.add_parser("show", help="inspect one capability contract")
