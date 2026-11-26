@@ -39,3 +39,4 @@ The single architectural authority is [Agentics Molecularis Master Plan](AGENTIC
 6. [Rulebook](../services/ai/RULEBOOK.md) — mandatory execution and scientific rules.
 7. [Acceptance](../services/ai/ACCEPTANCE.md) — evidence required to pass each phase.
 
+\n- [Molecularis Terminal](MOLECULARIS_TERMINAL.md) — local CLI for capability inventory, contract inspection and governed single-capability execution.\n
