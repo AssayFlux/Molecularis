@@ -1,5 +1,6 @@
 jsonschema[format]>=4.23,<5
 mypy>=1.10,<2
+pip-audit>=2.7,<3
 pre-commit>=3.8,<5
 pytest>=8,<9
 PyYAML>=6,<7
