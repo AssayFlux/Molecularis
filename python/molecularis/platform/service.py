@@ -59,6 +59,27 @@ class MolecularisPlatform:
     def bind(self, capability_id: str, handler: Any) -> None:
         self._require_ready()[1].bind(capability_id, handler)
 
+    def bind_sandboxed(
+        self, capability_id: str, *, runner: Any, image: str,
+        argv: tuple[str, ...], max_output_bytes: int = 64 * 1024 * 1024,
+    ) -> None:
+        """Bind a capability to a digest-pinned OCI JSON handler.
+
+        The image must implement the documented request.json/result.json
+        contract. The OCI runner disables networking and applies its resource
+        policy. Output byte acceptance is checked after execution; a host
+        filesystem quota is still required for a hard write-time disk limit.
+        """
+        from ..sandbox import OCIContainerRunner, OCIJSONHandler
+
+        if not isinstance(runner, OCIContainerRunner):
+            raise TypeError("runner must be an OCIContainerRunner")
+        self.registry.get(capability_id)
+        self.bind(capability_id, OCIJSONHandler(
+            runner=runner, capability_id=capability_id, image=image,
+            argv=argv, max_output_bytes=max_output_bytes,
+        ))
+
     def has_handler(self, capability_id: str) -> bool:
         """Return whether a capability has a registered executable handler."""
         return self._require_ready()[1].has_handler(capability_id)
