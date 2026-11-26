@@ -48,3 +48,10 @@ The legacy Boolean approval flag is not an authorization mechanism and is not ac
 ## OCI sandbox operating boundary
 
 `OCIContainerRunner` is opt-in and is not wired into the normal Rulebook handler dispatch. It requires a preloaded image referenced by immutable SHA-256 digest and a trusted Docker/Podman daemon. The runner supplies no network, a read-only root filesystem, no-new-privileges, all Linux capabilities dropped, non-root UID/GID, CPU/memory/PID/tmpfs/time limits and only explicit input/output bind mounts. Output mount disk quotas and daemon/rootless configuration must be enforced by the deployment operator. Do not expose a privileged container socket to untrusted users.
+
+
+## Data classification and egress policy primitive (P0)
+
+The `molecularis.governance` module provides a deny-by-default egress authorization contract. Missing, malformed or unknown data classifications resolve to `restricted`. A transfer requires an exact grant for HTTPS recipient hostname, declared purpose, classification and payload byte ceiling. Credentials in URLs, IP-literal destinations, private/reserved addresses and non-standard HTTPS ports are rejected.
+
+This is a policy decision helper, **not a network firewall**. It does not inspect DNS resolution, redirects, proxy routing, provider SDK behavior or traffic from code that bypasses it. Until every outbound adapter and deployment network boundary enforces an approved policy, external egress remains prohibited for confidential/restricted data. See `python/molecularis/governance.py` and `tests/test_governance.py`.
