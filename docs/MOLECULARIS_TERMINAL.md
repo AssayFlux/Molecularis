@@ -61,3 +61,21 @@ The terminal reports a capability as registered even if its optional external
 runtime is not installed. Attempting that operation will report the actual
 runtime error. A successful inventory is not a claim that all external
 dependencies are available.
+
+## Guided capability test lab
+
+`molecularis testlab` runs deterministic, built-in fixture cases for
+capabilities that have an explicit local fixture provider. The initial suite
+covers the five Sequence service operations. It creates typed sequence
+artifacts in the selected workspace, executes each operation through its
+native Sequence Rulebook and checks a small deterministic output assertion.
+
+`molecularis testlab --service chemistry` demonstrates honest coverage
+reporting: until reviewed chemistry fixtures are added, those registered
+capabilities are marked `NOT_COVERED`, not passed or simulated. The JSON report
+includes registered counts, case outcomes, execution run IDs, output artifact
+IDs, and coverage for every capability in the selected service.
+
+Fixture smoke tests establish that a software path executes against a known
+input and returns an expected basic result. They are not scientific reference
+validation, benchmark evidence, or a substitute for independent review.
