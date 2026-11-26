@@ -240,6 +240,18 @@ class OCIJSONHandler:
                     details={"capability_id": self.capability_id,
                              "exit_code": result.exit_code},
                 )
+            total_output_bytes = 0
+            for candidate in output_dir.rglob("*"):
+                if candidate.is_symlink():
+                    raise ValidationError("OCI capability output must not contain symbolic links")
+                if candidate.is_file():
+                    total_output_bytes += candidate.stat().st_size
+                    if total_output_bytes > self.max_output_bytes:
+                        raise ResourceLimitError(
+                            "OCI capability output tree exceeds accepted byte limit",
+                            details={"limit": self.max_output_bytes,
+                                     "observed": total_output_bytes},
+                        )
             output_path = output_dir / "result.json"
             if output_path.is_symlink() or not output_path.is_file():
                 raise ValidationError("OCI capability must produce a regular /output/result.json")
