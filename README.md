@@ -301,6 +301,22 @@ Read: [Agentics Master Plan](docs/AGENTICS_MOLECULARIS_MASTER_PLAN.md) · [Engin
 
 </details>
 
+## P0 platform safety and acceptance status
+
+**OPEN — NOT ACCEPTED**
+
+P0 is the active engineering gate. The latest hardening work adds:
+
+- Fail-closed outbound authorization in the Galaxy REST/dataset adapter; other adapter and host/network enforcement still require review.
+- A Rulebook-bindable OCI JSON handler (`MolecularisPlatform.bind_sandboxed`) for digest-pinned, network-disabled tool containers, with resource controls and post-run aggregate output checks.
+- Durable, atomic one-use approval consumption in the ArtifactStore catalog after a caller-supplied external verifier authenticates the exact scope-bound payload.
+- Crash-boundary fault injection for artifact publication, with orphan detection and non-destructive recovery evidence.
+- Regression coverage for the terminal fixture lab, sandbox-to-Rulebook execution, approval replay prevention and catalog backup/restore behavior.
+
+These are engineering controls, not a security certification. P0 still requires real rootless OCI runtime testing, a hard write-time output-volume quota, DNS/network egress enforcement across all paths, institutional identity/key/signature services, encrypted and signed backup/restore drills, native binary/package provenance and vulnerability/license review, source-specific dataset/model permissions, representative end-to-end A–N workflow/replay/cancellation evidence, and signed university security/privacy acceptance. Do not use restricted data or start model training on the strength of repository CI alone.
+
+See [P0 platform audit](docs/P0_PLATFORM_AUDIT.md), [work backlog](docs/WORK_BACKLOG.md) and [operations/recovery runbook](docs/OPERATIONS_AND_RECOVERY.md) for the exact residual gates.
+
 ## Platform architecture cards
 
 <table>
