@@ -315,7 +315,7 @@ P0 is the active engineering gate. The latest hardening work adds:
 
 These are engineering controls, not a security certification. P0 still requires real rootless OCI runtime testing, a hard write-time output-volume quota, DNS/network egress enforcement across all paths, institutional identity/key/signature services, encrypted and signed backup/restore drills, native binary/package provenance and vulnerability/license review, source-specific dataset/model permissions, representative end-to-end A–N workflow/replay/cancellation evidence, and signed university security/privacy acceptance. Do not use restricted data or start model training on the strength of repository CI alone.
 
-See [P0 platform audit](docs/P0_PLATFORM_AUDIT.md), [work backlog](docs/WORK_BACKLOG.md) and [operations/recovery runbook](docs/OPERATIONS_AND_RECOVERY.md) for the exact residual gates.
+See the [P0 acceptance report](docs/P0_ACCEPTANCE_REPORT.md), [P0 platform audit](docs/P0_PLATFORM_AUDIT.md), [work backlog](docs/WORK_BACKLOG.md) and [operations/recovery runbook](docs/OPERATIONS_AND_RECOVERY.md) for the evidence and exact residual gates.
 
 ## Platform architecture cards
 
