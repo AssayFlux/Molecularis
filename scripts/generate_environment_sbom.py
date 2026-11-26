@@ -144,6 +144,8 @@ def _native_packages() -> tuple[list[dict], list[dict]]:
         name, version = fields
         identity = f"{manager}:{name}@{version}"
         package_id = _spdx_id("Native", identity)
+        native_name = quote(name, safe=".-_")
+        native_version = quote(version, safe=".-_+~")
         packages.append({
             "name": name,
             "SPDXID": package_id,
@@ -161,7 +163,7 @@ def _native_packages() -> tuple[list[dict], list[dict]]:
             "externalRefs": [{
                 "referenceCategory": "PACKAGE-MANAGER",
                 "referenceType": "purl",
-                "referenceLocator": f"pkg:{manager}/{quote(name, safe=\".-_\")}@{quote(version, safe=\".-_+~\")}",
+                "referenceLocator": f"pkg:{manager}/{native_name}@{native_version}",
             }],
         })
         relationships.append({
