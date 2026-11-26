@@ -10,6 +10,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Sequence
+import json
 import os
 import re
 import signal
@@ -171,3 +172,90 @@ class OCIContainerRunner:
                 exit_code=exit_code, elapsed_seconds=time.monotonic() - started,
                 timed_out=timed_out, output_directory=str(Path(output_dir).resolve()),
             )
+
+
+
+class OCIJSONHandler:
+    """Adapt a pinned OCI tool to the Rulebook's JSON-in/JSON-out handler contract.
+
+    The tool receives /input/request.json and must write /output/result.json.
+    Output acceptance is bounded after execution; deployments still need a
+    filesystem/project quota to enforce a hard write-time disk limit.
+    """
+
+    def __init__(
+        self, *, runner: OCIContainerRunner, capability_id: str,
+        image: str, argv: Sequence[str], max_output_bytes: int = 64 * 1024 * 1024,
+    ) -> None:
+        if not isinstance(capability_id, str) or not capability_id.strip():
+            raise ValueError("capability_id must be non-empty text")
+        if isinstance(max_output_bytes, bool) or not isinstance(max_output_bytes, int) or max_output_bytes <= 0:
+            raise ValueError("max_output_bytes must be a positive integer")
+        self.runner = runner
+        self.capability_id = capability_id
+        self.image = image
+        self.argv = tuple(argv)
+        self.max_output_bytes = max_output_bytes
+
+    def __call__(self, inputs: dict, parameters: dict, context) -> dict:
+        from .platform.contracts import ValidationError
+
+        request = {
+            "schema": "molecularis.oci-handler-request.v1",
+            "capability_id": self.capability_id,
+            "inputs": inputs,
+            "parameters": parameters,
+            "execution": {
+                "run_id": context.run_id,
+                "service_id": context.service_id,
+                "engine_version": context.engine_version,
+                "schema_version": context.schema_version,
+                "rulebook_version": context.rulebook_version,
+                "budget": {
+                    "max_bytes": context.budget.max_bytes,
+                    "max_candidates": context.budget.max_candidates,
+                    "max_results": context.budget.max_results,
+                    "max_wall_seconds": context.budget.max_wall_seconds,
+                    "chunk_bytes": context.budget.chunk_bytes,
+                },
+            },
+        }
+        with tempfile.TemporaryDirectory(prefix="molecularis-oci-handler-") as temp:
+            root = Path(temp)
+            input_dir, output_dir = root / "input", root / "output"
+            input_dir.mkdir()
+            output_dir.mkdir()
+            (input_dir / "request.json").write_text(
+                json.dumps(request, sort_keys=True, ensure_ascii=False,
+                           allow_nan=False, separators=(",", ":")),
+                encoding="utf-8",
+            )
+            result = self.runner.run(
+                image=self.image, argv=self.argv,
+                input_dir=input_dir, output_dir=output_dir,
+            )
+            if result.exit_code != 0:
+                raise ValidationError(
+                    "OCI capability process returned a non-zero exit code",
+                    details={"capability_id": self.capability_id,
+                             "exit_code": result.exit_code},
+                )
+            output_path = output_dir / "result.json"
+            if output_path.is_symlink() or not output_path.is_file():
+                raise ValidationError("OCI capability must produce a regular /output/result.json")
+            if output_path.stat().st_size > self.max_output_bytes:
+                raise ResourceLimitError(
+                    "OCI capability result exceeds accepted output byte limit",
+                    details={"limit": self.max_output_bytes,
+                             "observed": output_path.stat().st_size},
+                )
+            try:
+                value = json.loads(
+                    output_path.read_text(encoding="utf-8"),
+                    parse_constant=lambda token: (_ for _ in ()).throw(ValueError(token)),
+                )
+            except (OSError, UnicodeDecodeError, json.JSONDecodeError, ValueError) as exc:
+                raise ValidationError("OCI capability result is not valid strict JSON") from exc
+            if not isinstance(value, dict):
+                raise ValidationError("OCI capability result must be a JSON object")
+            return value
