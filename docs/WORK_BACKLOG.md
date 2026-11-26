@@ -1,12 +1,12 @@
 # Molecularis Work Backlog
 
-**Current position (2026-11-22):** Engineering implementation for services A–N is recorded complete. P1 Scientific Knowledge Engine and P2 shared reasoning/construction reference implementations are merged and pass CI. The shared Core/MSDE platform remains a local reference implementation, not a fully accepted production platform. P0 platform safety, integration and recovery residuals remain open; P0 is still a prerequisite for progression into P2/P3/P4 and model training. University scientific/privacy review and formal service freezes remain separate gates.
+**Current position (2026-11-26):** Engineering implementation for services A–N and the P1–P3 reference implementations is recorded complete on their respective tested commits. SF0 repository/dependency inventory is complete for audited HEAD `e36e32705045ab6311d20713d8f2a47b8c5af715`; see [SF0 Repository Truth Audit](SF0_REPOSITORY_TRUTH_AUDIT.md). The shared Core/MSDE platform remains a local reference implementation, not a fully accepted production platform. P0 security, integration, exact-HEAD CI, dependency/license and recovery residuals remain open. P0 acceptance and university scientific/privacy review remain prerequisites for production use, restricted-data processing and model training.
 
 The [Agentics Molecularis Master Plan](AGENTICS_MOLECULARIS_MASTER_PLAN.md) is the single authority for Agentics architecture and phases. This backlog records actionable work only. Mark an item complete only with a commit and the relevant verification evidence.
 
 ## P0 — Repository truth, platform safety and reliability
 
-- [ ] SF0 repository/dependency audit: inventory actual code, A–N capabilities, package versions, licenses, data/model permissions, adapters and test coverage.
+- [x] SF0 repository/dependency audit: tracked-tree inventory, canonical Python package and compatibility namespace, A–N service/capability declarations, package/version declarations, license/data/model governance, adapters, schemas, tests and CI configuration inventoried in [SF0 Repository Truth Audit](SF0_REPOSITORY_TRUTH_AUDIT.md). Remaining exact-HEAD CI, measured coverage, per-dependency legal/security review and source-specific data/model permission verification are explicitly retained as P0 follow-up gates.
 - [ ] Reconcile capability contracts and demonstrate real typed artifact handoff across representative services.
 - [ ] Verify provenance continuity from source artifacts through multi-service workflows and final reports.
 - [ ] Add deterministic replay, dependency invalidation, cancellation, timeout and failure-propagation evidence.
