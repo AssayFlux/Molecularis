@@ -85,3 +85,5 @@ The university/system owner must supply or approve:
 | System/deployment owner | Pending | Pending | Pending | Pending |
 
 **Final gate:** P0 remains **OPEN / NOT PASSED** until all mandatory engineering evidence is complete and authorized institutional owners sign the acceptance record.
+
+- [Run #45868818928](https://github.com/AssayFlux/Molecularis/actions/runs/45868818928), exact tested code commit `d7e43682c1190e6b4adf534db367b6c0fd5f0308`: DNS-pinned Galaxy HTTPS transport and OCI tmpfs output/work mounts; core 845 passed/12 skipped, Chemistry 853/4, Genomics 846/11, Sequence 848/9 with 4 warnings; all four jobs passed. This includes unit tests for private/mixed DNS answer rejection, pinned-IP socket connection with original TLS hostname, OCI tmpfs quota command construction, bounded output extraction and container cleanup. Real network integration and rootless Docker/Podman execution remain deployment tests.
