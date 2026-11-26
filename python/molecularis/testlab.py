@@ -48,7 +48,7 @@ def _has_transcript(values: dict[str, Any]) -> bool:
 
 
 def _has_translation(values: dict[str, Any]) -> bool:
-    return _result(values).get("protein_sequence") == "MAI"
+    return _result(values).get("protein") == "MAI"
 
 
 CASES = (
