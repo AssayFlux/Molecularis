@@ -79,3 +79,10 @@ After restore, verify a representative set of artifact IDs, source/parent lineag
 ## Open validation evidence
 
 The repository tests exercise backup/restore round-trip and tamper detection. A deployment owner must still run and sign a scheduled restore drill, crash-boundary fault injection, retention review, encryption/key-management review, RPO/RTO measurement and a real rootless-container adversarial test. These are not marked complete by CI.
+
+
+## Data classification and external egress
+
+Use `molecularis.governance.DataClassification` for metadata labels. Missing, malformed and unknown labels default to `restricted`. An outbound transfer must be denied unless an exact `EgressGrant` matches the destination host, purpose, classification and payload byte limit.
+
+The policy module is a decision helper only. It is not a firewall, does not control DNS resolution/redirects/proxies, and does not prevent an adapter from bypassing it. Until every external adapter calls the policy and the deployment enforces a network allowlist, keep external provider/tool egress disabled for confidential and restricted data. Never treat a code-level grant as institutional permission or legal authorization.
