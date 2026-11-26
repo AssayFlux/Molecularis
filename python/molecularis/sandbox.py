@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Sequence
 import os
 import re
+import signal
 import shutil
 import subprocess
 import tempfile
@@ -95,6 +96,42 @@ class OCIContainerRunner:
             image, *argv,
         ]
 
+    @staticmethod
+    def _terminate_process_group(process: subprocess.Popen[bytes]) -> None:
+        """Terminate the OCI client and any descendants, escalating if necessary."""
+        if process.poll() is not None:
+            return
+        try:
+            os.killpg(process.pid, signal.SIGTERM)
+        except ProcessLookupError:
+            return
+        try:
+            process.wait(timeout=2)
+        except subprocess.TimeoutExpired:
+            try:
+                os.killpg(process.pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
+            process.wait(timeout=2)
+
+    def _remove_container(self, cidfile: Path) -> None:
+        """Best-effort daemon-side cleanup after terminating a timed-out client."""
+        try:
+            container_id = cidfile.read_text(encoding="utf-8").strip()
+        except OSError:
+            return
+        if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{5,127}", container_id):
+            return
+        try:
+            subprocess.run(
+                [self.runtime, "rm", "-f", container_id],
+                stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL, check=False, timeout=10,
+                env={"PATH": os.defpath, "LANG": "C"},
+            )
+        except (subprocess.TimeoutExpired, OSError):
+            pass
+
     def run(
         self, *, image: str, argv: Sequence[str], input_dir: str | Path,
         output_dir: str | Path,
@@ -111,32 +148,23 @@ class OCIContainerRunner:
             started = time.monotonic()
             timed_out = False
             exit_code = -1
+            process: subprocess.Popen[bytes] | None = None
             try:
-                completed = subprocess.run(
+                process = subprocess.Popen(
                     command, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
-                    stderr=subprocess.DEVNULL, check=False,
-                    timeout=self.policy.max_wall_seconds,
+                    stderr=subprocess.DEVNULL, start_new_session=True,
                     env={"PATH": os.defpath, "LANG": "C"},
                 )
-                exit_code = completed.returncode
-            except subprocess.TimeoutExpired:
-                timed_out = True
-                if cidfile.exists():
-                    container_id = cidfile.read_text(encoding="utf-8").strip()
-                    if container_id and re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{5,127}", container_id):
-                        try:
-                            subprocess.run(
-                                [self.runtime, "rm", "-f", container_id],
-                                stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
-                                stderr=subprocess.DEVNULL, check=False, timeout=10,
-                                env={"PATH": os.defpath, "LANG": "C"},
-                            )
-                        except (subprocess.TimeoutExpired, OSError):
-                            pass
-                raise ResourceLimitError(
-                    "sandbox execution exceeded wall-time budget",
-                    details={"max_wall_seconds": self.policy.max_wall_seconds},
-                )
+                try:
+                    exit_code = process.wait(timeout=self.policy.max_wall_seconds)
+                except subprocess.TimeoutExpired:
+                    timed_out = True
+                    self._terminate_process_group(process)
+                    self._remove_container(cidfile)
+                    raise ResourceLimitError(
+                        "sandbox execution exceeded wall-time budget",
+                        details={"max_wall_seconds": self.policy.max_wall_seconds},
+                    )
             except OSError as exc:
                 raise ValidationError("OCI runtime invocation failed") from exc
             return SandboxResult(
