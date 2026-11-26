@@ -55,3 +55,10 @@ The legacy Boolean approval flag is not an authorization mechanism and is not ac
 The `molecularis.governance` module provides a deny-by-default egress authorization contract. Missing, malformed or unknown data classifications resolve to `restricted`. A transfer requires an exact grant for HTTPS recipient hostname, declared purpose, classification and payload byte ceiling. Credentials in URLs, IP-literal destinations, private/reserved addresses and non-standard HTTPS ports are rejected.
 
 This is a policy decision helper, **not a network firewall**. It does not inspect DNS resolution, redirects, proxy routing, provider SDK behavior or traffic from code that bypasses it. Until every outbound adapter and deployment network boundary enforces an approved policy, external egress remains prohibited for confidential/restricted data. See `python/molecularis/governance.py` and `tests/test_governance.py`.
+
+
+### Galaxy outbound enforcement follow-up — 2026-11-26
+
+`GalaxyClient` now requires an explicit `EgressPolicy` before sending any REST request or dataset download. The authorization check binds the configured recipient host, purpose, data classification and byte ceiling; absent policy fails closed before transport. Its default opener disables environment-derived HTTP proxies and rejects redirects. Tests cover missing grants, recipient mismatch, pre-transport denial, bounded requests and downloads.
+
+This closes the application-level policy omission for the Galaxy HTTP client only. It is not a host firewall: DNS resolution is not pinned to an approved address, custom injected openers are trusted test/deployment dependencies, and other process/native-tool network traffic is outside this client. Do not treat it as complete platform-wide egress enforcement.
