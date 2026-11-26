@@ -203,3 +203,47 @@ def test_oci_json_handler_rejects_nonzero_exit():
     )
     with pytest.raises(ValidationError, match="non-zero"):
         handler({}, {}, ExecutionContext())
+
+
+
+def test_platform_rulebook_can_bind_and_execute_oci_capability(tmp_path, monkeypatch):
+    import json
+
+    from molecularis.platform.contracts import Capability
+    from molecularis.platform.runtime import Operation, Rulebook
+    from molecularis.platform.service import MolecularisPlatform
+    from molecularis.sandbox import OCIContainerRunner, SandboxResult
+
+    runner = OCIContainerRunner()
+    def fake_run(*, image, argv, input_dir, output_dir):
+        request = json.loads((Path(input_dir) / "request.json").read_text())
+        (Path(output_dir) / "result.json").write_text(
+            json.dumps({"echo": request["inputs"]["payload"]})
+        )
+        return SandboxResult(0, 0.01, False, str(output_dir))
+    monkeypatch.setattr(runner, "run", fake_run)
+
+    platform = MolecularisPlatform(tmp_path / "workspace")
+    platform.start()
+    try:
+        platform.register(Capability(
+            id="test.oci.v1", version="1", service="test", operation="oci",
+            input_schema="test.input.v1", output_schema="test.output.v1",
+        ))
+        platform.bind_sandboxed(
+            "test.oci.v1", runner=runner,
+            image="registry.example/tool@sha256:" + "2" * 64,
+            argv=("tool",),
+        )
+        rulebook = Rulebook(
+            id="test-oci", version="1",
+            operations=(Operation(
+                id="run-oci", capability_id="test.oci.v1",
+                inputs=("payload",), output="result", parameters={},
+            ),),
+        )
+        assert platform.execute(rulebook, {"payload": {"value": 42}})["result"] == {
+            "echo": {"value": 42}
+        }
+    finally:
+        platform.close()
