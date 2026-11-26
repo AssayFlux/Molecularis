@@ -25,6 +25,8 @@ def test_sandbox_command_is_digest_pinned_and_restrictive(tmp_path):
     assert "--cap-drop=ALL" in command
     assert "--security-opt=no-new-privileges" in command
     assert "--pids-limit" in command
+    assert any(arg.startswith("/output:rw,noexec,nosuid,nodev,size=") for arg in command)
+    assert not any("dst=/output" in arg for arg in command)
     assert "--memory" in command
     assert "--cpus" in command
     assert "--pull=never" in command
@@ -70,6 +72,8 @@ def test_sandbox_runner_invokes_runtime_without_shell(tmp_path, monkeypatch):
         def __init__(self, command, **kwargs):
             observed["command"] = command
             observed["kwargs"] = kwargs
+            cidfile = Path(command[command.index("--cidfile") + 1])
+            cidfile.write_text("container123", encoding="utf-8")
 
         def wait(self, timeout=None):
             return 0
@@ -78,6 +82,10 @@ def test_sandbox_runner_invokes_runtime_without_shell(tmp_path, monkeypatch):
             return 0
 
     monkeypatch.setattr("molecularis.sandbox.subprocess.Popen", FakeProcess)
+    def fake_run(command, **kwargs):
+        observed.setdefault("cleanup_commands", []).append(command)
+        return subprocess.CompletedProcess(command, 0)
+    monkeypatch.setattr("molecularis.sandbox.subprocess.run", fake_run)
     result = OCIContainerRunner().run(
         image="registry.example/tool@sha256:" + "c" * 64,
         argv=("tool", "--input", "/input/a"),
@@ -90,6 +98,10 @@ def test_sandbox_runner_invokes_runtime_without_shell(tmp_path, monkeypatch):
     assert observed["kwargs"]["stdout"] == subprocess.DEVNULL
     assert observed["kwargs"]["stderr"] == subprocess.DEVNULL
     assert observed["kwargs"]["start_new_session"] is True
+    assert observed["cleanup_commands"] == [
+        ["/usr/bin/docker", "cp", "container123:/output/.", str(target.resolve())],
+        ["/usr/bin/docker", "rm", "-f", "container123"],
+    ]
 
 
 def test_sandbox_policy_rejects_unbounded_limits():
@@ -99,6 +111,8 @@ def test_sandbox_policy_rejects_unbounded_limits():
         SandboxPolicy(memory_mb=32)
     with pytest.raises(ValueError):
         SandboxPolicy(pids=0)
+    with pytest.raises(ValueError):
+        SandboxPolicy(output_mb=32, memory_mb=64, tmpfs_mb=32)
 
 
 def test_sandbox_timeout_kills_client_process_group_and_removes_container(tmp_path, monkeypatch):
