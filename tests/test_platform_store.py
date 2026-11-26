@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import io
+from contextlib import contextmanager
 
 import pytest
 
@@ -202,3 +203,33 @@ def test_approval_id_cannot_be_reused_by_another_principal(tmp_path):
             approval_id="approval-global-unique", principal_id="reviewer-B",
             payload_sha256=digest,
         )
+
+
+
+def test_ingest_crash_after_blob_publish_leaves_auditable_orphan(tmp_path, monkeypatch):
+    store = ArtifactStore(tmp_path)
+    original_session = store._session
+
+    @contextmanager
+    def fail_catalog_insert():
+        with original_session() as connection:
+            class FailingConnection:
+                def execute(self, sql, *args, **kwargs):
+                    if sql.lstrip().upper().startswith("INSERT INTO ARTIFACTS"):
+                        raise OSError("injected crash at catalog publication boundary")
+                    return connection.execute(sql, *args, **kwargs)
+
+                def __getattr__(self, name):
+                    return getattr(connection, name)
+
+            yield FailingConnection()
+
+    monkeypatch.setattr(store, "_session", fail_catalog_insert)
+    with pytest.raises(OSError, match="injected crash"):
+        store.ingest(b"crash-boundary-payload")
+    monkeypatch.setattr(store, "_session", original_session)
+
+    report = store.audit()
+    assert report["ok"] is True
+    assert len(report["orphan_digests"]) == 1
+    assert report["temporary_files"] == []
