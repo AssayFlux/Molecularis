@@ -144,3 +144,62 @@ def test_sandbox_timeout_kills_client_process_group_and_removes_container(tmp_pa
         )
     assert observed["signals"]
     assert observed["commands"] == [["/usr/bin/docker", "rm", "-f", "container123"]]
+
+
+
+def test_oci_json_handler_executes_bounded_json_contract(tmp_path):
+    import json
+
+    from molecularis.platform.contracts import ExecutionContext
+    from molecularis.sandbox import OCIJSONHandler, SandboxResult
+
+    class FakeRunner:
+        def run(self, *, image, argv, input_dir, output_dir):
+            request = json.loads((Path(input_dir) / "request.json").read_text())
+            assert request["schema"] == "molecularis.oci-handler-request.v1"
+            assert request["capability_id"] == "sequence.validate.v1"
+            (Path(output_dir) / "result.json").write_text('{"valid":true}')
+            return SandboxResult(0, 0.01, False, str(output_dir))
+
+    handler = OCIJSONHandler(
+        runner=FakeRunner(), capability_id="sequence.validate.v1",
+        image="registry.example/tool@sha256:" + "e" * 64, argv=("tool",),
+    )
+    result = handler({"sequence_artifact_id": "art_fixture"}, {}, ExecutionContext())
+    assert result == {"valid": True}
+
+
+def test_oci_json_handler_rejects_oversized_output_tree():
+    import json
+
+    from molecularis.platform.contracts import ExecutionContext, ResourceLimitError
+    from molecularis.sandbox import OCIJSONHandler, SandboxResult
+
+    class FakeRunner:
+        def run(self, *, image, argv, input_dir, output_dir):
+            (Path(output_dir) / "result.json").write_text(json.dumps({"x": "too large"}))
+            return SandboxResult(0, 0.01, False, str(output_dir))
+
+    handler = OCIJSONHandler(
+        runner=FakeRunner(), capability_id="sequence.validate.v1",
+        image="registry.example/tool@sha256:" + "f" * 64, argv=("tool",),
+        max_output_bytes=4,
+    )
+    with pytest.raises(ResourceLimitError, match="output"):
+        handler({}, {}, ExecutionContext())
+
+
+def test_oci_json_handler_rejects_nonzero_exit():
+    from molecularis.platform.contracts import ExecutionContext, ValidationError
+    from molecularis.sandbox import OCIJSONHandler, SandboxResult
+
+    class FakeRunner:
+        def run(self, **kwargs):
+            return SandboxResult(7, 0.01, False, kwargs["output_dir"])
+
+    handler = OCIJSONHandler(
+        runner=FakeRunner(), capability_id="sequence.validate.v1",
+        image="registry.example/tool@sha256:" + "1" * 64, argv=("tool",),
+    )
+    with pytest.raises(ValidationError, match="non-zero"):
+        handler({}, {}, ExecutionContext())
