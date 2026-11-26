@@ -6,7 +6,7 @@ import io
 import pytest
 
 from molecularis.platform import ArtifactStore, Budget
-from molecularis.platform.contracts import ArtifactNotFound, IntegrityError, ResourceLimitError
+from molecularis.platform.contracts import ArtifactNotFound, ConflictError, IntegrityError, ResourceLimitError
 
 
 def test_ingest_deduplicates_blob_and_preserves_distinct_artifact_identity(tmp_path):
@@ -164,3 +164,41 @@ def test_backup_reports_missing_or_corrupt_source_blob(tmp_path):
     with pytest.raises(IntegrityError):
         store.backup(tmp_path / "backup")
     assert not (tmp_path / "backup").exists()
+
+
+
+def test_approval_consumption_is_atomic_unique_and_backup_preserved(tmp_path):
+    store = ArtifactStore(tmp_path / "live")
+    digest = hashlib.sha256(b"canonical-approval").hexdigest()
+    store.consume_approval(
+        approval_id="approval-once", principal_id="reviewer",
+        payload_sha256=digest,
+    )
+    with pytest.raises(ConflictError, match="already been consumed"):
+        store.consume_approval(
+            approval_id="approval-once", principal_id="reviewer",
+            payload_sha256=digest,
+        )
+
+    backup = tmp_path / "backup"
+    store.backup(backup)
+    restored = ArtifactStore.restore(backup, tmp_path / "restored")
+    with pytest.raises(ConflictError, match="already been consumed"):
+        restored.consume_approval(
+            approval_id="approval-once", principal_id="reviewer",
+            payload_sha256=digest,
+        )
+
+
+def test_approval_id_cannot_be_reused_by_another_principal(tmp_path):
+    store = ArtifactStore(tmp_path)
+    digest = hashlib.sha256(b"approval").hexdigest()
+    store.consume_approval(
+        approval_id="approval-global-unique", principal_id="reviewer-A",
+        payload_sha256=digest,
+    )
+    with pytest.raises(ConflictError):
+        store.consume_approval(
+            approval_id="approval-global-unique", principal_id="reviewer-B",
+            payload_sha256=digest,
+        )
