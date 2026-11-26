@@ -118,7 +118,7 @@ def test_sandbox_timeout_kills_client_process_group_and_removes_container(tmp_pa
             self.cidfile.write_text("container123", encoding="utf-8")
 
         def poll(self):
-            return None if observed["waits"] == 0 else -9
+            return None if observed["waits"] < 2 else -9
 
         def wait(self, timeout=None):
             observed["waits"] += 1
