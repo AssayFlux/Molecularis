@@ -32,6 +32,7 @@ class SandboxPolicy:
     cpus: float = 2.0
     pids: int = 128
     tmpfs_mb: int = 256
+    output_mb: int = 256
 
     def __post_init__(self) -> None:
         if not 1 <= self.max_wall_seconds <= 86_400:
@@ -44,6 +45,8 @@ class SandboxPolicy:
             raise ValueError("pids must be in 1..65536")
         if not 16 <= self.tmpfs_mb <= self.memory_mb:
             raise ValueError("tmpfs_mb must be >=16 and <= memory_mb")
+        if not 16 <= self.output_mb <= self.memory_mb:
+            raise ValueError("output_mb must be >=16 and <= memory_mb")
 
 
 @dataclass(frozen=True, slots=True)
@@ -83,17 +86,19 @@ class OCIContainerRunner:
             raise ValidationError("sandbox mount paths must not contain commas")
         if source in target.parents or target in source.parents:
             raise ValidationError("sandbox input and output directories must not be nested")
+        if any(target.iterdir()):
+            raise ValidationError("sandbox output directory must be empty before execution")
         policy = self.policy
         return [
-            self.runtime, "run", "--rm", "--pull=never", "--cidfile", str(cidfile),
+            self.runtime, "run", "--pull=never", "--cidfile", str(cidfile),
             "--network=none", "--read-only", "--cap-drop=ALL",
             "--security-opt=no-new-privileges", "--pids-limit", str(policy.pids),
             "--memory", f"{policy.memory_mb}m", "--cpus", str(policy.cpus),
             "--ipc=private", "--user", f"{os.getuid()}:{os.getgid()}",
             "--workdir", "/work",
             "--tmpfs", f"/tmp:rw,noexec,nosuid,nodev,size={policy.tmpfs_mb}m",
+            "--tmpfs", f"/output:rw,noexec,nosuid,nodev,size={policy.output_mb}m",
             "--mount", f"type=bind,src={source},dst=/input,readonly",
-            "--mount", f"type=bind,src={target},dst=/output",
             image, *argv,
         ]
 
@@ -133,6 +138,25 @@ class OCIContainerRunner:
         except (subprocess.TimeoutExpired, OSError):
             pass
 
+    def _copy_output_from_container(self, cidfile: Path, output_dir: Path) -> None:
+        """Copy bounded tmpfs output from a stopped container to the host."""
+        try:
+            container_id = cidfile.read_text(encoding="utf-8").strip()
+        except OSError as exc:
+            raise ValidationError("OCI runtime did not produce a container ID") from exc
+        if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{5,127}", container_id):
+            raise ValidationError("OCI runtime produced an invalid container ID")
+        try:
+            completed = subprocess.run(
+                [self.runtime, "cp", f"{container_id}:/output/.", str(output_dir)],
+                stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL, check=False, timeout=30,
+                env={"PATH": os.defpath, "LANG": "C"},
+            )
+        except (subprocess.TimeoutExpired, OSError) as exc:
+            raise ValidationError("OCI output extraction failed") from exc
+        if completed.returncode != 0:
+            raise ValidationError("OCI output extraction returned a non-zero exit code")
     def run(
         self, *, image: str, argv: Sequence[str], input_dir: str | Path,
         output_dir: str | Path,
@@ -161,13 +185,17 @@ class OCIContainerRunner:
                 except subprocess.TimeoutExpired:
                     timed_out = True
                     self._terminate_process_group(process)
-                    self._remove_container(cidfile)
                     raise ResourceLimitError(
                         "sandbox execution exceeded wall-time budget",
                         details={"max_wall_seconds": self.policy.max_wall_seconds},
                     )
+                if exit_code == 0:
+                    self._copy_output_from_container(cidfile, Path(output_dir).resolve())
             except OSError as exc:
                 raise ValidationError("OCI runtime invocation failed") from exc
+            finally:
+                if cidfile.exists():
+                    self._remove_container(cidfile)
             return SandboxResult(
                 exit_code=exit_code, elapsed_seconds=time.monotonic() - started,
                 timed_out=timed_out, output_directory=str(Path(output_dir).resolve()),
