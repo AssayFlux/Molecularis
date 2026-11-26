@@ -86,3 +86,15 @@ The repository tests exercise backup/restore round-trip and tamper detection. A 
 Use `molecularis.governance.DataClassification` for metadata labels. Missing, malformed and unknown labels default to `restricted`. An outbound transfer must be denied unless an exact `EgressGrant` matches the destination host, purpose, classification and payload byte limit.
 
 The policy module is a decision helper only. It is not a firewall, does not control DNS resolution/redirects/proxies, and does not prevent an adapter from bypassing it. Until every external adapter calls the policy and the deployment enforces a network allowlist, keep external provider/tool egress disabled for confidential and restricted data. Never treat a code-level grant as institutional permission or legal authorization.
+
+
+## OCI capability handler contract
+
+An approved capability may be bound with `MolecularisPlatform.bind_sandboxed()` and an `OCIContainerRunner`. The image must be pinned by digest, preloaded locally (the runner uses `--pull=never`), and implement this contract:
+
+- Read `/input/request.json` as UTF-8 JSON with schema `molecularis.oci-handler-request.v1`.
+- Treat all request fields as untrusted input; validate capability-specific inputs and parameters independently.
+- Write one JSON object to `/output/result.json` and exit zero on success; non-zero exit is a failed capability operation.
+- Do not expect network access: the runner uses `--network=none`.
+
+The platform rejects missing/non-object/invalid JSON output, symbolic links and aggregate output exceeding the configured post-execution byte ceiling. **This is not a hard write-time disk quota.** Before using any image beyond synthetic fixtures, the operator must provide a rootless OCI runtime, a quota-enforced output filesystem, an institution-approved digest/signature allowlist, and adversarial process-tree/resource tests. The sandbox adapter does not make ordinary in-process handlers isolated automatically.
