@@ -97,6 +97,7 @@ class OCIContainerRunner:
             "--ipc=private", "--user", f"{os.getuid()}:{os.getgid()}",
             "--workdir", "/work",
             "--tmpfs", f"/tmp:rw,noexec,nosuid,nodev,size={policy.tmpfs_mb}m",
+            "--tmpfs", f"/work:rw,noexec,nosuid,nodev,size={policy.tmpfs_mb}m,uid={os.getuid()},gid={os.getgid()},mode=0700",
             "--tmpfs", f"/output:rw,noexec,nosuid,nodev,size={policy.output_mb}m,uid={os.getuid()},gid={os.getgid()},mode=0700",
             "--mount", f"type=bind,src={source},dst=/input,readonly",
             image, *argv,
