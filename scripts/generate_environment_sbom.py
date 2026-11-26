@@ -17,6 +17,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import uuid
+from urllib.parse import quote
 
 
 def _normalize(name: str) -> str:
@@ -160,7 +161,7 @@ def _native_packages() -> tuple[list[dict], list[dict]]:
             "externalRefs": [{
                 "referenceCategory": "PACKAGE-MANAGER",
                 "referenceType": "purl",
-                "referenceLocator": f"pkg:{manager}/{name}@{version}",
+                "referenceLocator": f"pkg:{manager}/{quote(name, safe=\".-_\")}@{quote(version, safe=\".-_+~\")}",
             }],
         })
         relationships.append({
