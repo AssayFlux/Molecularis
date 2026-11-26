@@ -98,3 +98,8 @@ An approved capability may be bound with `MolecularisPlatform.bind_sandboxed()` 
 - Do not expect network access: the runner uses `--network=none`.
 
 The platform rejects missing/non-object/invalid JSON output, symbolic links and aggregate output exceeding the configured post-execution byte ceiling. **This is not a hard write-time disk quota.** Before using any image beyond synthetic fixtures, the operator must provide a rootless OCI runtime, a quota-enforced output filesystem, an institution-approved digest/signature allowlist, and adversarial process-tree/resource tests. The sandbox adapter does not make ordinary in-process handlers isolated automatically.
+
+
+## Execution approval replay protection
+
+The `ArtifactStore` catalog contains a durable one-use approval ledger. `MolecularisAI.execute()` first validates the caller-supplied external signature verifier and exact plan/input/catalog/budget/policy scope, then atomically consumes the approval ID before any workflow operation starts. Reuse of an approval ID fails, including after restoring a backup made after consumption. Back up and protect `catalog.sqlite3` together with the artifact objects; do not restore a pre-consumption catalog into a live execution environment without reconciling approvals with the institutional authorization service. This ledger prevents local replay only. Operators must still configure a real institutional verifier, identity provider, key management and role policy; test fixtures use synthetic signatures and are not deployment credentials.
