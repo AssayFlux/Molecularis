@@ -195,3 +195,9 @@ GitHub Actions [run #45846604545](https://github.com/AssayFlux/Molecularis/actio
 - Registry/schema validation, Ruff E9/F, Python compilation and all benchmark smoke steps passed.
 
 This is exact-commit engineering CI evidence. It does not replace source-level license review, OS/native vulnerability scanning, container-runtime adversarial tests, recovery drills or institutional approval. The four existing Sequence-profile warnings remain recorded rather than silently treated as failures or ignored.
+
+## 10. OCI timeout cleanup follow-up — 2026-11-26
+
+The opt-in `OCIContainerRunner` now starts the local Docker/Podman client in a new process session. When its wall-time budget expires, the runner attempts to terminate the client process group with SIGTERM, escalates to SIGKILL if the client does not exit, and then attempts daemon-side removal of the container ID recorded in the cidfile. The client process group is therefore handled more deliberately than the prior `subprocess.run(timeout=...)` path.
+
+This remains best-effort cleanup, not proof of complete process-tree or container termination: daemon responsiveness, cidfile creation races, runtime-specific behavior and host-level process supervision require real rootless Docker/Podman adversarial tests. The runner still is not integrated into ordinary in-process Rulebook handler execution. Output bind-mount disk usage is not hard-quota enforced. These P0 items remain open.
