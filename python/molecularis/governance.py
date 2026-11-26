@@ -54,7 +54,9 @@ class EgressGrant:
             raise ValueError("recipient must be a valid lowercase DNS hostname")
         if not self.purpose or len(self.purpose) > 256:
             raise ValueError("purpose must be non-empty bounded text")
-        if self.max_bytes <= 0:
+        if not isinstance(self.classification, DataClassification):
+            raise ValueError("classification must be a DataClassification value")
+        if isinstance(self.max_bytes, bool) or not isinstance(self.max_bytes, int) or self.max_bytes <= 0:
             raise ValueError("max_bytes must be positive")
 
 
@@ -80,10 +82,15 @@ class EgressPolicy:
     def _recipient(url: str) -> str:
         if not isinstance(url, str) or len(url) > 2048:
             raise ValidationError("egress URL must be bounded text")
-        parsed = urlsplit(url)
-        if parsed.scheme != "https" or not parsed.hostname or parsed.username or parsed.password:
+        try:
+            parsed = urlsplit(url)
+            hostname = parsed.hostname
+            port = parsed.port
+        except ValueError as exc:
+            raise EgressDenied("egress URL is malformed") from exc
+        if parsed.scheme != "https" or not hostname or parsed.username or parsed.password:
             raise EgressDenied("egress requires an HTTPS URL without embedded credentials")
-        host = parsed.hostname.lower().rstrip(".")
+        host = hostname.lower().rstrip(".")
         try:
             address = ipaddress.ip_address(host)
         except ValueError:
@@ -92,7 +99,7 @@ class EgressPolicy:
             if not address.is_global:
                 raise EgressDenied("private, loopback and reserved IP destinations are forbidden")
             raise EgressDenied("egress grants must name an explicit DNS host, not an IP address")
-        if parsed.port not in (None, 443):
+        if port not in (None, 443):
             raise EgressDenied("non-standard HTTPS ports are not permitted")
         return host
 
