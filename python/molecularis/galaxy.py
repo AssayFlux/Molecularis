@@ -18,6 +18,8 @@ import urllib.request
 from pathlib import Path
 from typing import Any
 
+from .governance import DataClassification, EgressPolicy
+
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 _ID = re.compile(r"^[A-Za-z0-9_.:-]{1,200}$")
 
@@ -39,6 +41,9 @@ class GalaxyClient:
         timeout_seconds: float = 30.0,
         max_response_bytes: int = 16 * 1024 * 1024,
         opener: Any | None = None,
+        egress_policy: EgressPolicy | None = None,
+        data_classification: DataClassification = DataClassification.RESTRICTED,
+        egress_purpose: str = "galaxy_workflow",
     ) -> None:
         if not isinstance(base_url, str) or not base_url.strip():
             raise ValueError("base_url must be non-empty")
@@ -57,8 +62,28 @@ class GalaxyClient:
         self._base = base_url.strip().rstrip("/")
         self._key = api_key
         self._timeout = float(timeout_seconds)
+        if egress_policy is not None and not isinstance(egress_policy, EgressPolicy):
+            raise ValueError("egress_policy must be an EgressPolicy")
+        if not isinstance(data_classification, DataClassification):
+            raise ValueError("data_classification must be a DataClassification")
+        if not isinstance(egress_purpose, str) or not egress_purpose or len(egress_purpose) > 256:
+            raise ValueError("egress_purpose must be non-empty bounded text")
         self._max_response = max_response_bytes
-        self._opener = opener or urllib.request.build_opener(_NoRedirect())
+        self._egress_policy = egress_policy
+        self._classification = data_classification
+        self._egress_purpose = egress_purpose
+        # Do not inherit HTTP(S)_PROXY from the process environment.
+        self._opener = opener or urllib.request.build_opener(
+            urllib.request.ProxyHandler({}), _NoRedirect()
+        )
+
+    def _authorize_egress(self, url: str, payload_bytes: int) -> None:
+        if self._egress_policy is None:
+            raise RuntimeError("Galaxy outbound access is disabled: an explicit EgressPolicy is required")
+        self._egress_policy.authorize(
+            url=url, purpose=self._egress_purpose,
+            classification=self._classification, payload_bytes=payload_bytes,
+        )
 
     @staticmethod
     def _identifier(value: str, name: str) -> str:
@@ -70,8 +95,10 @@ class GalaxyClient:
                  content_type: str = "application/json") -> Any:
         if not path.startswith("/api/") or "?" in path or "#" in path:
             raise ValueError("Galaxy API path must be a fixed /api/ path without query")
+        url = self._base + path
+        self._authorize_egress(url, len(payload) if payload is not None else self._max_response)
         request = urllib.request.Request(
-            self._base + path,
+            url,
             data=payload,
             headers={"x-api-key": self._key, "Accept": "application/json",
                      "Content-Type": content_type},
@@ -201,6 +228,7 @@ class GalaxyClient:
         if target.name in {"", ".", ".."}:
             raise ValueError("download destination must name a file")
         url = self._base + f"/api/datasets/{urllib.parse.quote(dataset, safe='')}/display"
+        self._authorize_egress(url, max_download_bytes)
         request = urllib.request.Request(url, headers={"x-api-key": self._key,
                                     "Accept": "application/octet-stream"}, method="GET")
         digest = hashlib.sha256()
