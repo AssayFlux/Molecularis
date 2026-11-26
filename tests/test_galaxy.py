@@ -215,20 +215,23 @@ def test_pinned_https_connection_uses_validated_ip_and_original_tls_hostname(mon
 
     observed = {}
 
+    class FakeTLSContext:
+        verify_mode = ssl.CERT_REQUIRED
+        check_hostname = False
+
+        def wrap_socket(self, raw, server_hostname):
+            observed["server_hostname"] = server_hostname
+            return raw
+
     raw_socket = object()
     def fake_create_connection(address, timeout, source_address):
         observed["address"] = address
         return raw_socket
 
-    def fake_wrap_socket(self, raw, server_hostname):
-        observed["server_hostname"] = server_hostname
-        return raw
-
     monkeypatch.setattr(socket, "create_connection", fake_create_connection)
-    monkeypatch.setattr(ssl.SSLContext, "wrap_socket", fake_wrap_socket)
     connection = _PinnedHTTPSConnection(
         "galaxy.example.org", pinned_ip="93.184.216.34",
-        context=ssl.create_default_context(), timeout=3,
+        context=FakeTLSContext(), timeout=3,
     )
     connection.connect()
     assert observed["address"] == ("93.184.216.34", 443)
