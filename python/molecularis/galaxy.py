@@ -7,9 +7,12 @@ validation. API keys are sent only in the x-api-key header and never returned.
 from __future__ import annotations
 
 import hashlib
+import http.client
+import ipaddress
 import json
 import os
 import re
+import socket
 import time
 import tempfile
 import urllib.error
@@ -22,6 +25,56 @@ from .governance import DataClassification, EgressPolicy
 
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 _ID = re.compile(r"^[A-Za-z0-9_.:-]{1,200}$")
+
+
+def _resolve_public_address(host: str) -> str:
+    """Resolve once, reject mixed/private answers, and return a pinned public IP."""
+    try:
+        records = socket.getaddrinfo(host, 443, type=socket.SOCK_STREAM)
+    except OSError as exc:
+        raise RuntimeError("Galaxy destination DNS resolution failed") from exc
+    addresses = sorted({record[4][0] for record in records})
+    if not addresses:
+        raise RuntimeError("Galaxy destination has no usable DNS address")
+    for address in addresses:
+        try:
+            if not ipaddress.ip_address(address).is_global:
+                raise RuntimeError("Galaxy destination resolves to a non-global address")
+        except ValueError as exc:
+            raise RuntimeError("Galaxy destination DNS returned an invalid address") from exc
+    return addresses[0]
+
+
+class _PinnedHTTPSConnection(http.client.HTTPSConnection):
+    """Connect to the validated IP while retaining hostname TLS verification."""
+
+    def __init__(self, host: str, *, pinned_ip: str, **kwargs: Any) -> None:
+        self._pinned_ip = pinned_ip
+        super().__init__(host, **kwargs)
+
+    def connect(self) -> None:
+        if self._tunnel_host:
+            raise RuntimeError("proxy tunnels are disabled for governed Galaxy egress")
+        raw = socket.create_connection(
+            (self._pinned_ip, self.port), self.timeout, self.source_address
+        )
+        self.sock = self._context.wrap_socket(raw, server_hostname=self.host)
+
+
+class _PinnedHTTPSHandler(urllib.request.HTTPSHandler):
+    """Resolve and pin a public IP for each HTTPS request, with TLS SNI intact."""
+
+    def https_open(self, request: urllib.request.Request):
+        host = urllib.parse.urlsplit(request.full_url).hostname
+        if not host:
+            raise RuntimeError("Galaxy request has no destination hostname")
+        pinned_ip = _resolve_public_address(host)
+        return self.do_open(
+            lambda target, **kwargs: _PinnedHTTPSConnection(
+                target, pinned_ip=pinned_ip, **kwargs
+            ),
+            request, context=self._context, check_hostname=self._check_hostname,
+        )
 
 
 class _NoRedirect(urllib.request.HTTPRedirectHandler):
@@ -74,7 +127,7 @@ class GalaxyClient:
         self._egress_purpose = egress_purpose
         # Do not inherit HTTP(S)_PROXY from the process environment.
         self._opener = opener or urllib.request.build_opener(
-            urllib.request.ProxyHandler({}), _NoRedirect()
+            urllib.request.ProxyHandler({}), _PinnedHTTPSHandler(), _NoRedirect()
         )
 
     def _authorize_egress(self, url: str, payload_bytes: int) -> None:
