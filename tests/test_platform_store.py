@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import io
 from contextlib import contextmanager
+from concurrent.futures import ThreadPoolExecutor
 
 import pytest
 
@@ -233,3 +234,23 @@ def test_ingest_crash_after_blob_publish_leaves_auditable_orphan(tmp_path, monke
     assert report["ok"] is True
     assert len(report["orphan_digests"]) == 1
     assert report["temporary_files"] == []
+
+
+
+def test_concurrent_approval_consumption_allows_exactly_one_winner(tmp_path):
+    store = ArtifactStore(tmp_path)
+    digest = hashlib.sha256(b"concurrent-approval").hexdigest()
+
+    def consume():
+        try:
+            store.consume_approval(
+                approval_id="one-winner", principal_id="reviewer",
+                payload_sha256=digest,
+            )
+            return "consumed"
+        except ConflictError:
+            return "rejected"
+
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        outcomes = list(pool.map(lambda _: consume(), range(2)))
+    assert sorted(outcomes) == ["consumed", "rejected"]
