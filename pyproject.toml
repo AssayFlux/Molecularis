@@ -9,6 +9,9 @@ description = "Offline-first scientific research workbench"
 requires-python = ">=3.10"
 dependencies = []
 
+[project.scripts]
+molecularis = "molecularis.cli:main"
+
 [project.optional-dependencies]
 docking = [
   "vina==1.2.7",
