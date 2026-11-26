@@ -6,6 +6,14 @@ import json
 import pytest
 
 from molecularis.galaxy import GalaxyClient
+from molecularis.governance import DataClassification, EgressGrant, EgressPolicy
+
+
+def policy() -> EgressPolicy:
+    return EgressPolicy((EgressGrant(
+        "galaxy.example.org", "galaxy_workflow", DataClassification.RESTRICTED,
+        512 * 1024 * 1024,
+    ),))
 
 
 class Response:
@@ -34,7 +42,7 @@ class Opener:
 
 def test_galaxy_client_sends_api_key_only_as_header_and_creates_history() -> None:
     opener = Opener({"id": "history-1", "name": "test"})
-    client = GalaxyClient("https://galaxy.example.org", "secret-key", opener=opener)
+    client = GalaxyClient("https://galaxy.example.org", "secret-key", opener=opener, egress_policy=policy())
     result = client.create_history("test")
     request, timeout = opener.requests[0]
     assert result == {"history_id": "history-1", "name": "test"}
@@ -58,7 +66,7 @@ def test_galaxy_client_invokes_workflow_and_returns_provenance() -> None:
 def test_galaxy_client_rejects_non_tls_remote_server_and_unsafe_ids() -> None:
     with pytest.raises(ValueError, match="HTTPS"):
         GalaxyClient("http://galaxy.example.org", "key")
-    client = GalaxyClient("https://galaxy.example.org", "key", opener=Opener())
+    client = GalaxyClient("https://galaxy.example.org", "key", opener=Opener(), egress_policy=policy())
     with pytest.raises(ValueError, match="workflow_id"):
         client.invoke_workflow("../other", "history-1", {"input-1": {}})
     with pytest.raises(ValueError, match="inputs"):
@@ -72,7 +80,7 @@ def test_galaxy_client_rejects_redirects_and_oversized_responses() -> None:
         def open(self, request, timeout):
             raise HTTPError(request.full_url, 302, "redirect", {}, io.BytesIO(b""))
 
-    client = GalaxyClient("https://galaxy.example.org", "key", opener=RedirectingOpener())
+    client = GalaxyClient("https://galaxy.example.org", "key", opener=RedirectingOpener(), egress_policy=policy())
     with pytest.raises(RuntimeError, match="HTTP 302"):
         client.create_history("test")
 
@@ -91,7 +99,7 @@ def test_galaxy_client_rejects_redirects_and_oversized_responses() -> None:
             return LargeResponse()
 
     client = GalaxyClient("https://galaxy.example.org", "key",
-                          max_response_bytes=10, opener=LargeOpener())
+                          max_response_bytes=10, opener=LargeOpener(), egress_policy=policy())
     with pytest.raises(RuntimeError, match="exceeds"):
         client.create_history("test")
 
@@ -134,7 +142,7 @@ def test_galaxy_downloads_output_dataset_with_digest(tmp_path) -> None:
             return RawResponse()
 
     destination = tmp_path / "result.tsv"
-    client = GalaxyClient("https://galaxy.example.org", "key", opener=RawOpener())
+    client = GalaxyClient("https://galaxy.example.org", "key", opener=RawOpener(), egress_policy=policy())
     result = client.download_dataset("dataset-1", destination)
     assert destination.read_bytes() == b"scientific-result"
     assert result["sha256"] == hashlib.sha256(b"scientific-result").hexdigest()
@@ -165,3 +173,21 @@ def test_galaxy_download_refuses_overwrite_and_bounds_bytes(tmp_path) -> None:
     client = GalaxyClient("https://galaxy.example.org", "key", opener=RawOpener())
     with pytest.raises(RuntimeError, match="exceeds max_download_bytes"):
         client.download_dataset("dataset-1", tmp_path / "too-large.bin", max_download_bytes=5)
+
+
+def test_galaxy_client_fails_closed_without_egress_policy() -> None:
+    client = GalaxyClient("https://galaxy.example.org", "key", opener=Opener({"id": "h"}))
+    with pytest.raises(RuntimeError, match="EgressPolicy is required"):
+        client.create_history("blocked")
+
+
+def test_galaxy_client_denies_unapproved_recipient_before_transport() -> None:
+    opener = Opener({"id": "h"})
+    denied = EgressPolicy((EgressGrant(
+        "other.example.org", "galaxy_workflow", DataClassification.RESTRICTED, 1024,
+    ),))
+    client = GalaxyClient("https://galaxy.example.org", "key", opener=opener,
+                          egress_policy=denied)
+    with pytest.raises(Exception):
+        client.create_history("blocked")
+    assert opener.requests == []
