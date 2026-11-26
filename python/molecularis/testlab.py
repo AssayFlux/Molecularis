@@ -82,10 +82,14 @@ def run_testlab(platform: Any, *, service: str | None = None) -> dict[str, Any]:
                     description="Built-in deterministic Molecularis Terminal smoke fixture",
                 ),
             )
-            rulebook = sequence_rulebook(
-                case.capability_id.split(".")[1].replace("-", "_"),
-                parameters=case.parameters,
-            )
+            operation = {
+                "sequence.validate.v1": "validate",
+                "sequence.analyze.v1": "statistics",
+                "sequence.reverse-complement.v1": "reverse_complement",
+                "sequence.transcribe.v1": "transcribe",
+                "sequence.translate.v1": "translate",
+            }[case.capability_id]
+            rulebook = sequence_rulebook(operation, parameters=case.parameters)
             context = ExecutionContext(
                 service_id="molecularis-terminal-testlab",
                 rulebook_version=rulebook.version,
@@ -104,8 +108,8 @@ def run_testlab(platform: Any, *, service: str | None = None) -> dict[str, Any]:
                 "description": case.description,
                 "run_id": context.run_id,
                 "output_artifact_ids": [
-                    item.artifact_id for item in platform.store.list()
-                    if item.metadata.get("run_id") == context.run_id
+                    item["artifact_id"]
+                    for item in platform.find_exact("run_id", context.run_id).items
                 ],
                 "observed": values.get("sequence_result"),
             })
