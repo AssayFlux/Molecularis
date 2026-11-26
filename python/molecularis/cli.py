@@ -15,6 +15,7 @@ from typing import Any, Sequence
 from .bootstrap import create_full_platform
 from .platform import Budget, ExecutionContext, Operation, Rulebook
 from .platform.contracts import PlatformError
+from .testlab import run_testlab
 
 
 BANNER = r"""
@@ -157,9 +158,12 @@ def _shell(platform: Any, max_seconds: float) -> int:
         if command in {"exit", "quit"}:
             return 0
         if command in {"help", "?"}:
-            print("help | doctor | services | list [service] | show <capability-id>")
+            print("help | doctor | services | list [service] | show <capability-id> | testlab [service]")
             print("run <capability-id> --input '{\"key\": \"value\"}' [--params '{}']")
             print("JSON inputs may use @file.json. Type exit to leave.")
+        elif command == "testlab":
+            report = run_testlab(platform, service=args[0] if args else None)
+            print(json.dumps(report, indent=2, ensure_ascii=False))
         elif command == "doctor":
             _doctor(platform)
         elif command == "services":
@@ -200,7 +204,7 @@ def build_parser() -> argparse.ArgumentParser:
                         help="per-operation wall-time budget (default: 30)")
     sub = parser.add_subparsers(dest="command")
     sub.add_parser("doctor", help="check service and handler registration")
-    sub.add_parser("services", help="list registered scientific services")
+    sub.add_parser("services", help="list registered scientific services")\n    testlab_parser = sub.add_parser("testlab", help="run deterministic fixture-backed capability smoke tests")\n    testlab_parser.add_argument("--service", help="limit tests to one service")
     list_parser = sub.add_parser("list", help="list registered capabilities")
     list_parser.add_argument("--service", help="filter by service name")
     show_parser = sub.add_parser("show", help="inspect one capability contract")
