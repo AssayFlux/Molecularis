@@ -381,7 +381,7 @@ Lifecycle management and bounded execution in the local reference platform.
 | `scripts/` · `tests/` | Engineering checks, fixtures and automated tests |
 | `Assets/` | Project identity and visual assets |
 
-## Engineering status
+## Molecularis Terminal\n\nA local terminal workbench now bootstraps the live A–N runtime, inventories registered capabilities, inspects their contracts and executes selected operations through the Core Rulebook executor. See [Molecularis Terminal guide](docs/MOLECULARIS_TERMINAL.md) for installation and commands.\n\n## Engineering status
 
 <table>
 <tr>
