@@ -26,6 +26,7 @@ def test_sandbox_command_is_digest_pinned_and_restrictive(tmp_path):
     assert "--security-opt=no-new-privileges" in command
     assert "--pids-limit" in command
     assert any(arg.startswith("/output:rw,noexec,nosuid,nodev,size=") for arg in command)
+    assert any(arg.startswith("/work:rw,noexec,nosuid,nodev,size=") for arg in command)
     assert not any("dst=/output" in arg for arg in command)
     assert "--memory" in command
     assert "--cpus" in command
