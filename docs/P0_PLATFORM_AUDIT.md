@@ -201,3 +201,10 @@ This is exact-commit engineering CI evidence. It does not replace source-level l
 The opt-in `OCIContainerRunner` now starts the local Docker/Podman client in a new process session. When its wall-time budget expires, the runner attempts to terminate the client process group with SIGTERM, escalates to SIGKILL if the client does not exit, and then attempts daemon-side removal of the container ID recorded in the cidfile. The client process group is therefore handled more deliberately than the prior `subprocess.run(timeout=...)` path.
 
 This remains best-effort cleanup, not proof of complete process-tree or container termination: daemon responsiveness, cidfile creation races, runtime-specific behavior and host-level process supervision require real rootless Docker/Podman adversarial tests. The runner still is not integrated into ordinary in-process Rulebook handler execution. Output bind-mount disk usage is not hard-quota enforced. These P0 items remain open.
+
+
+## 11. Galaxy adapter egress enforcement follow-up — 2026-11-26
+
+The Galaxy REST client now requires an explicit EgressPolicy for every outbound API request and dataset download. Authorization is performed before transport and binds the configured host, purpose (galaxy_workflow by default), classification (Restricted by default) and request/transfer byte ceiling. Missing policy fails closed. The default opener disables environment-derived HTTP proxies and refuses redirects. Regression tests cover absent policy, recipient mismatch before transport, approved requests, response/download ceilings and redirect rejection.
+
+**Scope and residual risk:** this is enforcement at the Galaxy application adapter only. DNS answers are not pinned or revalidated against private/reserved address ranges, custom injected openers are trusted, and native executables or future adapters can still make independent network connections. This does not replace an OS/container network namespace, firewall or institutional egress gateway. Platform-wide egress remains OPEN; confidential/restricted outbound transfers remain prohibited unless the institution approves and enforces the complete path.
