@@ -20,7 +20,7 @@ P0 cannot honestly be marked complete yet. The repository now contains additiona
 | Provenance continuity | ArtifactStore parent lineage; plan/input lineage; verifier/evidence references on handoffs | Partial; end-to-end replay/provenance acceptance open |
 | Deterministic replay and cancellation | Rulebook run evidence, budget checks and failure records | Incomplete; no general replay engine, dependency invalidation or hard in-process cancellation |
 | Threat model and classification | `docs/P0_PLATFORM_AUDIT.md`; `governance.py` | Baseline documented; institutional review and complete enforcement open |
-| Egress enforcement | GalaxyClient requires explicit EgressPolicy; OCI tools run with network disabled | Partial; other process/network paths, DNS pinning and host firewall enforcement open |
+| Egress enforcement | GalaxyClient requires explicit EgressPolicy, pins validated public DNS answers to TLS-verified connections; OCI tools run with network disabled | Partial; other process/network paths and host firewall enforcement open |
 | OCI isolation | `OCIJSONHandler`; `MolecularisPlatform.bind_sandboxed()`; pinned image, network-none, read-only root, dropped caps, CPU/memory/PID/time limits | Adapter integrated with Rulebook API; real rootless runtime tests, hard output quota and image signature verification open |
 | Approval and identity | Scope-bound approval payload; external verifier callback; SQLite atomic one-use ledger in ArtifactStore | Local replay prevention implemented; institutional identity, PKI, key custody and role authorization open |
 | Backup and recovery | Verified backup/restore; corruption checks; injected post-blob/pre-catalog crash test | Partial; complete crash matrix, encrypted/signed off-host backups and witnessed restore drills open |
@@ -46,7 +46,7 @@ A newer documentation-only HEAD may have a separate workflow pending. Do not tre
 1. Exercise OCIJSONHandler with rootless Docker and Podman on the target host; verify namespace, mount, UID/GID, seccomp/LSM and process-tree behavior.
 2. Enforce a hard write-time output-volume quota. Current byte ceiling is checked after container exit and does not prevent temporary disk exhaustion.
 3. Pin and verify image publishers/signatures and approved digests before execution.
-4. Map every outbound network path, resolve DNS safely, prevent rebinding/proxy bypass and enforce an OS/network-level allowlist. Galaxy's client-level check alone is not sufficient.
+4. Map every outbound network path, verify the Galaxy DNS pinning behavior under adversarial DNS conditions, prevent remaining proxy/SDK bypasses and enforce an OS/network-level allowlist. Galaxy's client-level check alone is not sufficient.
 5. Demonstrate multi-service execution with typed contracts, continuous provenance, deterministic replay, dependency invalidation, cancellation, timeout and injected failure evidence.
 6. Expand crash injection across catalog transactions, WAL, object publication, backup publication, restore, disk-full and process/power-loss boundaries.
 7. Add encrypted and signed off-host backup handling with institution-controlled keys, key rotation, restore verification and measured RPO/RTO.
