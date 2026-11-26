@@ -161,3 +161,19 @@ These additions do **not** provide backup encryption/signing, OS sandboxing, har
 GitHub Actions [run #45088241792](https://github.com/AssayFlux/Molecularis/actions/runs/45088241792) on exact commit `2c9ae812ec7ecf213ca8fbc4303132e5e34b43a3`: core 817 passed/12 skipped; Genomics 818/11; Chemistry 825/4; Sequence 820/9 (4 existing warnings); 69 JSON schemas validated; installed-environment SPDX 2.3 inventory generated (43 Python distributions); Ruff, compilation and benchmark smoke steps passed.
 
 The passing CI run includes signed/scope-bound approval contract tests, the opt-in OCI sandbox command-contract tests, the all-pairs synthetic A–N handoff envelope matrix, environment SBOM generation/structure tests, all core regression tests and optional scientific profiles. The SBOM is a Python installed-distribution inventory, not a native OS image SBOM or a license/security attestation. Passing CI does not close institutional, deployment or scientific review gates.
+
+
+## 10. Consolidated P0 hardening — 2026-11-26
+
+This delivery adds the following repository-level controls:
+
+1. **Fail-closed classification and egress grants:** `python/molecularis/governance.py` defines Public/Internal/Confidential/Restricted labels; missing or malformed labels default to Restricted. Outbound authorization requires an exact HTTPS host, purpose, classification and byte-ceiling grant. URL credentials, IP-literal destinations and non-standard ports are rejected. This is a reusable policy primitive, not a firewall; no claim is made that every adapter currently invokes it or that DNS/redirect/proxy egress is constrained.
+2. **Known-vulnerability audit in CI:** `pip-audit --strict` runs against the installed Python environment. It detects known advisories for resolved Python distributions at CI time; it does not establish that packages are safe, review OS/native packages, or replace license and provenance review.
+3. **Expanded environment SBOM:** SPDX 2.3 output now includes installed Python distributions and dpkg/rpm native package inventories when available, observed Python dependency edges, package URLs, host platform metadata and unreviewed license metadata hints. License declarations/conclusions remain `NOASSERTION`; publisher identity, package provenance, binary hashes, OS vulnerability scanning and legal review remain open.
+4. **Regression tests:** tests cover classification fail-closed behavior, exact egress grant matching, byte limits and unsafe URL destinations; SBOM tests cover Python/native inventory structure and preserve explicit non-claims.
+
+### P0 status after this delivery
+
+The repository now has stronger engineering primitives and an automated Python vulnerability audit. P0 is still **NOT PASSED**. The following require deployment/institutional resources or further integration: connect egress checks to every provider/tool/network adapter and enforce network policy; institutional identity, cryptographic signature verification and atomic replay prevention; integrate OCI isolation into normal capability execution and test a real rootless runtime; enforce output-volume quotas and process-tree termination; verify typed semantic handoffs/provenance across representative real A–N chains; run crash-boundary fault injection and signed/encrypted off-host backup/restore drills; inventory and scan OS/native executables and model/data assets; review dependency licenses and source-specific data permissions; complete university security/privacy/threat-model review and sign a platform acceptance record.
+
+The latest P0 additions are code and CI changes, not evidence of production security, scientific validation, or authorization to process restricted data/train models.
