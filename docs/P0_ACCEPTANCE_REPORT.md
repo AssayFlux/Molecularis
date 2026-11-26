@@ -41,6 +41,8 @@ A newer documentation-only HEAD may have a separate workflow pending. Do not tre
 
 - [Run #45868818928](https://github.com/AssayFlux/Molecularis/actions/runs/45868818928), exact tested code commit `d7e43682c1190e6b4adf534db367b6c0fd5f0308`: DNS-pinned Galaxy HTTPS transport and OCI tmpfs output/work mounts; core 845 passed/12 skipped, Chemistry 853/4, Genomics 846/11, Sequence 848/9 with 4 warnings; all four jobs passed. This includes unit tests for private/mixed DNS answer rejection, pinned-IP socket connection with original TLS hostname, OCI tmpfs quota command construction, bounded output extraction and container cleanup. Real network integration and rootless Docker/Podman execution remain deployment tests.
 
+- [Run #45869124000](https://github.com/AssayFlux/Molecularis/actions/runs/45869124000), exact `CORE` HEAD commit `00e708490f19663ed55c3c5d7cf2862f5b6857f2`: all four jobs passed — core 846 passed/12 skipped, Chemistry 854/4, Genomics 847/11, Sequence 849/9 with 4 warnings. This includes the concurrent approval-consumption test (exactly one winner), backup/restore replay persistence, crash-boundary orphan detection, DNS-pinned Galaxy transport, OCI tmpfs output extraction and Rulebook sandbox binding.
+
 ## Mandatory remaining closure work
 
 ### Engineering and deployment
