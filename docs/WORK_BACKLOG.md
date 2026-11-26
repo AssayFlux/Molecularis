@@ -65,7 +65,7 @@ P1, P2 and the P3 A–N integration implementation were delivered on the owner's
 **P3 engineering gate: PASSED.** GitHub Actions [run #45088241792](https://github.com/AssayFlux/Molecularis/actions/runs/45088241792) on exact tested commit `2c9ae812ec7ecf213ca8fbc4303132e5e34b43a3`: core 817 passed/12 skipped; Genomics 818/11; Chemistry 825/4; Sequence 820/9 (4 existing warnings); 69 JSON schemas validated; SPDX 2.3 inventory generated for 43 installed Python distributions; Ruff, compilation and benchmark smoke steps passed. The 182-pair synthetic matrix establishes transport/provenance contracts only, not scientific semantic conversion. Source-backed knowledge population and independent scientific acceptance remain open.
 
 
-## P4 — Agentics orchestration maturity
+## Terminal workbench — guided capability verification\n\n- [x] Add a deterministic fixture-backed test lab for the five Sequence capabilities, with real artifact ingestion and native Rulebook execution.\n- [x] Report every registered capability as covered or not covered; never treat missing fixtures as a pass.\n- [ ] Add reviewed fixture providers and positive/negative assertions for Structure, Chemistry, Protein, Genomics, DNA/RNA, Simulation, Kinetics, Omics, Phylogeny, Pharmacogenomics, Cohorts, Workflows and Molecular.\n- [ ] Add reference-backed scientific validation suites, tolerance policies and independent expected-result provenance per capability.\n\n## P4 — Agentics orchestration maturity
 
 - [ ] Add a deployment-configured, provider-neutral model adapter and secure credential handling.
 - [ ] Derive constrained tool calls from registered capability schemas.
