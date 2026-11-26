@@ -192,3 +192,43 @@ def test_galaxy_client_denies_unapproved_recipient_before_transport() -> None:
     with pytest.raises(EgressDenied):
         client.create_history("blocked")
     assert opener.requests == []
+
+
+
+def test_galaxy_dns_resolution_rejects_private_or_mixed_answers(monkeypatch):
+    import socket
+    from molecularis.galaxy import _resolve_public_address
+
+    public = (socket.AF_INET, socket.SOCK_STREAM, 6, "", ("93.184.216.34", 443))
+    private = (socket.AF_INET, socket.SOCK_STREAM, 6, "", ("127.0.0.1", 443))
+    monkeypatch.setattr(socket, "getaddrinfo", lambda *args, **kwargs: [public])
+    assert _resolve_public_address("galaxy.example.org") == "93.184.216.34"
+    monkeypatch.setattr(socket, "getaddrinfo", lambda *args, **kwargs: [public, private])
+    with pytest.raises(RuntimeError, match="non-global"):
+        _resolve_public_address("galaxy.example.org")
+
+
+def test_pinned_https_connection_uses_validated_ip_and_original_tls_hostname(monkeypatch):
+    import socket
+    from molecularis.galaxy import _PinnedHTTPSConnection
+
+    observed = {}
+
+    class FakeTLSContext:
+        def wrap_socket(self, raw, server_hostname):
+            observed["server_hostname"] = server_hostname
+            return raw
+
+    raw_socket = object()
+    def fake_create_connection(address, timeout, source_address):
+        observed["address"] = address
+        return raw_socket
+
+    monkeypatch.setattr(socket, "create_connection", fake_create_connection)
+    connection = _PinnedHTTPSConnection(
+        "galaxy.example.org", pinned_ip="93.184.216.34",
+        context=FakeTLSContext(), timeout=3,
+    )
+    connection.connect()
+    assert observed["address"] == ("93.184.216.34", 443)
+    assert observed["server_hostname"] == "galaxy.example.org"
