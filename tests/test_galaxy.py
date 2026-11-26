@@ -54,7 +54,7 @@ def test_galaxy_client_sends_api_key_only_as_header_and_creates_history() -> Non
 def test_galaxy_client_invokes_workflow_and_returns_provenance() -> None:
     opener = Opener({"id": "inv-1", "state": "new"},
                     {"id": "inv-1", "state": "ok", "outputs": {"out": ["dataset-1"]}})
-    client = GalaxyClient("https://galaxy.example.org", "key", opener=opener)
+    client = GalaxyClient("https://galaxy.example.org", "key", opener=opener, egress_policy=policy())
     submitted = client.invoke_workflow("workflow-1", "history-1", {"input-1": {"id": "dataset-1"}})
     result = client.get_invocation("workflow-1", submitted["invocation_id"])
     assert submitted["state"] == "new"
@@ -108,7 +108,7 @@ def test_galaxy_upload_records_file_digest_and_dataset_id(tmp_path) -> None:
     source = tmp_path / "reads.fastq"
     source.write_bytes(b"@r1\\nACGT\\n+\\n!!!!\\n")
     opener = Opener([{"id": "dataset-1", "state": "ok"}])
-    client = GalaxyClient("https://galaxy.example.org", "key", opener=opener)
+    client = GalaxyClient("https://galaxy.example.org", "key", opener=opener, egress_policy=policy())
     result = client.upload_file("history-1", source, file_type="fastqsanger")
     assert result["dataset_id"] == "dataset-1"
     assert result["size_bytes"] == source.stat().st_size
@@ -188,6 +188,7 @@ def test_galaxy_client_denies_unapproved_recipient_before_transport() -> None:
     ),))
     client = GalaxyClient("https://galaxy.example.org", "key", opener=opener,
                           egress_policy=denied)
-    with pytest.raises(Exception):
+    from molecularis.governance import EgressDenied
+    with pytest.raises(EgressDenied):
         client.create_history("blocked")
     assert opener.requests == []
