@@ -173,10 +173,25 @@ This delivery adds the following repository-level controls:
 4. **Regression tests:** tests cover classification fail-closed behavior, exact egress grant matching, byte limits and unsafe URL destinations; SBOM tests cover Python/native inventory structure and preserve explicit non-claims.
 
 
-The first dependency-audit execution identified **PYSEC-2026-1845** in the resolved development dependency `pytest 8.4.2` (the advisory reported `9.0.3` as the fix). The project and development requirements were raised to `pytest>=9.0.3,<10`. The next exact-HEAD CI run must confirm the resolved graph is clean; do not treat the version change alone as a passed scan.
+The first dependency-audit execution identified **PYSEC-2026-1845** in the resolved development dependency `pytest 8.4.2` (the advisory reported `9.0.3` as the fix). The project and development requirements were raised to `pytest>=9.0.3,<10`. The subsequent resolved-environment CI scan passed on commit `564db597902e5e5a036f191c2228f8e160fe87a5`; all audited Python dependency graphs were clean after the upgrade.
 
 ### P0 status after this delivery
 
 The repository now has stronger engineering primitives and an automated Python vulnerability audit. P0 is still **NOT PASSED**. The following require deployment/institutional resources or further integration: connect egress checks to every provider/tool/network adapter and enforce network policy; institutional identity, cryptographic signature verification and atomic replay prevention; integrate OCI isolation into normal capability execution and test a real rootless runtime; enforce output-volume quotas and process-tree termination; verify typed semantic handoffs/provenance across representative real A–N chains; run crash-boundary fault injection and signed/encrypted off-host backup/restore drills; inventory and scan OS/native executables and model/data assets; review dependency licenses and source-specific data permissions; complete university security/privacy/threat-model review and sign a platform acceptance record.
 
 The latest P0 additions are code and CI changes, not evidence of production security, scientific validation, or authorization to process restricted data/train models.
+
+
+### Exact-HEAD P0 engineering CI evidence — 2026-11-26
+
+GitHub Actions [run #45846604545](https://github.com/AssayFlux/Molecularis/actions/runs/45846604545) passed on `CORE` commit `564db597902e5e5a036f191c2228f8e160fe87a5`:
+
+- Core Python suite: **828 passed, 12 skipped**.
+- Chemistry profile: **836 passed, 4 skipped**.
+- Genomics profile: **829 passed, 11 skipped**.
+- Sequence profile: **831 passed, 9 skipped, 4 warnings**.
+- Resolved Python dependency audit: passed in core and all three optional scientific profiles, with no known vulnerabilities reported.
+- SPDX 2.3 Python/native environment inventory generated and uploaded as workflow artifact `molecularis-python-environment-sbom` (75,790 bytes; SHA-256 `0a6da8aed7ecef4a8217c0e69d566e987897125a8a495225af391db8b66487eb`).
+- Registry/schema validation, Ruff E9/F, Python compilation and all benchmark smoke steps passed.
+
+This is exact-commit engineering CI evidence. It does not replace source-level license review, OS/native vulnerability scanning, container-runtime adversarial tests, recovery drills or institutional approval. The four existing Sequence-profile warnings remain recorded rather than silently treated as failures or ignored.
