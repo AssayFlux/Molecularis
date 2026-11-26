@@ -97,7 +97,7 @@ An approved capability may be bound with `MolecularisPlatform.bind_sandboxed()` 
 - Write one JSON object to `/output/result.json` and exit zero on success; non-zero exit is a failed capability operation.
 - Do not expect network access: the runner uses `--network=none`.
 
-The platform rejects missing/non-object/invalid JSON output, symbolic links and aggregate output exceeding the configured post-execution byte ceiling. **This is not a hard write-time disk quota.** Before using any image beyond synthetic fixtures, the operator must provide a rootless OCI runtime, a quota-enforced output filesystem, an institution-approved digest/signature allowlist, and adversarial process-tree/resource tests. The sandbox adapter does not make ordinary in-process handlers isolated automatically.
+The platform mounts `/output` as a size-bounded tmpfs (`SandboxPolicy.output_mb`), then copies output from the stopped container and rejects missing/non-object/invalid JSON, symbolic links and aggregate output exceeding the configured post-execution byte ceiling. The tmpfs is the container-side hard write-time output limit; the bounded copy can still fail if the host filesystem is full. Before using any image beyond synthetic fixtures, the operator must verify this behavior on a rootless OCI runtime, provide an institution-approved digest/signature allowlist, and complete adversarial process-tree/resource tests. The sandbox adapter does not make ordinary in-process handlers isolated automatically.
 
 
 ## Execution approval replay protection
