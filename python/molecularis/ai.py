@@ -234,6 +234,14 @@ class MolecularisAI:
         for artifact_id_value in supplied.values():
             self.platform.store.get(artifact_id_value)
         context = context or ExecutionContext(service_id="molecularis-ai", budget=self.budget)
+        # Consume only after signature and scope checks, but before any operation
+        # starts. SQLite BEGIN IMMEDIATE + the primary key makes replay prevention
+        # atomic across concurrent processes sharing this ArtifactStore.
+        self.platform.store.consume_approval(
+            approval_id=approval.approval_id,
+            principal_id=approval.principal_id,
+            payload_sha256=hashlib.sha256(payload).hexdigest(),
+        )
         result = execute_workflow(self.platform, workflow, supplied, context=context)
         return {
             "schema": AI_REPORT_SCHEMA, "workflow_id": workflow.workflow_id,
