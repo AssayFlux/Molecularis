@@ -59,6 +59,10 @@ class MolecularisPlatform:
     def bind(self, capability_id: str, handler: Any) -> None:
         self._require_ready()[1].bind(capability_id, handler)
 
+    def has_handler(self, capability_id: str) -> bool:
+        """Return whether a capability has a registered executable handler."""
+        return self._require_ready()[1].has_handler(capability_id)
+
     def ingest(self, chunks: bytes | Iterable[bytes], *, media_type: str,
                schema_id: str, metadata: dict[str, Any] | None = None,
                parents: Iterable[str] = (), budget: Budget | None = None) -> Artifact:
