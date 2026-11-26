@@ -7,7 +7,7 @@ boundary; an unintegrated policy object does not prevent data exfiltration.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import StrEnum
+from enum import Enum
 from urllib.parse import urlsplit
 import ipaddress
 import re
@@ -21,7 +21,7 @@ class EgressDenied(PlatformError):
     code = "EGRESS_DENIED"
 
 
-class DataClassification(StrEnum):
+class DataClassification(str, Enum):
     PUBLIC = "public"
     INTERNAL = "internal"
     CONFIDENTIAL = "confidential"
