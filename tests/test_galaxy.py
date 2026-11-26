@@ -170,7 +170,7 @@ def test_galaxy_download_refuses_overwrite_and_bounds_bytes(tmp_path) -> None:
         def open(self, request, timeout):
             return RawResponse()
 
-    client = GalaxyClient("https://galaxy.example.org", "key", opener=RawOpener())
+    client = GalaxyClient("https://galaxy.example.org", "key", opener=RawOpener(), egress_policy=policy())
     with pytest.raises(RuntimeError, match="exceeds max_download_bytes"):
         client.download_dataset("dataset-1", tmp_path / "too-large.bin", max_download_bytes=5)
 
