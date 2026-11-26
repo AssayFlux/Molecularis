@@ -20,7 +20,7 @@ import time
 import uuid
 
 from .contracts import (
-    ArtifactNotFound, Budget, IntegrityError, QueryResult, ResourceLimitError,
+    ArtifactNotFound, Budget, ConflictError, IntegrityError, QueryResult, ResourceLimitError,
     ValidationError,
 )
 
@@ -107,6 +107,12 @@ class ArtifactStore:
                 );
                 CREATE INDEX IF NOT EXISTS idx_labels_exact ON labels(key, value_json, artifact_id);
                 CREATE INDEX IF NOT EXISTS idx_labels_range ON labels(key, value_number, artifact_id);
+                CREATE TABLE IF NOT EXISTS consumed_approvals (
+                    approval_id TEXT PRIMARY KEY,
+                    principal_id TEXT NOT NULL,
+                    payload_sha256 TEXT NOT NULL,
+                    consumed_at REAL NOT NULL
+                );
                 CREATE TABLE IF NOT EXISTS runs (
                     run_id TEXT PRIMARY KEY,
                     service_id TEXT NOT NULL,
@@ -331,6 +337,29 @@ class ArtifactStore:
         next_offset = offset + len(selected) if has_more else None
         return QueryResult(tuple({"artifact_id": row["artifact_id"]} for row in selected),
                            str(snapshot), len(selected), not has_more, True, next_offset)
+
+    def consume_approval(self, *, approval_id: str, principal_id: str,
+                         payload_sha256: str) -> None:
+        """Atomically consume a signed approval ID once in the durable catalog."""
+        if not isinstance(approval_id, str) or not approval_id.strip() or len(approval_id) > 256:
+            raise ValidationError("approval_id must be non-empty bounded text")
+        if not isinstance(principal_id, str) or not principal_id.strip() or len(principal_id) > 256:
+            raise ValidationError("principal_id must be non-empty bounded text")
+        if (not isinstance(payload_sha256, str) or len(payload_sha256) != 64
+                or any(char not in "0123456789abcdef" for char in payload_sha256)):
+            raise ValidationError("payload_sha256 must be a lowercase SHA-256 digest")
+        try:
+            with self._session() as conn:
+                conn.execute("BEGIN IMMEDIATE")
+                conn.execute(
+                    "INSERT INTO consumed_approvals VALUES(?,?,?,?)",
+                    (approval_id, principal_id, payload_sha256, time.time()),
+                )
+        except sqlite3.IntegrityError as exc:
+            raise ConflictError(
+                "execution approval has already been consumed",
+                details={"approval_id": approval_id},
+            ) from exc
 
     def record_run(self, *, run_id: str, service_id: str, operation: str, status: str,
                    inputs: list[str], outputs: list[str], evidence: dict[str, Any],
