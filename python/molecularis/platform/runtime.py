@@ -90,6 +90,14 @@ class RulebookExecutor:
         self.store = store
         self._handlers: dict[str, Handler] = {}
 
+    def has_handler(self, capability_id: str) -> bool:
+        """Return whether a registered capability has an executable handler."""
+        return capability_id in self._handlers
+
+    def bound_capability_ids(self) -> tuple[str, ...]:
+        """Return stable IDs for all capabilities with bound handlers."""
+        return tuple(sorted(self._handlers))
+
     def bind(self, capability_id: str, handler: Handler) -> None:
         self.registry.get(capability_id)
         if capability_id in self._handlers:
