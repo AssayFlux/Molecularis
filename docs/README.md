@@ -24,6 +24,10 @@ Read in this order:
 Service-specific documents live under services/<service>/. Update status and backlog only from verified commits and test results.
 
 
+## Observatory
+
+- [Molecularis Observatory](OBSERVATORY.md) — live repository dashboard, run instructions and metric-integrity rules.
+
 ## Agentics Molecularis documentation
 
 The single architectural authority is [Agentics Molecularis Master Plan](AGENTICS_MOLECULARIS_MASTER_PLAN.md) (v2.1). It supersedes earlier AI phase drafts. Read its subordinate specifications in this order:
