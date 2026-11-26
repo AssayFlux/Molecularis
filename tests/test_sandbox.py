@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import subprocess
+from pathlib import Path
 
 import pytest
 
@@ -63,12 +64,20 @@ def test_sandbox_runner_invokes_runtime_without_shell(tmp_path, monkeypatch):
     monkeypatch.setattr("molecularis.sandbox.shutil.which", lambda name: "/usr/bin/docker")
     observed = {}
 
-    def fake_run(command, **kwargs):
-        observed["command"] = command
-        observed["kwargs"] = kwargs
-        return subprocess.CompletedProcess(command, 0)
+    class FakeProcess:
+        pid = 12345
 
-    monkeypatch.setattr("molecularis.sandbox.subprocess.run", fake_run)
+        def __init__(self, command, **kwargs):
+            observed["command"] = command
+            observed["kwargs"] = kwargs
+
+        def wait(self, timeout=None):
+            return 0
+
+        def poll(self):
+            return 0
+
+    monkeypatch.setattr("molecularis.sandbox.subprocess.Popen", FakeProcess)
     result = OCIContainerRunner().run(
         image="registry.example/tool@sha256:" + "c" * 64,
         argv=("tool", "--input", "/input/a"),
@@ -80,6 +89,7 @@ def test_sandbox_runner_invokes_runtime_without_shell(tmp_path, monkeypatch):
     assert observed["kwargs"]["stdin"] == subprocess.DEVNULL
     assert observed["kwargs"]["stdout"] == subprocess.DEVNULL
     assert observed["kwargs"]["stderr"] == subprocess.DEVNULL
+    assert observed["kwargs"]["start_new_session"] is True
 
 
 def test_sandbox_policy_rejects_unbounded_limits():
@@ -89,3 +99,48 @@ def test_sandbox_policy_rejects_unbounded_limits():
         SandboxPolicy(memory_mb=32)
     with pytest.raises(ValueError):
         SandboxPolicy(pids=0)
+
+
+def test_sandbox_timeout_kills_client_process_group_and_removes_container(tmp_path, monkeypatch):
+    source = tmp_path / "input"
+    target = tmp_path / "output"
+    source.mkdir()
+    target.mkdir()
+    monkeypatch.setattr("molecularis.sandbox.shutil.which", lambda name: "/usr/bin/docker")
+    observed = {"waits": 0, "signals": [], "commands": []}
+
+    class FakeProcess:
+        pid = 23456
+
+        def __init__(self, command, **kwargs):
+            self.command = command
+            self.cidfile = Path(command[command.index("--cidfile") + 1])
+            self.cidfile.write_text("container123", encoding="utf-8")
+
+        def poll(self):
+            return None if observed["waits"] == 0 else -9
+
+        def wait(self, timeout=None):
+            observed["waits"] += 1
+            if observed["waits"] == 1:
+                raise subprocess.TimeoutExpired(self.command, timeout)
+            return -9
+
+    def fake_killpg(pid, sig):
+        observed["signals"].append((pid, sig))
+
+    def fake_run(command, **kwargs):
+        observed["commands"].append(command)
+        return subprocess.CompletedProcess(command, 0)
+
+    monkeypatch.setattr("molecularis.sandbox.subprocess.Popen", FakeProcess)
+    monkeypatch.setattr("molecularis.sandbox.os.killpg", fake_killpg)
+    monkeypatch.setattr("molecularis.sandbox.subprocess.run", fake_run)
+    from molecularis.platform.contracts import ResourceLimitError
+    with pytest.raises(ResourceLimitError, match="wall-time"):
+        OCIContainerRunner(policy=SandboxPolicy(max_wall_seconds=1)).run(
+            image="registry.example/tool@sha256:" + "d" * 64,
+            argv=("tool",), input_dir=source, output_dir=target,
+        )
+    assert observed["signals"]
+    assert observed["commands"] == [["/usr/bin/docker", "rm", "-f", "container123"]]
