@@ -8,7 +8,7 @@ from molecularis.ai import ExecutionApproval, MolecularisAI
 from molecularis.domain_integration import validate_scientific_domains
 from molecularis.bootstrap import create_full_platform, register_all_services
 from molecularis.platform import Capability, ExecutionContext, MolecularisPlatform
-from molecularis.platform.contracts import ValidationError
+from molecularis.platform.contracts import ConflictError, ValidationError
 
 
 def _workflow(capability_id: str, input_keys: tuple[str, ...]) -> dict:
@@ -87,6 +87,11 @@ def test_ai_plans_and_requires_approval_before_execution(tmp_path):
         )
         assert result["result"]["validation_report"] == {"echo": "synthetic"}
         assert platform.store.get_run(context.run_id)["status"] == "succeeded"
+        with pytest.raises(ConflictError, match="already been consumed"):
+            agent.execute(
+                plan, input_artifacts={"source": source.artifact_id},
+                approval=approval, approval_verifier=verifier, context=context,
+            )
     finally:
         platform.close()
 
