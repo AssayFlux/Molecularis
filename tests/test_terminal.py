@@ -1,8 +1,6 @@
 """Tests for the Molecularis Terminal command workbench."""
 from __future__ import annotations
 
-import json
-
 from molecularis.cli import _capability_dict, _json_value, build_parser
 from molecularis.bootstrap import create_full_platform
 
