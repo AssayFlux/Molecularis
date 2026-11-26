@@ -458,6 +458,16 @@ All A–N services follow **Understand → Represent → Reason → Construct �
 
 The candidate package/engine catalogue is not an installation list. Each integration requires a repository gap audit, version/license review, typed adapter, resource controls, provenance and independent tests. See [AI Constitution](services/ai/AI_CONSTITUTION.md), [Scientific Foundation](services/ai/SCIENTIFIC_FOUNDATION.md), [Scientific Tool Registry](services/ai/SCIENTIFIC_TOOL_REGISTRY.md) and [Implementation Roadmap](services/ai/IMPLEMENTATION_ROADMAP.md).
 
+## Molecularis Observatory
+
+A live, read-only repository control centre for engineering progress, A–N service inventory, capability declarations, scientific evidence levels and recent repository activity. It uses live GitHub metadata and deliberately does not equate declared capabilities with scientific validation.
+
+- [Observatory source](observatory/index.html)
+- [Observatory run guide](observatory/README.md)
+- [Observatory methodology](docs/OBSERVATORY.md)
+
+Run locally: `python -m http.server 8765 --directory observatory`, then open `http://localhost:8765`.
+
 ## Project documentation
 
 - [P0 Platform Trust, Safety and Reliability Audit](docs/P0_PLATFORM_AUDIT.md)
