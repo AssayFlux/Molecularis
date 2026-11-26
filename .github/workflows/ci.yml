@@ -25,7 +25,7 @@ jobs:
       - name: Install Molecularis
         run: python -m pip install -e .
       - name: Audit installed Python dependencies for known vulnerabilities
-        run: pip-audit --strict
+        run: pip-audit --skip-editable --strict
       - name: Generate installed-environment SPDX inventory
         run: python scripts/generate_environment_sbom.py --output environment.spdx.json
       - name: Upload installed-environment SBOM
